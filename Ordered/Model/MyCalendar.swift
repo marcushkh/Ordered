@@ -47,19 +47,8 @@ struct MyCalendar {
         return startOfWeekArr
     }
     
-    
-}
-
-extension Date {
-    func monthYYYY() -> String {
-        return self.formatted(.dateTime.month(.wide).year())
-    }
-    
-    func weekDayAbbrev() -> String {
-        return self.formatted(.dateTime .weekday(.abbreviated))
-    }
-    
-    func dayNum() -> String{
-        return self.formatted(.dateTime .day())
+    func startDateOfWeek(from date: Date) -> Date{
+        let currentWeek = calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: date)
+        return calendar.date(from: currentWeek)!
     }
 }

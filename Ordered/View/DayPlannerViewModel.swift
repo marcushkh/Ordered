@@ -29,4 +29,8 @@ class DayPlannerViewModel: ObservableObject{
     func datesInAWeek(from date: Date) -> [Date]{
         model.datesInWeek(from: date)
     }
+    
+    func startDateOfWeek(from date: Date) -> Date{
+        model.startDateOfWeek(from: date)
+    }
 }

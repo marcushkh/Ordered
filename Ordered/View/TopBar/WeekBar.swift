@@ -11,7 +11,8 @@ struct WeekBar: View {
     @StateObject var viewModel = DayPlannerViewModel()
     
     var body: some View{
-        SwipeableStack(viewModel.startDateOfWeeksInAYear()){ data in
+        let mondayOfTheCurrentDate = viewModel.startDateOfWeek(from: viewModel.currentDate)
+        SwipeableStack(viewModel.startDateOfWeeksInAYear(), jumpTo: mondayOfTheCurrentDate){ data in
             Week(dayPlannerVM: viewModel, date: data)
         }
     }
@@ -19,9 +20,10 @@ struct WeekBar: View {
 
 struct SwipeableStack<WhateverTypeOfData: Hashable, Content>: View where Content : View{
     var WhateverData: [WhateverTypeOfData] = []
-    @ViewBuilder let content: (WhateverTypeOfData) -> Content
-    @State private var dragged = CGSize.zero
+    let content: (WhateverTypeOfData) -> Content
+    var jumpTo: WhateverTypeOfData?
     
+    @State private var dragged = CGSize.zero
     @State var dataIndex = 1
     
     var previousExist: Bool{
@@ -31,9 +33,12 @@ struct SwipeableStack<WhateverTypeOfData: Hashable, Content>: View where Content
         return dataIndex < (WhateverData.count - 1)
     }
     
-    init(_ data: [WhateverTypeOfData], content: @escaping (WhateverTypeOfData) -> Content) {
+    init(_ data: [WhateverTypeOfData], jumpTo: WhateverTypeOfData? = nil, @ViewBuilder content: @escaping (WhateverTypeOfData) -> Content) {
         self.WhateverData = data
         self.content = content
+        if let jumpTo{
+            self.jumpTo = jumpTo
+        }
     }
     
     var body: some View{
@@ -52,6 +57,13 @@ struct SwipeableStack<WhateverTypeOfData: Hashable, Content>: View where Content
                     content(WhateverData[dataIndex + 1]) //Next week
                         .frame(width: w)
                         .offset(x: previousExist ? -w-K.horizontal_padding*2 : 0)
+                }
+            }
+            .onAppear {
+                if let jumpTo{
+                    if let pos = WhateverData.firstIndex(of: jumpTo) {
+                        dataIndex = pos
+                    }
                 }
             }
             .offset(x: dragged.width)

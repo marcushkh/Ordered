@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2C14A3102C6A0DEE00807FFB /* Date+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C14A30F2C6A0DEE00807FFB /* Date+Ext.swift */; };
 		2C15B7FA2C3D0F3600B008DB /* OrderedApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C15B7F92C3D0F3600B008DB /* OrderedApp.swift */; };
 		2C15B7FC2C3D0F3600B008DB /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C15B7FB2C3D0F3600B008DB /* ContentView.swift */; };
 		2C15B7FE2C3D0F3800B008DB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C15B7FD2C3D0F3800B008DB /* Assets.xcassets */; };
@@ -30,6 +31,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2C14A30F2C6A0DEE00807FFB /* Date+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Ext.swift"; sourceTree = "<group>"; };
 		2C15B7F62C3D0F3600B008DB /* Ordered.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Ordered.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C15B7F92C3D0F3600B008DB /* OrderedApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderedApp.swift; sourceTree = "<group>"; };
 		2C15B7FB2C3D0F3600B008DB /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -131,6 +133,7 @@
 				2C74CB3E2C59DE6F00716233 /* Sample.swift */,
 				2C3F2CDE2C561BAD008BD72A /* View+Ext.swift */,
 				2C601C5B2C5B411A00FBC8E2 /* Color+Ext.swift */,
+				2C14A30F2C6A0DEE00807FFB /* Date+Ext.swift */,
 				2C601C5D2C5B6FE600FBC8E2 /* K.swift */,
 			);
 			path = Component;
@@ -242,6 +245,7 @@
 				2C5C1C9E2C5781B30079482A /* TabBar.swift in Sources */,
 				2C15B8062C3D0F3800B008DB /* Ordered.xcdatamodeld in Sources */,
 				2CC16CEF2C63B2D0002DCF79 /* DayPlannerViewModel.swift in Sources */,
+				2C14A3102C6A0DEE00807FFB /* Date+Ext.swift in Sources */,
 				2CFF02D82C60A06400627CDF /* EventBar.swift in Sources */,
 				2C601C5E2C5B6FE600FBC8E2 /* K.swift in Sources */,
 				2C601C5C2C5B411A00FBC8E2 /* Color+Ext.swift in Sources */,
