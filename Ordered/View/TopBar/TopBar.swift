@@ -9,12 +9,13 @@ import SwiftUI
 
 struct TopBar: View {
     @StateObject var viewModel: ContentViewModel
+    @StateObject var dayPlannerVM: DayPlannerViewModel
     
     var body: some View {
         //TODO: Change the Top Bar Content depending on the Tab View
         
         VStack(spacing: 0){
-            if viewModel.currentTab == .today{
+            if viewModel.currentTab == .home{
                 VStack{
                     //two icon + theme of day
                     HStack{
@@ -58,9 +59,9 @@ struct TopBar: View {
         .background(.color1, ignoresSafeAreaEdges: .top)
         
         
-        if viewModel.currentTab == .today || viewModel.currentTab == .plan{
+        if viewModel.currentTab == .home || viewModel.currentTab == .plan{
             
-            WeekBar()
+            WeekBar(viewModel: viewModel, dayPlannerVM: dayPlannerVM)
                 .padding(.horizontal, K.horizontal_padding)
                 .padding(.bottom, K.xxxsmall_size)
                 .background(.color1)
@@ -73,7 +74,7 @@ struct TopBar: View {
 
 #Preview {
     VStack(spacing: 0){
-        TopBar(viewModel: ContentViewModel())
+        TopBar(viewModel: ContentViewModel(), dayPlannerVM: DayPlannerViewModel())
         Spacer()
     }
     

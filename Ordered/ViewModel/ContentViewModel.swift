@@ -8,7 +8,8 @@
 import SwiftUI
 
 class ContentViewModel: ObservableObject{
-    @Published var currentTab = TabBarItem.today
-    @Published var currentDay = ""
+    @Published var currentTab = TabBarItem.home
     
+    @Published var showEventDetail = false
+    @Published var eventDetail: Event_Cal? = nil
 }

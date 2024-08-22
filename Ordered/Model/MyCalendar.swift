@@ -2,14 +2,17 @@
 import Foundation
 
 struct MyCalendar {
-    var today = Date()
+    var calendar = Calendar(identifier: .iso8601)
+    var today: Date
     var currentDate: Date
     var startOfYear: Date
-    var calendar = Calendar(identifier: .iso8601)
+    
     
     init() {
+        today = calendar.date(from: calendar.dateComponents([.year, .month, .day], from: Date())) ?? Date()
         currentDate = today
         startOfYear = calendar.date(from: DateComponents(year: 2024, month: 1, day: 1))!
+        
     }
     
     mutating func setCurrentDate(to dateStr: String) {
@@ -20,11 +23,15 @@ struct MyCalendar {
         }
     }
     
+    mutating func setCurrentDate(to date: Date) {
+        currentDate = date
+    }
+    
     //init / load dates
     func datesInYear() -> [Date] {
-        let range = calendar.range(of: .day, in: .year, for: currentDate)!
+        let range = calendar.range(of: .day, in: .year, for: startOfYear)!
         let datesArrInYear = range.compactMap({ i in
-            calendar.date(byAdding:.day, value: i - 1, to: currentDate)
+            calendar.date(byAdding:.day, value: i - 1, to: startOfYear)
         })
         return datesArrInYear
     }

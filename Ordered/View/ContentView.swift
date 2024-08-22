@@ -11,6 +11,7 @@ import CoreData
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @StateObject var viewModel = ContentViewModel()
+    @StateObject var dayPlannerVM = DayPlannerViewModel()
     
     var body: some View {
         GeometryReader{ geo in
@@ -19,17 +20,32 @@ struct ContentView: View {
             
             VStack(spacing: 0){
                 //Top Bar
-                TopBar(viewModel: viewModel)
+                TopBar(viewModel: viewModel, dayPlannerVM: dayPlannerVM)
                 
                 //Records
-                ScrollView {
-                    MainList()
-                }
+                MainList(viewModel: viewModel, dayPlannerVM: dayPlannerVM)
+                    .ignoresSafeArea()
+                
             }
             .frame(width: w, height: h)
             // TabBar
             .overlay(alignment: .bottom){
                 BottomBar(viewModel: viewModel)
+            }
+            //Pop up detail
+            .overlay{
+                if viewModel.showEventDetail{
+                    ZStack(alignment: .bottom){
+                        Color(.black)
+                            .opacity(0.3)
+                            .ignoresSafeArea()
+                            .onTapGesture {
+                                viewModel.showEventDetail = false
+                            }
+                        
+                        Text("HIHIHI")
+                    }
+                }
             }
         }
     }

@@ -10,9 +10,11 @@ import SwiftUI
 @main
 struct OrderedApp: App {
     let persistenceController = PersistenceController.shared
+    @AppStorage("preload") var preload: Bool = false
     
     //To be deleted:
     private var viewContext = PersistenceController.shared.container.viewContext
+    
     
     var body: some Scene {
         WindowGroup {

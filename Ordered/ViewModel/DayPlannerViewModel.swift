@@ -18,6 +18,10 @@ class DayPlannerViewModel: ObservableObject{
         model.setCurrentDate(to: dateStr)
     }
     
+    func setCurrentDate(to date: Date){
+        model.setCurrentDate(to: date)
+    }
+    
     func dates() -> [Date] {
         model.datesInYear()
     }
@@ -32,5 +36,17 @@ class DayPlannerViewModel: ObservableObject{
     
     func startDateOfWeek(from date: Date) -> Date{
         model.startDateOfWeek(from: date)
+    }
+    
+    func startDateOfCurrentDate() -> Date{
+        return model.startDateOfWeek(from: currentDate)
+    }
+    
+    func currentPositionInWeek() -> Int{
+        let startOfWeek = startDateOfWeek(from: currentDate)
+        let datesInAWeek = datesInAWeek(from: startOfWeek)
+        let position = datesInAWeek.firstIndex(of: currentDate) ?? 0
+        
+        return position
     }
 }

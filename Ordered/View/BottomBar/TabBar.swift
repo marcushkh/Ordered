@@ -51,7 +51,7 @@ struct TabBar: View {
 }
 
 enum TabBarItem: String, CaseIterable, Identifiable {
-    case today
+    case home
     case plan
     case startNow
     case statistic
@@ -61,7 +61,7 @@ enum TabBarItem: String, CaseIterable, Identifiable {
     
     var icon: String {
         switch self {
-        case .today:
+        case .home:
             return "house"
         case .plan:
             return "list.clipboard"
@@ -76,7 +76,7 @@ enum TabBarItem: String, CaseIterable, Identifiable {
     
     var label: String {
         switch self {
-        case .today:
+        case .home:
             return "Home"
         case .plan:
             return "Plan"
