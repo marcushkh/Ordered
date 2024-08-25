@@ -3,32 +3,49 @@ import Foundation
 
 struct MyCalendar {
     var calendar = Calendar(identifier: .iso8601)
-    var today: Date // Let VM handle this
-    var currentDate: Date //Let VM handle this
-    var startOfYear: Date //Let Init handle this
-    
+    var today: Date
+    var currentDate: Date
+    var startOfYear: Date
+    let dateFormatter = DateFormatter()
     
     init() {
+        calendar.timeZone = TimeZone(identifier: "UTC")!
+        dateFormatter.timeZone = TimeZone(identifier: "UTC")!
+        dateFormatter.dateFormat = "yyyyMMdd"
+        
         today = calendar.date(from: calendar.dateComponents([.year, .month, .day], from: Date())) ?? Date()
         currentDate = today
         startOfYear = calendar.date(from: DateComponents(year: 2024, month: 1, day: 1))!
         
     }
     
-    mutating func setCurrentDate(to dateStr: String) {//VM
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyyMMdd"
+    mutating func setCurrentDate(to dateStr: String) {
         if let d = dateFormatter.date(from: dateStr) {
             currentDate = d
         }
     }
     
-    mutating func setCurrentDate(to date: Date) {//VM
+    mutating func setCurrentDate(to date: Date) {
         currentDate = date
     }
     
+    static func getDate(from dateString: String) -> Date{
+        let dateFormatter = DateFormatter()
+        dateFormatter.timeZone = TimeZone(identifier: "UTC")!
+        dateFormatter.dateFormat = "yyyyMMdd"
+        
+        return dateFormatter.date(from: dateString) ?? Date()
+    }
+    
+    static func getDate(from date: Date) -> Date{
+        var calendar = Calendar(identifier: .iso8601)
+        calendar.timeZone = TimeZone(identifier: "UTC")!
+        
+        return calendar.date(from: calendar.dateComponents([.year, .month, .day], from: date)) ?? Date()
+    }
+    
     //init / load dates
-    func datesInYear() -> [Date] {//Init
+    func datesInYear() -> [Date] {
         let range = calendar.range(of: .day, in: .year, for: startOfYear)!
         let datesArrInYear = range.compactMap({ i in
             calendar.date(byAdding:.day, value: i - 1, to: startOfYear)
@@ -36,7 +53,7 @@ struct MyCalendar {
         return datesArrInYear
     }
     
-    func datesInWeek(from date: Date) -> [Date]{//Init
+    func datesInWeek(from date: Date) -> [Date]{
         let range = calendar.range(of: .weekday, in: .weekOfYear, for: date)!
         let dateArrInWeek = range.compactMap{
             calendar.date(byAdding: .day, value: $0 - 1, to: date)
@@ -44,7 +61,7 @@ struct MyCalendar {
         return dateArrInWeek
     }
     
-    func startDateOfWeeksInAYear() -> [Date]{//Init
+    func startDateOfWeeksInAYear() -> [Date]{
         let currentWeek = calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: startOfYear)
         let startOfWeek = calendar.date(from: currentWeek)
         let range = calendar.range(of: .weekOfYear, in: .year, for: startOfYear)!

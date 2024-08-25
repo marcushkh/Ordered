@@ -9,17 +9,18 @@ import SwiftUI
 
 struct OneDay: View {
     
-    var date: String
+    var date: Date
     var pos: ViewPosition
     @StateObject var viewModel: ContentViewModel
     @StateObject var dayPlannerVM: DayPlannerViewModel
     private var calendarFetchRequest: FetchRequest<Cal>
     
-    init(date: String, pos: ViewPosition, viewModel: ContentViewModel, dayPlannerVM: DayPlannerViewModel) {
+    init(date: Date, pos: ViewPosition, viewModel: ContentViewModel, dayPlannerVM: DayPlannerViewModel) {
         self.date = date
         self.calendarFetchRequest = FetchRequest(
             entity: Cal.entity(),
-            sortDescriptors: []
+            sortDescriptors: [],
+            predicate: NSPredicate(format: "date == %@", dayPlannerVM.currentDate as NSDate)
         )
         self.pos = pos
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -96,6 +97,6 @@ struct OneDay: View {
 }
 
 #Preview {
-    OneDay(date: "20240825", pos: .centerView, viewModel: ContentViewModel(), dayPlannerVM: DayPlannerViewModel())
+    OneDay(date: Date(), pos: .centerView, viewModel: ContentViewModel(), dayPlannerVM: DayPlannerViewModel())
         .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
 }
