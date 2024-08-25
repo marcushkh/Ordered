@@ -20,7 +20,6 @@ struct OneDay: View {
         self.calendarFetchRequest = FetchRequest(
             entity: Cal.entity(),
             sortDescriptors: []
-            //            predicate: NSPredicate(format: "date == %@", date as NSDate)
         )
         self.pos = pos
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -33,10 +32,11 @@ struct OneDay: View {
     }
     
     var body: some View {
+        
         if toDoForDate.first != nil{
             ScrollView{
-                ForEach(toDoForDate.first?.sections?.array as! [Section_Cal], id: \.self){ sc in
-                    
+                ForEach(toDoForDate.first?.section_cals?.array as! [Section_Cal], id: \.self){ sc in
+
                     VStack{
                         //Section Header
                         HStack(alignment: .bottom){
