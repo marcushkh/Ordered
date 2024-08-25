@@ -51,7 +51,7 @@ struct OneDay: View {
                                 .fill(Color(hex: sc.color))
                                 .frame(width: K.medium_size, height: K.medium_size)
                                 .overlay{
-                                    ColorPicker("", selection: .constant(Color(hex: sc.parent?.color))).labelsHidden().opacity(0.015)
+                                    ColorPicker("", selection: .constant(Color(hex: sc.color))).labelsHidden().opacity(0.015)
                                 }
                             
                         }
@@ -73,7 +73,7 @@ struct OneDay: View {
                                         .fill(.color1)
                                         .frame(height: K.medium_size)
                                     
-                                    Image(systemName: ec.parent?.duration == -1 ? "checkmark" : "play")
+                                    Image(systemName: ec.duration == -1 ? "checkmark" : "play")
                                 }
                             }
                             .onTapGesture {
