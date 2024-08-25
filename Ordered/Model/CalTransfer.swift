@@ -12,6 +12,10 @@ struct CalTransfer{
     
     static func eventToEC(_ event: Event) -> Event_Cal{
         let ec = Event_Cal(context: viewContext)
+        ec.duration = event.duration
+        ec.icon = event.icon
+        ec.name = event.name
+        
         ec.parent = event
         return ec
     }
@@ -24,9 +28,11 @@ struct CalTransfer{
         }
         
         let sc = Section_Cal(context: viewContext)
-        sc.parent = section
-        sc.events = NSOrderedSet(array: arr)
+        sc.color = section.color
+        sc.name = section.name
         
+        sc.parent = section
+        sc.event_cals = NSOrderedSet(array: arr)
         return sc
     }
 }

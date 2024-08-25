@@ -7,6 +7,7 @@
 
 import SwiftUI
 import CoreData
+import PopupView
 
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
@@ -28,24 +29,18 @@ struct ContentView: View {
                 
             }
             .frame(width: w, height: h)
-            // TabBar
-            .overlay(alignment: .bottom){
+            .overlay(alignment: .bottom){// TabBar
                 BottomBar(viewModel: viewModel)
             }
-            //Pop up detail
-            .overlay{
-                if viewModel.showEventDetail{
-                    ZStack(alignment: .bottom){
-                        Color(.black)
-                            .opacity(0.3)
-                            .ignoresSafeArea()
-                            .onTapGesture {
-                                viewModel.showEventDetail = false
-                            }
-                        
-                        Text("HIHIHI")
-                    }
-                }
+            .popup(isPresented: $viewModel.showEventDetail){
+                EventDetailPopup(viewModel: viewModel)
+            } customize: {
+                $0
+                    .type(.floater())
+                    .closeOnTap(false)
+                    .closeOnTapOutside(true)
+                    .backgroundColor(.black.opacity(0.5))
+                    
             }
         }
     }

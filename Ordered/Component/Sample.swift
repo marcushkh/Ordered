@@ -9,5 +9,12 @@ import Foundation
 import CoreData
 
 struct Sample{
-
+    static let sampleEC = {
+        let context = PersistenceController.preview.container.viewContext
+        let fetchRequest: NSFetchRequest<Event_Cal> = Event_Cal.fetchRequest()
+        fetchRequest.fetchLimit = 1
+        
+        let results = try! context.fetch(fetchRequest)
+        return results.first!
+    }()
 }

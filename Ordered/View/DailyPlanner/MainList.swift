@@ -14,7 +14,7 @@ struct MainList: View {
     var body: some View {
         GeometryReader{geo in
             SwipeableStack(dayPlannerVM.dates(), jumpTo: dayPlannerVM.currentDate) { d, pos in
-                OneDay(date: d, pos: pos, viewModel: viewModel, dayPlannerVM: dayPlannerVM)
+                OneDay(date: "20240825", pos: pos, viewModel: viewModel, dayPlannerVM: dayPlannerVM)
             }
             .frame(height: geo.size.height)
             

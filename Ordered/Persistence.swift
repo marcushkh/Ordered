@@ -36,13 +36,18 @@ struct PersistenceController {
 
         let ec = Event_Cal(context: viewContext)
         ec.parent = e1
+        ec.duration = e1.duration
+        ec.icon = e1.icon
+        ec.name = e1.name
         
         let sc = Section_Cal(context: viewContext)
         sc.parent = s1
-        sc.events = NSOrderedSet(array: [ec])
+        sc.event_cals = NSOrderedSet(array: [ec])
+        sc.color = s1.color
+        sc.name = s1.name
         
         let cal = Cal(context: viewContext)
-        cal.date = Date()
+        cal.date = "20240825"
         cal.sections = NSOrderedSet(array: [sc])
         cal.theme = "Theme"
         

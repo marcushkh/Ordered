@@ -9,13 +9,13 @@ import SwiftUI
 
 struct OneDay: View {
     
-    var date: Date
+    var date: String
     var pos: ViewPosition
     @StateObject var viewModel: ContentViewModel
     @StateObject var dayPlannerVM: DayPlannerViewModel
     private var calendarFetchRequest: FetchRequest<Cal>
     
-    init(date: Date, pos: ViewPosition, viewModel: ContentViewModel, dayPlannerVM: DayPlannerViewModel) {
+    init(date: String, pos: ViewPosition, viewModel: ContentViewModel, dayPlannerVM: DayPlannerViewModel) {
         self.date = date
         self.calendarFetchRequest = FetchRequest(
             entity: Cal.entity(),
@@ -37,36 +37,35 @@ struct OneDay: View {
             ScrollView{
                 ForEach(toDoForDate.first?.sections?.array as! [Section_Cal], id: \.self){ sc in
                     
-                    
                     VStack{
                         //Section Header
                         HStack(alignment: .bottom){
                             
-                            Text(sc.parent?.name ?? "")
+                            Text(sc.name ?? "")
                                 .font(.title3)
                                 .bold()
                             
                             Spacer()
                             
                             Circle()
-                                .fill(Color(hex: sc.parent?.color))
+                                .fill(Color(hex: sc.color))
                                 .frame(width: K.medium_size, height: K.medium_size)
                                 .overlay{
                                     ColorPicker("", selection: .constant(Color(hex: sc.parent?.color))).labelsHidden().opacity(0.015)
                                 }
                             
                         }
-                        
+
                         Divider()
                             .background(Color.blue)
                             .frame(height: 2)
                             .padding(.top, -8)
                         
                         //Events
-                        ForEach(sc.events?.array as! [Event_Cal], id: \.self){ ec in
+                        ForEach(sc.event_cals?.array as! [Event_Cal], id: \.self){ ec in
                             HStack{
-                                EventInfo(section: sc, event: ec)
-                                
+                                EventInfo(ec: ec)
+
                                 Spacer()
                                 
                                 ZStack{
@@ -97,6 +96,6 @@ struct OneDay: View {
 }
 
 #Preview {
-    OneDay(date: Date(), pos: .centerView, viewModel: ContentViewModel(), dayPlannerVM: DayPlannerViewModel())
+    OneDay(date: "20240825", pos: .centerView, viewModel: ContentViewModel(), dayPlannerVM: DayPlannerViewModel())
         .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
 }
