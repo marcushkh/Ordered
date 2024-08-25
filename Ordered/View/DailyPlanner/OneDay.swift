@@ -20,7 +20,7 @@ struct OneDay: View {
         self.calendarFetchRequest = FetchRequest(
             entity: Cal.entity(),
             sortDescriptors: [],
-            predicate: NSPredicate(format: "date == %@", dayPlannerVM.currentDate as NSDate)
+            predicate: NSPredicate(format: "date == %@", date as NSDate)
         )
         self.pos = pos
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -91,6 +91,13 @@ struct OneDay: View {
                 if pos == .centerView{
                     dayPlannerVM.setCurrentDate(to: date)
                 }
+            }
+        }
+        else{
+            ZStack{
+                Rectangle()
+                    .fill(.color1)
+                Text("This is Empty Try to add")
             }
         }
     }

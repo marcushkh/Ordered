@@ -24,7 +24,7 @@ struct PersistenceController {
         
         let e2 = Event(context: viewContext)
         e2.duration = 1000 //seconds
-        e2.icon = "🛏️"
+        e2.icon = "😎"
         e2.isActive = true
         e2.name = "Event 2"
         e2.order = 2
@@ -40,16 +40,43 @@ struct PersistenceController {
         ec.icon = e1.icon
         ec.name = e1.name
         
+        let ec2 = Event_Cal(context: viewContext)
+        ec2.parent = e2
+        ec2.duration = e2.duration
+        ec2.icon = e2.icon
+        ec2.name = e2.name
+        
         let sc = Section_Cal(context: viewContext)
         sc.parent = s1
         sc.event_cals = NSOrderedSet(array: [ec])
         sc.color = s1.color
         sc.name = s1.name
         
+        let sc2 = Section_Cal(context: viewContext)
+        sc2.parent = s1
+        sc2.event_cals = NSOrderedSet(array: [ec2])
+        sc2.color = s1.color
+        sc2.name = s1.name
+        
         let cal = Cal(context: viewContext)
-        cal.date = MyCalendar.getDate(from: "20240825")
+        cal.date = MyCalendar.getDate(from: "20240823")
         cal.section_cals = NSOrderedSet(array: [sc])
         cal.theme = "Theme"
+        
+        let cal2 = Cal(context: viewContext)
+        cal2.date = MyCalendar.getDate(from: "20240824")
+        cal2.section_cals = NSOrderedSet(array: [sc2])
+        cal2.theme = "Theme"
+        
+        let cal3 = Cal(context: viewContext)
+        cal3.date = MyCalendar.getDate(from: "20240825")
+        cal3.section_cals = NSOrderedSet(array: [sc])
+        cal3.theme = "Theme"
+        
+        let cal4 = Cal(context: viewContext)
+        cal4.date = MyCalendar.getDate(from: "20240826")
+        cal4.section_cals = NSOrderedSet(array: [sc2])
+        cal4.theme = "Theme"
         
         do {
             try viewContext.save()
