@@ -10,6 +10,7 @@ import Foundation
 struct CalTransfer{
     private static let viewContext = PersistenceController.shared.container.viewContext
     
+    
     static func eventToEC(_ event: Event) -> Event_Cal{
         let ec = Event_Cal(context: viewContext)
         ec.duration = event.duration
