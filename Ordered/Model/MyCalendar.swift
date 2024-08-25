@@ -3,9 +3,9 @@ import Foundation
 
 struct MyCalendar {
     var calendar = Calendar(identifier: .iso8601)
-    var today: Date
-    var currentDate: Date
-    var startOfYear: Date
+    var today: Date // Let VM handle this
+    var currentDate: Date //Let VM handle this
+    var startOfYear: Date //Let Init handle this
     
     
     init() {
@@ -15,7 +15,7 @@ struct MyCalendar {
         
     }
     
-    mutating func setCurrentDate(to dateStr: String) {
+    mutating func setCurrentDate(to dateStr: String) {//VM
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyyMMdd"
         if let d = dateFormatter.date(from: dateStr) {
@@ -23,12 +23,12 @@ struct MyCalendar {
         }
     }
     
-    mutating func setCurrentDate(to date: Date) {
+    mutating func setCurrentDate(to date: Date) {//VM
         currentDate = date
     }
     
     //init / load dates
-    func datesInYear() -> [Date] {
+    func datesInYear() -> [Date] {//Init
         let range = calendar.range(of: .day, in: .year, for: startOfYear)!
         let datesArrInYear = range.compactMap({ i in
             calendar.date(byAdding:.day, value: i - 1, to: startOfYear)
@@ -36,7 +36,7 @@ struct MyCalendar {
         return datesArrInYear
     }
     
-    func datesInWeek(from date: Date) -> [Date]{
+    func datesInWeek(from date: Date) -> [Date]{//Init
         let range = calendar.range(of: .weekday, in: .weekOfYear, for: date)!
         let dateArrInWeek = range.compactMap{
             calendar.date(byAdding: .day, value: $0 - 1, to: date)
@@ -44,7 +44,7 @@ struct MyCalendar {
         return dateArrInWeek
     }
     
-    func startDateOfWeeksInAYear() -> [Date]{
+    func startDateOfWeeksInAYear() -> [Date]{//Init
         let currentWeek = calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: startOfYear)
         let startOfWeek = calendar.date(from: currentWeek)
         let range = calendar.range(of: .weekOfYear, in: .year, for: startOfYear)!

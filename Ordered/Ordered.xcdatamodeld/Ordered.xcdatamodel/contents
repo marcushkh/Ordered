@@ -3,7 +3,7 @@
     <entity name="Cal" representedClassName="Cal" syncable="YES" codeGenerationType="class">
         <attribute name="date" optional="YES" attributeType="String"/>
         <attribute name="theme" optional="YES" attributeType="String"/>
-        <relationship name="sections" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Section_Cal" inverseName="cal" inverseEntity="Section_Cal"/>
+        <relationship name="section_cals" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Section_Cal" inverseName="cal" inverseEntity="Section_Cal"/>
     </entity>
     <entity name="Day" representedClassName="Day" syncable="YES" codeGenerationType="class">
         <attribute name="name" optional="YES" attributeType="String"/>
@@ -41,7 +41,7 @@
     <entity name="Section_Cal" representedClassName="Section_Cal" syncable="YES" codeGenerationType="class">
         <attribute name="color" optional="YES" attributeType="String"/>
         <attribute name="name" optional="YES" attributeType="String"/>
-        <relationship name="cal" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Cal" inverseName="sections" inverseEntity="Cal"/>
+        <relationship name="cal" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Cal" inverseName="section_cals" inverseEntity="Cal"/>
         <relationship name="event_cals" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Event_Cal" inverseName="section_cal" inverseEntity="Event_Cal"/>
         <relationship name="parent" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Section" inverseName="child" inverseEntity="Section"/>
     </entity>

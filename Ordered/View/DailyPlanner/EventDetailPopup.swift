@@ -19,7 +19,7 @@ struct EventDetailPopup: View {
             .overlay(alignment: .topTrailing){
                 Image(systemName: "x.circle.fill")
                     .foregroundStyle(.cBackground, .secondary)
-                    .font(.title3)
+                    .font(.title2)
                     .onTapGesture {
                         viewModel.showEventDetail = false
                     }

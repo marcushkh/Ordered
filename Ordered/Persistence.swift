@@ -48,7 +48,7 @@ struct PersistenceController {
         
         let cal = Cal(context: viewContext)
         cal.date = "20240825"
-        cal.sections = NSOrderedSet(array: [sc])
+        cal.section_cals = NSOrderedSet(array: [sc])
         cal.theme = "Theme"
         
         do {
