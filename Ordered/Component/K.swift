@@ -30,6 +30,11 @@ enum K{
         ["🚿", "Shower", -1]
     ]
     
+    static let scheduleSample =
+    [
+        ["💼", "Work", -1],
+        ["🏫", "School", -1]
+    ]
     
 }
 //Pixels: 24

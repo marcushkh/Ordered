@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct TabBar: View {
-    @StateObject var viewModel: ContentViewModel
+    @ObservedObject var viewModel: ContentViewModel
     
     var body: some View {
         

@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct MainList: View {
-    @StateObject var viewModel: ContentViewModel
-    @StateObject var dayPlannerVM: DayPlannerViewModel
+    @ObservedObject var viewModel: ContentViewModel
+    @ObservedObject var dayPlannerVM: DayPlannerViewModel
     
     var body: some View {
         GeometryReader{geo in

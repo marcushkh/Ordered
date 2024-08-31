@@ -6,10 +6,12 @@
 //
 
 import SwiftUI
+import PopupView
 
 struct WelcomeScreen: View {
     @State var currentItem = 0
-    let listOfSteps = ["Morning Routine", "Occupation", "Personal Development", "Night Routine"]
+    @StateObject var welcomeVM = WelcomeVM()
+    let listOfSteps = ["Morning Routine", "Schedule", "Personal Development", "Night Routine"]
     
     var body: some View {
         VStack{
@@ -19,7 +21,7 @@ struct WelcomeScreen: View {
             
             SwipeableStack(listOfSteps, jumpTo: listOfSteps.first) { d, pos in
                 
-                caseSeparation(currentPage: d, listOfSteps: listOfSteps)
+                CaseSeparation(currentPage: d, listOfSteps: listOfSteps, welcomeVM: welcomeVM)
                     .onChange(of: d){
                         if pos == .centerView{
                             withAnimation {
@@ -31,20 +33,31 @@ struct WelcomeScreen: View {
         }
         .padding(.horizontal, K.horizontal_padding)
         .padding(.top)
+        .popup(isPresented: $welcomeVM.showSelectTime){
+            Text("HI")
+        } customize: {
+            $0
+                .type(.floater())
+                .closeOnTap(false)
+                .closeOnTapOutside(true)
+                .backgroundColor(.black.opacity(0.5))
+            
+        }
     }
 }
 
-struct caseSeparation: View{
+struct CaseSeparation: View{
     var currentPage: String
     var listOfSteps: [String]
+    @ObservedObject var welcomeVM: WelcomeVM
     
     var body: some View{
         switch(currentPage){
         case listOfSteps[0]:
-            MorningRoutine()
+            MorningRoutine(welcomeVM: welcomeVM)
             
         case listOfSteps[1]:
-            Text("JIJI")
+            Schedule(welcomeVM: welcomeVM)
             
         case listOfSteps[2]:
             Text("HIHI")

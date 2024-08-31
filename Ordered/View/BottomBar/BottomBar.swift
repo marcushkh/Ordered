@@ -8,8 +8,7 @@
 import SwiftUI
 
 struct BottomBar: View {
-    
-    @StateObject var viewModel: ContentViewModel
+    @ObservedObject var viewModel: ContentViewModel
     
     var body: some View {
         if [TabBarItem.home, TabBarItem.statistic, TabBarItem.setting].contains(viewModel.currentTab){

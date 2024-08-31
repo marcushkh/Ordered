@@ -11,8 +11,8 @@ struct OneDay: View {
     
     var date: Date
     var pos: ViewPosition
-    @StateObject var viewModel: ContentViewModel
-    @StateObject var dayPlannerVM: DayPlannerViewModel
+    @ObservedObject var viewModel: ContentViewModel
+    @ObservedObject var dayPlannerVM: DayPlannerViewModel
     private var calendarFetchRequest: FetchRequest<Cal>
     
     init(date: Date, pos: ViewPosition, viewModel: ContentViewModel, dayPlannerVM: DayPlannerViewModel) {
@@ -23,8 +23,8 @@ struct OneDay: View {
             predicate: NSPredicate(format: "date == %@", date as NSDate)
         )
         self.pos = pos
-        _viewModel = StateObject(wrappedValue: viewModel)
-        _dayPlannerVM = StateObject(wrappedValue: dayPlannerVM)
+        _viewModel = ObservedObject(wrappedValue: viewModel)
+        _dayPlannerVM = ObservedObject(wrappedValue: dayPlannerVM)
         
     }
     

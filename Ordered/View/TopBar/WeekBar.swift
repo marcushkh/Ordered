@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct WeekBar: View {
-    @StateObject var viewModel: ContentViewModel
-    @StateObject var dayPlannerVM: DayPlannerViewModel
+    @ObservedObject var viewModel: ContentViewModel
+    @ObservedObject var dayPlannerVM: DayPlannerViewModel
     
     var body: some View{
         
@@ -21,7 +21,7 @@ struct WeekBar: View {
 }
 
 struct Week: View{
-    @StateObject var dayPlannerVM: DayPlannerViewModel
+    @ObservedObject var dayPlannerVM: DayPlannerViewModel
     let date: Date //first day of week of all stacks
     let pos: ViewPosition
     let calendar = Calendar(identifier: .iso8601)

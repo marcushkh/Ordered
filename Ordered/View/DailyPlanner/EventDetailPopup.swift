@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct EventDetailPopup: View {
-    @StateObject var viewModel: ContentViewModel
+    @ObservedObject var viewModel: ContentViewModel
     
     var body: some View {
         VStack(spacing: 12){

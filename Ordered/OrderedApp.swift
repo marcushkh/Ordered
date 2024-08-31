@@ -19,11 +19,17 @@ struct OrderedApp: App {
     init(){
         if !initData{
             let morningRoutine = Models.saveSection(name: "Morning Routine", color: "F5D657")
+            let schedule = Models.saveSection(name: "Schedule", color: "57B2BF")
             
             for i in K.morningRoutineSample{
                 let event = Models.saveEvent(icon: i[0] as! String, name: i[1] as! String, duration: i[2] as! Int)
                 
                 Models.add(event: event, to: morningRoutine)
+            }
+            
+            for i in K.scheduleSample{
+                let event = Models.saveEvent(icon: i[0] as! String, name: i[1] as! String, duration: i[2] as! Int)
+                Models.add(event: event, to: schedule)
             }
             
             initData = true

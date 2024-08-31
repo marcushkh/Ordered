@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct TopBar: View {
-    @StateObject var viewModel: ContentViewModel
-    @StateObject var dayPlannerVM: DayPlannerViewModel
+    @ObservedObject var viewModel: ContentViewModel
+    @ObservedObject var dayPlannerVM: DayPlannerViewModel
     
     var body: some View {
         //TODO: Change the Top Bar Content depending on the Tab View
