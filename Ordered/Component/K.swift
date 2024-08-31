@@ -17,5 +17,19 @@ enum K{
     static let medium_size = 28.0
     static let large_size = 32.0
     static let xlarge_size = 36.0
+    
+    static let morningRoutineSample =
+    [
+        ["☀️", "Wake Up", -1],
+        ["🪥", "Brush", -1],
+        ["🛏️", "Make Bed", -1],
+        ["☕️", "Coffee", -1],
+        ["🍽️", "Breakfast", -1],
+        ["🧠", "Meditation", 30],
+        ["🏃‍♂️", "Exercise", 30],
+        ["🚿", "Shower", -1]
+    ]
+    
+    
 }
 //Pixels: 24

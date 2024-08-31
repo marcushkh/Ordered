@@ -11,7 +11,7 @@ struct Models{
     static private var viewContext = PersistenceController.shared.container.viewContext
     
     static func swapOrder<T: OrderedItem>(item1: inout T, item2: inout T){
-        var tmp: Int16 = item1.order
+        let tmp: Int16 = item1.order
         item1.order = item2.order
         item2.order = tmp
         
@@ -22,36 +22,56 @@ struct Models{
         }
     }
     
-    static func createEvent(icon: String, name: String, duration: Int){ //duration is counted as seconds
-        let newEvent = Event(context: viewContext)
-        newEvent.icon = icon
-        newEvent.name = name
-        newEvent.duration = Int32(duration)
-        newEvent.isActive = true
-        newEvent.order = getHighestOrder(c: ModelName.Event) + 1
+    static func saveEvent(icon: String, name: String, duration: Int, event: Event? = nil) -> Event {
+        let eventToSave = event ?? Event(context: viewContext)
         
-        do{
-            try viewContext.save()
-        }catch{
-            print("Error")
+        eventToSave.icon = icon
+        eventToSave.name = name
+        eventToSave.duration = Int32(duration)
+        
+        if event == nil {
+            eventToSave.isActive = true
+            eventToSave.order = getHighestOrder(c: ModelName.Event) + 1
         }
+        
+        do {
+            try viewContext.save()
+        } catch {
+            print("Failed to save event: \(error.localizedDescription)")
+        }
+        
+        return eventToSave
     }
     
-    static func createSection(name: String, color: String){
-        let newSection = Section(context: viewContext)
-        newSection.name = name
-        newSection.color = color
-        newSection.order = getHighestOrder(c: ModelName.Section) + 1
+    static func saveSection(name: String, color: String, section: Section? = nil) -> Section{
+        let sectionToSave = section ?? Section(context: viewContext)
+        
+        sectionToSave.name = name
+        sectionToSave.color = color
+        
+        if section == nil{
+            sectionToSave.order = getHighestOrder(c: ModelName.Section) + 1
+        }
         
         do{
             try viewContext.save()
         }catch{
             print("Error")
         }
+        return sectionToSave
     }
     
     static func add(event: Event, to section: Section){
-        //        section.events.insert(event
+        if let events = section.events?.mutableCopy() as? NSMutableOrderedSet {
+            events.add(event)
+            section.events = events
+        }
+        
+        do {
+            try viewContext.save()
+        } catch {
+            print("Failed to save event: \(error.localizedDescription)")
+        }
     }
     
     static func remove(event: Event, from section: Section){

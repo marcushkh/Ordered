@@ -37,7 +37,7 @@ struct OneDay: View {
         if toDoForDate.first != nil{
             ScrollView{
                 ForEach(toDoForDate.first?.section_cals?.array as! [Section_Cal], id: \.self){ sc in
-
+                    
                     VStack{
                         //Section Header
                         HStack(alignment: .bottom){
@@ -56,7 +56,7 @@ struct OneDay: View {
                                 }
                             
                         }
-
+                        
                         Divider()
                             .background(Color.blue)
                             .frame(height: 2)
@@ -66,7 +66,7 @@ struct OneDay: View {
                         ForEach(sc.event_cals?.array as! [Event_Cal], id: \.self){ ec in
                             HStack{
                                 EventInfo(ec: ec)
-
+                                
                                 Spacer()
                                 
                                 ZStack{
@@ -97,13 +97,18 @@ struct OneDay: View {
             ZStack{
                 Rectangle()
                     .fill(.color1)
-                Text("This is Empty Try to add")
+                Text("Sorry this day is too far for adding")
+            }
+            .onChange(of: date) {
+                if pos == .centerView{
+                    dayPlannerVM.setCurrentDate(to: date)
+                }
             }
         }
     }
 }
 
 #Preview {
-    OneDay(date: Date(), pos: .centerView, viewModel: ContentViewModel(), dayPlannerVM: DayPlannerViewModel())
+    OneDay(date: MyCalendar.getDate(from: "20240826"), pos: .centerView, viewModel: ContentViewModel(), dayPlannerVM: DayPlannerViewModel())
         .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
 }

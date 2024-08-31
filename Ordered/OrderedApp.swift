@@ -10,19 +10,41 @@ import SwiftUI
 @main
 struct OrderedApp: App {
     let persistenceController = PersistenceController.shared
-    @AppStorage("preload") var preload: Bool = false
+    @AppStorage("welcomeScreen") var welcomeScreen: Bool = false
+    @AppStorage("initData") var initData: Bool = false
     
     //To be deleted:
     private var viewContext = PersistenceController.shared.container.viewContext
     
+    init(){
+        if !initData{
+            let morningRoutine = Models.saveSection(name: "Morning Routine", color: "F5D657")
+            
+            for i in K.morningRoutineSample{
+                let event = Models.saveEvent(icon: i[0] as! String, name: i[1] as! String, duration: i[2] as! Int)
+                
+                Models.add(event: event, to: morningRoutine)
+            }
+            
+            initData = true
+        }
+    }
+    
     
     var body: some Scene {
         WindowGroup {
-            ContentView()
-                .environment(\.managedObjectContext, persistenceController.container.viewContext)
-                .task{
-                    //Load Data
-                }
+            if !welcomeScreen{
+                
+                WelcomeScreen()
+                    .environment(\.managedObjectContext, persistenceController.container.viewContext)
+            }
+            else{
+                ContentView()
+                    .environment(\.managedObjectContext, persistenceController.container.viewContext)
+                    .task{
+                        //Load Data
+                    }
+            }
         }
     }
     

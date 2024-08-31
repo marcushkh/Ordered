@@ -99,6 +99,5 @@ struct SwipeableStack<WhateverTypeOfData: Hashable, Content>: View where Content
                     })
             )
         }
-        //        .frame(height: 52)
     }
 }
