@@ -21,6 +21,7 @@ struct PersistenceController {
         e1.isActive = true
         e1.name = "Event 1"
         e1.order = 1
+        e1.startTime = "20:14"
         
         let e2 = Event(context: viewContext)
         e2.duration = 1000 //seconds
@@ -57,11 +58,11 @@ struct PersistenceController {
         sc.color = s1.color
         sc.name = s1.name
         
-//        let sc2 = Section_Cal(context: viewContext)
-//        sc2.parent = s1
-//        sc2.event_cals = NSOrderedSet(array: [ec2])
-//        sc2.color = s1.color
-//        sc2.name = s1.name
+        let sc2 = Section_Cal(context: viewContext)
+        sc2.parent = s1
+        sc2.event_cals = NSOrderedSet(array: [ec2])
+        sc2.color = s1.color
+        sc2.name = s1.name
         
         let cal = Cal(context: viewContext)
         cal.date = MyCalendar.getDate(from: "20240823")
@@ -70,7 +71,7 @@ struct PersistenceController {
         
         let cal2 = Cal(context: viewContext)
         cal2.date = MyCalendar.getDate(from: "20240824")
-        cal2.section_cals = NSOrderedSet(array: [sc])
+        cal2.section_cals = NSOrderedSet(array: [sc2])
         cal2.theme = "Theme"
         
         let cal3 = Cal(context: viewContext)
@@ -80,7 +81,7 @@ struct PersistenceController {
         
         let cal4 = Cal(context: viewContext)
         cal4.date = MyCalendar.getDate(from: "20240826")
-        cal4.section_cals = NSOrderedSet(array: [sc])
+        cal4.section_cals = NSOrderedSet(array: [sc2])
         cal4.theme = "Theme"
         
         do {

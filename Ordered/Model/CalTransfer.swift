@@ -16,6 +16,8 @@ struct CalTransfer{
         ec.duration = event.duration
         ec.icon = event.icon
         ec.name = event.name
+//        ec.startTime = event.startTime
+//        ec.endTime = event.endTime
         
         ec.parent = event
         return ec

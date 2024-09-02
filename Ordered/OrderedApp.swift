@@ -17,7 +17,7 @@ struct OrderedApp: App {
     private var viewContext = PersistenceController.shared.container.viewContext
     
     init(){
-        if !initData{
+        if !initData{ //Need to add the logic of if the data is not empty, initData = true
             let morningRoutine = Models.saveSection(name: "Morning Routine", color: "F5D657")
             let schedule = Models.saveSection(name: "Schedule", color: "57B2BF")
             
@@ -40,7 +40,6 @@ struct OrderedApp: App {
     var body: some Scene {
         WindowGroup {
             if !welcomeScreen{
-                
                 WelcomeScreen()
                     .environment(\.managedObjectContext, persistenceController.container.viewContext)
             }

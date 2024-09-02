@@ -13,7 +13,7 @@ struct EventDetailPopup: View {
     var body: some View {
         VStack(spacing: 12){
             HStack{
-                EventInfo(ec: viewModel.eventDetail)
+                ECInfo(ec: viewModel.eventDetail!)
                 Spacer()
             }
             .overlay(alignment: .topTrailing){

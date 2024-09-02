@@ -34,14 +34,14 @@ struct WelcomeScreen: View {
         .padding(.horizontal, K.horizontal_padding)
         .padding(.top)
         .popup(isPresented: $welcomeVM.showSelectTime){
-            Text("HI")
+            TimeSelection(isPresented: $welcomeVM.showSelectTime, event: $welcomeVM.selectedEvent, eventList: $welcomeVM.scheduleEvents)
         } customize: {
             $0
                 .type(.floater())
                 .closeOnTap(false)
                 .closeOnTapOutside(true)
                 .backgroundColor(.black.opacity(0.5))
-            
+                .dragToDismiss(false)
         }
     }
 }

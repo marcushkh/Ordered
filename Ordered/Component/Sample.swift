@@ -26,4 +26,22 @@ struct Sample{
         let results = try! context.fetch(fetchRequest)
         return results.first!
     }()
+    
+    static let sampleEvent = {
+        let context = PersistenceController.preview.container.viewContext
+        let fetchRequest: NSFetchRequest<Event> = Event.fetchRequest()
+        fetchRequest.fetchLimit = 1
+        
+        let results = try! context.fetch(fetchRequest)
+        return results.first!
+    }()
+    
+    static let sampleSection = {
+        let context = PersistenceController.preview.container.viewContext
+        let fetchRequest: NSFetchRequest<Section> = Section.fetchRequest()
+        fetchRequest.fetchLimit = 1
+        
+        let results = try! context.fetch(fetchRequest)
+        return results.first!
+    }()
 }

@@ -52,30 +52,7 @@ struct Schedule: View {
                 
                 ForEach(fetchedSection.first!.events?.array as! [Event], id: \.self){ e in
                     HStack{
-                        HStack{
-                            ZStack{
-                                Circle()
-                                    .fill(Color(hex: fetchedSection.first!.color))
-                                    .frame(height: K.xlarge_size)
-                                
-                                Text(e.icon ?? "")
-                                    .font(.custom("", size: K.large_size))
-                                    .shadow(radius: K.medium_size)
-                            }
-                            .padding(.trailing)
-                            
-                            VStack(alignment: .leading){
-                                Text(e.name ?? "")
-                                    .font(.title3)
-                                
-                                if e.duration != -1 {
-                                    Text(String(e.duration) + " min")
-                                        .font(.callout)
-                                        .foregroundStyle(.secondary)
-                                }
-                                
-                            }
-                        }
+                        EventInfo(s: fetchedSection.first!, e: e)
                         
                         Spacer()
                         
@@ -114,5 +91,5 @@ struct Schedule: View {
 
 #Preview {
     Schedule(welcomeVM: WelcomeVM())
-    .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+        .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
 }

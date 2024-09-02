@@ -8,27 +8,37 @@
 import SwiftUI
 
 struct EventInfo: View {
-    @State var ec: Event_Cal?
+    @ObservedObject var s: Section
+    @ObservedObject var e: Event
     
     var body: some View {
         HStack{
             ZStack{
                 Circle()
-                    .fill(Color(hex: ec?.section_cal?.color))
+                    .fill(Color(hex: s.color))
                     .frame(height: K.xlarge_size)
                 
-                Text(ec?.icon ?? "")
+                Text(e.icon ?? "")
                     .font(.custom("", size: K.large_size))
                     .shadow(radius: K.medium_size)
             }
             .padding(.trailing)
             
             VStack(alignment: .leading){
-                Text(ec?.name ?? "")
+                Text(e.name ?? "")
                     .font(.title3)
                 
-                if ec?.duration != -1 && ec?.duration != nil {
-                    Text(String(ec?.duration ?? 0))
+                if e.startTime != nil {
+                    HStack(spacing: 0){
+                        Text(e.startTime ?? "")
+                        Text(" - ")
+                        Text(e.endTime ?? "")
+                    }
+                    .font(.callout)
+                    .foregroundStyle(.secondary)
+                }
+                else if e.duration != -1{
+                    Text(String(e.duration))
                         .font(.callout)
                         .foregroundStyle(.secondary)
                 }
@@ -39,5 +49,5 @@ struct EventInfo: View {
 }
 
 #Preview {
-    EventInfo(ec: Sample.sampleEC)
+    EventInfo(s: Sample.sampleSection, e: Sample.sampleEvent)
 }

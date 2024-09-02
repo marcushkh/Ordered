@@ -65,7 +65,7 @@ struct OneDay: View {
                         //Events
                         ForEach(sc.event_cals?.array as! [Event_Cal], id: \.self){ ec in
                             HStack{
-                                EventInfo(ec: ec)
+                                ECInfo(ec: ec)
                                 
                                 Spacer()
                                 
