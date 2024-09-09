@@ -19,7 +19,7 @@ struct WelcomeScreen: View {
             
             Spacer()
             
-            SwipeableStack(listOfSteps, jumpTo: listOfSteps.first) { d, pos in
+            SwipeableStack(listOfSteps, jumpTo: listOfSteps[currentItem]) { d, pos in
                 
                 CaseSeparation(currentPage: d, listOfSteps: listOfSteps, welcomeVM: welcomeVM)
                     .onChange(of: d){
@@ -60,10 +60,10 @@ struct CaseSeparation: View{
             Schedule(welcomeVM: welcomeVM)
             
         case listOfSteps[2]:
-            Text("HIHI")
+            Personal(welcomeVM: welcomeVM)
             
         case listOfSteps[3]:
-            Text("JFDI")
+            NightRoutine(welcomeVM: welcomeVM)
             
         default:
             Text("Default")

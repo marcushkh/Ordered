@@ -39,6 +39,16 @@ struct PersistenceController {
         s2.color = "57B2BF"
         s2.name = "Schedule"
         s2.events = NSOrderedSet(array: [e2])
+        
+        let s3 = Section(context: viewContext)
+        s3.color = "F59057"
+        s3.name = "Personal"
+        s3.events = NSOrderedSet(array: [e2])
+        
+        let s4 = Section(context: viewContext)
+        s4.color = "8057F5"
+        s4.name = "Night Routine"
+        s4.events = NSOrderedSet(array: [e1])
 
         let ec = Event_Cal(context: viewContext)
         ec.parent = e1

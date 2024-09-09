@@ -19,6 +19,13 @@ struct ProgressStepBar: View{
                 Circle()
                     .fill(i <= currentItem ? .color3 : .color1)
                     .frame(width: 40, height: i <= currentItem ? 40 : 20)
+                    .onTapGesture {
+                        if i < currentItem{
+                            withAnimation {
+                                currentItem = i
+                            }
+                        }
+                    }
                 
                 if i < listOfTitle.count - 1{
                     ZStack(alignment: .leading){

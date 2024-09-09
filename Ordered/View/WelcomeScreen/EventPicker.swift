@@ -70,18 +70,19 @@ struct EventPicker: View {
                     .background()
                     .onTapGesture {
                         if !selectedEvents.contains(e){
-                            withAnimation {
+                            withAnimation (.easeInOut(duration: 0.2)) {
                                 selectedEvents.append(e)
                             }
                             
                         }
                         else{
-                            withAnimation {
+                            withAnimation (.easeInOut(duration: 0.2)) {
                                 selectedEvents.removeAll { $0 == e }
                             }
                         }
-                        
                     }
+                    .opacity(selectedEvents.contains(e) ? 1 : 0.5)
+                    
                 }
                 
             }
