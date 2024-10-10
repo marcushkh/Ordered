@@ -18,23 +18,36 @@ enum K{
     static let large_size = 32.0
     static let xlarge_size = 36.0
     
-    static let morningRoutineSample =
-    [
-        ["☀️", "Wake Up", -1],
-        ["🪥", "Brush", -1],
-        ["🛏️", "Make Bed", -1],
-        ["☕️", "Coffee", -1],
-        ["🍽️", "Breakfast", -1],
-        ["🧠", "Meditation", 30],
-        ["🏃‍♂️", "Exercise", 30],
-        ["🚿", "Shower", -1]
+    static let defaultSection = ["Morning Routine", "Schedule", "Personal Time", "Night Routine"]
+    
+    static let allEvents : [Event] = [
+        Models.saveEvent(icon: "☀️", name: "Wake Up", duration: -1),//0
+        Models.saveEvent(icon: "🪥", name: "Brush", duration: -1),
+        Models.saveEvent(icon: "🛏️", name: "Make Bed", duration: -1),
+        Models.saveEvent(icon: "☕️", name: "Coffee", duration: -1),
+        Models.saveEvent(icon: "🍽️", name: "Breakfast", duration: -1),
+        Models.saveEvent(icon: "🧠", name: "Meditation", duration: 30),//5
+        Models.saveEvent(icon: "🏃‍♂️", name: "Exercise", duration: 30),
+        Models.saveEvent(icon: "🚿", name: "Shower", duration: -1),
+        Models.saveEvent(icon: "💼", name: "Work", duration: -1),
+        Models.saveEvent(icon: "🏫", name: "School", duration: -1),
+        Models.saveEvent(icon: "🚀", name: "Personal Project", duration: -1),//10
+        Models.saveEvent(icon: "📚", name: "Learning", duration: -1),
+        Models.saveEvent(icon: "🚀", name: "Business Idea", duration: -1),
+        Models.saveEvent(icon: "📖", name: "Reading", duration: -1),
+        Models.saveEvent(icon: "💆‍♀️", name: "Skin Care", duration: -1),
+        Models.saveEvent(icon: "📝", name: "Planning For Next Day", duration: -1),
+        Models.saveEvent(icon: "🥱", name: "Sleep", duration: -1)
+        
     ]
     
-    static let scheduleSample =
-    [
-        ["💼", "Work", -1],
-        ["🏫", "School", -1]
-    ]
+    static let morningRoutineDefault = [allEvents[0], allEvents[1], allEvents[2], allEvents[3], allEvents[4], allEvents[5],  allEvents[6], allEvents[7]]
+    
+    static let scheduleDefault = [allEvents[8], allEvents[9], allEvents[10]]
+    
+    static let personalDefault = [allEvents[10], allEvents[12], allEvents[6], allEvents[11], allEvents[13]]
+    
+    static let nightRoutineDefault = [allEvents[7], allEvents[1], allEvents[13], allEvents[14], allEvents[5], allEvents[15], allEvents[16]]
     
 }
 //Pixels: 24

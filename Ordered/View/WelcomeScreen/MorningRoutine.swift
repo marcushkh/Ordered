@@ -22,7 +22,7 @@ struct MorningRoutine: View {
                 .bold()
                 .padding(.bottom)
             
-            EventPicker(sectionName: "Morning Routine", selectedEvents: $welcomeVM.morningEvents)
+            EventPicker(sectionName: K.defaultSection[0], selectedEvents: $welcomeVM.morningEvents)
             
         }
         .padding(.top)

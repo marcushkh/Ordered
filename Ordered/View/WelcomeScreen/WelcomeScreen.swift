@@ -11,7 +11,7 @@ import PopupView
 struct WelcomeScreen: View {
     @State var currentItem = 0
     @StateObject var welcomeVM = WelcomeVM()
-    let listOfSteps = ["Morning Routine", "Schedule", "Personal Development", "Night Routine"]
+    let listOfSteps = K.defaultSection
     
     var body: some View {
         VStack{
@@ -30,6 +30,8 @@ struct WelcomeScreen: View {
                         }
                     }
             }
+            
+            Text("Next")
         }
         .padding(.horizontal, K.horizontal_padding)
         .padding(.top)

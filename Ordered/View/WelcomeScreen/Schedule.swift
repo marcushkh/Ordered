@@ -14,7 +14,7 @@ struct Schedule: View {
     
     @FetchRequest<Section>(
         sortDescriptors: [],
-        predicate: NSPredicate(format: "name == %@", "Schedule")
+        predicate: NSPredicate(format: "name == %@", K.defaultSection[1])
     )
     var fetchedSection: FetchedResults<Section>
     

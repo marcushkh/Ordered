@@ -74,6 +74,21 @@ struct Models{
         }
     }
     
+    static func add(event: [Event], to section: Section){
+        if let events = section.events?.mutableCopy() as? NSMutableOrderedSet {
+            for i in event{
+                events.add(i)
+            }
+            section.events = events
+        }
+        
+        do {
+            try viewContext.save()
+        } catch {
+            print("Failed to save event: \(error.localizedDescription)")
+        }
+    }
+    
     static func remove(event: Event, from section: Section){
         //        section.events.re
     }

@@ -47,5 +47,5 @@ struct ProgressStepBar: View{
 }
 
 #Preview {
-    ProgressStepBar(listOfTitle: ["Morning Routine", "Occupation", "Personal Development", "Night Routine"], currentItem: .constant(0))
+    ProgressStepBar(listOfTitle: K.defaultSection, currentItem: .constant(0))
 }

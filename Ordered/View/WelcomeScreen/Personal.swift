@@ -17,12 +17,12 @@ struct Personal: View {
             Text("Design Your Dream Day")
                 .font(.title2)
                 .bold()
-            Text("A Good Day Starts Every Morning")
+            Text("Be Productive After Work or School")
                 .font(.title2)
                 .bold()
                 .padding(.bottom)
             
-            EventPicker(sectionName: "Personal", selectedEvents: $welcomeVM.personalEvents)
+            EventPicker(sectionName: K.defaultSection[2], selectedEvents: $welcomeVM.personalEvents)
             
         }
         .padding(.top)

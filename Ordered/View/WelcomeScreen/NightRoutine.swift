@@ -17,12 +17,12 @@ struct NightRoutine: View {
             Text("Design Your Dream Day")
                 .font(.title2)
                 .bold()
-            Text("A Good Day Starts Every Morning")
+            Text("A Great Night Routine")
                 .font(.title2)
                 .bold()
                 .padding(.bottom)
             
-            EventPicker(sectionName: "Night Routine", selectedEvents: $welcomeVM.nightEvents)
+            EventPicker(sectionName: K.defaultSection[3], selectedEvents: $welcomeVM.nightEvents)
             
         }
         .padding(.top)
