@@ -5,6 +5,11 @@
 //  Created by Kai Hin Hung on 15/8/2024.
 //
 
+// This Class is adapted from Coding In A Nutshell Youtube Channel
+// Source: https://www.youtube.com/watch?v=PZySRHE783s&t=845s&ab_channel=CodingInANutshell
+// Date: [Date when you copied or adapted the code]
+// Modifications: I made small modification to make the jumpTo looks better when it is changed from the outside
+
 import SwiftUI
 
 struct SwipeableStack<WhateverTypeOfData: Hashable, Content>: View where Content : View{
@@ -44,6 +49,7 @@ struct SwipeableStack<WhateverTypeOfData: Hashable, Content>: View where Content
                 content(WhateverData[dataIndex], .centerView) //This week
                     .frame(width: w, height: h)
                     .offset(x: previousExist ? -w-K.horizontal_padding*2 : 0)
+
                 if nextExist{
                     content(WhateverData[dataIndex + 1], .nextView) //Next week
                         .frame(width: w, height: h)
@@ -57,16 +63,22 @@ struct SwipeableStack<WhateverTypeOfData: Hashable, Content>: View where Content
                     }
                 }
             }
-            .onChange(of: jumpTo, { oldValue, newValue in
+            .onChange(of: jumpTo) { oldValue, newValue in
                 if let jumpTo{
                     if let pos = WhateverData.firstIndex(of: jumpTo) {
-                        withAnimation(.bouncy) {
-                            dataIndex = pos
+                        let direction = (pos == dataIndex) ? 0 : (pos > dataIndex ? -1 : 1)
+                        
+                        withAnimation(.smooth(duration: 0.5)) {
+                            dragged.width = CGFloat(direction) * (w + K.horizontal_padding * 2)
                         }
                         
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                            dataIndex = pos
+                            dragged = CGSize.zero
+                        }
                     }
                 }
-            })
+            }
             .offset(x: dragged.width)
             .gesture(
                 DragGesture()

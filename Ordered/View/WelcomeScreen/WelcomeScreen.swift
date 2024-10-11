@@ -29,9 +29,27 @@ struct WelcomeScreen: View {
                             }
                         }
                     }
+                    
             }
             
-            Text("Next")
+            Text(currentItem < listOfSteps.count - 1 ? "Next" : "Start!")
+                .font(.title2)
+                .foregroundStyle(Color(.white))
+                .bold()
+                .padding([.top, .bottom], 10)
+                .padding([.leading, .trailing], UIScreen.main.bounds.width * 0.385)
+                .background(Color(hex: "484B6A"))
+                .clipShape(.rect(cornerRadius: 10))
+                .onTapGesture {
+                    withAnimation(.easeInOut) {
+                        if currentItem < listOfSteps.count - 1{
+                            currentItem += 1
+                        }
+                        else{
+                            //init database
+                        }
+                    }
+                }
         }
         .padding(.horizontal, K.horizontal_padding)
         .padding(.top)
