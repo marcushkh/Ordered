@@ -7,8 +7,7 @@
 
 // This Class is adapted from Coding In A Nutshell Youtube Channel
 // Source: https://www.youtube.com/watch?v=PZySRHE783s&t=845s&ab_channel=CodingInANutshell
-// Date: [Date when you copied or adapted the code]
-// Modifications: I made small modification to make the jumpTo looks better when it is changed from the outside
+// Modifications: I made modification to make the jumpTo looks better when it is changed from the outside
 
 import SwiftUI
 
@@ -56,6 +55,7 @@ struct SwipeableStack<WhateverTypeOfData: Hashable, Content>: View where Content
                         .offset(x: previousExist ? -w-K.horizontal_padding*2 : 0)
                 }
             }
+            //when first time
             .onAppear {
                 if let jumpTo{
                     if let pos = WhateverData.firstIndex(of: jumpTo) {
@@ -63,19 +63,18 @@ struct SwipeableStack<WhateverTypeOfData: Hashable, Content>: View where Content
                     }
                 }
             }
+            // Give animation and change the view when jumpTo is changed
             .onChange(of: jumpTo) { oldValue, newValue in
                 if let jumpTo{
                     if let pos = WhateverData.firstIndex(of: jumpTo) {
-                        let direction = (pos == dataIndex) ? 0 : (pos > dataIndex ? -1 : 1)
                         
+                        let direction = (pos == dataIndex) ? 0 : (pos > dataIndex ? -1 : 1)
                         withAnimation(.smooth(duration: 0.5)) {
                             dragged.width = CGFloat(direction) * (w + K.horizontal_padding * 2)
                         }
                         
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                            dataIndex = pos
-                            dragged = CGSize.zero
-                        }
+                        dataIndex = pos
+                        dragged = CGSize.zero
                     }
                 }
             }

@@ -13,6 +13,8 @@ struct EventPicker: View {
     @FetchRequest private var fetchedSection: FetchedResults<Section>
     @Binding var selectedEvents: [Event]
     
+    @State var draggingItem: Event? = nil
+    
     init(sectionName: String, selectedEvents: Binding<[Event]>) {
         self.sectionName = sectionName
         self._selectedEvents = selectedEvents
@@ -82,6 +84,40 @@ struct EventPicker: View {
                         }
                     }
                     .opacity(selectedEvents.contains(e) ? 1 : 0.5)
+                    
+                    //For dragging capability
+                    .dropDestination(for: String.self) { items, location in
+                        draggingItem = nil
+                        return false
+                    } isTargeted: { status in
+                        if let draggingItem, status, draggingItem.description != e.description{
+                            
+                            if let events = fetchedSection.first?.events?.mutableCopy() as? NSMutableOrderedSet {
+                                let e_index = events.index(of: e)
+                                let d_index = events.index(of: draggingItem)
+                                
+                                if e_index != d_index{
+                                    events.remove(draggingItem)
+                                    events.insert(draggingItem, at: e_index)
+                                }
+                                
+                                fetchedSection.first?.events = events.copy() as? NSOrderedSet
+                            }
+                            
+                            do{
+                                try PersistenceController.shared.container.viewContext.save()
+                            }
+                            catch{
+                                fatalError("unresolved error \(error)")
+                            }
+                        }
+                    }
+                    .draggable(e.description){
+                        Image(systemName: "pencil")
+                            .onAppear {
+                                draggingItem = e
+                            }
+                    }
                     
                 }
                 

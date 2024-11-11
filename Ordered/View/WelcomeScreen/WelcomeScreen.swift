@@ -29,7 +29,6 @@ struct WelcomeScreen: View {
                             }
                         }
                     }
-                    
             }
             
             Text(currentItem < listOfSteps.count - 1 ? "Next" : "Start!")
@@ -37,7 +36,7 @@ struct WelcomeScreen: View {
                 .foregroundStyle(Color(.white))
                 .bold()
                 .padding([.top, .bottom], 10)
-                .padding([.leading, .trailing], UIScreen.main.bounds.width * 0.385)
+                .padding([.leading, .trailing], UIScreen.main.bounds.width * 0.35)
                 .background(Color(hex: "484B6A"))
                 .clipShape(.rect(cornerRadius: 10))
                 .onTapGesture {

@@ -68,6 +68,7 @@ struct Schedule: View {
                         }
                     }
                     .background()
+                    .opacity(welcomeVM.scheduleEvents.contains(e) ? 1 : 0.5)
                     .onTapGesture {
                         if !welcomeVM.scheduleEvents.contains(e){
                             withAnimation {

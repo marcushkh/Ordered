@@ -93,18 +93,6 @@ struct Models{
         //        section.events.re
     }
     
-    static func createDay(name: String){
-        let newDay = Day(context: viewContext)
-        newDay.name = name
-        newDay.order =  getHighestOrder(c: ModelName.Day) + 1
-        
-        do{
-            try viewContext.save()
-        }catch{
-            print("Error")
-        }
-    }
-    
     static func getHighestOrder(c: ModelName) -> Int16 {
         switch(c){
         case .Event:
@@ -121,19 +109,12 @@ struct Models{
             }catch{
                 fatalError("Unresolved error \(error)")
             }
-        case .Day:
-            do{
-                let allItems = try viewContext.fetch(Day.fetchRequest()) as? [Day]
-                return allItems?.max { $0.order < $1.order }?.order ?? 1
-            }catch{
-                fatalError("Unresolved error \(error)")
-            }
         }
     }
 }
 
 enum ModelName{
-    case Event, Section, Day
+    case Event, Section
 }
 
 protocol OrderedItem {

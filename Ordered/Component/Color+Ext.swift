@@ -8,6 +8,7 @@
 import SwiftUI
 
 extension Color {
+    //Source: https://stackoverflow.com/questions/56874133/use-hex-color-in-swiftui 
     init(hex: String?) {
         
         if hex == "defaultColor" {

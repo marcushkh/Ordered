@@ -96,8 +96,8 @@ struct OneDay: View {
         else{
             ZStack{
                 Rectangle()
-                    .fill(.color1)
-                Text("Sorry this day is too far for adding")
+                    .fill(.white)
+                Text(date.description)
             }
             .onChange(of: date) {
                 if pos == .centerView{
@@ -109,6 +109,6 @@ struct OneDay: View {
 }
 
 #Preview {
-    OneDay(date: MyCalendar.getDate(from: "20240826"), pos: .centerView, viewModel: ContentViewModel(), dayPlannerVM: DayPlannerViewModel())
+    OneDay(date: MyCalendar.getDate(from: "20240890"), pos: .centerView, viewModel: ContentViewModel(), dayPlannerVM: DayPlannerViewModel())
         .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
 }

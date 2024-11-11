@@ -1,14 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23231" systemVersion="24A5331b" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23231" systemVersion="24A335" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Cal" representedClassName="Cal" syncable="YES" codeGenerationType="class">
         <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="theme" optional="YES" attributeType="String"/>
         <relationship name="section_cals" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Section_Cal" inverseName="cal" inverseEntity="Section_Cal"/>
-    </entity>
-    <entity name="Day" representedClassName="Day" syncable="YES" codeGenerationType="class">
-        <attribute name="name" optional="YES" attributeType="String"/>
-        <attribute name="order" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
-        <relationship name="sections" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Section" inverseName="day" inverseEntity="Section"/>
     </entity>
     <entity name="Event" representedClassName="Event" syncable="YES" codeGenerationType="class">
         <attribute name="duration" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
@@ -37,7 +32,6 @@
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="order" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="child" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Section_Cal" inverseName="parent" inverseEntity="Section_Cal"/>
-        <relationship name="day" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Day" inverseName="sections" inverseEntity="Day"/>
         <relationship name="events" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Event" inverseName="section" inverseEntity="Event"/>
     </entity>
     <entity name="Section_Cal" representedClassName="Section_Cal" syncable="YES" codeGenerationType="class">
@@ -47,4 +41,5 @@
         <relationship name="event_cals" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Event_Cal" inverseName="section_cal" inverseEntity="Event_Cal"/>
         <relationship name="parent" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Section" inverseName="child" inverseEntity="Section"/>
     </entity>
+    <entity name="WeekDefault" representedClassName="WeekDefault" syncable="YES" codeGenerationType="class"/>
 </model>

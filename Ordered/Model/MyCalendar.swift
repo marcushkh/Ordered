@@ -1,6 +1,9 @@
 
 import Foundation
 
+// This Class is adapted from Coding In A Nutshell Youtube Channel
+// Source: https://www.youtube.com/watch?v=PZySRHE783s&t=845s&ab_channel=CodingInANutshell
+// Modifications: I made modification to make the jumpTo looks better when it is changed from the outside
 struct MyCalendar {
     var calendar = Calendar(identifier: .iso8601)
     var today: Date

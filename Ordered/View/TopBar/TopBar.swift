@@ -33,7 +33,7 @@ struct TopBar: View {
                         Spacer()
                         
                         
-                        Text("Personal Project")
+                        Text("May 2024")
                             .font(.title2)
                             .bold()
                         

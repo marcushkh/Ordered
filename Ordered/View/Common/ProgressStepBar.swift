@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+//Source code: https://www.youtube.com/watch?v=OJAW-MXkzRM&ab_channel=SuCodee 
 struct ProgressStepBar: View{
     var listOfTitle: [String]
     @Binding var currentItem: Int //currentItem should be less than the number of ListOfTitle

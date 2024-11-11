@@ -32,17 +32,13 @@ struct OrderedApp: App {
     
     var body: some Scene {
         WindowGroup {
-            if !welcomeScreen{
-                WelcomeScreen()
-                    .environment(\.managedObjectContext, persistenceController.container.viewContext)
-            }
-            else{
-                ContentView()
-                    .environment(\.managedObjectContext, persistenceController.container.viewContext)
-                    .task{
-                        //Load Data
-                    }
-            }
+            
+            ContentView()
+                .environment(\.managedObjectContext, persistenceController.container.viewContext)
+                .task{
+                    //Load Data
+                }
+            
         }
     }
     
