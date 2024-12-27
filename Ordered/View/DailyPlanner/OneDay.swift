@@ -94,14 +94,27 @@ struct OneDay: View {
             }
         }
         else{
-            ZStack{
-                Rectangle()
-                    .fill(.white)
-                Text(date.description)
-            }
-            .onChange(of: date) {
-                if pos == .centerView{
-                    dayPlannerVM.setCurrentDate(to: date)
+            ScrollView{
+                ZStack{
+                    Rectangle()
+                        .fill(.white)
+                    VStack{
+                        Image("NoEventIcon")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(height: 300)
+                        
+                        Text("Decorate Your Schedule")
+                            .font(.title2)
+                            .bold()
+                        
+                        Spacer()
+                    }
+                }
+                .onChange(of: date) {
+                    if pos == .centerView{
+                        dayPlannerVM.setCurrentDate(to: date)
+                    }
                 }
             }
         }

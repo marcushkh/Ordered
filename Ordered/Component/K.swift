@@ -9,6 +9,7 @@ import Foundation
 
 enum K{
     static let horizontal_padding = 20.0
+    static let vertical_padding = 16.0
     
     static let xxxsmall_size = 8.0
     static let xxsmall_size = 16.0
