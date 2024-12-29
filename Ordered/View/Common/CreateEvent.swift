@@ -7,7 +7,6 @@
 
 import SwiftUI
 import MCEmojiPicker
-
  
 struct CreateEvent: View {
     @Namespace private var underlineNamespace
@@ -63,7 +62,7 @@ struct CreateEvent: View {
                 }
                 .padding(.bottom)
                 
-                //Start End Time
+                //Schedule
                 VStack{
                     Toggle(isOn: $isSchedule) {
                         Text("Schedule")
@@ -71,6 +70,11 @@ struct CreateEvent: View {
                             .bold()
                     }
                     .toggleStyle(SwitchToggleStyle(tint: .color3))
+                    .onChange(of: isSchedule) { oldValue, newValue in
+                        if newValue == true{
+                            isDuration = false
+                        }
+                    }
                     
                     ZStack{
                         RoundedRectangle(cornerRadius: 10)
@@ -112,6 +116,11 @@ struct CreateEvent: View {
                             .bold()
                     }
                     .toggleStyle(SwitchToggleStyle(tint: .color3))
+                    .onChange(of: isDuration) { oldValue, newValue in
+                        if newValue == true{
+                            isSchedule = false
+                        }
+                    }
                     
                     ZStack{
                         RoundedRectangle(cornerRadius: 10)
@@ -149,6 +158,11 @@ struct CreateEvent: View {
                 }
                 
                 Spacer()
+                
+                RoundedRectangle(cornerRadius: 20)
+                    .fill(.color3)
+                    .frame(height: 50)
+                    
             }
             .padding(.horizontal, K.horizontal_padding * 2)
             
