@@ -13,15 +13,21 @@ struct OneDay: View {
     var pos: ViewPosition
     @ObservedObject var viewModel: ContentViewModel
     @ObservedObject var dayPlannerVM: DayPlannerViewModel
+    
     private var calendarFetchRequest: FetchRequest<Cal>
+    
+    //tobe deleted
+    @State var refresh: Bool = false
     
     init(date: Date, pos: ViewPosition, viewModel: ContentViewModel, dayPlannerVM: DayPlannerViewModel) {
         self.date = date
+        
         self.calendarFetchRequest = FetchRequest(
             entity: Cal.entity(),
             sortDescriptors: [],
-            predicate: NSPredicate(format: "date == %@", date as NSDate)
+            predicate: NSPredicate(format: "date == %@", date.getYYMMDD())
         )
+        
         self.pos = pos
         _viewModel = ObservedObject(wrappedValue: viewModel)
         _dayPlannerVM = ObservedObject(wrappedValue: dayPlannerVM)
@@ -33,9 +39,9 @@ struct OneDay: View {
     }
     
     var body: some View {
-        
-        if toDoForDate.first != nil{
-            ScrollView{
+        ScrollView{
+            if toDoForDate.first != nil{
+                
                 ForEach(toDoForDate.first?.section_cals?.array as! [Section_Cal], id: \.self){ sc in
                     
                     VStack{
@@ -48,12 +54,21 @@ struct OneDay: View {
                             
                             Spacer()
                             
-                            Circle()
-                                .fill(Color(hex: sc.color))
-                                .frame(width: K.medium_size, height: K.medium_size)
-                                .overlay{
-                                    ColorPicker("", selection: .constant(Color(hex: sc.color))).labelsHidden().opacity(0.015)
-                                }
+                            
+                            ColorPicker("", selection: Binding(get: {
+                                Color(hex: sc.color)
+                            }, set: { c in
+                                let color: String = c.toHex() ?? "000000"
+                                sc.setColor(color)
+                                refresh.toggle()
+                            }))
+                            .labelsHidden()
+                            .overlay{
+                                Circle()
+                                    .fill(Color(hex: sc.color))
+                                    .frame(width: K.medium_size, height: K.medium_size)
+                            }
+                            
                             
                         }
                         
@@ -65,7 +80,7 @@ struct OneDay: View {
                         //Events
                         ForEach(sc.event_cals?.array as! [Event_Cal], id: \.self){ ec in
                             HStack{
-                                ECInfo(ec: ec)
+                                ECInfo(ec: ec, refresh: refresh)
                                 
                                 Spacer()
                                 
@@ -73,6 +88,9 @@ struct OneDay: View {
                                     Circle()
                                         .fill(.color1)
                                         .frame(height: K.medium_size)
+                                        .onChange(of: refresh) { _, _ in
+                                            print("Refreshed")
+                                        }
                                     
                                     Image(systemName: ec.duration == -1 ? "checkmark" : "play")
                                 }
@@ -86,15 +104,11 @@ struct OneDay: View {
                     .padding(.vertical)
                     .padding(.horizontal, K.horizontal_padding)
                 }
+                
+                
             }
-            .onChange(of: date) {
-                if pos == .centerView{
-                    dayPlannerVM.setCurrentDate(to: date)
-                }
-            }
-        }
-        else{
-            ScrollView{
+            else{
+                
                 ZStack{
                     Rectangle()
                         .fill(.white)
@@ -103,6 +117,9 @@ struct OneDay: View {
                             .resizable()
                             .scaledToFit()
                             .frame(height: 300)
+                            .onTapGesture {
+                                viewModel.showCreateEvent = true
+                            }
                         
                         Text("Decorate Your Schedule")
                             .font(.title2)
@@ -110,18 +127,24 @@ struct OneDay: View {
                         
                         Spacer()
                     }
+                    
                 }
-                .onChange(of: date) {
-                    if pos == .centerView{
-                        dayPlannerVM.setCurrentDate(to: date)
-                    }
-                }
+                
+                
             }
+        }
+        .onChange(of: date) {
+            if pos == .centerView{
+                dayPlannerVM.setCurrentDate(to: date)
+            }
+        }
+        .onChange(of: refresh) { _, _ in
+            print("Refreshed")
         }
     }
 }
 
 #Preview {
-    OneDay(date: MyCalendar.getDate(from: "20240890"), pos: .centerView, viewModel: ContentViewModel(), dayPlannerVM: DayPlannerViewModel())
+    OneDay(date: MyCalendar.getDate(from: "240826"), pos: .centerView, viewModel: ContentViewModel(), dayPlannerVM: DayPlannerViewModel())
         .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
 }

@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ECInfo: View {
     @ObservedObject var ec: Event_Cal
+    @State var refresh: Bool = false
     
     var body: some View {
         HStack{
@@ -20,6 +21,7 @@ struct ECInfo: View {
                 Text(ec.icon ?? "")
                     .font(.custom("", size: K.large_size))
                     .shadow(radius: K.medium_size)
+                    
             }
             .padding(.trailing)
             
@@ -34,6 +36,9 @@ struct ECInfo: View {
                 }
                 
             }
+        }
+        .onChange(of: refresh) { oldValue, newValue in
+            print("refreshed")
         }
     }
 }

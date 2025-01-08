@@ -33,7 +33,7 @@ struct TopBar: View {
                         Spacer()
                         
                         
-                        Text("May 2024")
+                        Text(dayPlannerVM.currentDate.monthYYYY())
                             .font(.title2)
                             .bold()
                         

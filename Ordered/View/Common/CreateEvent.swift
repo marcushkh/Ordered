@@ -11,6 +11,9 @@ import MCEmojiPicker
 struct CreateEvent: View {
     @Namespace private var underlineNamespace
     
+    @State var date: Date = Date()
+    @State var section_Cal: Section_Cal? = nil
+    
     @State var isPresented: Bool = false
     @State var selectedEmoji: String = "🥱"
     
@@ -24,6 +27,8 @@ struct CreateEvent: View {
     @State var isDuration: Bool = false
     @State private var selectedIndex: Int = 0
     private let durationOptions = ["5m", "10m", "30m", "1h", "More"]
+    
+    @Environment(\.dismiss) var dismiss
     
     var body: some View {
         Background(color: Color(.white), allFocusStates: [$eventNameTyping]){
@@ -159,13 +164,47 @@ struct CreateEvent: View {
                 
                 Spacer()
                 
-                RoundedRectangle(cornerRadius: 20)
-                    .fill(.color3)
-                    .frame(height: 50)
+                Button {
+                    //Submit
+                    //Create the new event
+                    let event: Event = Event.save(icon: selectedEmoji, name: eventName, duration: selectedIndex)
+                    let event_Cal = event.getEC()
                     
+                    //if no Cal -> create Cal
+                    let cal = Cal.get(date: date.getYYMMDD()) ?? Cal.new(date: date.getYYMMDD())
+                    
+                    //if no Section_Cal -> create empty Cal
+                    let new_section_Cal: Section_Cal = section_Cal ?? Section_Cal.new()
+                    
+                    //put the event_Cal into the Section_Cal
+                    new_section_Cal.add(event: event_Cal)
+                    cal.add(new_section_Cal)
+
+                    print(cal.description)
+                    
+                    dismiss()
+                } label: {
+                    ZStack{
+                        RoundedRectangle(cornerRadius: 20)
+                            .fill(.color3)
+                            .frame(height: 40)
+                            
+                        Text("Add")
+                            .font(.system(size: 20))
+                            .foregroundStyle(Color(.white))
+                            .bold()
+                        
+                    }
+                }
+                .padding(.bottom)
+                
+                
             }
             .padding(.horizontal, K.horizontal_padding * 2)
-            
+            .padding(.top)
+            .onAppear{
+                eventNameTyping = true
+            }
         }
     }
 }

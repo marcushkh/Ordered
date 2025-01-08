@@ -75,22 +75,22 @@ struct PersistenceController {
         sc2.name = s1.name
         
         let cal = Cal(context: viewContext)
-        cal.date = MyCalendar.getDate(from: "20240823")
+        cal.date = "240823"
         cal.section_cals = NSOrderedSet(array: [sc])
         cal.theme = "Theme"
         
         let cal2 = Cal(context: viewContext)
-        cal2.date = MyCalendar.getDate(from: "20240824")
+        cal2.date = "240824"
         cal2.section_cals = NSOrderedSet(array: [sc2])
         cal2.theme = "Theme"
         
         let cal3 = Cal(context: viewContext)
-        cal3.date = MyCalendar.getDate(from: "20240825")
+        cal3.date = "240825"
         cal3.section_cals = NSOrderedSet(array: [sc])
         cal3.theme = "Theme"
         
         let cal4 = Cal(context: viewContext)
-        cal4.date = MyCalendar.getDate(from: "20240826")
+        cal4.date = "240826"
         cal4.section_cals = NSOrderedSet(array: [sc2])
         cal4.theme = "Theme"
         

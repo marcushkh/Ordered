@@ -19,4 +19,10 @@ extension Date {
     func dayNum() -> String{
         return self.formatted(.dateTime .day())
     }
+    
+    func getYYMMDD() -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyMMdd"
+        return dateFormatter.string(from: self)
+    }
 }

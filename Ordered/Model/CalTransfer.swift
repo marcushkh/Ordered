@@ -11,23 +11,13 @@ struct CalTransfer{
     private static let viewContext = PersistenceController.shared.container.viewContext
     
     
-    static func eventToEC(_ event: Event) -> Event_Cal{
-        let ec = Event_Cal(context: viewContext)
-        ec.duration = event.duration
-        ec.icon = event.icon
-        ec.name = event.name
-//        ec.startTime = event.startTime
-//        ec.endTime = event.endTime
-        
-        ec.parent = event
-        return ec
-    }
+
     
     static func sectionToSC(_ section: Section) -> Section_Cal{
         var arr: [Event_Cal] = []
         
         for i in section.events?.array ?? []{
-            arr.append(eventToEC(i as! Event))
+            arr.append((i as! Event).getEC())
         }
         
         let sc = Section_Cal(context: viewContext)

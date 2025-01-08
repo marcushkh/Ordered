@@ -12,4 +12,6 @@ class ContentViewModel: ObservableObject{
     
     @Published var showEventDetail = false
     @Published var eventDetail: Event_Cal? = nil
+    
+    @Published var showCreateEvent = false
 }

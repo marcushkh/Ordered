@@ -18,7 +18,7 @@ struct MyCalendar {
         
         today = calendar.date(from: calendar.dateComponents([.year, .month, .day], from: Date())) ?? Date()
         currentDate = today
-        startOfYear = calendar.date(from: DateComponents(year: 2024, month: 1, day: 1))!
+        startOfYear = calendar.date(from: DateComponents(year: 2025, month: 1, day: 1))!
         
     }
     

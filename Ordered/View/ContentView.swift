@@ -42,6 +42,10 @@ struct ContentView: View {
                     .backgroundColor(.black.opacity(0.5))
                     
             }
+            .sheet(isPresented: $viewModel.showCreateEvent) {
+                CreateEvent(date: dayPlannerVM.currentDate)
+                    .presentationCornerRadius(K.presentationCornerRadius)
+            }
         }
 
     }
