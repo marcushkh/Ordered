@@ -29,8 +29,13 @@ struct ECInfo: View {
                 Text(ec.name ?? "")
                     .font(.title3)
                 
-                if ec.duration != -1{
-                    Text(String(ec.duration))
+                if ec.startTime != "-1" && ec.startTime != nil{
+                    Text(String(ec.startTime ?? "") + "-" + String(ec.endTime ?? ""))
+                        .font(.callout)
+                        .foregroundStyle(.secondary)
+                }
+                else if ec.duration != -1{
+                    Text(Model.duration_to_string(ec.duration))
                         .font(.callout)
                         .foregroundStyle(.secondary)
                 }

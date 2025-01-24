@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 enum K{
     static let horizontal_padding = 20.0
@@ -18,6 +19,15 @@ enum K{
     static let medium_size = 28.0
     static let large_size = 32.0
     static let xlarge_size = 36.0
+    
+    static let defaultSectionColor = [
+        "DCEDFA",
+        "D2CAF3",
+        "E3BCB5",
+        "F0DCB8",
+        "FDFBCC",
+        "E6EEDA"
+    ]
     
     static let defaultSection = ["Morning Routine", "Schedule", "Personal Time", "Night Routine"]
     

@@ -9,6 +9,7 @@ import SwiftUI
 
 struct EventDetailPopup: View {
     @ObservedObject var viewModel: ContentViewModel
+    @State var showAlert: Bool = false
     
     var body: some View {
         VStack(spacing: 12){
@@ -31,7 +32,7 @@ struct EventDetailPopup: View {
             
             HStack{
                 Button(action: {
-                    // Action for Delete
+                    showAlert = true
                 }) {
                     VStack{
                         Image(systemName: "trash")
@@ -59,7 +60,10 @@ struct EventDetailPopup: View {
                 Spacer()
                 
                 Button(action: {
-                    // Action for Delete
+                    viewModel.editEvent_Cal = viewModel.eventDetail
+                    viewModel.createEvent_Section_Cal = nil
+                    viewModel.showEventDetail = false
+                    viewModel.showCreateEvent = true
                 }) {
                     VStack{
                         Image(systemName: "square.and.pencil")
@@ -70,6 +74,16 @@ struct EventDetailPopup: View {
                     .cornerRadius(10)
                 }
             }
+            .alert(isPresented: $showAlert) {
+                Alert(  title: Text("Delete Event"),
+                        message: Text("Are you sure you want to delete this item?"),
+                        primaryButton: .destructive(Text("Delete")) {
+                            viewModel.eventDetail?.delete()
+                            viewModel.showEventDetail = false
+                        },
+                        secondaryButton: .cancel())
+            }
+
             
             Button(action: {
                 
@@ -92,6 +106,10 @@ struct EventDetailPopup: View {
         .padding(.vertical, K.large_size)
         .background(Color.white.cornerRadius(30))
         .padding(.horizontal, K.horizontal_padding)
+        .onDisappear{
+            print("Event Detail is nil now")
+            viewModel.eventDetail = nil
+        }
     }
 }
 

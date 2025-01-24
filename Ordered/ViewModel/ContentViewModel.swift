@@ -8,10 +8,18 @@
 import SwiftUI
 
 class ContentViewModel: ObservableObject{
+    @Published var refresh = false
+    
     @Published var currentTab = TabBarItem.home
     
     @Published var showEventDetail = false
     @Published var eventDetail: Event_Cal? = nil
+    @Published var editEvent_Cal: Event_Cal? = nil
     
     @Published var showCreateEvent = false
+    @Published var createEvent_Section_Cal: Section_Cal? = nil
+    
+    @Published var showChangeSection = false
+    @Published var changeSection_Cal: Section_Cal? = nil
+    @Published var insertToCal: Cal? = nil
 }

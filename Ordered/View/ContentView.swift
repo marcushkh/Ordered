@@ -42,9 +42,22 @@ struct ContentView: View {
                     .backgroundColor(.black.opacity(0.5))
                     
             }
+            .popup(isPresented: $viewModel.showChangeSection){
+                ChangeSectionName(viewModel: viewModel)
+            } customize: {
+                $0
+                    .type(.floater())
+                    .closeOnTap(false)
+                    .closeOnTapOutside(true)
+                    .backgroundColor(.black.opacity(0.5))
+            }
             .sheet(isPresented: $viewModel.showCreateEvent) {
-                CreateEvent(date: dayPlannerVM.currentDate)
+                CreateEvent(editEvent_Cal: viewModel.editEvent_Cal, date: dayPlannerVM.currentDate, section_Cal: viewModel.createEvent_Section_Cal, display: $viewModel.showCreateEvent)
                     .presentationCornerRadius(K.presentationCornerRadius)
+                    .onDisappear {
+                        viewModel.createEvent_Section_Cal = nil
+                    }
+                
             }
         }
 

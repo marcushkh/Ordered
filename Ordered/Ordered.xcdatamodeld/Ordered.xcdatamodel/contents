@@ -17,6 +17,8 @@
         <relationship name="section" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Section" inverseName="events" inverseEntity="Section"/>
     </entity>
     <entity name="Event_Cal" representedClassName="Event_Cal" syncable="YES" codeGenerationType="class">
+        <attribute name="aEndTime" optional="YES" attributeType="String"/>
+        <attribute name="aStartTime" optional="YES" attributeType="String"/>
         <attribute name="duration" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="duration_finished" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="endTime" optional="YES" attributeType="String"/>

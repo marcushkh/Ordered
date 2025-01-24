@@ -9,11 +9,15 @@ import Foundation
 
 extension Section {
     
-    static func save(name: String, color: String, section: Section? = nil) -> Section {
+    static func save(name: String?, color: String?, section: Section? = nil) -> Section {
         let sectionToSave = section ?? Section(context: Model.viewContext)
         
-        sectionToSave.name = name
-        sectionToSave.color = color
+        if let n = name{
+            sectionToSave.name = n
+        }
+        if let c = color{
+            sectionToSave.color = c
+        }
         
         if section == nil{
             sectionToSave.order = Model.getHighestOrder(c: Model.Section) + 1
@@ -65,8 +69,8 @@ extension Section_Cal {
     static func new() -> Section_Cal{
         let section = Section_Cal(context: Model.viewContext)
         section.event_cals = NSMutableOrderedSet()
-        section.color = "f0411c"
-        section.name = "new calendar"
+        section.color = K.defaultSectionColor[0]
+        section.name = "New Section"
         
         do {
             try Model.viewContext.save()
@@ -74,6 +78,31 @@ extension Section_Cal {
             print("Failed to save event: \(error.localizedDescription)")
         }
         return section
+    }
+    
+    static func save(name: String? = nil, color: String? = nil, sc: Section_Cal? = nil, cal: Cal? = nil) -> Section_Cal{ //not yet support create
+        let scToSave = sc ?? Section_Cal(context: Model.viewContext)
+        
+        if let n = name{
+            scToSave.name = n
+        }
+        if let c = color{
+            scToSave.color = c
+        }
+        
+        if let c = cal{
+            let sectionCals = c.section_cals?.mutableCopy() as? NSMutableOrderedSet
+            sectionCals?.add(scToSave)
+            cal?.section_cals = sectionCals
+        }
+        
+        
+        do{
+            try Model.viewContext.save()
+        }catch{
+            print("Error")
+        }
+        return scToSave
     }
     
     func add(event: Event_Cal){

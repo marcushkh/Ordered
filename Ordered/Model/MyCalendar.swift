@@ -12,8 +12,8 @@ struct MyCalendar {
     let dateFormatter = DateFormatter()
     
     init() {
-        calendar.timeZone = TimeZone(identifier: "UTC")!
-        dateFormatter.timeZone = TimeZone(identifier: "UTC")!
+//        calendar.timeZone = TimeZone(identifier: "UTC")!
+//        dateFormatter.timeZone = TimeZone(identifier: "UTC")!
         dateFormatter.dateFormat = "yyyyMMdd"
         
         today = calendar.date(from: calendar.dateComponents([.year, .month, .day], from: Date())) ?? Date()
@@ -34,7 +34,7 @@ struct MyCalendar {
     
     static func getDate(from dateString: String) -> Date{
         let dateFormatter = DateFormatter()
-        dateFormatter.timeZone = TimeZone(identifier: "UTC")!
+//        dateFormatter.timeZone = TimeZone(identifier: "UTC")!
         dateFormatter.dateFormat = "yyyyMMdd"
         
         return dateFormatter.date(from: dateString) ?? Date()
@@ -42,7 +42,7 @@ struct MyCalendar {
     
     static func getDate(from date: Date) -> Date{
         var calendar = Calendar(identifier: .iso8601)
-        calendar.timeZone = TimeZone(identifier: "UTC")!
+//        calendar.timeZone = TimeZone(identifier: "UTC")!
         
         return calendar.date(from: calendar.dateComponents([.year, .month, .day], from: date)) ?? Date()
     }

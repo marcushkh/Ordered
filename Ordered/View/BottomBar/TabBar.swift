@@ -33,7 +33,7 @@ struct TabBar: View {
         })
         .padding(.horizontal)
         .padding(.vertical)
-        .background(.color1.opacity(0.75))
+        .background(.color1.opacity(0.9))
         .clipShape(Capsule())
         .padding(.horizontal, K.horizontal_padding)
         .ignoresSafeArea()

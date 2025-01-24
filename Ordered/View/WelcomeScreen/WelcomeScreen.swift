@@ -59,7 +59,7 @@ struct WelcomeScreen: View {
                 .type(.floater())
                 .closeOnTap(false)
                 .closeOnTapOutside(true)
-                .backgroundColor(.black.opacity(0.5))
+                .backgroundColor(.black.opacity(0.3))
                 .dragToDismiss(false)
         }
     }

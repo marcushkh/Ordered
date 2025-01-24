@@ -1,0 +1,7591 @@
+[
+    {
+        "emoji": "😄",
+        "description": "grinning face with smiling eyes",
+        "keywords": [
+            "joy",
+            "happy",
+            "positive",
+            "smile",
+            "grinning",
+            "cheerful",
+            "eyes",
+            "laugh",
+            "smiling",
+            "fun"
+        ]
+    },
+    {
+        "emoji": "💩",
+        "description": "pile of poo",
+        "keywords": [
+            "pile",
+            "poo"
+        ]
+    },
+    {
+        "emoji": "🤡",
+        "description": "clown face",
+        "keywords": [
+            "clown"
+        ]
+    },
+    {
+        "emoji": "👻",
+        "description": "ghost",
+        "keywords": [
+            "ghost"
+        ]
+    },
+    {
+        "emoji": "👽",
+        "description": "alien",
+        "keywords": [
+            "alien"
+        ]
+    },
+    {
+        "emoji": "🤖",
+        "description": "robot",
+        "keywords": [
+            "robot"
+        ]
+    },
+    {
+        "emoji": "😸",
+        "description": "grinning cat with smiling eyes",
+        "keywords": [
+            "joy",
+            "happy",
+            "positive",
+            "cat",
+            "smile",
+            "grinning",
+            "cheerful",
+            "eyes",
+            "laugh",
+            "smiling",
+            "fun"
+        ]
+    },
+    {
+        "emoji": "❤️",
+        "description": "red heart",
+        "keywords": [
+            "romance",
+            "love",
+            "affection",
+            "red",
+            "heart",
+            "Valentine",
+            "Lover"
+        ]
+    },
+    {
+        "emoji": "💯",
+        "description": "hundred points",
+        "keywords": [
+            "hundred",
+            "points"
+        ]
+    },
+    {
+        "emoji": "💫",
+        "description": "dizzy",
+        "keywords": [
+            "dizzy"
+        ]
+    },
+    {
+        "emoji": "💨",
+        "description": "dashing away",
+        "keywords": [
+            "run",
+            "dashing"
+        ]
+    },
+    {
+        "emoji": "🕳",
+        "description": "hole",
+        "keywords": [
+            "golf"
+        ]
+    },
+    {
+        "emoji": "💬",
+        "description": "speech balloon",
+        "keywords": [
+            "phone call",
+            "chat"
+        ]
+    },
+    {
+        "emoji": "💭",
+        "description": "thought balloon",
+        "keywords": [
+            "thought"
+        ]
+    },
+    {
+        "emoji": "💤",
+        "description": "zzz",
+        "keywords": [
+            "sleep"
+        ]
+    },
+    {
+        "emoji": "✍️",
+        "description": "writing hand",
+        "keywords": [
+            "writing"
+        ]
+    },
+    {
+        "emoji": "💅",
+        "description": "nail polish",
+        "keywords": [
+            "nail",
+            "polish"
+        ]
+    },
+    {
+        "emoji": "🤳",
+        "description": "selfie",
+        "keywords": [
+            "selfie",
+            "hangout"
+        ]
+    },
+    {
+        "emoji": "🦾",
+        "description": "mechanical arm",
+        "keywords": [
+            "gym"
+        ]
+    },
+    {
+        "emoji": "🦿",
+        "description": "mechanical leg",
+        "keywords": [
+            "run",
+            "jog"
+        ]
+    },
+    {
+        "emoji": "🧠",
+        "description": "brain",
+        "keywords": [
+            "meditation"
+        ]
+    },
+    {
+        "emoji": "🦷",
+        "description": "tooth",
+        "keywords": [
+            "dental",
+            "dentist"
+        ]
+    },
+    {
+        "emoji": "🦴",
+        "description": "bone",
+        "keywords": [
+            "dog"
+        ]
+    },
+    {
+        "emoji": "👀",
+        "description": "eyes",
+        "keywords": [
+            "sightsee"
+        ]
+    },
+    {
+        "emoji": "👶",
+        "description": "baby",
+        "keywords": [
+            "baby sitting"
+        ]
+    },
+    {
+        "emoji": "🧒",
+        "description": "child",
+        "keywords": [
+            "child"
+        ]
+    },
+    {
+        "emoji": "👦",
+        "description": "boy",
+        "keywords": [
+            "boy"
+        ]
+    },
+    {
+        "emoji": "👧",
+        "description": "girl",
+        "keywords": [
+            "girl"
+        ]
+    },
+    {
+        "emoji": "🧑",
+        "description": "person",
+        "keywords": [
+            "male"
+        ]
+    },
+    {
+        "emoji": "👨‍🦳",
+        "description": "man: white hair",
+        "keywords": [
+            "elder",
+            "male"
+        ]
+    },
+    {
+        "emoji": "👩",
+        "description": "woman",
+        "keywords": [
+            "woman"
+        ]
+    },
+    {
+        "emoji": "👩‍🦳",
+        "description": "woman: white hair",
+        "keywords": [
+            "elder",
+            "female"
+        ]
+    },
+    {
+        "emoji": "🙇",
+        "description": "person bowing",
+        "keywords": [
+            "apologize",
+            "bowing"
+        ]
+    },
+    {
+        "emoji": "🙇‍♀️",
+        "description": "woman bowing",
+        "keywords": [
+            "woman",
+            "bowing"
+        ]
+    },
+    {
+        "emoji": "🧑‍⚕️",
+        "description": "health worker",
+        "keywords": [
+            "health",
+            "worker"
+        ]
+    },
+    {
+        "emoji": "👩‍⚕️",
+        "description": "woman health worker",
+        "keywords": [
+            "health",
+            "woman",
+            "worker"
+        ]
+    },
+    {
+        "emoji": "👨‍🎓",
+        "description": "man student",
+        "keywords": [
+            "man",
+            "student"
+        ]
+    },
+    {
+        "emoji": "👩‍🎓",
+        "description": "woman student",
+        "keywords": [
+            "woman",
+            "student"
+        ]
+    },
+    {
+        "emoji": "👨‍🏫",
+        "description": "man teacher",
+        "keywords": [
+            "man",
+            "teacher"
+        ]
+    },
+    {
+        "emoji": "👩‍🏫",
+        "description": "woman teacher",
+        "keywords": [
+            "woman",
+            "teacher"
+        ]
+    },
+    {
+        "emoji": "👨‍⚖️",
+        "description": "man judge",
+        "keywords": [
+            "man",
+            "court"
+        ]
+    },
+    {
+        "emoji": "👩‍⚖️",
+        "description": "woman judge",
+        "keywords": [
+            "woman",
+            "judge"
+        ]
+    },
+    {
+        "emoji": "👨‍🌾",
+        "description": "man farmer",
+        "keywords": [
+            "man",
+            "garden"
+        ]
+    },
+    {
+        "emoji": "👩‍🌾",
+        "description": "woman farmer",
+        "keywords": [
+            "woman",
+            "farmer"
+        ]
+    },
+    {
+        "emoji": "👨‍🍳",
+        "description": "man cook",
+        "keywords": [
+            "man",
+            "cook"
+        ]
+    },
+    {
+        "emoji": "👩‍🍳",
+        "description": "woman cook",
+        "keywords": [
+            "woman",
+            "cook"
+        ]
+    },
+    {
+        "emoji": "👨‍🔧",
+        "description": "man mechanic",
+        "keywords": [
+            "mechanic",
+            "man"
+        ]
+    },
+    {
+        "emoji": "👩‍🔧",
+        "description": "woman mechanic",
+        "keywords": [
+            "mechanic",
+            "woman"
+        ]
+    },
+    {
+        "emoji": "👨‍🏭",
+        "description": "man factory worker",
+        "keywords": [
+            "man",
+            "factory",
+            "worker"
+        ]
+    },
+    {
+        "emoji": "👩‍🏭",
+        "description": "woman factory worker",
+        "keywords": [
+            "woman",
+            "factory",
+            "worker"
+        ]
+    },
+    {
+        "emoji": "👨‍💼",
+        "description": "man office worker",
+        "keywords": [
+            "man",
+            "office",
+            "worker"
+        ]
+    },
+    {
+        "emoji": "👩‍💼",
+        "description": "woman office worker",
+        "keywords": [
+            "woman",
+            "office",
+            "worker"
+        ]
+    },
+    {
+        "emoji": "👨‍🔬",
+        "description": "man scientist",
+        "keywords": [
+            "man",
+            "scientist"
+        ]
+    },
+    {
+        "emoji": "👩‍🔬",
+        "description": "woman scientist",
+        "keywords": [
+            "woman",
+            "scientist"
+        ]
+    },
+    {
+        "emoji": "👨‍💻",
+        "description": "man technologist",
+        "keywords": [
+            "technologist",
+            "coding",
+            "IT",
+            "man"
+        ]
+    },
+    {
+        "emoji": "👩‍💻",
+        "description": "woman technologist",
+        "keywords": [
+            "technologist",
+            "coding",
+            "IT",
+            "woman"
+        ]
+    },
+    {
+        "emoji": "👨‍🎤",
+        "description": "man singer",
+        "keywords": [
+            "singer",
+            "man"
+        ]
+    },
+    {
+        "emoji": "👩‍🎤",
+        "description": "woman singer",
+        "keywords": [
+            "singer",
+            "woman"
+        ]
+    },
+    {
+        "emoji": "👨‍🎨",
+        "description": "man artist",
+        "keywords": [
+            "man",
+            "artist"
+        ]
+    },
+    {
+        "emoji": "👩‍🎨",
+        "description": "woman artist",
+        "keywords": [
+            "woman",
+            "artist"
+        ]
+    },
+    {
+        "emoji": "👨‍✈️",
+        "description": "man pilot",
+        "keywords": [
+            "man",
+            "pilot"
+        ]
+    },
+    {
+        "emoji": "👩‍✈️",
+        "description": "woman pilot",
+        "keywords": [
+            "woman",
+            "pilot"
+        ]
+    },
+    {
+        "emoji": "👨‍🚀",
+        "description": "man astronaut",
+        "keywords": [
+            "man",
+            "astronaut"
+        ]
+    },
+    {
+        "emoji": "👩‍🚀",
+        "description": "woman astronaut",
+        "keywords": [
+            "woman",
+            "astronaut"
+        ]
+    },
+    {
+        "emoji": "👨‍🚒",
+        "description": "man firefighter",
+        "keywords": [
+            "firefighter",
+            "man"
+        ]
+    },
+    {
+        "emoji": "👩‍🚒",
+        "description": "woman firefighter",
+        "keywords": [
+            "firefighter",
+            "woman"
+        ]
+    },
+    {
+        "emoji": "👮‍♂️",
+        "description": "man police officer",
+        "keywords": [
+            "police",
+            "man",
+            "officer"
+        ]
+    },
+    {
+        "emoji": "👮‍♀️",
+        "description": "woman police officer",
+        "keywords": [
+            "police",
+            "woman",
+            "officer"
+        ]
+    },
+    {
+        "emoji": "🕵",
+        "description": "detective",
+        "keywords": [
+            "detective"
+        ]
+    },
+    {
+        "emoji": "🕵️‍♂️",
+        "description": "man detective",
+        "keywords": [
+            "detective",
+            "man"
+        ]
+    },
+    {
+        "emoji": "🕵️‍♀️",
+        "description": "woman detective",
+        "keywords": [
+            "detective",
+            "woman"
+        ]
+    },
+    {
+        "emoji": "💂",
+        "description": "guard",
+        "keywords": [
+            "guard"
+        ]
+    },
+    {
+        "emoji": "💂‍♂️",
+        "description": "man guard",
+        "keywords": [
+            "guard",
+            "man"
+        ]
+    },
+    {
+        "emoji": "💂‍♀️",
+        "description": "woman guard",
+        "keywords": [
+            "guard",
+            "woman"
+        ]
+    },
+    {
+        "emoji": "🥷",
+        "description": "ninja",
+        "keywords": [
+            "ninja"
+        ]
+    },
+    {
+        "emoji": "👷",
+        "description": "construction worker",
+        "keywords": [
+            "construction",
+            "worker"
+        ]
+    },
+    {
+        "emoji": "👷‍♂️",
+        "description": "man construction worker",
+        "keywords": [
+            "construction",
+            "man",
+            "worker"
+        ]
+    },
+    {
+        "emoji": "👷‍♀️",
+        "description": "woman construction worker",
+        "keywords": [
+            "construction",
+            "woman",
+            "worker"
+        ]
+    },
+    {
+        "emoji": "🤴",
+        "description": "prince",
+        "keywords": [
+            "prince"
+        ]
+    },
+    {
+        "emoji": "👸",
+        "description": "princess",
+        "keywords": [
+            "princess"
+        ]
+    },
+    {
+        "emoji": "👰‍♀️",
+        "description": "woman with veil",
+        "keywords": [
+            "wedding"
+        ]
+    },
+    {
+        "emoji": "🤰",
+        "description": "pregnant woman",
+        "keywords": [
+            "pregnant",
+            "woman"
+        ]
+    },
+    {
+        "emoji": "🤱",
+        "description": "breast-feeding",
+        "keywords": [
+            "breast-feeding"
+        ]
+    },
+    {
+        "emoji": "👼",
+        "description": "baby angel",
+        "keywords": [
+            "angel",
+            "baby"
+        ]
+    },
+    {
+        "emoji": "🎅",
+        "description": "Santa Claus",
+        "keywords": [
+            "christmas",
+            "festival"
+        ]
+    },
+    {
+        "emoji": "🦸‍♂️",
+        "description": "man superhero",
+        "keywords": [
+            "man",
+            "superhero"
+        ]
+    },
+    {
+        "emoji": "🦸‍♀️",
+        "description": "woman superhero",
+        "keywords": [
+            "woman",
+            "superhero"
+        ]
+    },
+    {
+        "emoji": "💆",
+        "description": "person getting massage",
+        "keywords": [
+            "massage",
+            "relax"
+        ]
+    },
+    {
+        "emoji": "💆‍♀️",
+        "description": "woman getting massage",
+        "keywords": [
+            "massage",
+            "relax"
+        ]
+    },
+    {
+        "emoji": "💇‍♂️",
+        "description": "man getting haircut",
+        "keywords": [
+            "man",
+            "haircut"
+        ]
+    },
+    {
+        "emoji": "💇‍♀️",
+        "description": "woman getting haircut",
+        "keywords": [
+            "woman",
+            "haircut"
+        ]
+    },
+    {
+        "emoji": "🚶‍♂️",
+        "description": "man walking",
+        "keywords": [
+            "man",
+            "jogging",
+            "walking"
+        ]
+    },
+    {
+        "emoji": "🚶‍♀️",
+        "description": "woman walking",
+        "keywords": [
+            "woman",
+            "jogging",
+            "walking"
+        ]
+    },
+    {
+        "emoji": "🧎‍♂️",
+        "description": "man kneeling",
+        "keywords": [
+            "man",
+            "praying"
+        ]
+    },
+    {
+        "emoji": "🧎‍♀️",
+        "description": "woman kneeling",
+        "keywords": [
+            "woman",
+            "praying"
+        ]
+    },
+    {
+        "emoji": "👨‍🦯",
+        "description": "man with white cane",
+        "keywords": [
+            "man",
+            "cane",
+            "white"
+        ]
+    },
+    {
+        "emoji": "👩‍🦯",
+        "description": "woman with white cane",
+        "keywords": [
+            "woman",
+            "cane",
+            "white"
+        ]
+    },
+    {
+        "emoji": "🏃‍♂️",
+        "description": "man running",
+        "keywords": [
+            "man",
+            "running"
+        ]
+    },
+    {
+        "emoji": "🏃‍♀️",
+        "description": "woman running",
+        "keywords": [
+            "woman",
+            "running"
+        ]
+    },
+    {
+        "emoji": "💃",
+        "description": "woman dancing",
+        "keywords": [
+            "woman",
+            "dancing"
+        ]
+    },
+    {
+        "emoji": "🕺",
+        "description": "man dancing",
+        "keywords": [
+            "man",
+            "dancing"
+        ]
+    },
+    {
+        "emoji": "🧗‍♂️",
+        "description": "man climbing",
+        "keywords": [
+            "man",
+            "climbing"
+        ]
+    },
+    {
+        "emoji": "🧗‍♀️",
+        "description": "woman climbing",
+        "keywords": [
+            "woman",
+            "climbing"
+        ]
+    },
+    {
+        "emoji": "🤺",
+        "description": "person fencing",
+        "keywords": [
+            "person",
+            "fencing"
+        ]
+    },
+    {
+        "emoji": "🏇",
+        "description": "horse racing",
+        "keywords": [
+            "horse",
+            "racing"
+        ]
+    },
+    {
+        "emoji": "⛷",
+        "description": "skier",
+        "keywords": [
+            "skier"
+        ]
+    },
+    {
+        "emoji": "🏂",
+        "description": "snowboarder",
+        "keywords": [
+            "snowboarder"
+        ]
+    },
+    {
+        "emoji": "🏌",
+        "description": "person golfing",
+        "keywords": [
+            "person",
+            "golfing"
+        ]
+    },
+    {
+        "emoji": "🏌️‍♂️",
+        "description": "man golfing",
+        "keywords": [
+            "man",
+            "golfing"
+        ]
+    },
+    {
+        "emoji": "🏌️‍♀️",
+        "description": "woman golfing",
+        "keywords": [
+            "woman",
+            "golfing"
+        ]
+    },
+    {
+        "emoji": "🏄",
+        "description": "person surfing",
+        "keywords": [
+            "person",
+            "surfing"
+        ]
+    },
+    {
+        "emoji": "🏄‍♂️",
+        "description": "man surfing",
+        "keywords": [
+            "surfing",
+            "man"
+        ]
+    },
+    {
+        "emoji": "🏄‍♀️",
+        "description": "woman surfing",
+        "keywords": [
+            "surfing",
+            "woman"
+        ]
+    },
+    {
+        "emoji": "🚣",
+        "description": "person rowing boat",
+        "keywords": [
+            "person",
+            "boat",
+            "rowing"
+        ]
+    },
+    {
+        "emoji": "🚣‍♂️",
+        "description": "man rowing boat",
+        "keywords": [
+            "boat",
+            "man",
+            "rowing"
+        ]
+    },
+    {
+        "emoji": "🚣‍♀️",
+        "description": "woman rowing boat",
+        "keywords": [
+            "boat",
+            "woman",
+            "rowing"
+        ]
+    },
+    {
+        "emoji": "🏊",
+        "description": "person swimming",
+        "keywords": [
+            "person",
+            "swimming"
+        ]
+    },
+    {
+        "emoji": "🏊‍♂️",
+        "description": "man swimming",
+        "keywords": [
+            "man",
+            "swimming"
+        ]
+    },
+    {
+        "emoji": "🏊‍♀️",
+        "description": "woman swimming",
+        "keywords": [
+            "woman",
+            "swimming"
+        ]
+    },
+    {
+        "emoji": "⛹",
+        "description": "person bouncing ball",
+        "keywords": [
+            "person",
+            "ball",
+            "bouncing"
+        ]
+    },
+    {
+        "emoji": "⛹️‍♂️",
+        "description": "man bouncing ball",
+        "keywords": [
+            "man",
+            "ball",
+            "bouncing"
+        ]
+    },
+    {
+        "emoji": "⛹️‍♀️",
+        "description": "woman bouncing ball",
+        "keywords": [
+            "woman",
+            "ball",
+            "bouncing"
+        ]
+    },
+    {
+        "emoji": "🏋",
+        "description": "person lifting weights",
+        "keywords": [
+            "person",
+            "weights",
+            "lifting",
+            "gym"
+        ]
+    },
+    {
+        "emoji": "🏋️‍♂️",
+        "description": "man lifting weights",
+        "keywords": [
+            "man",
+            "weights",
+            "lifting",
+            "gym"
+        ]
+    },
+    {
+        "emoji": "🏋️‍♀️",
+        "description": "woman lifting weights",
+        "keywords": [
+            "woman",
+            "weights",
+            "lifting",
+            "gym"
+        ]
+    },
+    {
+        "emoji": "🚴‍♂️",
+        "description": "man biking",
+        "keywords": [
+            "man",
+            "biking"
+        ]
+    },
+    {
+        "emoji": "🚴‍♀️",
+        "description": "woman biking",
+        "keywords": [
+            "woman",
+            "biking"
+        ]
+    },
+    {
+        "emoji": "🚵",
+        "description": "person mountain biking",
+        "keywords": [
+            "person",
+            "mountain",
+            "biking"
+        ]
+    },
+    {
+        "emoji": "🚵‍♂️",
+        "description": "man mountain biking",
+        "keywords": [
+            "man",
+            "mountain",
+            "biking"
+        ]
+    },
+    {
+        "emoji": "🚵‍♀️",
+        "description": "woman mountain biking",
+        "keywords": [
+            "woman",
+            "mountain",
+            "biking"
+        ]
+    },
+    {
+        "emoji": "🤸",
+        "description": "person cartwheeling",
+        "keywords": [
+            "person",
+            "cartwheeling"
+        ]
+    },
+    {
+        "emoji": "🤸‍♂️",
+        "description": "man cartwheeling",
+        "keywords": [
+            "man",
+            "cartwheeling"
+        ]
+    },
+    {
+        "emoji": "🤸‍♀️",
+        "description": "woman cartwheeling",
+        "keywords": [
+            "woman",
+            "cartwheeling"
+        ]
+    },
+    {
+        "emoji": "🤼",
+        "description": "people wrestling",
+        "keywords": [
+            "people",
+            "wrestling"
+        ]
+    },
+    {
+        "emoji": "🤼‍♂️",
+        "description": "men wrestling",
+        "keywords": [
+            "wrestling",
+            "men"
+        ]
+    },
+    {
+        "emoji": "🤼‍♀️",
+        "description": "women wrestling",
+        "keywords": [
+            "wrestling",
+            "women"
+        ]
+    },
+    {
+        "emoji": "🤽",
+        "description": "person playing water polo",
+        "keywords": [
+            "person",
+            "water",
+            "playing",
+            "polo"
+        ]
+    },
+    {
+        "emoji": "🤽‍♂️",
+        "description": "man playing water polo",
+        "keywords": [
+            "playing",
+            "man",
+            "polo",
+            "water"
+        ]
+    },
+    {
+        "emoji": "🤽‍♀️",
+        "description": "woman playing water polo",
+        "keywords": [
+            "playing",
+            "woman",
+            "polo",
+            "water"
+        ]
+    },
+    {
+        "emoji": "🤾",
+        "description": "person playing handball",
+        "keywords": [
+            "action",
+            "person",
+            "handball",
+            "wave",
+            "playing",
+            "gesture"
+        ]
+    },
+    {
+        "emoji": "🤾‍♂️",
+        "description": "man playing handball",
+        "keywords": [
+            "action",
+            "man",
+            "handball",
+            "wave",
+            "playing",
+            "gesture"
+        ]
+    },
+    {
+        "emoji": "🤾‍♀️",
+        "description": "woman playing handball",
+        "keywords": [
+            "action",
+            "woman",
+            "handball",
+            "wave",
+            "playing",
+            "gesture"
+        ]
+    },
+    {
+        "emoji": "🤹",
+        "description": "person juggling",
+        "keywords": [
+            "person",
+            "juggling"
+        ]
+    },
+    {
+        "emoji": "🤹‍♂️",
+        "description": "man juggling",
+        "keywords": [
+            "man",
+            "juggling"
+        ]
+    },
+    {
+        "emoji": "🤹‍♀️",
+        "description": "woman juggling",
+        "keywords": [
+            "woman",
+            "juggling"
+        ]
+    },
+    {
+        "emoji": "🧘‍♂️",
+        "description": "man in lotus position",
+        "keywords": [
+            "yoga",
+            "man",
+            "relax"
+        ]
+    },
+    {
+        "emoji": "🧘‍♀️",
+        "description": "woman in lotus position",
+        "keywords": [
+            "yoga",
+            "woman",
+            "relax"
+        ]
+    },
+    {
+        "emoji": "🛀",
+        "description": "person taking bath",
+        "keywords": [
+            "bath",
+            "clean"
+        ]
+    },
+    {
+        "emoji": "🛌",
+        "description": "person in bed",
+        "keywords": [
+            "sleeping",
+            "bed"
+        ]
+    },
+    {
+        "emoji": "👪",
+        "description": "family",
+        "keywords": [
+            "family"
+        ]
+    },
+    {
+        "emoji": "🗣",
+        "description": "speaking head",
+        "keywords": [
+            "head",
+            "speaking"
+        ]
+    },
+    {
+        "emoji": "🐒",
+        "description": "monkey",
+        "keywords": [
+            "monkey"
+        ]
+    },
+    {
+        "emoji": "🦍",
+        "description": "gorilla",
+        "keywords": [
+            "gorilla"
+        ]
+    },
+    {
+        "emoji": "🦧",
+        "description": "orangutan",
+        "keywords": [
+            "orangutan"
+        ]
+    },
+    {
+        "emoji": "🐶",
+        "description": "dog face",
+        "keywords": [
+            "dog"
+        ]
+    },
+    {
+        "emoji": "🐕",
+        "description": "dog",
+        "keywords": [
+            "dog"
+        ]
+    },
+    {
+        "emoji": "🦮",
+        "description": "guide dog",
+        "keywords": [
+            "dog",
+            "guide"
+        ]
+    },
+    {
+        "emoji": "🐕‍🦺",
+        "description": "service dog",
+        "keywords": [
+            "dog",
+            "service"
+        ]
+    },
+    {
+        "emoji": "🐩",
+        "description": "poodle",
+        "keywords": [
+            "poodle"
+        ]
+    },
+    {
+        "emoji": "🐺",
+        "description": "wolf",
+        "keywords": [
+            "wolf"
+        ]
+    },
+    {
+        "emoji": "🦊",
+        "description": "fox",
+        "keywords": [
+            "fox"
+        ]
+    },
+    {
+        "emoji": "🦝",
+        "description": "raccoon",
+        "keywords": [
+            "raccoon"
+        ]
+    },
+    {
+        "emoji": "🐱",
+        "description": "cat face",
+        "keywords": [
+            "cat"
+        ]
+    },
+    {
+        "emoji": "🐈",
+        "description": "cat",
+        "keywords": [
+            "cat"
+        ]
+    },
+    {
+        "emoji": "🐈‍⬛",
+        "description": "black cat",
+        "keywords": [
+            "black",
+            "cat"
+        ]
+    },
+    {
+        "emoji": "🦁",
+        "description": "lion",
+        "keywords": [
+            "lion"
+        ]
+    },
+    {
+        "emoji": "🐯",
+        "description": "tiger face",
+        "keywords": [
+            "tiger"
+        ]
+    },
+    {
+        "emoji": "🐅",
+        "description": "tiger",
+        "keywords": [
+            "tiger"
+        ]
+    },
+    {
+        "emoji": "🐆",
+        "description": "leopard",
+        "keywords": [
+            "leopard"
+        ]
+    },
+    {
+        "emoji": "🐴",
+        "description": "horse face",
+        "keywords": [
+            "horse"
+        ]
+    },
+    {
+        "emoji": "🐎",
+        "description": "horse",
+        "keywords": [
+            "horse"
+        ]
+    },
+    {
+        "emoji": "🦄",
+        "description": "unicorn",
+        "keywords": [
+            "unicorn"
+        ]
+    },
+    {
+        "emoji": "🦓",
+        "description": "zebra",
+        "keywords": [
+            "zebra"
+        ]
+    },
+    {
+        "emoji": "🦌",
+        "description": "deer",
+        "keywords": [
+            "deer"
+        ]
+    },
+    {
+        "emoji": "🦬",
+        "description": "bison",
+        "keywords": [
+            "bison"
+        ]
+    },
+    {
+        "emoji": "🐮",
+        "description": "cow face",
+        "keywords": [
+            "cow"
+        ]
+    },
+    {
+        "emoji": "🐂",
+        "description": "ox",
+        "keywords": [
+            "ox"
+        ]
+    },
+    {
+        "emoji": "🐃",
+        "description": "water buffalo",
+        "keywords": [
+            "water",
+            "buffalo"
+        ]
+    },
+    {
+        "emoji": "🐄",
+        "description": "cow",
+        "keywords": [
+            "cow"
+        ]
+    },
+    {
+        "emoji": "🐷",
+        "description": "pig face",
+        "keywords": [
+            "pig"
+        ]
+    },
+    {
+        "emoji": "🐖",
+        "description": "pig",
+        "keywords": [
+            "pig"
+        ]
+    },
+    {
+        "emoji": "🐗",
+        "description": "boar",
+        "keywords": [
+            "boar"
+        ]
+    },
+    {
+        "emoji": "🐽",
+        "description": "pig nose",
+        "keywords": [
+            "nose",
+            "pig"
+        ]
+    },
+    {
+        "emoji": "🐏",
+        "description": "ram",
+        "keywords": [
+            "ram"
+        ]
+    },
+    {
+        "emoji": "🐑",
+        "description": "ewe",
+        "keywords": [
+            "ewe"
+        ]
+    },
+    {
+        "emoji": "🐐",
+        "description": "goat",
+        "keywords": [
+            "goat"
+        ]
+    },
+    {
+        "emoji": "🐪",
+        "description": "camel",
+        "keywords": [
+            "camel"
+        ]
+    },
+    {
+        "emoji": "🐫",
+        "description": "two-hump camel",
+        "keywords": [
+            "two-hump",
+            "camel"
+        ]
+    },
+    {
+        "emoji": "🦙",
+        "description": "llama",
+        "keywords": [
+            "llama"
+        ]
+    },
+    {
+        "emoji": "🦒",
+        "description": "giraffe",
+        "keywords": [
+            "giraffe"
+        ]
+    },
+    {
+        "emoji": "🐘",
+        "description": "elephant",
+        "keywords": [
+            "elephant"
+        ]
+    },
+    {
+        "emoji": "🦣",
+        "description": "mammoth",
+        "keywords": [
+            "mammoth"
+        ]
+    },
+    {
+        "emoji": "🦏",
+        "description": "rhinoceros",
+        "keywords": [
+            "rhinoceros"
+        ]
+    },
+    {
+        "emoji": "🦛",
+        "description": "hippopotamus",
+        "keywords": [
+            "hippopotamus"
+        ]
+    },
+    {
+        "emoji": "🐭",
+        "description": "mouse face",
+        "keywords": [
+            "mouse"
+        ]
+    },
+    {
+        "emoji": "🐁",
+        "description": "mouse",
+        "keywords": [
+            "mouse"
+        ]
+    },
+    {
+        "emoji": "🐀",
+        "description": "rat",
+        "keywords": [
+            "rat"
+        ]
+    },
+    {
+        "emoji": "🐹",
+        "description": "hamster",
+        "keywords": [
+            "hamster"
+        ]
+    },
+    {
+        "emoji": "🐰",
+        "description": "rabbit face",
+        "keywords": [
+            "rabbit"
+        ]
+    },
+    {
+        "emoji": "🐇",
+        "description": "rabbit",
+        "keywords": [
+            "rabbit"
+        ]
+    },
+    {
+        "emoji": "🐿",
+        "description": "chipmunk",
+        "keywords": [
+            "chipmunk"
+        ]
+    },
+    {
+        "emoji": "🦫",
+        "description": "beaver",
+        "keywords": [
+            "beaver"
+        ]
+    },
+    {
+        "emoji": "🦔",
+        "description": "hedgehog",
+        "keywords": [
+            "hedgehog"
+        ]
+    },
+    {
+        "emoji": "🦇",
+        "description": "bat",
+        "keywords": [
+            "bat"
+        ]
+    },
+    {
+        "emoji": "🐻",
+        "description": "bear",
+        "keywords": [
+            "bear"
+        ]
+    },
+    {
+        "emoji": "🐻‍❄️",
+        "description": "polar bear",
+        "keywords": [
+            "polar",
+            "bear"
+        ]
+    },
+    {
+        "emoji": "🐨",
+        "description": "koala",
+        "keywords": [
+            "koala"
+        ]
+    },
+    {
+        "emoji": "🐼",
+        "description": "panda",
+        "keywords": [
+            "panda"
+        ]
+    },
+    {
+        "emoji": "🦥",
+        "description": "sloth",
+        "keywords": [
+            "sloth"
+        ]
+    },
+    {
+        "emoji": "🦦",
+        "description": "otter",
+        "keywords": [
+            "otter"
+        ]
+    },
+    {
+        "emoji": "🦨",
+        "description": "skunk",
+        "keywords": [
+            "skunk"
+        ]
+    },
+    {
+        "emoji": "🦘",
+        "description": "kangaroo",
+        "keywords": [
+            "kangaroo"
+        ]
+    },
+    {
+        "emoji": "🦡",
+        "description": "badger",
+        "keywords": [
+            "badger"
+        ]
+    },
+    {
+        "emoji": "🐾",
+        "description": "paw prints",
+        "keywords": [
+            "paw",
+            "prints"
+        ]
+    },
+    {
+        "emoji": "🦃",
+        "description": "turkey",
+        "keywords": [
+            "turkey"
+        ]
+    },
+    {
+        "emoji": "🐔",
+        "description": "chicken",
+        "keywords": [
+            "chicken"
+        ]
+    },
+    {
+        "emoji": "🐓",
+        "description": "rooster",
+        "keywords": [
+            "rooster"
+        ]
+    },
+    {
+        "emoji": "🐣",
+        "description": "hatching chick",
+        "keywords": [
+            "chick",
+            "hatching"
+        ]
+    },
+    {
+        "emoji": "🐤",
+        "description": "baby chick",
+        "keywords": [
+            "chick",
+            "baby"
+        ]
+    },
+    {
+        "emoji": "🐥",
+        "description": "front-facing baby chick",
+        "keywords": [
+            "baby",
+            "chick",
+            "front-facing"
+        ]
+    },
+    {
+        "emoji": "🐦",
+        "description": "bird",
+        "keywords": [
+            "bird"
+        ]
+    },
+    {
+        "emoji": "🐧",
+        "description": "penguin",
+        "keywords": [
+            "penguin"
+        ]
+    },
+    {
+        "emoji": "🕊",
+        "description": "dove",
+        "keywords": [
+            "dove"
+        ]
+    },
+    {
+        "emoji": "🦅",
+        "description": "eagle",
+        "keywords": [
+            "eagle"
+        ]
+    },
+    {
+        "emoji": "🦆",
+        "description": "duck",
+        "keywords": [
+            "duck"
+        ]
+    },
+    {
+        "emoji": "🦢",
+        "description": "swan",
+        "keywords": [
+            "swan"
+        ]
+    },
+    {
+        "emoji": "🦉",
+        "description": "owl",
+        "keywords": [
+            "owl"
+        ]
+    },
+    {
+        "emoji": "🦤",
+        "description": "dodo",
+        "keywords": [
+            "dodo"
+        ]
+    },
+    {
+        "emoji": "🪶",
+        "description": "feather",
+        "keywords": [
+            "feather"
+        ]
+    },
+    {
+        "emoji": "🦩",
+        "description": "flamingo",
+        "keywords": [
+            "flamingo"
+        ]
+    },
+    {
+        "emoji": "🦚",
+        "description": "peacock",
+        "keywords": [
+            "peacock"
+        ]
+    },
+    {
+        "emoji": "🦜",
+        "description": "parrot",
+        "keywords": [
+            "parrot"
+        ]
+    },
+    {
+        "emoji": "🐸",
+        "description": "frog",
+        "keywords": [
+            "frog"
+        ]
+    },
+    {
+        "emoji": "🐊",
+        "description": "crocodile",
+        "keywords": [
+            "crocodile"
+        ]
+    },
+    {
+        "emoji": "🐢",
+        "description": "turtle",
+        "keywords": [
+            "turtle"
+        ]
+    },
+    {
+        "emoji": "🦎",
+        "description": "lizard",
+        "keywords": [
+            "lizard"
+        ]
+    },
+    {
+        "emoji": "🐍",
+        "description": "snake",
+        "keywords": [
+            "snake"
+        ]
+    },
+    {
+        "emoji": "🐲",
+        "description": "dragon face",
+        "keywords": [
+            "dragon"
+        ]
+    },
+    {
+        "emoji": "🐉",
+        "description": "dragon",
+        "keywords": [
+            "dragon"
+        ]
+    },
+    {
+        "emoji": "🦕",
+        "description": "sauropod",
+        "keywords": [
+            "sauropod"
+        ]
+    },
+    {
+        "emoji": "🦖",
+        "description": "T-Rex",
+        "keywords": [
+            "t-rex"
+        ]
+    },
+    {
+        "emoji": "🐳",
+        "description": "spouting whale",
+        "keywords": [
+            "spouting",
+            "whale"
+        ]
+    },
+    {
+        "emoji": "🐋",
+        "description": "whale",
+        "keywords": [
+            "whale"
+        ]
+    },
+    {
+        "emoji": "🐬",
+        "description": "dolphin",
+        "keywords": [
+            "dolphin"
+        ]
+    },
+    {
+        "emoji": "🦭",
+        "description": "seal",
+        "keywords": [
+            "seal"
+        ]
+    },
+    {
+        "emoji": "🐟",
+        "description": "fish",
+        "keywords": [
+            "fish"
+        ]
+    },
+    {
+        "emoji": "🐠",
+        "description": "tropical fish",
+        "keywords": [
+            "tropical",
+            "fish"
+        ]
+    },
+    {
+        "emoji": "🐡",
+        "description": "blowfish",
+        "keywords": [
+            "blowfish"
+        ]
+    },
+    {
+        "emoji": "🦈",
+        "description": "shark",
+        "keywords": [
+            "shark"
+        ]
+    },
+    {
+        "emoji": "🐙",
+        "description": "octopus",
+        "keywords": [
+            "octopus"
+        ]
+    },
+    {
+        "emoji": "🐚",
+        "description": "spiral shell",
+        "keywords": [
+            "spiral",
+            "shell"
+        ]
+    },
+    {
+        "emoji": "🐌",
+        "description": "snail",
+        "keywords": [
+            "snail"
+        ]
+    },
+    {
+        "emoji": "🦋",
+        "description": "butterfly",
+        "keywords": [
+            "butterfly"
+        ]
+    },
+    {
+        "emoji": "🐛",
+        "description": "bug",
+        "keywords": [
+            "bug"
+        ]
+    },
+    {
+        "emoji": "🐜",
+        "description": "ant",
+        "keywords": [
+            "ant"
+        ]
+    },
+    {
+        "emoji": "🐝",
+        "description": "honeybee",
+        "keywords": [
+            "honeybee"
+        ]
+    },
+    {
+        "emoji": "🪲",
+        "description": "beetle",
+        "keywords": [
+            "beetle"
+        ]
+    },
+    {
+        "emoji": "🐞",
+        "description": "lady beetle",
+        "keywords": [
+            "lady",
+            "beetle"
+        ]
+    },
+    {
+        "emoji": "🦗",
+        "description": "cricket",
+        "keywords": [
+            "cricket"
+        ]
+    },
+    {
+        "emoji": "🪳",
+        "description": "cockroach",
+        "keywords": [
+            "cockroach"
+        ]
+    },
+    {
+        "emoji": "🕷",
+        "description": "spider",
+        "keywords": [
+            "spider"
+        ]
+    },
+    {
+        "emoji": "🕸",
+        "description": "spider web",
+        "keywords": [
+            "web",
+            "spider"
+        ]
+    },
+    {
+        "emoji": "🦂",
+        "description": "scorpion",
+        "keywords": [
+            "scorpion"
+        ]
+    },
+    {
+        "emoji": "🦟",
+        "description": "mosquito",
+        "keywords": [
+            "mosquito"
+        ]
+    },
+    {
+        "emoji": "🪰",
+        "description": "fly",
+        "keywords": [
+            "fly"
+        ]
+    },
+    {
+        "emoji": "🪱",
+        "description": "worm",
+        "keywords": [
+            "worm"
+        ]
+    },
+    {
+        "emoji": "🦠",
+        "description": "microbe",
+        "keywords": [
+            "microbe"
+        ]
+    },
+    {
+        "emoji": "💐",
+        "description": "bouquet",
+        "keywords": [
+            "bouquet"
+        ]
+    },
+    {
+        "emoji": "🌸",
+        "description": "cherry blossom",
+        "keywords": [
+            "blossom",
+            "cherry"
+        ]
+    },
+    {
+        "emoji": "💮",
+        "description": "white flower",
+        "keywords": [
+            "white",
+            "flower"
+        ]
+    },
+    {
+        "emoji": "🏵",
+        "description": "rosette",
+        "keywords": [
+            "rosette"
+        ]
+    },
+    {
+        "emoji": "🌹",
+        "description": "rose",
+        "keywords": [
+            "rose"
+        ]
+    },
+    {
+        "emoji": "🥀",
+        "description": "wilted flower",
+        "keywords": [
+            "flower",
+            "wilted"
+        ]
+    },
+    {
+        "emoji": "🌺",
+        "description": "hibiscus",
+        "keywords": [
+            "hibiscus"
+        ]
+    },
+    {
+        "emoji": "🌻",
+        "description": "sunflower",
+        "keywords": [
+            "sunflower"
+        ]
+    },
+    {
+        "emoji": "🌼",
+        "description": "blossom",
+        "keywords": [
+            "blossom"
+        ]
+    },
+    {
+        "emoji": "🌷",
+        "description": "tulip",
+        "keywords": [
+            "tulip"
+        ]
+    },
+    {
+        "emoji": "🌱",
+        "description": "seedling",
+        "keywords": [
+            "seedling"
+        ]
+    },
+    {
+        "emoji": "🪴",
+        "description": "potted plant",
+        "keywords": [
+            "plant",
+            "potted"
+        ]
+    },
+    {
+        "emoji": "🌲",
+        "description": "evergreen tree",
+        "keywords": [
+            "evergreen",
+            "tree"
+        ]
+    },
+    {
+        "emoji": "🌳",
+        "description": "deciduous tree",
+        "keywords": [
+            "tree",
+            "deciduous"
+        ]
+    },
+    {
+        "emoji": "🌴",
+        "description": "palm tree",
+        "keywords": [
+            "tree",
+            "palm"
+        ]
+    },
+    {
+        "emoji": "🌵",
+        "description": "cactus",
+        "keywords": [
+            "cactus"
+        ]
+    },
+    {
+        "emoji": "🌾",
+        "description": "sheaf of rice",
+        "keywords": [
+            "rice",
+            "sheaf"
+        ]
+    },
+    {
+        "emoji": "🌿",
+        "description": "herb",
+        "keywords": [
+            "herb"
+        ]
+    },
+    {
+        "emoji": "☘",
+        "description": "shamrock",
+        "keywords": [
+            "shamrock"
+        ]
+    },
+    {
+        "emoji": "🍀",
+        "description": "four leaf clover",
+        "keywords": [
+            "four",
+            "clover",
+            "leaf"
+        ]
+    },
+    {
+        "emoji": "🍁",
+        "description": "maple leaf",
+        "keywords": [
+            "leaf",
+            "maple"
+        ]
+    },
+    {
+        "emoji": "🍂",
+        "description": "fallen leaf",
+        "keywords": [
+            "fallen",
+            "leaf"
+        ]
+    },
+    {
+        "emoji": "🍃",
+        "description": "leaf fluttering in wind",
+        "keywords": [
+            "fluttering",
+            "wind",
+            "leaf"
+        ]
+    },
+    {
+        "emoji": "🍇",
+        "description": "grapes",
+        "keywords": [
+            "grapes"
+        ]
+    },
+    {
+        "emoji": "🍈",
+        "description": "melon",
+        "keywords": [
+            "melon"
+        ]
+    },
+    {
+        "emoji": "🍉",
+        "description": "watermelon",
+        "keywords": [
+            "watermelon"
+        ]
+    },
+    {
+        "emoji": "🍊",
+        "description": "tangerine",
+        "keywords": [
+            "tangerine"
+        ]
+    },
+    {
+        "emoji": "🍋",
+        "description": "lemon",
+        "keywords": [
+            "lemon"
+        ]
+    },
+    {
+        "emoji": "🍌",
+        "description": "banana",
+        "keywords": [
+            "banana"
+        ]
+    },
+    {
+        "emoji": "🍍",
+        "description": "pineapple",
+        "keywords": [
+            "pineapple"
+        ]
+    },
+    {
+        "emoji": "🥭",
+        "description": "mango",
+        "keywords": [
+            "mango"
+        ]
+    },
+    {
+        "emoji": "🍎",
+        "description": "red apple",
+        "keywords": [
+            "apple",
+            "red"
+        ]
+    },
+    {
+        "emoji": "🍏",
+        "description": "green apple",
+        "keywords": [
+            "apple",
+            "green"
+        ]
+    },
+    {
+        "emoji": "🍐",
+        "description": "pear",
+        "keywords": [
+            "pear"
+        ]
+    },
+    {
+        "emoji": "🍑",
+        "description": "peach",
+        "keywords": [
+            "peach"
+        ]
+    },
+    {
+        "emoji": "🍒",
+        "description": "cherries",
+        "keywords": [
+            "cherries"
+        ]
+    },
+    {
+        "emoji": "🍓",
+        "description": "strawberry",
+        "keywords": [
+            "strawberry"
+        ]
+    },
+    {
+        "emoji": "🫐",
+        "description": "blueberries",
+        "keywords": [
+            "blueberries"
+        ]
+    },
+    {
+        "emoji": "🥝",
+        "description": "kiwi fruit",
+        "keywords": [
+            "kiwi",
+            "fruit"
+        ]
+    },
+    {
+        "emoji": "🍅",
+        "description": "tomato",
+        "keywords": [
+            "tomato"
+        ]
+    },
+    {
+        "emoji": "🫒",
+        "description": "olive",
+        "keywords": [
+            "olive"
+        ]
+    },
+    {
+        "emoji": "🥥",
+        "description": "coconut",
+        "keywords": [
+            "coconut"
+        ]
+    },
+    {
+        "emoji": "🥑",
+        "description": "avocado",
+        "keywords": [
+            "avocado"
+        ]
+    },
+    {
+        "emoji": "🍆",
+        "description": "eggplant",
+        "keywords": [
+            "eggplant"
+        ]
+    },
+    {
+        "emoji": "🥔",
+        "description": "potato",
+        "keywords": [
+            "potato"
+        ]
+    },
+    {
+        "emoji": "🥕",
+        "description": "carrot",
+        "keywords": [
+            "carrot"
+        ]
+    },
+    {
+        "emoji": "🌽",
+        "description": "ear of corn",
+        "keywords": [
+            "ear",
+            "corn"
+        ]
+    },
+    {
+        "emoji": "🌶",
+        "description": "hot pepper",
+        "keywords": [
+            "hot",
+            "pepper"
+        ]
+    },
+    {
+        "emoji": "🫑",
+        "description": "bell pepper",
+        "keywords": [
+            "bell",
+            "pepper"
+        ]
+    },
+    {
+        "emoji": "🥒",
+        "description": "cucumber",
+        "keywords": [
+            "cucumber"
+        ]
+    },
+    {
+        "emoji": "🥬",
+        "description": "leafy green",
+        "keywords": [
+            "green",
+            "leafy"
+        ]
+    },
+    {
+        "emoji": "🥦",
+        "description": "broccoli",
+        "keywords": [
+            "broccoli"
+        ]
+    },
+    {
+        "emoji": "🧄",
+        "description": "garlic",
+        "keywords": [
+            "garlic"
+        ]
+    },
+    {
+        "emoji": "🧅",
+        "description": "onion",
+        "keywords": [
+            "onion"
+        ]
+    },
+    {
+        "emoji": "🍄",
+        "description": "mushroom",
+        "keywords": [
+            "mushroom"
+        ]
+    },
+    {
+        "emoji": "🥜",
+        "description": "peanuts",
+        "keywords": [
+            "peanuts"
+        ]
+    },
+    {
+        "emoji": "🌰",
+        "description": "chestnut",
+        "keywords": [
+            "chestnut"
+        ]
+    },
+    {
+        "emoji": "🍞",
+        "description": "bread",
+        "keywords": [
+            "bread"
+        ]
+    },
+    {
+        "emoji": "🥐",
+        "description": "croissant",
+        "keywords": [
+            "croissant"
+        ]
+    },
+    {
+        "emoji": "🥖",
+        "description": "baguette bread",
+        "keywords": [
+            "bread",
+            "baguette"
+        ]
+    },
+    {
+        "emoji": "🫓",
+        "description": "flatbread",
+        "keywords": [
+            "flatbread"
+        ]
+    },
+    {
+        "emoji": "🥨",
+        "description": "pretzel",
+        "keywords": [
+            "pretzel"
+        ]
+    },
+    {
+        "emoji": "🥯",
+        "description": "bagel",
+        "keywords": [
+            "bagel"
+        ]
+    },
+    {
+        "emoji": "🥞",
+        "description": "pancakes",
+        "keywords": [
+            "pancakes"
+        ]
+    },
+    {
+        "emoji": "🧇",
+        "description": "waffle",
+        "keywords": [
+            "waffle"
+        ]
+    },
+    {
+        "emoji": "🧀",
+        "description": "cheese wedge",
+        "keywords": [
+            "wedge",
+            "cheese"
+        ]
+    },
+    {
+        "emoji": "🍖",
+        "description": "meat on bone",
+        "keywords": [
+            "bone",
+            "meat"
+        ]
+    },
+    {
+        "emoji": "🍗",
+        "description": "poultry leg",
+        "keywords": [
+            "poultry",
+            "leg"
+        ]
+    },
+    {
+        "emoji": "🥩",
+        "description": "cut of meat",
+        "keywords": [
+            "meat",
+            "cut"
+        ]
+    },
+    {
+        "emoji": "🥓",
+        "description": "bacon",
+        "keywords": [
+            "bacon"
+        ]
+    },
+    {
+        "emoji": "🍔",
+        "description": "hamburger",
+        "keywords": [
+            "hamburger"
+        ]
+    },
+    {
+        "emoji": "🍟",
+        "description": "french fries",
+        "keywords": [
+            "fries",
+            "french"
+        ]
+    },
+    {
+        "emoji": "🍕",
+        "description": "pizza",
+        "keywords": [
+            "pizza"
+        ]
+    },
+    {
+        "emoji": "🌭",
+        "description": "hot dog",
+        "keywords": [
+            "dog",
+            "hot"
+        ]
+    },
+    {
+        "emoji": "🥪",
+        "description": "sandwich",
+        "keywords": [
+            "sandwich"
+        ]
+    },
+    {
+        "emoji": "🌮",
+        "description": "taco",
+        "keywords": [
+            "taco"
+        ]
+    },
+    {
+        "emoji": "🌯",
+        "description": "burrito",
+        "keywords": [
+            "burrito"
+        ]
+    },
+    {
+        "emoji": "🫔",
+        "description": "tamale",
+        "keywords": [
+            "tamale"
+        ]
+    },
+    {
+        "emoji": "🥙",
+        "description": "stuffed flatbread",
+        "keywords": [
+            "flatbread",
+            "stuffed"
+        ]
+    },
+    {
+        "emoji": "🧆",
+        "description": "falafel",
+        "keywords": [
+            "falafel"
+        ]
+    },
+    {
+        "emoji": "🥚",
+        "description": "egg",
+        "keywords": [
+            "egg"
+        ]
+    },
+    {
+        "emoji": "🍳",
+        "description": "cooking",
+        "keywords": [
+            "cooking"
+        ]
+    },
+    {
+        "emoji": "🥘",
+        "description": "shallow pan of food",
+        "keywords": [
+            "shallow",
+            "food",
+            "pan"
+        ]
+    },
+    {
+        "emoji": "🍲",
+        "description": "pot of food",
+        "keywords": [
+            "food",
+            "pot"
+        ]
+    },
+    {
+        "emoji": "🫕",
+        "description": "fondue",
+        "keywords": [
+            "fondue"
+        ]
+    },
+    {
+        "emoji": "🥣",
+        "description": "bowl with spoon",
+        "keywords": [
+            "spoon",
+            "bowl"
+        ]
+    },
+    {
+        "emoji": "🥗",
+        "description": "green salad",
+        "keywords": [
+            "salad",
+            "green"
+        ]
+    },
+    {
+        "emoji": "🍿",
+        "description": "popcorn",
+        "keywords": [
+            "popcorn"
+        ]
+    },
+    {
+        "emoji": "🧈",
+        "description": "butter",
+        "keywords": [
+            "butter"
+        ]
+    },
+    {
+        "emoji": "🧂",
+        "description": "salt",
+        "keywords": [
+            "salt"
+        ]
+    },
+    {
+        "emoji": "🥫",
+        "description": "canned food",
+        "keywords": [
+            "food",
+            "canned"
+        ]
+    },
+    {
+        "emoji": "🍱",
+        "description": "bento box",
+        "keywords": [
+            "box",
+            "bento"
+        ]
+    },
+    {
+        "emoji": "🍘",
+        "description": "rice cracker",
+        "keywords": [
+            "cracker",
+            "rice"
+        ]
+    },
+    {
+        "emoji": "🍙",
+        "description": "rice ball",
+        "keywords": [
+            "ball",
+            "rice"
+        ]
+    },
+    {
+        "emoji": "🍚",
+        "description": "cooked rice",
+        "keywords": [
+            "cooked",
+            "rice"
+        ]
+    },
+    {
+        "emoji": "🍛",
+        "description": "curry rice",
+        "keywords": [
+            "curry",
+            "rice"
+        ]
+    },
+    {
+        "emoji": "🍜",
+        "description": "steaming bowl",
+        "keywords": [
+            "steaming",
+            "bowl"
+        ]
+    },
+    {
+        "emoji": "🍝",
+        "description": "spaghetti",
+        "keywords": [
+            "spaghetti"
+        ]
+    },
+    {
+        "emoji": "🍠",
+        "description": "roasted sweet potato",
+        "keywords": [
+            "potato",
+            "roasted",
+            "sweet"
+        ]
+    },
+    {
+        "emoji": "🍢",
+        "description": "oden",
+        "keywords": [
+            "oden"
+        ]
+    },
+    {
+        "emoji": "🍣",
+        "description": "sushi",
+        "keywords": [
+            "sushi"
+        ]
+    },
+    {
+        "emoji": "🍤",
+        "description": "fried shrimp",
+        "keywords": [
+            "shrimp",
+            "fried"
+        ]
+    },
+    {
+        "emoji": "🍥",
+        "description": "fish cake with swirl",
+        "keywords": [
+            "swirl",
+            "fish",
+            "cake"
+        ]
+    },
+    {
+        "emoji": "🥮",
+        "description": "moon cake",
+        "keywords": [
+            "cake",
+            "moon"
+        ]
+    },
+    {
+        "emoji": "🍡",
+        "description": "dango",
+        "keywords": [
+            "dango"
+        ]
+    },
+    {
+        "emoji": "🥟",
+        "description": "dumpling",
+        "keywords": [
+            "dumpling"
+        ]
+    },
+    {
+        "emoji": "🥠",
+        "description": "fortune cookie",
+        "keywords": [
+            "fortune",
+            "cookie"
+        ]
+    },
+    {
+        "emoji": "🥡",
+        "description": "takeout box",
+        "keywords": [
+            "box",
+            "takeout"
+        ]
+    },
+    {
+        "emoji": "🦀",
+        "description": "crab",
+        "keywords": [
+            "crab"
+        ]
+    },
+    {
+        "emoji": "🦞",
+        "description": "lobster",
+        "keywords": [
+            "lobster"
+        ]
+    },
+    {
+        "emoji": "🦐",
+        "description": "shrimp",
+        "keywords": [
+            "shrimp"
+        ]
+    },
+    {
+        "emoji": "🦑",
+        "description": "squid",
+        "keywords": [
+            "squid"
+        ]
+    },
+    {
+        "emoji": "🦪",
+        "description": "oyster",
+        "keywords": [
+            "oyster"
+        ]
+    },
+    {
+        "emoji": "🍦",
+        "description": "soft ice cream",
+        "keywords": [
+            "cream",
+            "ice",
+            "soft"
+        ]
+    },
+    {
+        "emoji": "🍧",
+        "description": "shaved ice",
+        "keywords": [
+            "shaved",
+            "ice"
+        ]
+    },
+    {
+        "emoji": "🍨",
+        "description": "ice cream",
+        "keywords": [
+            "cream",
+            "ice"
+        ]
+    },
+    {
+        "emoji": "🍩",
+        "description": "doughnut",
+        "keywords": [
+            "doughnut"
+        ]
+    },
+    {
+        "emoji": "🍪",
+        "description": "cookie",
+        "keywords": [
+            "cookie"
+        ]
+    },
+    {
+        "emoji": "🎂",
+        "description": "birthday cake",
+        "keywords": [
+            "birthday",
+            "cake"
+        ]
+    },
+    {
+        "emoji": "🍰",
+        "description": "shortcake",
+        "keywords": [
+            "shortcake"
+        ]
+    },
+    {
+        "emoji": "🧁",
+        "description": "cupcake",
+        "keywords": [
+            "cupcake"
+        ]
+    },
+    {
+        "emoji": "🥧",
+        "description": "pie",
+        "keywords": [
+            "pie"
+        ]
+    },
+    {
+        "emoji": "🍫",
+        "description": "chocolate bar",
+        "keywords": [
+            "bar",
+            "chocolate"
+        ]
+    },
+    {
+        "emoji": "🍬",
+        "description": "candy",
+        "keywords": [
+            "candy"
+        ]
+    },
+    {
+        "emoji": "🍭",
+        "description": "lollipop",
+        "keywords": [
+            "lollipop"
+        ]
+    },
+    {
+        "emoji": "🍮",
+        "description": "custard",
+        "keywords": [
+            "custard"
+        ]
+    },
+    {
+        "emoji": "🍯",
+        "description": "honey pot",
+        "keywords": [
+            "honey",
+            "pot"
+        ]
+    },
+    {
+        "emoji": "🍼",
+        "description": "baby bottle",
+        "keywords": [
+            "bottle",
+            "baby"
+        ]
+    },
+    {
+        "emoji": "🥛",
+        "description": "glass of milk",
+        "keywords": [
+            "milk",
+            "glass"
+        ]
+    },
+    {
+        "emoji": "☕",
+        "description": "hot beverage",
+        "keywords": [
+            "hot",
+            "beverage"
+        ]
+    },
+    {
+        "emoji": "🫖",
+        "description": "teapot",
+        "keywords": [
+            "teapot"
+        ]
+    },
+    {
+        "emoji": "🍵",
+        "description": "teacup without handle",
+        "keywords": [
+            "action",
+            "handle",
+            "teacup",
+            "wave",
+            "without",
+            "gesture"
+        ]
+    },
+    {
+        "emoji": "🍶",
+        "description": "sake",
+        "keywords": [
+            "sake"
+        ]
+    },
+    {
+        "emoji": "🍾",
+        "description": "bottle with popping cork",
+        "keywords": [
+            "popping",
+            "cork",
+            "bottle"
+        ]
+    },
+    {
+        "emoji": "🍷",
+        "description": "wine glass",
+        "keywords": [
+            "wine",
+            "glass"
+        ]
+    },
+    {
+        "emoji": "🍸",
+        "description": "cocktail glass",
+        "keywords": [
+            "cocktail",
+            "glass"
+        ]
+    },
+    {
+        "emoji": "🍹",
+        "description": "tropical drink",
+        "keywords": [
+            "tropical",
+            "drink"
+        ]
+    },
+    {
+        "emoji": "🍺",
+        "description": "beer mug",
+        "keywords": [
+            "beer",
+            "mug"
+        ]
+    },
+    {
+        "emoji": "🍻",
+        "description": "clinking beer mugs",
+        "keywords": [
+            "beer",
+            "clinking",
+            "mugs"
+        ]
+    },
+    {
+        "emoji": "🥂",
+        "description": "clinking glasses",
+        "keywords": [
+            "glasses",
+            "clinking"
+        ]
+    },
+    {
+        "emoji": "🥃",
+        "description": "tumbler glass",
+        "keywords": [
+            "tumbler",
+            "glass"
+        ]
+    },
+    {
+        "emoji": "🥤",
+        "description": "cup with straw",
+        "keywords": [
+            "cup",
+            "straw"
+        ]
+    },
+    {
+        "emoji": "🧋",
+        "description": "bubble tea",
+        "keywords": [
+            "tea",
+            "bubble"
+        ]
+    },
+    {
+        "emoji": "🧃",
+        "description": "beverage box",
+        "keywords": [
+            "box",
+            "beverage"
+        ]
+    },
+    {
+        "emoji": "🧉",
+        "description": "mate",
+        "keywords": [
+            "mate"
+        ]
+    },
+    {
+        "emoji": "🧊",
+        "description": "ice",
+        "keywords": [
+            "ice"
+        ]
+    },
+    {
+        "emoji": "🥢",
+        "description": "chopsticks",
+        "keywords": [
+            "chopsticks"
+        ]
+    },
+    {
+        "emoji": "🍽",
+        "description": "fork and knife with plate",
+        "keywords": [
+            "knife",
+            "plate",
+            "fork",
+            "food",
+            "breakfast",
+            "lunch",
+            "dinner"
+        ]
+    },
+    {
+        "emoji": "🍴",
+        "description": "fork and knife",
+        "keywords": [
+            "knife",
+            "fork"
+        ]
+    },
+    {
+        "emoji": "🥄",
+        "description": "spoon",
+        "keywords": [
+            "spoon"
+        ]
+    },
+    {
+        "emoji": "🔪",
+        "description": "kitchen knife",
+        "keywords": [
+            "knife",
+            "kitchen"
+        ]
+    },
+    {
+        "emoji": "🏺",
+        "description": "amphora",
+        "keywords": [
+            "amphora"
+        ]
+    },
+    {
+        "emoji": "🌍",
+        "description": "globe showing Europe-Africa",
+        "keywords": [
+            "europe-africa",
+            "globe",
+            "showing"
+        ]
+    },
+    {
+        "emoji": "🌎",
+        "description": "globe showing Americas",
+        "keywords": [
+            "globe",
+            "showing",
+            "americas"
+        ]
+    },
+    {
+        "emoji": "🌏",
+        "description": "globe showing Asia-Australia",
+        "keywords": [
+            "asia-australia",
+            "globe",
+            "showing"
+        ]
+    },
+    {
+        "emoji": "🌐",
+        "description": "globe with meridians",
+        "keywords": [
+            "globe",
+            "meridians"
+        ]
+    },
+    {
+        "emoji": "🗺",
+        "description": "world map",
+        "keywords": [
+            "map",
+            "world"
+        ]
+    },
+    {
+        "emoji": "🗾",
+        "description": "map of Japan",
+        "keywords": [
+            "map",
+            "japan"
+        ]
+    },
+    {
+        "emoji": "🧭",
+        "description": "compass",
+        "keywords": [
+            "compass"
+        ]
+    },
+    {
+        "emoji": "🏔",
+        "description": "snow-capped mountain",
+        "keywords": [
+            "mountain",
+            "snow-capped",
+            "hiking"
+        ]
+    },
+    {
+        "emoji": "⛰",
+        "description": "mountain",
+        "keywords": [
+            "mountain"
+        ]
+    },
+    {
+        "emoji": "🌋",
+        "description": "volcano",
+        "keywords": [
+            "volcano"
+        ]
+    },
+    {
+        "emoji": "🗻",
+        "description": "mount fuji",
+        "keywords": [
+            "fuji",
+            "mount"
+        ]
+    },
+    {
+        "emoji": "🏕",
+        "description": "camping",
+        "keywords": [
+            "camping"
+        ]
+    },
+    {
+        "emoji": "🏖",
+        "description": "beach with umbrella",
+        "keywords": [
+            "beach",
+            "umbrella"
+        ]
+    },
+    {
+        "emoji": "🏜",
+        "description": "desert",
+        "keywords": [
+            "desert"
+        ]
+    },
+    {
+        "emoji": "🏝",
+        "description": "desert island",
+        "keywords": [
+            "island",
+            "desert"
+        ]
+    },
+    {
+        "emoji": "🏞",
+        "description": "national park",
+        "keywords": [
+            "national",
+            "park"
+        ]
+    },
+    {
+        "emoji": "🏟",
+        "description": "stadium",
+        "keywords": [
+            "stadium"
+        ]
+    },
+    {
+        "emoji": "🏛",
+        "description": "classical building",
+        "keywords": [
+            "classical",
+            "building"
+        ]
+    },
+    {
+        "emoji": "🏗",
+        "description": "building construction",
+        "keywords": [
+            "construction",
+            "building"
+        ]
+    },
+    {
+        "emoji": "🧱",
+        "description": "brick",
+        "keywords": [
+            "brick"
+        ]
+    },
+    {
+        "emoji": "🪨",
+        "description": "rock",
+        "keywords": [
+            "rock"
+        ]
+    },
+    {
+        "emoji": "🪵",
+        "description": "wood",
+        "keywords": [
+            "wood"
+        ]
+    },
+    {
+        "emoji": "🛖",
+        "description": "hut",
+        "keywords": [
+            "hut"
+        ]
+    },
+    {
+        "emoji": "🏘",
+        "description": "houses",
+        "keywords": [
+            "houses"
+        ]
+    },
+    {
+        "emoji": "🏢",
+        "description": "office building",
+        "keywords": [
+            "building",
+            "office"
+        ]
+    },
+    {
+        "emoji": "🏣",
+        "description": "Japanese post office",
+        "keywords": [
+            "office",
+            "japanese",
+            "post"
+        ]
+    },
+    {
+        "emoji": "🏤",
+        "description": "post office",
+        "keywords": [
+            "office",
+            "post"
+        ]
+    },
+    {
+        "emoji": "🏥",
+        "description": "hospital",
+        "keywords": [
+            "hospital"
+        ]
+    },
+    {
+        "emoji": "🏦",
+        "description": "bank",
+        "keywords": [
+            "bank"
+        ]
+    },
+    {
+        "emoji": "🏨",
+        "description": "hotel",
+        "keywords": [
+            "hotel"
+        ]
+    },
+    {
+        "emoji": "🏩",
+        "description": "hotel",
+        "keywords": [
+            "hotel"
+        ]
+    },
+    {
+        "emoji": "🏪",
+        "description": "convenience store",
+        "keywords": [
+            "store",
+            "convenience"
+        ]
+    },
+    {
+        "emoji": "🏫",
+        "description": "school",
+        "keywords": [
+            "school"
+        ]
+    },
+    {
+        "emoji": "🏬",
+        "description": "department store",
+        "keywords": [
+            "store",
+            "department"
+        ]
+    },
+    {
+        "emoji": "🏭",
+        "description": "factory",
+        "keywords": [
+            "factory"
+        ]
+    },
+    {
+        "emoji": "🏯",
+        "description": "Japanese castle",
+        "keywords": [
+            "castle",
+            "japanese"
+        ]
+    },
+    {
+        "emoji": "🏰",
+        "description": "castle",
+        "keywords": [
+            "castle"
+        ]
+    },
+    {
+        "emoji": "💒",
+        "description": "wedding",
+        "keywords": [
+            "wedding"
+        ]
+    },
+    {
+        "emoji": "🗼",
+        "description": "Tokyo tower",
+        "keywords": [
+            "tower",
+            "tokyo"
+        ]
+    },
+    {
+        "emoji": "🗽",
+        "description": "Statue of Liberty",
+        "keywords": [
+            "liberty",
+            "statue"
+        ]
+    },
+    {
+        "emoji": "⛪",
+        "description": "church",
+        "keywords": [
+            "church",
+            "pray"
+        ]
+    },
+    {
+        "emoji": "🕌",
+        "description": "mosque",
+        "keywords": [
+            "mosque"
+        ]
+    },
+    {
+        "emoji": "🛕",
+        "description": "hindu temple",
+        "keywords": [
+            "temple",
+            "hindu"
+        ]
+    },
+    {
+        "emoji": "🕍",
+        "description": "synagogue",
+        "keywords": [
+            "synagogue"
+        ]
+    },
+    {
+        "emoji": "⛩",
+        "description": "shinto shrine",
+        "keywords": [
+            "shrine",
+            "shinto"
+        ]
+    },
+    {
+        "emoji": "🕋",
+        "description": "kaaba",
+        "keywords": [
+            "kaaba"
+        ]
+    },
+    {
+        "emoji": "⛲",
+        "description": "fountain",
+        "keywords": [
+            "fountain"
+        ]
+    },
+    {
+        "emoji": "⛺",
+        "description": "tent",
+        "keywords": [
+            "tent"
+        ]
+    },
+    {
+        "emoji": "🌁",
+        "description": "foggy",
+        "keywords": [
+            "foggy"
+        ]
+    },
+    {
+        "emoji": "🌃",
+        "description": "night with stars",
+        "keywords": [
+            "night",
+            "stars"
+        ]
+    },
+    {
+        "emoji": "🏙",
+        "description": "cityscape",
+        "keywords": [
+            "cityscape"
+        ]
+    },
+    {
+        "emoji": "🌄",
+        "description": "sunrise over mountains",
+        "keywords": [
+            "sunrise",
+            "over",
+            "mountains"
+        ]
+    },
+    {
+        "emoji": "🌅",
+        "description": "sunrise",
+        "keywords": [
+            "sunrise"
+        ]
+    },
+    {
+        "emoji": "🌆",
+        "description": "cityscape at dusk",
+        "keywords": [
+            "dusk",
+            "cityscape"
+        ]
+    },
+    {
+        "emoji": "🌇",
+        "description": "sunset",
+        "keywords": [
+            "sunset"
+        ]
+    },
+    {
+        "emoji": "🌉",
+        "description": "bridge at night",
+        "keywords": [
+            "bridge",
+            "night"
+        ]
+    },
+    {
+        "emoji": "♨",
+        "description": "hot springs",
+        "keywords": [
+            "hot",
+            "springs"
+        ]
+    },
+    {
+        "emoji": "🎠",
+        "description": "carousel horse",
+        "keywords": [
+            "carousel",
+            "horse"
+        ]
+    },
+    {
+        "emoji": "🎡",
+        "description": "ferris wheel",
+        "keywords": [
+            "wheel",
+            "ferris"
+        ]
+    },
+    {
+        "emoji": "🎢",
+        "description": "roller coaster",
+        "keywords": [
+            "coaster",
+            "roller"
+        ]
+    },
+    {
+        "emoji": "💈",
+        "description": "barber pole",
+        "keywords": [
+            "pole",
+            "barber"
+        ]
+    },
+    {
+        "emoji": "🎪",
+        "description": "circus tent",
+        "keywords": [
+            "tent",
+            "circus"
+        ]
+    },
+    {
+        "emoji": "🚂",
+        "description": "locomotive",
+        "keywords": [
+            "locomotive"
+        ]
+    },
+    {
+        "emoji": "🚃",
+        "description": "railway car",
+        "keywords": [
+            "railway",
+            "car"
+        ]
+    },
+    {
+        "emoji": "🚄",
+        "description": "high-speed train",
+        "keywords": [
+            "high-speed",
+            "train"
+        ]
+    },
+    {
+        "emoji": "🚅",
+        "description": "bullet train",
+        "keywords": [
+            "bullet",
+            "train"
+        ]
+    },
+    {
+        "emoji": "🚆",
+        "description": "train",
+        "keywords": [
+            "train",
+            "MTR"
+        ]
+    },
+    {
+        "emoji": "🚇",
+        "description": "metro",
+        "keywords": [
+            "metro",
+            "MTR"
+        ]
+    },
+    {
+        "emoji": "🚈",
+        "description": "light rail",
+        "keywords": [
+            "rail",
+            "light"
+        ]
+    },
+    {
+        "emoji": "🚉",
+        "description": "station",
+        "keywords": [
+            "station"
+        ]
+    },
+    {
+        "emoji": "🚊",
+        "description": "tram",
+        "keywords": [
+            "tram"
+        ]
+    },
+    {
+        "emoji": "🚝",
+        "description": "monorail",
+        "keywords": [
+            "monorail"
+        ]
+    },
+    {
+        "emoji": "🚞",
+        "description": "mountain railway",
+        "keywords": [
+            "railway",
+            "mountain"
+        ]
+    },
+    {
+        "emoji": "🚋",
+        "description": "tram car",
+        "keywords": [
+            "tram",
+            "car"
+        ]
+    },
+    {
+        "emoji": "🚌",
+        "description": "bus",
+        "keywords": [
+            "bus"
+        ]
+    },
+    {
+        "emoji": "🚍",
+        "description": "oncoming bus",
+        "keywords": [
+            "bus",
+            "oncoming"
+        ]
+    },
+    {
+        "emoji": "🚎",
+        "description": "trolleybus",
+        "keywords": [
+            "trolleybus"
+        ]
+    },
+    {
+        "emoji": "🚐",
+        "description": "minibus",
+        "keywords": [
+            "minibus"
+        ]
+    },
+    {
+        "emoji": "🚑",
+        "description": "ambulance",
+        "keywords": [
+            "ambulance"
+        ]
+    },
+    {
+        "emoji": "🚒",
+        "description": "fire engine",
+        "keywords": [
+            "engine",
+            "fire"
+        ]
+    },
+    {
+        "emoji": "🚓",
+        "description": "police car",
+        "keywords": [
+            "police",
+            "car"
+        ]
+    },
+    {
+        "emoji": "🚔",
+        "description": "oncoming police car",
+        "keywords": [
+            "police",
+            "oncoming",
+            "car"
+        ]
+    },
+    {
+        "emoji": "🚕",
+        "description": "taxi",
+        "keywords": [
+            "taxi"
+        ]
+    },
+    {
+        "emoji": "🚖",
+        "description": "oncoming taxi",
+        "keywords": [
+            "taxi",
+            "oncoming"
+        ]
+    },
+    {
+        "emoji": "🚗",
+        "description": "automobile",
+        "keywords": [
+            "automobile"
+        ]
+    },
+    {
+        "emoji": "🚘",
+        "description": "oncoming automobile",
+        "keywords": [
+            "oncoming",
+            "automobile"
+        ]
+    },
+    {
+        "emoji": "🚙",
+        "description": "sport utility vehicle",
+        "keywords": [
+            "vehicle",
+            "sport",
+            "utility"
+        ]
+    },
+    {
+        "emoji": "🛻",
+        "description": "pickup truck",
+        "keywords": [
+            "pickup",
+            "truck"
+        ]
+    },
+    {
+        "emoji": "🚚",
+        "description": "delivery truck",
+        "keywords": [
+            "delivery",
+            "truck"
+        ]
+    },
+    {
+        "emoji": "🚛",
+        "description": "articulated lorry",
+        "keywords": [
+            "lorry",
+            "articulated"
+        ]
+    },
+    {
+        "emoji": "🚜",
+        "description": "tractor",
+        "keywords": [
+            "tractor"
+        ]
+    },
+    {
+        "emoji": "🏎",
+        "description": "racing car",
+        "keywords": [
+            "car",
+            "racing"
+        ]
+    },
+    {
+        "emoji": "🏍",
+        "description": "motorcycle",
+        "keywords": [
+            "motorcycle"
+        ]
+    },
+    {
+        "emoji": "🛵",
+        "description": "motor scooter",
+        "keywords": [
+            "scooter",
+            "motor"
+        ]
+    },
+    {
+        "emoji": "🦽",
+        "description": "manual wheelchair",
+        "keywords": [
+            "manual",
+            "wheelchair"
+        ]
+    },
+    {
+        "emoji": "🦼",
+        "description": "motorized wheelchair",
+        "keywords": [
+            "wheelchair",
+            "motorized"
+        ]
+    },
+    {
+        "emoji": "🛺",
+        "description": "auto rickshaw",
+        "keywords": [
+            "rickshaw",
+            "auto"
+        ]
+    },
+    {
+        "emoji": "🚲",
+        "description": "bicycle",
+        "keywords": [
+            "bicycle"
+        ]
+    },
+    {
+        "emoji": "🛴",
+        "description": "kick scooter",
+        "keywords": [
+            "scooter",
+            "kick"
+        ]
+    },
+    {
+        "emoji": "🛹",
+        "description": "skateboard",
+        "keywords": [
+            "skateboard"
+        ]
+    },
+    {
+        "emoji": "🛼",
+        "description": "roller skate",
+        "keywords": [
+            "roller",
+            "skate"
+        ]
+    },
+    {
+        "emoji": "🚏",
+        "description": "bus stop",
+        "keywords": [
+            "bus",
+            "stop"
+        ]
+    },
+    {
+        "emoji": "🛣",
+        "description": "motorway",
+        "keywords": [
+            "motorway"
+        ]
+    },
+    {
+        "emoji": "🛤",
+        "description": "railway track",
+        "keywords": [
+            "railway",
+            "track"
+        ]
+    },
+    {
+        "emoji": "🛢",
+        "description": "oil drum",
+        "keywords": [
+            "oil",
+            "drum"
+        ]
+    },
+    {
+        "emoji": "⛽",
+        "description": "fuel pump",
+        "keywords": [
+            "pump",
+            "fuel"
+        ]
+    },
+    {
+        "emoji": "🚨",
+        "description": "police car light",
+        "keywords": [
+            "police",
+            "light",
+            "car"
+        ]
+    },
+    {
+        "emoji": "🚥",
+        "description": "horizontal traffic light",
+        "keywords": [
+            "horizontal",
+            "traffic",
+            "light"
+        ]
+    },
+    {
+        "emoji": "🚦",
+        "description": "vertical traffic light",
+        "keywords": [
+            "vertical",
+            "traffic",
+            "light"
+        ]
+    },
+    {
+        "emoji": "🛑",
+        "description": "stop sign",
+        "keywords": [
+            "stop",
+            "sign"
+        ]
+    },
+    {
+        "emoji": "🚧",
+        "description": "construction",
+        "keywords": [
+            "construction"
+        ]
+    },
+    {
+        "emoji": "⚓",
+        "description": "anchor",
+        "keywords": [
+            "anchor"
+        ]
+    },
+    {
+        "emoji": "⛵",
+        "description": "sailboat",
+        "keywords": [
+            "sailboat"
+        ]
+    },
+    {
+        "emoji": "🛶",
+        "description": "canoe",
+        "keywords": [
+            "canoe"
+        ]
+    },
+    {
+        "emoji": "🚤",
+        "description": "speedboat",
+        "keywords": [
+            "speedboat"
+        ]
+    },
+    {
+        "emoji": "🛳",
+        "description": "passenger ship",
+        "keywords": [
+            "ship",
+            "passenger"
+        ]
+    },
+    {
+        "emoji": "⛴",
+        "description": "ferry",
+        "keywords": [
+            "ferry"
+        ]
+    },
+    {
+        "emoji": "🛥",
+        "description": "motor boat",
+        "keywords": [
+            "boat",
+            "motor"
+        ]
+    },
+    {
+        "emoji": "🚢",
+        "description": "ship",
+        "keywords": [
+            "ship"
+        ]
+    },
+    {
+        "emoji": "✈",
+        "description": "airplane",
+        "keywords": [
+            "airplane"
+        ]
+    },
+    {
+        "emoji": "🛩",
+        "description": "small airplane",
+        "keywords": [
+            "small",
+            "airplane"
+        ]
+    },
+    {
+        "emoji": "🛫",
+        "description": "airplane departure",
+        "keywords": [
+            "airplane",
+            "departure"
+        ]
+    },
+    {
+        "emoji": "🛬",
+        "description": "airplane arrival",
+        "keywords": [
+            "airplane",
+            "arrival"
+        ]
+    },
+    {
+        "emoji": "🪂",
+        "description": "parachute",
+        "keywords": [
+            "parachute"
+        ]
+    },
+    {
+        "emoji": "💺",
+        "description": "seat",
+        "keywords": [
+            "seat"
+        ]
+    },
+    {
+        "emoji": "🚁",
+        "description": "helicopter",
+        "keywords": [
+            "helicopter"
+        ]
+    },
+    {
+        "emoji": "🚟",
+        "description": "suspension railway",
+        "keywords": [
+            "railway",
+            "suspension"
+        ]
+    },
+    {
+        "emoji": "🚠",
+        "description": "mountain cableway",
+        "keywords": [
+            "cableway",
+            "mountain"
+        ]
+    },
+    {
+        "emoji": "🚡",
+        "description": "aerial tramway",
+        "keywords": [
+            "tramway",
+            "aerial"
+        ]
+    },
+    {
+        "emoji": "🛰",
+        "description": "satellite",
+        "keywords": [
+            "satellite"
+        ]
+    },
+    {
+        "emoji": "🚀",
+        "description": "rocket",
+        "keywords": [
+            "rocket"
+        ]
+    },
+    {
+        "emoji": "🛸",
+        "description": "flying saucer",
+        "keywords": [
+            "saucer",
+            "flying"
+        ]
+    },
+    {
+        "emoji": "🛎",
+        "description": "bellhop bell",
+        "keywords": [
+            "bell",
+            "bellhop"
+        ]
+    },
+    {
+        "emoji": "🧳",
+        "description": "luggage",
+        "keywords": [
+            "luggage"
+        ]
+    },
+    {
+        "emoji": "⌛",
+        "description": "hourglass done",
+        "keywords": [
+            "hourglass",
+            "done"
+        ]
+    },
+    {
+        "emoji": "⏳",
+        "description": "hourglass not done",
+        "keywords": [
+            "hourglass",
+            "not",
+            "done"
+        ]
+    },
+    {
+        "emoji": "⌚",
+        "description": "watch",
+        "keywords": [
+            "watch"
+        ]
+    },
+    {
+        "emoji": "⏰",
+        "description": "alarm clock",
+        "keywords": [
+            "clock",
+            "alarm"
+        ]
+    },
+    {
+        "emoji": "⏱",
+        "description": "stopwatch",
+        "keywords": [
+            "stopwatch"
+        ]
+    },
+    {
+        "emoji": "⏲",
+        "description": "timer clock",
+        "keywords": [
+            "clock",
+            "timer"
+        ]
+    },
+    {
+        "emoji": "🕰",
+        "description": "mantelpiece clock",
+        "keywords": [
+            "mantelpiece",
+            "clock"
+        ]
+    },
+    {
+        "emoji": "🌕",
+        "description": "full moon",
+        "keywords": [
+            "full",
+            "moon"
+        ]
+    },
+    {
+        "emoji": "🌙",
+        "description": "crescent moon",
+        "keywords": [
+            "crescent",
+            "moon"
+        ]
+    },
+    {
+        "emoji": "🌚",
+        "description": "new moon face",
+        "keywords": [
+            "new",
+            "moon"
+        ]
+    },
+    {
+        "emoji": "🌛",
+        "description": "first quarter moon face",
+        "keywords": [
+            "moon",
+            "quarter",
+            "first"
+        ]
+    },
+    {
+        "emoji": "🌜",
+        "description": "last quarter moon face",
+        "keywords": [
+            "moon",
+            "quarter",
+            "last"
+        ]
+    },
+    {
+        "emoji": "🌡",
+        "description": "thermometer",
+        "keywords": [
+            "thermometer"
+        ]
+    },
+    {
+        "emoji": "☀",
+        "description": "sun",
+        "keywords": [
+            "sun"
+        ]
+    },
+    {
+        "emoji": "🌝",
+        "description": "full moon face",
+        "keywords": [
+            "full",
+            "moon"
+        ]
+    },
+    {
+        "emoji": "🌞",
+        "description": "sun with face",
+        "keywords": [
+            "sun"
+        ]
+    },
+    {
+        "emoji": "🪐",
+        "description": "ringed planet",
+        "keywords": [
+            "planet",
+            "ringed"
+        ]
+    },
+    {
+        "emoji": "⭐",
+        "description": "star",
+        "keywords": [
+            "star"
+        ]
+    },
+    {
+        "emoji": "🌟",
+        "description": "glowing star",
+        "keywords": [
+            "star",
+            "glowing"
+        ]
+    },
+    {
+        "emoji": "🌠",
+        "description": "shooting star",
+        "keywords": [
+            "star",
+            "shooting"
+        ]
+    },
+    {
+        "emoji": "🌌",
+        "description": "milky way",
+        "keywords": [
+            "way",
+            "milky"
+        ]
+    },
+    {
+        "emoji": "☁",
+        "description": "cloud",
+        "keywords": [
+            "cloud"
+        ]
+    },
+    {
+        "emoji": "⛅",
+        "description": "sun behind cloud",
+        "keywords": [
+            "cloud",
+            "behind",
+            "sun"
+        ]
+    },
+    {
+        "emoji": "⛈",
+        "description": "cloud with lightning and rain",
+        "keywords": [
+            "rain",
+            "lightning",
+            "cloud"
+        ]
+    },
+    {
+        "emoji": "🌤",
+        "description": "sun behind small cloud",
+        "keywords": [
+            "small",
+            "cloud",
+            "behind",
+            "sun"
+        ]
+    },
+    {
+        "emoji": "🌥",
+        "description": "sun behind large cloud",
+        "keywords": [
+            "large",
+            "cloud",
+            "behind",
+            "sun"
+        ]
+    },
+    {
+        "emoji": "🌦",
+        "description": "sun behind rain cloud",
+        "keywords": [
+            "rain",
+            "cloud",
+            "behind",
+            "sun"
+        ]
+    },
+    {
+        "emoji": "🌧",
+        "description": "cloud with rain",
+        "keywords": [
+            "rain",
+            "cloud"
+        ]
+    },
+    {
+        "emoji": "🌨",
+        "description": "cloud with snow",
+        "keywords": [
+            "snow",
+            "cloud"
+        ]
+    },
+    {
+        "emoji": "🌩",
+        "description": "cloud with lightning",
+        "keywords": [
+            "lightning",
+            "cloud"
+        ]
+    },
+    {
+        "emoji": "🌪",
+        "description": "tornado",
+        "keywords": [
+            "tornado"
+        ]
+    },
+    {
+        "emoji": "🌫",
+        "description": "fog",
+        "keywords": [
+            "fog"
+        ]
+    },
+    {
+        "emoji": "🌬",
+        "description": "wind face",
+        "keywords": [
+            "wind"
+        ]
+    },
+    {
+        "emoji": "🌀",
+        "description": "cyclone",
+        "keywords": [
+            "cyclone"
+        ]
+    },
+    {
+        "emoji": "🌈",
+        "description": "rainbow",
+        "keywords": [
+            "rainbow"
+        ]
+    },
+    {
+        "emoji": "🌂",
+        "description": "closed umbrella",
+        "keywords": [
+            "umbrella",
+            "closed"
+        ]
+    },
+    {
+        "emoji": "☂",
+        "description": "umbrella",
+        "keywords": [
+            "umbrella"
+        ]
+    },
+    {
+        "emoji": "☔",
+        "description": "umbrella with rain drops",
+        "keywords": [
+            "umbrella",
+            "rain",
+            "drops"
+        ]
+    },
+    {
+        "emoji": "⛱",
+        "description": "umbrella on ground",
+        "keywords": [
+            "umbrella",
+            "ground"
+        ]
+    },
+    {
+        "emoji": "⚡",
+        "description": "high voltage",
+        "keywords": [
+            "voltage",
+            "high"
+        ]
+    },
+    {
+        "emoji": "❄",
+        "description": "snowflake",
+        "keywords": [
+            "snowflake"
+        ]
+    },
+    {
+        "emoji": "☃",
+        "description": "snowman",
+        "keywords": [
+            "snowman"
+        ]
+    },
+    {
+        "emoji": "⛄",
+        "description": "snowman without snow",
+        "keywords": [
+            "snowman",
+            "snow",
+            "without"
+        ]
+    },
+    {
+        "emoji": "☄",
+        "description": "comet",
+        "keywords": [
+            "comet"
+        ]
+    },
+    {
+        "emoji": "🔥",
+        "description": "fire",
+        "keywords": [
+            "fire"
+        ]
+    },
+    {
+        "emoji": "💧",
+        "description": "droplet",
+        "keywords": [
+            "droplet"
+        ]
+    },
+    {
+        "emoji": "🌊",
+        "description": "water wave",
+        "keywords": [
+            "wave",
+            "water"
+        ]
+    },
+    {
+        "emoji": "🎃",
+        "description": "jack-o-lantern",
+        "keywords": [
+            "jack-o-lantern"
+        ]
+    },
+    {
+        "emoji": "🎄",
+        "description": "Christmas tree",
+        "keywords": [
+            "christmas",
+            "tree"
+        ]
+    },
+    {
+        "emoji": "🎆",
+        "description": "fireworks",
+        "keywords": [
+            "fireworks"
+        ]
+    },
+    {
+        "emoji": "🎇",
+        "description": "sparkler",
+        "keywords": [
+            "sparkler"
+        ]
+    },
+    {
+        "emoji": "🧨",
+        "description": "firecracker",
+        "keywords": [
+            "firecracker"
+        ]
+    },
+    {
+        "emoji": "✨",
+        "description": "sparkles",
+        "keywords": [
+            "sparkles"
+        ]
+    },
+    {
+        "emoji": "🎈",
+        "description": "balloon",
+        "keywords": [
+            "balloon"
+        ]
+    },
+    {
+        "emoji": "🎉",
+        "description": "party popper",
+        "keywords": [
+            "party",
+            "popper"
+        ]
+    },
+    {
+        "emoji": "🎊",
+        "description": "confetti ball",
+        "keywords": [
+            "confetti",
+            "ball"
+        ]
+    },
+    {
+        "emoji": "🎋",
+        "description": "tanabata tree",
+        "keywords": [
+            "tree",
+            "tanabata"
+        ]
+    },
+    {
+        "emoji": "🎍",
+        "description": "pine decoration",
+        "keywords": [
+            "pine",
+            "decoration"
+        ]
+    },
+    {
+        "emoji": "🎎",
+        "description": "Japanese dolls",
+        "keywords": [
+            "japanese",
+            "dolls"
+        ]
+    },
+    {
+        "emoji": "🎏",
+        "description": "carp streamer",
+        "keywords": [
+            "carp",
+            "streamer"
+        ]
+    },
+    {
+        "emoji": "🎐",
+        "description": "wind chime",
+        "keywords": [
+            "chime",
+            "wind"
+        ]
+    },
+    {
+        "emoji": "🎑",
+        "description": "moon viewing ceremony",
+        "keywords": [
+            "viewing",
+            "ceremony",
+            "moon"
+        ]
+    },
+    {
+        "emoji": "🧧",
+        "description": "red envelope",
+        "keywords": [
+            "envelope",
+            "red"
+        ]
+    },
+    {
+        "emoji": "🎀",
+        "description": "ribbon",
+        "keywords": [
+            "ribbon"
+        ]
+    },
+    {
+        "emoji": "🎁",
+        "description": "wrapped gift",
+        "keywords": [
+            "wrapped",
+            "gift"
+        ]
+    },
+    {
+        "emoji": "🎗",
+        "description": "reminder ribbon",
+        "keywords": [
+            "ribbon",
+            "reminder"
+        ]
+    },
+    {
+        "emoji": "🎟",
+        "description": "admission tickets",
+        "keywords": [
+            "admission",
+            "tickets"
+        ]
+    },
+    {
+        "emoji": "🎫",
+        "description": "ticket",
+        "keywords": [
+            "ticket"
+        ]
+    },
+    {
+        "emoji": "🎖",
+        "description": "military medal",
+        "keywords": [
+            "medal",
+            "military"
+        ]
+    },
+    {
+        "emoji": "🏆",
+        "description": "trophy",
+        "keywords": [
+            "trophy"
+        ]
+    },
+    {
+        "emoji": "🏅",
+        "description": "sports medal",
+        "keywords": [
+            "medal",
+            "sports"
+        ]
+    },
+    {
+        "emoji": "🥇",
+        "description": "1st place medal",
+        "keywords": [
+            "1st",
+            "medal",
+            "place"
+        ]
+    },
+    {
+        "emoji": "🥈",
+        "description": "2nd place medal",
+        "keywords": [
+            "medal",
+            "place",
+            "2nd"
+        ]
+    },
+    {
+        "emoji": "🥉",
+        "description": "3rd place medal",
+        "keywords": [
+            "medal",
+            "3rd",
+            "place"
+        ]
+    },
+    {
+        "emoji": "⚽",
+        "description": "soccer ball",
+        "keywords": [
+            "ball",
+            "soccer"
+        ]
+    },
+    {
+        "emoji": "⚾",
+        "description": "baseball",
+        "keywords": [
+            "baseball"
+        ]
+    },
+    {
+        "emoji": "🥎",
+        "description": "softball",
+        "keywords": [
+            "softball"
+        ]
+    },
+    {
+        "emoji": "🏀",
+        "description": "basketball",
+        "keywords": [
+            "basketball"
+        ]
+    },
+    {
+        "emoji": "🏐",
+        "description": "volleyball",
+        "keywords": [
+            "volleyball"
+        ]
+    },
+    {
+        "emoji": "🏈",
+        "description": "american football",
+        "keywords": [
+            "football",
+            "american"
+        ]
+    },
+    {
+        "emoji": "🏉",
+        "description": "rugby football",
+        "keywords": [
+            "rugby",
+            "football"
+        ]
+    },
+    {
+        "emoji": "🎾",
+        "description": "tennis",
+        "keywords": [
+            "tennis"
+        ]
+    },
+    {
+        "emoji": "🥏",
+        "description": "flying disc",
+        "keywords": [
+            "disc",
+            "flying"
+        ]
+    },
+    {
+        "emoji": "🎳",
+        "description": "bowling",
+        "keywords": [
+            "bowling"
+        ]
+    },
+    {
+        "emoji": "🏏",
+        "description": "cricket game",
+        "keywords": [
+            "game",
+            "cricket"
+        ]
+    },
+    {
+        "emoji": "🏑",
+        "description": "field hockey",
+        "keywords": [
+            "hockey",
+            "field"
+        ]
+    },
+    {
+        "emoji": "🏒",
+        "description": "ice hockey",
+        "keywords": [
+            "hockey",
+            "ice"
+        ]
+    },
+    {
+        "emoji": "🥍",
+        "description": "lacrosse",
+        "keywords": [
+            "lacrosse"
+        ]
+    },
+    {
+        "emoji": "🏓",
+        "description": "ping pong",
+        "keywords": [
+            "pong",
+            "ping"
+        ]
+    },
+    {
+        "emoji": "🏸",
+        "description": "badminton",
+        "keywords": [
+            "badminton"
+        ]
+    },
+    {
+        "emoji": "🥊",
+        "description": "boxing glove",
+        "keywords": [
+            "boxing",
+            "glove"
+        ]
+    },
+    {
+        "emoji": "🥋",
+        "description": "martial arts uniform",
+        "keywords": [
+            "martial",
+            "arts",
+            "uniform"
+        ]
+    },
+    {
+        "emoji": "🥅",
+        "description": "goal net",
+        "keywords": [
+            "goal",
+            "net"
+        ]
+    },
+    {
+        "emoji": "⛳",
+        "description": "flag in hole",
+        "keywords": [
+            "hole",
+            "flag"
+        ]
+    },
+    {
+        "emoji": "⛸",
+        "description": "ice skate",
+        "keywords": [
+            "ice",
+            "skate"
+        ]
+    },
+    {
+        "emoji": "🎣",
+        "description": "fishing pole",
+        "keywords": [
+            "fishing",
+            "pole"
+        ]
+    },
+    {
+        "emoji": "🤿",
+        "description": "diving mask",
+        "keywords": [
+            "mask",
+            "diving"
+        ]
+    },
+    {
+        "emoji": "🎽",
+        "description": "running shirt",
+        "keywords": [
+            "shirt",
+            "running"
+        ]
+    },
+    {
+        "emoji": "🎿",
+        "description": "skis",
+        "keywords": [
+            "skis"
+        ]
+    },
+    {
+        "emoji": "🛷",
+        "description": "sled",
+        "keywords": [
+            "sled"
+        ]
+    },
+    {
+        "emoji": "🥌",
+        "description": "curling stone",
+        "keywords": [
+            "stone",
+            "curling"
+        ]
+    },
+    {
+        "emoji": "🎯",
+        "description": "bullseye",
+        "keywords": [
+            "bullseye"
+        ]
+    },
+    {
+        "emoji": "🪀",
+        "description": "yo-yo",
+        "keywords": [
+            "yo-yo"
+        ]
+    },
+    {
+        "emoji": "🪁",
+        "description": "kite",
+        "keywords": [
+            "kite"
+        ]
+    },
+    {
+        "emoji": "🎱",
+        "description": "pool 8 ball",
+        "keywords": [
+            "pool",
+            "8",
+            "ball"
+        ]
+    },
+    {
+        "emoji": "🔮",
+        "description": "crystal ball",
+        "keywords": [
+            "ball",
+            "crystal"
+        ]
+    },
+    {
+        "emoji": "🪄",
+        "description": "magic wand",
+        "keywords": [
+            "magic",
+            "wand"
+        ]
+    },
+    {
+        "emoji": "🧿",
+        "description": "nazar amulet",
+        "keywords": [
+            "amulet",
+            "nazar"
+        ]
+    },
+    {
+        "emoji": "🎮",
+        "description": "video game",
+        "keywords": [
+            "game",
+            "video"
+        ]
+    },
+    {
+        "emoji": "🕹",
+        "description": "joystick",
+        "keywords": [
+            "joystick"
+        ]
+    },
+    {
+        "emoji": "🎰",
+        "description": "slot machine",
+        "keywords": [
+            "slot",
+            "machine"
+        ]
+    },
+    {
+        "emoji": "🎲",
+        "description": "game die",
+        "keywords": [
+            "game",
+            "die"
+        ]
+    },
+    {
+        "emoji": "🧩",
+        "description": "puzzle piece",
+        "keywords": [
+            "piece",
+            "puzzle"
+        ]
+    },
+    {
+        "emoji": "🧸",
+        "description": "teddy bear",
+        "keywords": [
+            "bear",
+            "teddy"
+        ]
+    },
+    {
+        "emoji": "🪅",
+        "description": "piñata",
+        "keywords": [
+            "piñata"
+        ]
+    },
+    {
+        "emoji": "🪆",
+        "description": "nesting dolls",
+        "keywords": [
+            "nesting",
+            "dolls"
+        ]
+    },
+    {
+        "emoji": "🎴",
+        "description": "flower playing cards",
+        "keywords": [
+            "flower",
+            "playing",
+            "cards"
+        ]
+    },
+    {
+        "emoji": "🎭",
+        "description": "performing arts",
+        "keywords": [
+            "arts",
+            "performing"
+        ]
+    },
+    {
+        "emoji": "🖼",
+        "description": "framed picture",
+        "keywords": [
+            "framed",
+            "picture"
+        ]
+    },
+    {
+        "emoji": "🎨",
+        "description": "artist palette",
+        "keywords": [
+            "palette",
+            "artist"
+        ]
+    },
+    {
+        "emoji": "🧵",
+        "description": "thread",
+        "keywords": [
+            "thread"
+        ]
+    },
+    {
+        "emoji": "🪡",
+        "description": "sewing needle",
+        "keywords": [
+            "sewing",
+            "needle"
+        ]
+    },
+    {
+        "emoji": "🧶",
+        "description": "yarn",
+        "keywords": [
+            "yarn"
+        ]
+    },
+    {
+        "emoji": "🪢",
+        "description": "knot",
+        "keywords": [
+            "knot"
+        ]
+    },
+    {
+        "emoji": "👓",
+        "description": "glasses",
+        "keywords": [
+            "glasses"
+        ]
+    },
+    {
+        "emoji": "🕶",
+        "description": "sunglasses",
+        "keywords": [
+            "sunglasses"
+        ]
+    },
+    {
+        "emoji": "🥽",
+        "description": "goggles",
+        "keywords": [
+            "goggles"
+        ]
+    },
+    {
+        "emoji": "🥼",
+        "description": "lab coat",
+        "keywords": [
+            "coat",
+            "lab"
+        ]
+    },
+    {
+        "emoji": "🦺",
+        "description": "safety vest",
+        "keywords": [
+            "safety",
+            "vest"
+        ]
+    },
+    {
+        "emoji": "👔",
+        "description": "necktie",
+        "keywords": [
+            "necktie"
+        ]
+    },
+    {
+        "emoji": "👕",
+        "description": "t-shirt",
+        "keywords": [
+            "t-shirt"
+        ]
+    },
+    {
+        "emoji": "👖",
+        "description": "jeans",
+        "keywords": [
+            "jeans"
+        ]
+    },
+    {
+        "emoji": "🧣",
+        "description": "scarf",
+        "keywords": [
+            "scarf"
+        ]
+    },
+    {
+        "emoji": "🧤",
+        "description": "gloves",
+        "keywords": [
+            "gloves"
+        ]
+    },
+    {
+        "emoji": "🧥",
+        "description": "coat",
+        "keywords": [
+            "coat"
+        ]
+    },
+    {
+        "emoji": "🧦",
+        "description": "socks",
+        "keywords": [
+            "socks"
+        ]
+    },
+    {
+        "emoji": "👗",
+        "description": "dress",
+        "keywords": [
+            "dress"
+        ]
+    },
+    {
+        "emoji": "👘",
+        "description": "kimono",
+        "keywords": [
+            "kimono"
+        ]
+    },
+    {
+        "emoji": "🥻",
+        "description": "sari",
+        "keywords": [
+            "sari"
+        ]
+    },
+    {
+        "emoji": "🩱",
+        "description": "one-piece swimsuit",
+        "keywords": [
+            "swimsuit",
+            "one-piece"
+        ]
+    },
+    {
+        "emoji": "🩲",
+        "description": "briefs",
+        "keywords": [
+            "briefs"
+        ]
+    },
+    {
+        "emoji": "🩳",
+        "description": "shorts",
+        "keywords": [
+            "shorts"
+        ]
+    },
+    {
+        "emoji": "👙",
+        "description": "bikini",
+        "keywords": [
+            "bikini"
+        ]
+    },
+    {
+        "emoji": "👚",
+        "description": "woman’s clothes",
+        "keywords": [
+            "woman’s",
+            "clothes"
+        ]
+    },
+    {
+        "emoji": "👛",
+        "description": "purse",
+        "keywords": [
+            "purse"
+        ]
+    },
+    {
+        "emoji": "👜",
+        "description": "handbag",
+        "keywords": [
+            "wave",
+            "handbag",
+            "gesture",
+            "action"
+        ]
+    },
+    {
+        "emoji": "👝",
+        "description": "clutch bag",
+        "keywords": [
+            "clutch",
+            "bag"
+        ]
+    },
+    {
+        "emoji": "🛍",
+        "description": "shopping bags",
+        "keywords": [
+            "shopping",
+            "bags"
+        ]
+    },
+    {
+        "emoji": "🎒",
+        "description": "backpack",
+        "keywords": [
+            "backpack"
+        ]
+    },
+    {
+        "emoji": "🩴",
+        "description": "thong sandal",
+        "keywords": [
+            "thong",
+            "sandal"
+        ]
+    },
+    {
+        "emoji": "👞",
+        "description": "man’s shoe",
+        "keywords": [
+            "shoe",
+            "man’s"
+        ]
+    },
+    {
+        "emoji": "👟",
+        "description": "running shoe",
+        "keywords": [
+            "shoe",
+            "running"
+        ]
+    },
+    {
+        "emoji": "🥾",
+        "description": "hiking boot",
+        "keywords": [
+            "hiking",
+            "boot"
+        ]
+    },
+    {
+        "emoji": "🥿",
+        "description": "flat shoe",
+        "keywords": [
+            "flat",
+            "shoe"
+        ]
+    },
+    {
+        "emoji": "👠",
+        "description": "high-heeled shoe",
+        "keywords": [
+            "shoe",
+            "high-heeled"
+        ]
+    },
+    {
+        "emoji": "👡",
+        "description": "woman’s sandal",
+        "keywords": [
+            "woman’s",
+            "sandal"
+        ]
+    },
+    {
+        "emoji": "🩰",
+        "description": "ballet shoes",
+        "keywords": [
+            "shoes",
+            "ballet"
+        ]
+    },
+    {
+        "emoji": "👢",
+        "description": "woman’s boot",
+        "keywords": [
+            "woman’s",
+            "boot"
+        ]
+    },
+    {
+        "emoji": "👑",
+        "description": "crown",
+        "keywords": [
+            "crown"
+        ]
+    },
+    {
+        "emoji": "👒",
+        "description": "woman’s hat",
+        "keywords": [
+            "woman’s",
+            "hat"
+        ]
+    },
+    {
+        "emoji": "🎩",
+        "description": "top hat",
+        "keywords": [
+            "hat",
+            "top"
+        ]
+    },
+    {
+        "emoji": "🎓",
+        "description": "graduation cap",
+        "keywords": [
+            "graduation",
+            "cap"
+        ]
+    },
+    {
+        "emoji": "🧢",
+        "description": "billed cap",
+        "keywords": [
+            "cap",
+            "billed"
+        ]
+    },
+    {
+        "emoji": "🪖",
+        "description": "military helmet",
+        "keywords": [
+            "military",
+            "helmet"
+        ]
+    },
+    {
+        "emoji": "⛑",
+        "description": "rescue worker’s helmet",
+        "keywords": [
+            "helmet",
+            "worker’s",
+            "rescue"
+        ]
+    },
+    {
+        "emoji": "📿",
+        "description": "prayer beads",
+        "keywords": [
+            "beads",
+            "prayer"
+        ]
+    },
+    {
+        "emoji": "💄",
+        "description": "lipstick",
+        "keywords": [
+            "lipstick"
+        ]
+    },
+    {
+        "emoji": "💍",
+        "description": "ring",
+        "keywords": [
+            "ring"
+        ]
+    },
+    {
+        "emoji": "💎",
+        "description": "gem stone",
+        "keywords": [
+            "stone",
+            "gem"
+        ]
+    },
+    {
+        "emoji": "🔇",
+        "description": "muted speaker",
+        "keywords": [
+            "muted",
+            "speaker"
+        ]
+    },
+    {
+        "emoji": "🔈",
+        "description": "speaker low volume",
+        "keywords": [
+            "low",
+            "speaker",
+            "volume"
+        ]
+    },
+    {
+        "emoji": "🔉",
+        "description": "speaker medium volume",
+        "keywords": [
+            "medium",
+            "speaker",
+            "volume"
+        ]
+    },
+    {
+        "emoji": "🔊",
+        "description": "speaker high volume",
+        "keywords": [
+            "speaker",
+            "volume",
+            "high"
+        ]
+    },
+    {
+        "emoji": "📢",
+        "description": "loudspeaker",
+        "keywords": [
+            "loudspeaker"
+        ]
+    },
+    {
+        "emoji": "📣",
+        "description": "megaphone",
+        "keywords": [
+            "megaphone"
+        ]
+    },
+    {
+        "emoji": "📯",
+        "description": "postal horn",
+        "keywords": [
+            "horn",
+            "postal"
+        ]
+    },
+    {
+        "emoji": "🔔",
+        "description": "bell",
+        "keywords": [
+            "bell"
+        ]
+    },
+    {
+        "emoji": "🔕",
+        "description": "bell with slash",
+        "keywords": [
+            "bell",
+            "slash"
+        ]
+    },
+    {
+        "emoji": "🎼",
+        "description": "musical score",
+        "keywords": [
+            "score",
+            "musical"
+        ]
+    },
+    {
+        "emoji": "🎵",
+        "description": "musical note",
+        "keywords": [
+            "note",
+            "musical"
+        ]
+    },
+    {
+        "emoji": "🎶",
+        "description": "musical notes",
+        "keywords": [
+            "notes",
+            "musical"
+        ]
+    },
+    {
+        "emoji": "🎙",
+        "description": "studio microphone",
+        "keywords": [
+            "studio",
+            "microphone"
+        ]
+    },
+    {
+        "emoji": "🎚",
+        "description": "level slider",
+        "keywords": [
+            "level",
+            "slider"
+        ]
+    },
+    {
+        "emoji": "🎛",
+        "description": "control knobs",
+        "keywords": [
+            "knobs",
+            "control"
+        ]
+    },
+    {
+        "emoji": "🎤",
+        "description": "microphone",
+        "keywords": [
+            "microphone"
+        ]
+    },
+    {
+        "emoji": "🎧",
+        "description": "headphone",
+        "keywords": [
+            "headphone"
+        ]
+    },
+    {
+        "emoji": "📻",
+        "description": "radio",
+        "keywords": [
+            "radio"
+        ]
+    },
+    {
+        "emoji": "🎷",
+        "description": "saxophone",
+        "keywords": [
+            "saxophone"
+        ]
+    },
+    {
+        "emoji": "🪗",
+        "description": "accordion",
+        "keywords": [
+            "accordion"
+        ]
+    },
+    {
+        "emoji": "🎸",
+        "description": "guitar",
+        "keywords": [
+            "guitar"
+        ]
+    },
+    {
+        "emoji": "🎹",
+        "description": "musical keyboard",
+        "keywords": [
+            "keyboard",
+            "musical"
+        ]
+    },
+    {
+        "emoji": "🎺",
+        "description": "trumpet",
+        "keywords": [
+            "trumpet"
+        ]
+    },
+    {
+        "emoji": "🎻",
+        "description": "violin",
+        "keywords": [
+            "violin"
+        ]
+    },
+    {
+        "emoji": "🪕",
+        "description": "banjo",
+        "keywords": [
+            "banjo"
+        ]
+    },
+    {
+        "emoji": "🥁",
+        "description": "drum",
+        "keywords": [
+            "drum"
+        ]
+    },
+    {
+        "emoji": "🪘",
+        "description": "long drum",
+        "keywords": [
+            "long",
+            "drum"
+        ]
+    },
+    {
+        "emoji": "📱",
+        "description": "mobile phone",
+        "keywords": [
+            "mobile",
+            "phone"
+        ]
+    },
+    {
+        "emoji": "📲",
+        "description": "mobile phone with arrow",
+        "keywords": [
+            "mobile",
+            "arrow",
+            "phone"
+        ]
+    },
+    {
+        "emoji": "☎",
+        "description": "telephone",
+        "keywords": [
+            "telephone"
+        ]
+    },
+    {
+        "emoji": "📞",
+        "description": "telephone receiver",
+        "keywords": [
+            "receiver",
+            "telephone"
+        ]
+    },
+    {
+        "emoji": "📟",
+        "description": "pager",
+        "keywords": [
+            "pager"
+        ]
+    },
+    {
+        "emoji": "📠",
+        "description": "fax machine",
+        "keywords": [
+            "machine",
+            "fax"
+        ]
+    },
+    {
+        "emoji": "🔋",
+        "description": "battery",
+        "keywords": [
+            "battery"
+        ]
+    },
+    {
+        "emoji": "🔌",
+        "description": "electric plug",
+        "keywords": [
+            "electric",
+            "plug"
+        ]
+    },
+    {
+        "emoji": "💻",
+        "description": "laptop",
+        "keywords": [
+            "laptop"
+        ]
+    },
+    {
+        "emoji": "🖥",
+        "description": "desktop computer",
+        "keywords": [
+            "computer",
+            "desktop"
+        ]
+    },
+    {
+        "emoji": "🖨",
+        "description": "printer",
+        "keywords": [
+            "printer"
+        ]
+    },
+    {
+        "emoji": "⌨",
+        "description": "keyboard",
+        "keywords": [
+            "keyboard"
+        ]
+    },
+    {
+        "emoji": "🖱",
+        "description": "computer mouse",
+        "keywords": [
+            "computer",
+            "mouse"
+        ]
+    },
+    {
+        "emoji": "🖲",
+        "description": "trackball",
+        "keywords": [
+            "trackball"
+        ]
+    },
+    {
+        "emoji": "💽",
+        "description": "computer disk",
+        "keywords": [
+            "computer",
+            "disk"
+        ]
+    },
+    {
+        "emoji": "💾",
+        "description": "floppy disk",
+        "keywords": [
+            "disk",
+            "floppy"
+        ]
+    },
+    {
+        "emoji": "💿",
+        "description": "optical disk",
+        "keywords": [
+            "optical",
+            "disk"
+        ]
+    },
+    {
+        "emoji": "📀",
+        "description": "dvd",
+        "keywords": [
+            "dvd"
+        ]
+    },
+    {
+        "emoji": "🧮",
+        "description": "abacus",
+        "keywords": [
+            "abacus"
+        ]
+    },
+    {
+        "emoji": "🎥",
+        "description": "movie camera",
+        "keywords": [
+            "camera",
+            "movie"
+        ]
+    },
+    {
+        "emoji": "🎞",
+        "description": "film frames",
+        "keywords": [
+            "film",
+            "frames"
+        ]
+    },
+    {
+        "emoji": "📽",
+        "description": "film projector",
+        "keywords": [
+            "projector",
+            "film"
+        ]
+    },
+    {
+        "emoji": "🎬",
+        "description": "clapper board",
+        "keywords": [
+            "clapper",
+            "board"
+        ]
+    },
+    {
+        "emoji": "📺",
+        "description": "television",
+        "keywords": [
+            "television"
+        ]
+    },
+    {
+        "emoji": "📷",
+        "description": "camera",
+        "keywords": [
+            "camera"
+        ]
+    },
+    {
+        "emoji": "📸",
+        "description": "camera with flash",
+        "keywords": [
+            "camera",
+            "flash"
+        ]
+    },
+    {
+        "emoji": "📹",
+        "description": "video camera",
+        "keywords": [
+            "camera",
+            "video"
+        ]
+    },
+    {
+        "emoji": "📼",
+        "description": "videocassette",
+        "keywords": [
+            "videocassette"
+        ]
+    },
+    {
+        "emoji": "🔍",
+        "description": "magnifying glass tilted left",
+        "keywords": [
+            "left",
+            "magnifying",
+            "tilted",
+            "glass"
+        ]
+    },
+    {
+        "emoji": "🔎",
+        "description": "magnifying glass tilted right",
+        "keywords": [
+            "right",
+            "magnifying",
+            "tilted",
+            "glass"
+        ]
+    },
+    {
+        "emoji": "🕯",
+        "description": "candle",
+        "keywords": [
+            "candle"
+        ]
+    },
+    {
+        "emoji": "💡",
+        "description": "light bulb",
+        "keywords": [
+            "bulb",
+            "light"
+        ]
+    },
+    {
+        "emoji": "🔦",
+        "description": "flashlight",
+        "keywords": [
+            "flashlight"
+        ]
+    },
+    {
+        "emoji": "🏮",
+        "description": "red paper lantern",
+        "keywords": [
+            "paper",
+            "red",
+            "lantern"
+        ]
+    },
+    {
+        "emoji": "🪔",
+        "description": "diya lamp",
+        "keywords": [
+            "lamp",
+            "diya"
+        ]
+    },
+    {
+        "emoji": "📖",
+        "description": "open book",
+        "keywords": [
+            "reading",
+            "study",
+            "book",
+            "open",
+            "education"
+        ]
+    },
+    {
+        "emoji": "📚",
+        "description": "books",
+        "keywords": [
+            "study",
+            "books",
+            "reading",
+            "education"
+        ]
+    },
+    {
+        "emoji": "📒",
+        "description": "ledger",
+        "keywords": [
+            "ledger"
+        ]
+    },
+    {
+        "emoji": "📃",
+        "description": "page with curl",
+        "keywords": [
+            "page",
+            "curl"
+        ]
+    },
+    {
+        "emoji": "📜",
+        "description": "scroll",
+        "keywords": [
+            "scroll"
+        ]
+    },
+    {
+        "emoji": "📄",
+        "description": "page facing up",
+        "keywords": [
+            "page",
+            "up",
+            "facing"
+        ]
+    },
+    {
+        "emoji": "📰",
+        "description": "newspaper",
+        "keywords": [
+            "newspaper"
+        ]
+    },
+    {
+        "emoji": "🗞",
+        "description": "rolled-up newspaper",
+        "keywords": [
+            "rolled-up",
+            "newspaper"
+        ]
+    },
+    {
+        "emoji": "📑",
+        "description": "bookmark tabs",
+        "keywords": [
+            "reading",
+            "bookmark",
+            "study",
+            "tabs",
+            "education"
+        ]
+    },
+    {
+        "emoji": "🔖",
+        "description": "bookmark",
+        "keywords": [
+            "study",
+            "reading",
+            "bookmark",
+            "education"
+        ]
+    },
+    {
+        "emoji": "🏷",
+        "description": "label",
+        "keywords": [
+            "label"
+        ]
+    },
+    {
+        "emoji": "💰",
+        "description": "money bag",
+        "keywords": [
+            "money",
+            "bag"
+        ]
+    },
+    {
+        "emoji": "🪙",
+        "description": "coin",
+        "keywords": [
+            "coin"
+        ]
+    },
+    {
+        "emoji": "💴",
+        "description": "yen banknote",
+        "keywords": [
+            "banknote",
+            "yen"
+        ]
+    },
+    {
+        "emoji": "💵",
+        "description": "dollar banknote",
+        "keywords": [
+            "dollar",
+            "banknote"
+        ]
+    },
+    {
+        "emoji": "💶",
+        "description": "euro banknote",
+        "keywords": [
+            "euro",
+            "banknote"
+        ]
+    },
+    {
+        "emoji": "💷",
+        "description": "pound banknote",
+        "keywords": [
+            "pound",
+            "banknote"
+        ]
+    },
+    {
+        "emoji": "💸",
+        "description": "money with wings",
+        "keywords": [
+            "wings",
+            "money"
+        ]
+    },
+    {
+        "emoji": "💳",
+        "description": "credit card",
+        "keywords": [
+            "card",
+            "credit"
+        ]
+    },
+    {
+        "emoji": "🧾",
+        "description": "receipt",
+        "keywords": [
+            "receipt"
+        ]
+    },
+    {
+        "emoji": "💹",
+        "description": "chart increasing with yen",
+        "keywords": [
+            "yen",
+            "increasing",
+            "chart"
+        ]
+    },
+    {
+        "emoji": "✉",
+        "description": "envelope",
+        "keywords": [
+            "envelope"
+        ]
+    },
+    {
+        "emoji": "📧",
+        "description": "e-mail",
+        "keywords": [
+            "e-mail"
+        ]
+    },
+    {
+        "emoji": "📨",
+        "description": "incoming envelope",
+        "keywords": [
+            "envelope",
+            "incoming"
+        ]
+    },
+    {
+        "emoji": "📩",
+        "description": "envelope with arrow",
+        "keywords": [
+            "envelope",
+            "arrow"
+        ]
+    },
+    {
+        "emoji": "📤",
+        "description": "outbox tray",
+        "keywords": [
+            "tray",
+            "outbox"
+        ]
+    },
+    {
+        "emoji": "📥",
+        "description": "inbox tray",
+        "keywords": [
+            "inbox",
+            "tray"
+        ]
+    },
+    {
+        "emoji": "📦",
+        "description": "package",
+        "keywords": [
+            "package"
+        ]
+    },
+    {
+        "emoji": "📫",
+        "description": "closed mailbox with raised flag",
+        "keywords": [
+            "raised",
+            "flag",
+            "mailbox",
+            "closed"
+        ]
+    },
+    {
+        "emoji": "📪",
+        "description": "closed mailbox with lowered flag",
+        "keywords": [
+            "flag",
+            "lowered",
+            "mailbox",
+            "closed"
+        ]
+    },
+    {
+        "emoji": "📬",
+        "description": "open mailbox with raised flag",
+        "keywords": [
+            "raised",
+            "flag",
+            "mailbox",
+            "open"
+        ]
+    },
+    {
+        "emoji": "📭",
+        "description": "open mailbox with lowered flag",
+        "keywords": [
+            "lowered",
+            "flag",
+            "mailbox",
+            "open"
+        ]
+    },
+    {
+        "emoji": "📮",
+        "description": "postbox",
+        "keywords": [
+            "postbox"
+        ]
+    },
+    {
+        "emoji": "🗳",
+        "description": "ballot box with ballot",
+        "keywords": [
+            "box",
+            "ballot"
+        ]
+    },
+    {
+        "emoji": "✏",
+        "description": "pencil",
+        "keywords": [
+            "pencil"
+        ]
+    },
+    {
+        "emoji": "✒",
+        "description": "black nib",
+        "keywords": [
+            "black",
+            "nib"
+        ]
+    },
+    {
+        "emoji": "🖋",
+        "description": "fountain pen",
+        "keywords": [
+            "fountain",
+            "pen"
+        ]
+    },
+    {
+        "emoji": "🖊",
+        "description": "pen",
+        "keywords": [
+            "pen"
+        ]
+    },
+    {
+        "emoji": "🖌",
+        "description": "paintbrush",
+        "keywords": [
+            "paintbrush"
+        ]
+    },
+    {
+        "emoji": "🖍",
+        "description": "crayon",
+        "keywords": [
+            "crayon"
+        ]
+    },
+    {
+        "emoji": "📝",
+        "description": "memo",
+        "keywords": [
+            "memo"
+        ]
+    },
+    {
+        "emoji": "💼",
+        "description": "briefcase",
+        "keywords": [
+            "work",
+            "job"
+        ]
+    },
+    {
+        "emoji": "📁",
+        "description": "file folder",
+        "keywords": [
+            "folder",
+            "file"
+        ]
+    },
+    {
+        "emoji": "📂",
+        "description": "open file folder",
+        "keywords": [
+            "open",
+            "file",
+            "folder"
+        ]
+    },
+    {
+        "emoji": "🗂",
+        "description": "card index dividers",
+        "keywords": [
+            "dividers",
+            "card",
+            "index"
+        ]
+    },
+    {
+        "emoji": "📅",
+        "description": "calendar",
+        "keywords": [
+            "calendar"
+        ]
+    },
+    {
+        "emoji": "📆",
+        "description": "tear-off calendar",
+        "keywords": [
+            "tear-off",
+            "calendar"
+        ]
+    },
+    {
+        "emoji": "🗒",
+        "description": "spiral notepad",
+        "keywords": [
+            "spiral",
+            "notepad"
+        ]
+    },
+    {
+        "emoji": "🗓",
+        "description": "spiral calendar",
+        "keywords": [
+            "spiral",
+            "calendar"
+        ]
+    },
+    {
+        "emoji": "📇",
+        "description": "card index",
+        "keywords": [
+            "card",
+            "index"
+        ]
+    },
+    {
+        "emoji": "📈",
+        "description": "chart increasing",
+        "keywords": [
+            "increasing",
+            "chart"
+        ]
+    },
+    {
+        "emoji": "📉",
+        "description": "chart decreasing",
+        "keywords": [
+            "decreasing",
+            "chart"
+        ]
+    },
+    {
+        "emoji": "📊",
+        "description": "bar chart",
+        "keywords": [
+            "bar",
+            "chart"
+        ]
+    },
+    {
+        "emoji": "📋",
+        "description": "clipboard",
+        "keywords": [
+            "clipboard"
+        ]
+    },
+    {
+        "emoji": "📌",
+        "description": "pushpin",
+        "keywords": [
+            "pushpin"
+        ]
+    },
+    {
+        "emoji": "📍",
+        "description": "round pushpin",
+        "keywords": [
+            "round",
+            "pushpin"
+        ]
+    },
+    {
+        "emoji": "📎",
+        "description": "paperclip",
+        "keywords": [
+            "paperclip"
+        ]
+    },
+    {
+        "emoji": "🖇",
+        "description": "linked paperclips",
+        "keywords": [
+            "linked",
+            "paperclips"
+        ]
+    },
+    {
+        "emoji": "📏",
+        "description": "straight ruler",
+        "keywords": [
+            "ruler",
+            "straight"
+        ]
+    },
+    {
+        "emoji": "📐",
+        "description": "triangular ruler",
+        "keywords": [
+            "ruler",
+            "triangular"
+        ]
+    },
+    {
+        "emoji": "✂",
+        "description": "scissors",
+        "keywords": [
+            "scissors"
+        ]
+    },
+    {
+        "emoji": "🗃",
+        "description": "card file box",
+        "keywords": [
+            "box",
+            "card",
+            "file"
+        ]
+    },
+    {
+        "emoji": "🗄",
+        "description": "file cabinet",
+        "keywords": [
+            "file",
+            "cabinet"
+        ]
+    },
+    {
+        "emoji": "🗑",
+        "description": "wastebasket",
+        "keywords": [
+            "wastebasket"
+        ]
+    },
+    {
+        "emoji": "🔒",
+        "description": "locked",
+        "keywords": [
+            "locked"
+        ]
+    },
+    {
+        "emoji": "🔓",
+        "description": "unlocked",
+        "keywords": [
+            "unlocked"
+        ]
+    },
+    {
+        "emoji": "🔏",
+        "description": "locked with pen",
+        "keywords": [
+            "locked",
+            "pen"
+        ]
+    },
+    {
+        "emoji": "🔐",
+        "description": "locked with key",
+        "keywords": [
+            "locked",
+            "key"
+        ]
+    },
+    {
+        "emoji": "🔑",
+        "description": "key",
+        "keywords": [
+            "key"
+        ]
+    },
+    {
+        "emoji": "🗝",
+        "description": "old key",
+        "keywords": [
+            "old",
+            "key"
+        ]
+    },
+    {
+        "emoji": "🔨",
+        "description": "hammer",
+        "keywords": [
+            "hammer"
+        ]
+    },
+    {
+        "emoji": "🪓",
+        "description": "axe",
+        "keywords": [
+            "axe"
+        ]
+    },
+    {
+        "emoji": "⛏",
+        "description": "pick",
+        "keywords": [
+            "pick"
+        ]
+    },
+    {
+        "emoji": "⚒",
+        "description": "hammer and pick",
+        "keywords": [
+            "hammer",
+            "pick"
+        ]
+    },
+    {
+        "emoji": "🛠",
+        "description": "hammer and wrench",
+        "keywords": [
+            "hammer",
+            "wrench"
+        ]
+    },
+    {
+        "emoji": "🗡",
+        "description": "dagger",
+        "keywords": [
+            "dagger"
+        ]
+    },
+    {
+        "emoji": "⚔",
+        "description": "crossed swords",
+        "keywords": [
+            "swords",
+            "crossed"
+        ]
+    },
+    {
+        "emoji": "🔫",
+        "description": "water pistol",
+        "keywords": [
+            "water",
+            "pistol"
+        ]
+    },
+    {
+        "emoji": "🪃",
+        "description": "boomerang",
+        "keywords": [
+            "boomerang"
+        ]
+    },
+    {
+        "emoji": "🏹",
+        "description": "bow and arrow",
+        "keywords": [
+            "arrow",
+            "bow"
+        ]
+    },
+    {
+        "emoji": "🛡",
+        "description": "shield",
+        "keywords": [
+            "shield"
+        ]
+    },
+    {
+        "emoji": "🪚",
+        "description": "carpentry saw",
+        "keywords": [
+            "carpentry",
+            "saw"
+        ]
+    },
+    {
+        "emoji": "🔧",
+        "description": "wrench",
+        "keywords": [
+            "wrench"
+        ]
+    },
+    {
+        "emoji": "🪛",
+        "description": "screwdriver",
+        "keywords": [
+            "screwdriver"
+        ]
+    },
+    {
+        "emoji": "🔩",
+        "description": "nut and bolt",
+        "keywords": [
+            "nut",
+            "bolt"
+        ]
+    },
+    {
+        "emoji": "⚙",
+        "description": "gear",
+        "keywords": [
+            "gear"
+        ]
+    },
+    {
+        "emoji": "🗜",
+        "description": "clamp",
+        "keywords": [
+            "clamp"
+        ]
+    },
+    {
+        "emoji": "⚖",
+        "description": "balance scale",
+        "keywords": [
+            "scale",
+            "balance"
+        ]
+    },
+    {
+        "emoji": "🦯",
+        "description": "white cane",
+        "keywords": [
+            "white",
+            "cane"
+        ]
+    },
+    {
+        "emoji": "🔗",
+        "description": "link",
+        "keywords": [
+            "link"
+        ]
+    },
+    {
+        "emoji": "⛓",
+        "description": "chains",
+        "keywords": [
+            "chains"
+        ]
+    },
+    {
+        "emoji": "🪝",
+        "description": "hook",
+        "keywords": [
+            "hook"
+        ]
+    },
+    {
+        "emoji": "🧰",
+        "description": "toolbox",
+        "keywords": [
+            "toolbox"
+        ]
+    },
+    {
+        "emoji": "🧲",
+        "description": "magnet",
+        "keywords": [
+            "magnet"
+        ]
+    },
+    {
+        "emoji": "🪜",
+        "description": "ladder",
+        "keywords": [
+            "ladder"
+        ]
+    },
+    {
+        "emoji": "⚗",
+        "description": "alembic",
+        "keywords": [
+            "alembic"
+        ]
+    },
+    {
+        "emoji": "🧪",
+        "description": "test tube",
+        "keywords": [
+            "test",
+            "tube"
+        ]
+    },
+    {
+        "emoji": "🧫",
+        "description": "petri dish",
+        "keywords": [
+            "petri",
+            "dish"
+        ]
+    },
+    {
+        "emoji": "🧬",
+        "description": "dna",
+        "keywords": [
+            "dna"
+        ]
+    },
+    {
+        "emoji": "🔬",
+        "description": "microscope",
+        "keywords": [
+            "microscope"
+        ]
+    },
+    {
+        "emoji": "🔭",
+        "description": "telescope",
+        "keywords": [
+            "telescope"
+        ]
+    },
+    {
+        "emoji": "📡",
+        "description": "satellite antenna",
+        "keywords": [
+            "satellite",
+            "antenna"
+        ]
+    },
+    {
+        "emoji": "💉",
+        "description": "syringe",
+        "keywords": [
+            "syringe"
+        ]
+    },
+    {
+        "emoji": "🩸",
+        "description": "drop of blood",
+        "keywords": [
+            "drop",
+            "blood"
+        ]
+    },
+    {
+        "emoji": "💊",
+        "description": "pill",
+        "keywords": [
+            "pill"
+        ]
+    },
+    {
+        "emoji": "🩹",
+        "description": "adhesive bandage",
+        "keywords": [
+            "adhesive",
+            "bandage"
+        ]
+    },
+    {
+        "emoji": "🩺",
+        "description": "stethoscope",
+        "keywords": [
+            "stethoscope"
+        ]
+    },
+    {
+        "emoji": "🚪",
+        "description": "door",
+        "keywords": [
+            "door"
+        ]
+    },
+    {
+        "emoji": "🛗",
+        "description": "elevator",
+        "keywords": [
+            "elevator"
+        ]
+    },
+    {
+        "emoji": "🪞",
+        "description": "mirror",
+        "keywords": [
+            "mirror"
+        ]
+    },
+    {
+        "emoji": "🪟",
+        "description": "window",
+        "keywords": [
+            "window"
+        ]
+    },
+    {
+        "emoji": "🛏",
+        "description": "bed",
+        "keywords": [
+            "bed"
+        ]
+    },
+    {
+        "emoji": "🛋",
+        "description": "couch and lamp",
+        "keywords": [
+            "couch",
+            "lamp"
+        ]
+    },
+    {
+        "emoji": "🪑",
+        "description": "chair",
+        "keywords": [
+            "chair"
+        ]
+    },
+    {
+        "emoji": "🚽",
+        "description": "toilet",
+        "keywords": [
+            "toilet"
+        ]
+    },
+    {
+        "emoji": "🪠",
+        "description": "plunger",
+        "keywords": [
+            "plunger"
+        ]
+    },
+    {
+        "emoji": "🚿",
+        "description": "shower",
+        "keywords": [
+            "shower"
+        ]
+    },
+    {
+        "emoji": "🛁",
+        "description": "bathtub",
+        "keywords": [
+            "bathtub"
+        ]
+    },
+    {
+        "emoji": "🪤",
+        "description": "mouse trap",
+        "keywords": [
+            "trap",
+            "mouse"
+        ]
+    },
+    {
+        "emoji": "🪒",
+        "description": "razor",
+        "keywords": [
+            "razor"
+        ]
+    },
+    {
+        "emoji": "🧴",
+        "description": "lotion bottle",
+        "keywords": [
+            "bottle",
+            "lotion"
+        ]
+    },
+    {
+        "emoji": "🧷",
+        "description": "safety pin",
+        "keywords": [
+            "safety",
+            "pin"
+        ]
+    },
+    {
+        "emoji": "🧹",
+        "description": "broom",
+        "keywords": [
+            "broom"
+        ]
+    },
+    {
+        "emoji": "🧺",
+        "description": "basket",
+        "keywords": [
+            "basket"
+        ]
+    },
+    {
+        "emoji": "🧻",
+        "description": "roll of paper",
+        "keywords": [
+            "paper",
+            "roll"
+        ]
+    },
+    {
+        "emoji": "🪣",
+        "description": "bucket",
+        "keywords": [
+            "bucket"
+        ]
+    },
+    {
+        "emoji": "🧼",
+        "description": "soap",
+        "keywords": [
+            "soap"
+        ]
+    },
+    {
+        "emoji": "🪥",
+        "description": "toothbrush",
+        "keywords": [
+            "toothbrush"
+        ]
+    },
+    {
+        "emoji": "🧽",
+        "description": "sponge",
+        "keywords": [
+            "sponge"
+        ]
+    },
+    {
+        "emoji": "🧯",
+        "description": "fire extinguisher",
+        "keywords": [
+            "extinguisher",
+            "fire"
+        ]
+    },
+    {
+        "emoji": "🛒",
+        "description": "shopping cart",
+        "keywords": [
+            "shopping",
+            "cart"
+        ]
+    },
+    {
+        "emoji": "🚬",
+        "description": "cigarette",
+        "keywords": [
+            "cigarette"
+        ]
+    },
+    {
+        "emoji": "⚰",
+        "description": "coffin",
+        "keywords": [
+            "coffin"
+        ]
+    },
+    {
+        "emoji": "🪦",
+        "description": "headstone",
+        "keywords": [
+            "headstone"
+        ]
+    },
+    {
+        "emoji": "⚱",
+        "description": "funeral urn",
+        "keywords": [
+            "urn",
+            "funeral"
+        ]
+    },
+    {
+        "emoji": "🗿",
+        "description": "moai",
+        "keywords": [
+            "moai"
+        ]
+    },
+    {
+        "emoji": "🪧",
+        "description": "placard",
+        "keywords": [
+            "placard"
+        ]
+    },
+    {
+        "emoji": "🏧",
+        "description": "ATM sign",
+        "keywords": [
+            "atm",
+            "sign"
+        ]
+    },
+    {
+        "emoji": "🚮",
+        "description": "litter in bin sign",
+        "keywords": [
+            "sign",
+            "bin",
+            "litter"
+        ]
+    },
+    {
+        "emoji": "🚰",
+        "description": "potable water",
+        "keywords": [
+            "potable",
+            "water"
+        ]
+    },
+    {
+        "emoji": "♿",
+        "description": "wheelchair symbol",
+        "keywords": [
+            "wheelchair",
+            "symbol"
+        ]
+    },
+    {
+        "emoji": "🚹",
+        "description": "men’s room",
+        "keywords": [
+            "men’s",
+            "room"
+        ]
+    },
+    {
+        "emoji": "🚺",
+        "description": "women’s room",
+        "keywords": [
+            "women’s",
+            "room"
+        ]
+    },
+    {
+        "emoji": "🚻",
+        "description": "restroom",
+        "keywords": [
+            "restroom"
+        ]
+    },
+    {
+        "emoji": "🚼",
+        "description": "baby symbol",
+        "keywords": [
+            "symbol",
+            "baby"
+        ]
+    },
+    {
+        "emoji": "🚾",
+        "description": "water closet",
+        "keywords": [
+            "water",
+            "closet"
+        ]
+    },
+    {
+        "emoji": "🛂",
+        "description": "passport control",
+        "keywords": [
+            "control",
+            "passport"
+        ]
+    },
+    {
+        "emoji": "🛃",
+        "description": "customs",
+        "keywords": [
+            "customs"
+        ]
+    },
+    {
+        "emoji": "🛄",
+        "description": "baggage claim",
+        "keywords": [
+            "claim",
+            "baggage"
+        ]
+    },
+    {
+        "emoji": "🛅",
+        "description": "left luggage",
+        "keywords": [
+            "left",
+            "luggage"
+        ]
+    },
+    {
+        "emoji": "⚠",
+        "description": "warning",
+        "keywords": [
+            "warning"
+        ]
+    },
+    {
+        "emoji": "🚸",
+        "description": "children crossing",
+        "keywords": [
+            "crossing",
+            "children"
+        ]
+    },
+    {
+        "emoji": "⛔",
+        "description": "no entry",
+        "keywords": [
+            "no",
+            "entry"
+        ]
+    },
+    {
+        "emoji": "🚫",
+        "description": "prohibited",
+        "keywords": [
+            "prohibited"
+        ]
+    },
+    {
+        "emoji": "🚳",
+        "description": "no bicycles",
+        "keywords": [
+            "no",
+            "bicycles"
+        ]
+    },
+    {
+        "emoji": "🚭",
+        "description": "no smoking",
+        "keywords": [
+            "no",
+            "smoking"
+        ]
+    },
+    {
+        "emoji": "🚯",
+        "description": "no littering",
+        "keywords": [
+            "no",
+            "littering"
+        ]
+    },
+    {
+        "emoji": "🚱",
+        "description": "non-potable water",
+        "keywords": [
+            "non-potable",
+            "water"
+        ]
+    },
+    {
+        "emoji": "🚷",
+        "description": "no pedestrians",
+        "keywords": [
+            "no",
+            "pedestrians"
+        ]
+    },
+    {
+        "emoji": "📵",
+        "description": "no mobile phones",
+        "keywords": [
+            "no",
+            "mobile",
+            "phones"
+        ]
+    },
+    {
+        "emoji": "🔞",
+        "description": "no one under eighteen",
+        "keywords": [
+            "no",
+            "eighteen",
+            "one",
+            "under"
+        ]
+    },
+    {
+        "emoji": "🔄",
+        "description": "counterclockwise arrows button",
+        "keywords": [
+            "restart",
+            "repeat"
+        ]
+    },
+    {
+        "emoji": "☯",
+        "description": "yin yang",
+        "keywords": [
+            "taichi",
+            "china",
+            "kungfu"
+        ]
+    },
+    {
+        "emoji": "🎦",
+        "description": "cinema",
+        "keywords": [
+            "cinema"
+        ]
+    },
+    {
+        "emoji": "🔅",
+        "description": "dim button",
+        "keywords": [
+            "button",
+            "dim"
+        ]
+    },
+    {
+        "emoji": "🔆",
+        "description": "bright button",
+        "keywords": [
+            "button",
+            "bright"
+        ]
+    },
+    {
+        "emoji": "📶",
+        "description": "antenna bars",
+        "keywords": [
+            "bars",
+            "antenna"
+        ]
+    },
+    {
+        "emoji": "📳",
+        "description": "vibration mode",
+        "keywords": [
+            "mode",
+            "vibration"
+        ]
+    },
+    {
+        "emoji": "📴",
+        "description": "mobile phone off",
+        "keywords": [
+            "off",
+            "mobile",
+            "phone"
+        ]
+    },
+    {
+        "emoji": "♀",
+        "description": "female sign",
+        "keywords": [
+            "sign",
+            "female"
+        ]
+    },
+    {
+        "emoji": "♂",
+        "description": "male sign",
+        "keywords": [
+            "male",
+            "sign"
+        ]
+    },
+    {
+        "emoji": "✖",
+        "description": "multiply",
+        "keywords": [
+            "multiply"
+        ]
+    },
+    {
+        "emoji": "➕",
+        "description": "plus",
+        "keywords": [
+            "plus"
+        ]
+    },
+    {
+        "emoji": "➖",
+        "description": "minus",
+        "keywords": [
+            "minus"
+        ]
+    },
+    {
+        "emoji": "➗",
+        "description": "divide",
+        "keywords": [
+            "divide"
+        ]
+    },
+    {
+        "emoji": "♾",
+        "description": "infinity",
+        "keywords": [
+            "infinity"
+        ]
+    },
+    {
+        "emoji": "‼",
+        "description": "double exclamation mark",
+        "keywords": [
+            "mark",
+            "exclamation",
+            "double"
+        ]
+    },
+    {
+        "emoji": "⁉",
+        "description": "exclamation question mark",
+        "keywords": [
+            "exclamation",
+            "mark",
+            "question"
+        ]
+    },
+    {
+        "emoji": "❓",
+        "description": "red question mark",
+        "keywords": [
+            "red",
+            "mark",
+            "question"
+        ]
+    },
+    {
+        "emoji": "❔",
+        "description": "white question mark",
+        "keywords": [
+            "white",
+            "mark",
+            "question"
+        ]
+    },
+    {
+        "emoji": "❕",
+        "description": "white exclamation mark",
+        "keywords": [
+            "white",
+            "exclamation",
+            "mark"
+        ]
+    },
+    {
+        "emoji": "❗",
+        "description": "red exclamation mark",
+        "keywords": [
+            "exclamation",
+            "red",
+            "mark"
+        ]
+    },
+    {
+        "emoji": "〰",
+        "description": "wavy dash",
+        "keywords": [
+            "dash",
+            "wavy"
+        ]
+    },
+    {
+        "emoji": "💱",
+        "description": "currency exchange",
+        "keywords": [
+            "currency",
+            "exchange"
+        ]
+    },
+    {
+        "emoji": "💲",
+        "description": "heavy dollar sign",
+        "keywords": [
+            "sign",
+            "dollar",
+            "heavy"
+        ]
+    },
+    {
+        "emoji": "⚕",
+        "description": "medical symbol",
+        "keywords": [
+            "symbol",
+            "medical"
+        ]
+    },
+    {
+        "emoji": "♻",
+        "description": "recycling symbol",
+        "keywords": [
+            "symbol",
+            "recycling"
+        ]
+    },
+    {
+        "emoji": "⚜",
+        "description": "fleur-de-lis",
+        "keywords": [
+            "fleur-de-lis"
+        ]
+    },
+    {
+        "emoji": "📛",
+        "description": "name badge",
+        "keywords": [
+            "name",
+            "badge"
+        ]
+    },
+    {
+        "emoji": "🔰",
+        "description": "Japanese symbol for beginner",
+        "keywords": [
+            "symbol",
+            "japanese",
+            "beginner"
+        ]
+    },
+    {
+        "emoji": "⭕",
+        "description": "hollow red circle",
+        "keywords": [
+            "red",
+            "hollow",
+            "circle"
+        ]
+    },
+    {
+        "emoji": "✅",
+        "description": "check mark button",
+        "keywords": [
+            "check",
+            "button",
+            "mark"
+        ]
+    },
+    {
+        "emoji": "☑",
+        "description": "check box with check",
+        "keywords": [
+            "check",
+            "box"
+        ]
+    },
+    {
+        "emoji": "✔",
+        "description": "check mark",
+        "keywords": [
+            "check",
+            "mark"
+        ]
+    },
+    {
+        "emoji": "❌",
+        "description": "cross mark",
+        "keywords": [
+            "cross",
+            "mark"
+        ]
+    },
+    {
+        "emoji": "❎",
+        "description": "cross mark button",
+        "keywords": [
+            "cross",
+            "button",
+            "mark"
+        ]
+    },
+    {
+        "emoji": "💠",
+        "description": "diamond with a dot",
+        "keywords": [
+            "dot",
+            "diamond"
+        ]
+    },
+    {
+        "emoji": "🏁",
+        "description": "chequered flag",
+        "keywords": [
+            "flag",
+            "racing",
+            "cars"
+        ]
+    }
+]

@@ -14,10 +14,10 @@ struct OneDay: View {
     @ObservedObject var viewModel: ContentViewModel
     @ObservedObject var dayPlannerVM: DayPlannerViewModel
     
+    @State var draggingItem: Event_Cal? = nil
+    
     private var calendarFetchRequest: FetchRequest<Cal>
     
-    //tobe deleted
-    @State var refresh: Bool = false
     
     init(date: Date, pos: ViewPosition, viewModel: ContentViewModel, dayPlannerVM: DayPlannerViewModel) {
         self.date = date
@@ -51,16 +51,20 @@ struct OneDay: View {
                             Text(sc.name ?? "")
                                 .font(.title3)
                                 .bold()
+                                .onTapGesture {
+                                    viewModel.showChangeSection = true
+                                    viewModel.changeSection_Cal = sc
+                                    viewModel.insertToCal = nil
+                                }
                             
                             Spacer()
-                            
                             
                             ColorPicker("", selection: Binding(get: {
                                 Color(hex: sc.color)
                             }, set: { c in
-                                let color: String = c.toHex() ?? "000000"
+                                let color: String = c.toHex() ?? "93e3fd"
                                 sc.setColor(color)
-                                refresh.toggle()
+                                viewModel.refresh.toggle()
                             }))
                             .labelsHidden()
                             .overlay{
@@ -68,19 +72,17 @@ struct OneDay: View {
                                     .fill(Color(hex: sc.color))
                                     .frame(width: K.medium_size, height: K.medium_size)
                             }
-                            
-                            
                         }
                         
                         Divider()
-                            .background(Color.blue)
+                            .background(Color(.blue))
                             .frame(height: 2)
                             .padding(.top, -8)
                         
                         //Events
                         ForEach(sc.event_cals?.array as! [Event_Cal], id: \.self){ ec in
                             HStack{
-                                ECInfo(ec: ec, refresh: refresh)
+                                ECInfo(ec: ec, refresh: viewModel.refresh)
                                 
                                 Spacer()
                                 
@@ -88,27 +90,122 @@ struct OneDay: View {
                                     Circle()
                                         .fill(.color1)
                                         .frame(height: K.medium_size)
-                                        .onChange(of: refresh) { _, _ in
-                                            print("Refreshed")
+                                        .onChange(of: viewModel.refresh) { _, _ in
+                                            print("viewModel.refreshed")
                                         }
                                     
-                                    Image(systemName: ec.duration == -1 ? "checkmark" : "play")
+                                    Image(systemName: (ec.duration == -1 && ec.startTime == nil) ? "checkmark" : "play")
+                                        .onTapGesture {
+                                            print("Started / Ended")
+                                        }
                                 }
                             }
+                            .background()
                             .onTapGesture {
                                 viewModel.showEventDetail = true
                                 viewModel.eventDetail = ec
                             }
+                            
+                            //For dragging capability
+                            .dropDestination(for: String.self) { items, location in
+                                draggingItem = nil
+                                viewModel.refresh.toggle()
+                                return false
+                            } isTargeted: { status in
+                                if let draggingItem, status, draggingItem.description != ec.description{
+                                    
+                                    if let events = sc.event_cals?.mutableCopy() as? NSMutableOrderedSet {
+                                        let e_index = events.index(of: ec)
+                                        let d_index = events.index(of: draggingItem)
+                                        
+                                        if e_index != d_index{
+                                            events.remove(draggingItem)
+                                            events.insert(draggingItem, at: e_index)
+                                        }
+                                        
+                                        sc.event_cals = events.copy() as? NSOrderedSet
+                                    }
+                                    
+                                    do{
+                                        try PersistenceController.shared.container.viewContext.save()
+                                    }
+                                    catch{
+                                        fatalError("unresolved error \(error)")
+                                    }
+                                    viewModel.refresh.toggle()
+                                }
+                            }
+                            .draggable(ec.description){
+                                ZStack{
+                                    Circle()
+                                        .fill(Color(hex: ec.section_cal?.color))
+                                        .frame(height: K.xlarge_size)
+                                    
+                                    Text(ec.icon ?? "")
+                                        .font(.custom("", size: K.large_size))
+                                        .shadow(radius: K.medium_size)
+                                    
+                                }
+                                .onAppear {
+                                    draggingItem = ec
+                                }
+                            }
+                            
                         }
+                        
+                        //Create new Event
+                        HStack{
+                            ZStack{
+                                Circle()
+                                    .fill(Color(hex: sc.color))
+                                    .frame(height: K.xlarge_size)
+                                    .bold()
+                                Image(systemName: "plus")
+                            }
+                            .padding(.trailing)
+                            
+                            Text("Add Event")
+                                .bold()
+                            
+                            Spacer()
+                        }
+                        .background()
+                        .onTapGesture {
+                            viewModel.createEvent_Section_Cal = sc
+                            viewModel.editEvent_Cal = nil
+                            viewModel.showCreateEvent = true
+                        }
+                        
                     }
-                    .padding(.vertical)
+                    .padding(.top)
                     .padding(.horizontal, K.horizontal_padding)
                 }
-                
-                
+                //Create new Section
+                HStack{
+                    Rectangle()
+                        .fill(Color(.color1))
+                        .frame(height: 1)
+                    
+                    Image(systemName: "plus.circle")
+                        .foregroundStyle(Color(.color1))
+                    
+                    Rectangle()
+                        .fill(Color(.color1))
+                        .frame(height: 1)
+                }
+                .padding(.top, 4)
+                .background()
+                .onTapGesture {
+                    // Create new Section
+                    viewModel.showChangeSection = true
+                    viewModel.changeSection_Cal = nil
+                    viewModel.insertToCal = toDoForDate.first
+                }
+                .padding(.bottom, 125)
+                .padding(.horizontal, K.horizontal_padding)
             }
             else{
-                
+                //No event, show the image for event creation
                 ZStack{
                     Rectangle()
                         .fill(.white)
@@ -118,6 +215,8 @@ struct OneDay: View {
                             .scaledToFit()
                             .frame(height: 300)
                             .onTapGesture {
+                                viewModel.editEvent_Cal = nil
+                                viewModel.createEvent_Section_Cal = nil
                                 viewModel.showCreateEvent = true
                             }
                         
@@ -138,8 +237,8 @@ struct OneDay: View {
                 dayPlannerVM.setCurrentDate(to: date)
             }
         }
-        .onChange(of: refresh) { _, _ in
-            print("Refreshed")
+        .onChange(of: viewModel.refresh) { _, _ in
+            print("viewModel.refreshed")
         }
     }
 }

@@ -44,6 +44,25 @@ enum Model{
             print("Error")
         }
     }
+    
+    static func duration_to_string(_ duration: Int32) -> String{
+        var ans = ""
+        if duration/60 == 1{
+            ans += String(format: "1 hr ")
+        }
+        else if duration/60 >= 2{
+            ans += String(format: "%d hrs ", duration / 60)
+        }
+        
+        if duration%60 == 1{
+            ans += String(format: "1 min")
+        }
+        else if duration%60 >= 2{
+            ans += String(format: "%d mins", duration%60)
+        }
+        
+        return ans
+    }
 }
 
 protocol OrderedItem {

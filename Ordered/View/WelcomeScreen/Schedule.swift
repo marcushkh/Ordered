@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import PopupView
 
 struct Schedule: View {
     

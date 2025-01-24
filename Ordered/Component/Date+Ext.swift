@@ -25,4 +25,17 @@ extension Date {
         dateFormatter.dateFormat = "yyMMdd"
         return dateFormatter.string(from: self)
     }
+    
+    func getHHMM() -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "HH:mm"
+        return dateFormatter.string(from: self)
+    }
+    static func getDateFromHHMM(_ str: String) -> Date{
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm"
+        
+        let d = formatter.date(from: str)
+        return d ?? Date()
+    }
 }

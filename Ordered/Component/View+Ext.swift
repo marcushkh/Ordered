@@ -14,17 +14,6 @@ extension View {
             .overlay(Rectangle().frame(height: 2).padding(.top, 35).foregroundStyle(focus ? focusColor : lineColor))
     }
     
-    func placeholder<Content: View>(
-        when shouldShow: Bool,
-        alignment: Alignment = .leading,
-        @ViewBuilder placeholder: () -> Content) -> some View {
-            
-            ZStack(alignment: alignment) {
-                placeholder().opacity(shouldShow ? 1 : 0)
-                self
-            }
-        }
-    
     func Background<Content: View>
     (color: Color, opacity: Double = 1, allFocusStates: [FocusState<Bool>.Binding] = [], allBinding: [Binding<Bool>] = [] , content: () -> Content)
     -> some View{

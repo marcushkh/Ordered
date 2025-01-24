@@ -72,4 +72,5 @@ struct TimeSelection: View {
 
 #Preview {
     TimeSelection(isPresented: .constant(true), event: .constant(Sample.sampleEvent), eventList: .constant([]))
+        .border(.black)
 }
