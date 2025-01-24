@@ -23,28 +23,19 @@ public class DataLoader{
     let embedding = NLEmbedding.sentenceEmbedding(for: .english)!
     
     init(){
-//        load()
-//        toEmbed()
-//        allEmojiEmbedded = loadFromJSON(fileName: "emoji_embeddings.json") ?? []
+        load()
+        toEmbed()
+        allEmojiEmbedded = loadFromJSON(fileName: "emoji_embeddings.json") ?? []
     }
     
-    static func create() async -> DataLoader {
-        let loader = DataLoader()
-        await loader.load()
-        await loader.toEmbed()
-        return loader
-    }
-    
-    func load() async {
+    func load(){
         if let fileLocation = Bundle.main.url(forResource: "full_emoji", withExtension: "json") {
             do{
                 let data = try Data(contentsOf: fileLocation)
                 let jsonDecoder = JSONDecoder()
                 let dataFromJson = try jsonDecoder.decode([Emoji].self, from: data)
                 
-                DispatchQueue.main.async {
-                    self.allEmoji = dataFromJson
-                }
+                self.allEmoji = dataFromJson
             }
             catch{
                 print(error)
@@ -63,7 +54,7 @@ public class DataLoader{
         }
     }
     
-    func toEmbed() async {
+    func toEmbed() {
         
         var allEmojiEmbeddedArr: [[[Double]]] = []
         for i in allEmoji{
