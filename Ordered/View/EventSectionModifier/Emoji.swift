@@ -20,15 +20,16 @@ public class DataLoader{
     @Published var allEmoji = [Emoji]()
     @Published var allEmojiEmbedded: [[[Double]]] = []
     
-    let embedding = NLEmbedding.sentenceEmbedding(for: .english)!
+    @Published var personalizedEmojiList = [Emoji]()
+    @Published var personalizedEmojiEmbedded: [[Double]] = []
+    
+    let embedding = NLEmbedding.sentenceEmbedding(for: .english)
     
     init(){
         load()
-        toEmbed()
-        allEmojiEmbedded = loadFromJSON(fileName: "emoji_embeddings.json") ?? []
     }
     
-    func load(){
+    func load() {
         if let fileLocation = Bundle.main.url(forResource: "full_emoji", withExtension: "json") {
             do{
                 let data = try Data(contentsOf: fileLocation)
@@ -52,7 +53,29 @@ public class DataLoader{
                 print(error)
             }
         }
+        
+        let listURL = self.getDocumentsDirectory().appendingPathComponent("personalizedEmojiList")
+        
+        do {
+            let jsonData = try Data(contentsOf: listURL)
+            let loadedData = try JSONDecoder().decode([Emoji].self, from: jsonData)
+            self.personalizedEmojiList = loadedData
+        } catch {
+            print("Error loading JSON: \(error)")
+        }
+        
+        let EmbedURL = self.getDocumentsDirectory().appendingPathComponent("personalizedEmojiEmbedded")
+        
+        do {
+            let jsonData = try Data(contentsOf: EmbedURL)
+            let loadedData = try JSONDecoder().decode([[Double]].self, from: jsonData)
+            self.personalizedEmojiEmbedded = loadedData
+        } catch {
+            print("Error loading JSON: \(error)")
+        }
+        
     }
+
     
     func toEmbed() {
         
@@ -60,18 +83,42 @@ public class DataLoader{
         for i in allEmoji{
             //turn description & keywords into a string and embed it
             var arr: [[Double]] = []
-            
             for j in i.keywords{
-                if let embedded = embedding.vector(for: j){
+                if let embedded = embedding!.vector(for: j){
                     arr.append(embedded)
                 }
             }
-            if let embedded = embedding.vector(for: i.description){
+            if let embedded = embedding!.vector(for: i.description){
                 arr.append(embedded)
             }
             allEmojiEmbeddedArr.append(arr)
         }
         saveToJSON(allEmojiEmbeddedArr, fileName: "emoji_embeddings.json")
+    }
+    
+    func learn(emoji: String, description: String){
+        var e = Emoji(emoji: emoji, description: description, keywords: [])
+        let personalizedEmojiListURL = getDocumentsDirectory().appendingPathComponent("personalizedEmojiList")
+        let personalizedEmojiEmbeddedURL = getDocumentsDirectory().appendingPathComponent("personalizedEmojiEmbedded")
+        
+        personalizedEmojiList.append(e)
+        personalizedEmojiEmbedded.append(embedding!.vector(for: description) ?? [])
+        
+        do {
+            let jsonData = try JSONEncoder().encode(personalizedEmojiList)
+            try jsonData.write(to: personalizedEmojiListURL, options: .atomic)
+            print("Successfully saved personalizedEmojiList to \(personalizedEmojiListURL)")
+        } catch {
+            print("Error saving personalizedEmojiList: \(error)")
+        }
+        
+        do {
+            let jsonData = try JSONEncoder().encode(personalizedEmojiEmbedded)
+            try jsonData.write(to: personalizedEmojiEmbeddedURL, options: .atomic)
+            print("Data saved to \(personalizedEmojiEmbeddedURL)")
+        } catch {
+            print("Error saving JSON: \(error)")
+        }
     }
     
     func getDocumentsDirectory() -> URL {
@@ -104,31 +151,49 @@ public class DataLoader{
         }
     }
     
-    func getSuggestion(_ str: String, top_n: Int = 5, penalty: Double = 1.0) async -> String {
-        if let v1 = embedding.vector(for: str){
-            var allMark: [Double] = []
-            
-            for i in allEmojiEmbedded{
-                var thisEmojiSimilarity: [Double] = []
-                var mark: Double = 0
-                for j in i{
-                    thisEmojiSimilarity.append(cosineSimilarity(v1, j))
-                }
-                thisEmojiSimilarity.sort()
+    func getSuggestion(_ str: String, top_n: Int = 1, penalty: Double = 1.0) async -> String {
+        if let e = embedding{
+            if let v1 = e.vector(for: str){
+                var allMark: [Double] = []
+                var pMark: [Double] = []
                 
-                for j in 1...3 {
-                    if !thisEmojiSimilarity.isEmpty{
-                        mark += thisEmojiSimilarity.last!/Double(j)
-                        thisEmojiSimilarity.removeLast()
+                for i in allEmojiEmbedded{
+                    var thisEmojiSimilarity: [Double] = []
+                    var mark: Double = 0
+                    for j in i{
+                        thisEmojiSimilarity.append(cosineSimilarity(v1, j))
                     }
+                    thisEmojiSimilarity.sort()
+                    
+                    for j in 1...3 {
+                        if !thisEmojiSimilarity.isEmpty{
+                            mark += thisEmojiSimilarity.last!/Double(j)
+                            thisEmojiSimilarity.removeLast()
+                        }
+                    }
+                    allMark.append(mark)
                 }
-                allMark.append(mark)
+                for i in personalizedEmojiEmbedded{
+                    var mark: Double = 0
+                    mark = cosineSimilarity(v1, i)
+                    mark *= 1.84
+                    pMark.append(mark)
+                }
+                
+                let list = getBestIndex(top_n: top_n, array: allMark)
+                let pList = getBestIndex(top_n: top_n, array: pMark)
+                
+                if pMark.isEmpty {
+                    return allEmoji[list[0]].emoji
+                }
+                if allMark[list[0]] > pMark[pList[0]] {
+                    return allEmoji[list[0]].emoji
+                }
+                else{
+                    return personalizedEmojiList[pList[0]].emoji
+                }
             }
-            
-            let list = getBestIndex(top_n: top_n, array: allMark)
-            return list.map { String(allEmoji[$0].emoji) }.joined(separator: "")
         }
-        
         return "💡"
     }
     

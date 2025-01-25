@@ -18,6 +18,7 @@ struct CreateEvent: View {
     @State var showEmojiPicker: Bool = false
     @State var selectedEmoji: String = "💡"
     @State var emojiPickerPicked: String = "💡"
+    @State var suggestedEmoji: String = ""
     @State var giveSuggestion: Bool = true
     
     @State var eventName: String = ""
@@ -64,16 +65,16 @@ struct CreateEvent: View {
                                 giveSuggestion = false
                             })
                             .onChange(of: eventName) { oldValue, newValue in
-                                if editEvent_Cal == nil && giveSuggestion {
-                                    debounceTask?.cancel()
-                                    debounceTask = Task {
-                                        let suggestion = await data.getSuggestion(newValue, top_n: 1)
-                                        print(suggestion)
-                                        
+                                debounceTask?.cancel()
+                                debounceTask = Task {
+                                    suggestedEmoji = await data.getSuggestion(newValue, top_n: 1)
+                                    
+                                    if editEvent_Cal == nil && giveSuggestion {
                                         await MainActor.run {
-                                            selectedEmoji = suggestion
+                                            selectedEmoji = suggestedEmoji
                                         }
                                     }
+                                    
                                 }
                             }
                     }
@@ -244,6 +245,11 @@ struct CreateEvent: View {
                             display = false
                         }
                         else{
+                            // Emoji Recommender Learning
+                            if (selectedEmoji != suggestedEmoji){
+                                data.learn(emoji: selectedEmoji, description: eventName)
+                            }
+                            
                             //TODO: Logic for not creating is not done
                             let event: Event = Event.save(icon: selectedEmoji, name: eventName, startTime: isSchedule ? startTime.getHHMM() : nil, endTime: isSchedule ? endTime.getHHMM() : nil, duration: isDuration ? (useCustomDuration ? customDuration : duration) : -1)
                             let event_Cal = event.getEC()
