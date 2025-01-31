@@ -29,6 +29,15 @@ enum K{
         "E6EEDA"
     ]
     
+    static let defaultSectionColorDark = [
+        "88C0ED",
+        "7854EC",
+        "C4819B",
+        "D69569",
+        "C1BC63",
+        "819A59"
+    ]
+    
     static let defaultSection = ["Morning Routine", "Schedule", "Personal Time", "Night Routine"]
     
     static let allEvents : [Event] = [

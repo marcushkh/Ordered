@@ -71,7 +71,7 @@ struct DurationSelection: View{
             }
         }
         .padding()
-        .background(Color.white.cornerRadius(25))
+        .background(Color.cBackground.cornerRadius(25))
         .onAppear{
             withAnimation {
                 selectedHour = duration/60

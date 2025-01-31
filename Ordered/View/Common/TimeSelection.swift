@@ -47,10 +47,12 @@ struct TimeSelection: View {
                     // Save end time + add the event into the selected item
                     
                     withAnimation {
-                        print(event?.description ?? "ERROR")
-                        event?.endTime = dateFormatter.string(from: selectedTime)
-                        eventList.append(event!)
-                        isPresented = false
+                        if let e = event{
+                            print(e.description)
+                            e.endTime = dateFormatter.string(from: selectedTime)
+                            eventList.append(e)
+                            isPresented = false
+                        }
                     }
                 }
             } label: {

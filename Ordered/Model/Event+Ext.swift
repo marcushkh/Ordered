@@ -75,4 +75,21 @@ extension Event_Cal{
             print("Failed to save event: \(error.localizedDescription)")
         }
     }
+    
+    static func getEC(URL: URL) -> Event_Cal?{
+        let persistentStoreCoordinator = Model.viewContext.persistentStoreCoordinator
+        
+        if let objectID = persistentStoreCoordinator?.managedObjectID(forURIRepresentation: URL) {
+            do {
+                let managedObject = try Model.viewContext.existingObject(with: objectID)
+                print("Fetched object: \(managedObject)")
+                return managedObject as? Event_Cal
+            } catch {
+                print("Error fetching object: \(error)")
+            }
+        } else {
+            print("Invalid objectID")
+        }
+        return nil
+    }
 }

@@ -104,7 +104,7 @@ struct EventDetailPopup: View {
         .foregroundStyle(.cPrimary)
         .padding(.horizontal, K.horizontal_padding)
         .padding(.vertical, K.large_size)
-        .background(Color.white.cornerRadius(30))
+        .background(Color.cBackground.cornerRadius(30))
         .padding(.horizontal, K.horizontal_padding)
         .onDisappear{
             print("Event Detail is nil now")

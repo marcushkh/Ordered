@@ -11,6 +11,8 @@ struct ChangeSectionName: View{
     @State var name: String = ""
     @State var color: String = ""
     
+    @Environment(\.colorScheme) var colorScheme
+    
     @ObservedObject var viewModel: ContentViewModel
 
     var body: some View{
@@ -18,7 +20,15 @@ struct ChangeSectionName: View{
             ColorPicker("", selection: Binding(get: {
                 Color(hex: color)
             }, set: { c in
-                color = c.toHex() ?? K.defaultSectionColor[(viewModel.insertToCal?.section_cals?.count ?? 0) % K.defaultSectionColor.count]
+                var colorSuggested: String{
+                    if colorScheme == .light{
+                        K.defaultSectionColor[(viewModel.insertToCal?.section_cals?.count ?? 0) % K.defaultSectionColor.count]
+                    }
+                    else{
+                        K.defaultSectionColorDark[(viewModel.insertToCal?.section_cals?.count ?? 0) % K.defaultSectionColorDark.count]
+                    }
+                }
+                color = c.toHex() ?? colorSuggested
             }))
             .labelsHidden()
             .overlay{
@@ -56,8 +66,16 @@ struct ChangeSectionName: View{
             
         }
         .onAppear{
+            var colorSuggested: String{
+                if colorScheme == .light{
+                    K.defaultSectionColor[(viewModel.insertToCal?.section_cals?.count ?? 0) % K.defaultSectionColor.count]
+                }
+                else{
+                    K.defaultSectionColorDark[(viewModel.insertToCal?.section_cals?.count ?? 0) % K.defaultSectionColorDark.count]
+                }
+            }
             name = viewModel.changeSection_Cal?.name ?? ""
-            color = viewModel.changeSection_Cal?.color ?? K.defaultSectionColor[(viewModel.insertToCal?.section_cals?.count ?? 0) % K.defaultSectionColor.count]
+            color = viewModel.changeSection_Cal?.color ?? colorSuggested
             typingSectionName = true
         }
         .padding(.vertical)

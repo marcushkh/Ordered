@@ -42,7 +42,6 @@
 		2C74CB3F2C59DE6F00716233 /* Sample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C74CB3E2C59DE6F00716233 /* Sample.swift */; };
 		2C784E052D325C6400A56D72 /* DurationSelection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C784E042D325C5D00A56D72 /* DurationSelection.swift */; };
 		2C81ADC62D37869000D2AA98 /* PythonKit in Frameworks */ = {isa = PBXBuildFile; productRef = 2C81ADC52D37869000D2AA98 /* PythonKit */; };
-		2C82755B2CDC834300348869 /* Ordered.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2C8275592CDC834300348869 /* Ordered.xcdatamodeld */; };
 		2C9605362C82B18B00A1736D /* EventPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C9605352C82B18B00A1736D /* EventPicker.swift */; };
 		2C9605382C82B42B00A1736D /* Schedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C9605372C82B42B00A1736D /* Schedule.swift */; };
 		2C96053B2C82D21900A1736D /* WelcomeVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C96053A2C82D21900A1736D /* WelcomeVM.swift */; };
@@ -55,6 +54,9 @@
 		2CD3FF012C8F48D5001F68DC /* NightRoutine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD3FF002C8F48D5001F68DC /* NightRoutine.swift */; };
 		2CFC59A32D43844800529099 /* MCEmojiPicker in Frameworks */ = {isa = PBXBuildFile; productRef = 2CFC59A22D43844800529099 /* MCEmojiPicker */; };
 		2CFC59AB2D43EC3800529099 /* emoji_embeddings.json in Resources */ = {isa = PBXBuildFile; fileRef = 2CFC59AA2D43EC3800529099 /* emoji_embeddings.json */; };
+		2CFC59AD2D44CD4A00529099 /* EventActionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFC59AC2D44CD3000529099 /* EventActionHandler.swift */; };
+		2CFC59B62D44D1CA00529099 /* Ordered.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2CFC59B42D44D1CA00529099 /* Ordered.xcdatamodeld */; };
+		2CFC59B82D45038400529099 /* ActionButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFC59B72D45037300529099 /* ActionButtonView.swift */; };
 		2CFCE0412C777E33001B915B /* EventDetailPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFCE0402C777E33001B915B /* EventDetailPopup.swift */; };
 		2CFF02D82C60A06400627CDF /* EventBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFF02D72C60A06400627CDF /* EventBar.swift */; };
 		2CFF02DA2C60A07000627CDF /* BottomBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFF02D92C60A07000627CDF /* BottomBar.swift */; };
@@ -119,7 +121,6 @@
 		2C74CB3C2C59DD9D00716233 /* ContentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentViewModel.swift; sourceTree = "<group>"; };
 		2C74CB3E2C59DE6F00716233 /* Sample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sample.swift; sourceTree = "<group>"; };
 		2C784E042D325C5D00A56D72 /* DurationSelection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DurationSelection.swift; sourceTree = "<group>"; };
-		2C82755A2CDC834300348869 /* Ordered.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Ordered.xcdatamodel; sourceTree = "<group>"; };
 		2C9605352C82B18B00A1736D /* EventPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventPicker.swift; sourceTree = "<group>"; };
 		2C9605372C82B42B00A1736D /* Schedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Schedule.swift; sourceTree = "<group>"; };
 		2C96053A2C82D21900A1736D /* WelcomeVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeVM.swift; sourceTree = "<group>"; };
@@ -132,6 +133,9 @@
 		2CD3FEFE2C8F48A7001F68DC /* Personal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Personal.swift; sourceTree = "<group>"; };
 		2CD3FF002C8F48D5001F68DC /* NightRoutine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NightRoutine.swift; sourceTree = "<group>"; };
 		2CFC59AA2D43EC3800529099 /* emoji_embeddings.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = emoji_embeddings.json; sourceTree = "<group>"; };
+		2CFC59AC2D44CD3000529099 /* EventActionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventActionHandler.swift; sourceTree = "<group>"; };
+		2CFC59B52D44D1CA00529099 /* Ordered.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Ordered.xcdatamodel; sourceTree = "<group>"; };
+		2CFC59B72D45037300529099 /* ActionButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionButtonView.swift; sourceTree = "<group>"; };
 		2CFCE0402C777E33001B915B /* EventDetailPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailPopup.swift; sourceTree = "<group>"; };
 		2CFF02D72C60A06400627CDF /* EventBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventBar.swift; sourceTree = "<group>"; };
 		2CFF02D92C60A07000627CDF /* BottomBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomBar.swift; sourceTree = "<group>"; };
@@ -227,7 +231,7 @@
 				2C15B7FD2C3D0F3800B008DB /* Assets.xcassets */,
 				2C15B7F92C3D0F3600B008DB /* OrderedApp.swift */,
 				2C15B8022C3D0F3800B008DB /* Persistence.swift */,
-				2C8275592CDC834300348869 /* Ordered.xcdatamodeld */,
+				2CFC59B42D44D1CA00529099 /* Ordered.xcdatamodeld */,
 				2C15B7FF2C3D0F3800B008DB /* Preview Content */,
 			);
 			path = Ordered;
@@ -306,6 +310,8 @@
 				2C5DC11A2C5B37BE0021E54A /* OneDay.swift */,
 				2CFCE0402C777E33001B915B /* EventDetailPopup.swift */,
 				2C14A3152C6DD07A00807FFB /* MainList.swift */,
+				2CFC59AC2D44CD3000529099 /* EventActionHandler.swift */,
+				2CFC59B72D45037300529099 /* ActionButtonView.swift */,
 			);
 			path = DailyPlanner;
 			sourceTree = "<group>";
@@ -461,6 +467,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2C784E052D325C6400A56D72 /* DurationSelection.swift in Sources */,
+				2CFC59AD2D44CD4A00529099 /* EventActionHandler.swift in Sources */,
 				2C01D5142C81670300D33BDA /* ECInfo.swift in Sources */,
 				2C96053B2C82D21900A1736D /* WelcomeVM.swift in Sources */,
 				2C6A82D92CC17364006B533E /* CreateEvent.swift in Sources */,
@@ -486,6 +493,7 @@
 				2C14A3182C75A95B00807FFB /* Model.swift in Sources */,
 				2C9605362C82B18B00A1736D /* EventPicker.swift in Sources */,
 				2C14A3102C6A0DEE00807FFB /* Date+Ext.swift in Sources */,
+				2CFC59B82D45038400529099 /* ActionButtonView.swift in Sources */,
 				2CD3FEFF2C8F48A7001F68DC /* Personal.swift in Sources */,
 				2CFF02D82C60A06400627CDF /* EventBar.swift in Sources */,
 				2C601C5E2C5B6FE600FBC8E2 /* K.swift in Sources */,
@@ -494,7 +502,7 @@
 				2C74CB3F2C59DE6F00716233 /* Sample.swift in Sources */,
 				2C4BCF9F2C84D0560001AD4C /* EventInfo.swift in Sources */,
 				2C74CB3D2C59DD9D00716233 /* ContentViewModel.swift in Sources */,
-				2C82755B2CDC834300348869 /* Ordered.xcdatamodeld in Sources */,
+				2CFC59B62D44D1CA00529099 /* Ordered.xcdatamodeld in Sources */,
 				2C52C6982C8318D300C84996 /* TimeSelection.swift in Sources */,
 				2C3F2CDF2C561BAD008BD72A /* View+Ext.swift in Sources */,
 				2C15B7FC2C3D0F3600B008DB /* ContentView.swift in Sources */,
@@ -841,12 +849,12 @@
 /* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
-		2C8275592CDC834300348869 /* Ordered.xcdatamodeld */ = {
+		2CFC59B42D44D1CA00529099 /* Ordered.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				2C82755A2CDC834300348869 /* Ordered.xcdatamodel */,
+				2CFC59B52D44D1CA00529099 /* Ordered.xcdatamodel */,
 			);
-			currentVersion = 2C82755A2CDC834300348869 /* Ordered.xcdatamodel */;
+			currentVersion = 2CFC59B52D44D1CA00529099 /* Ordered.xcdatamodel */;
 			path = Ordered.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

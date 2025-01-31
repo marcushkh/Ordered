@@ -39,7 +39,7 @@ struct ContentView: View {
                     .type(.floater())
                     .closeOnTap(false)
                     .closeOnTapOutside(true)
-                    .backgroundColor(.black.opacity(0.5))
+                    .backgroundColor(.cPrimary.opacity(0.2))
                     
             }
             .popup(isPresented: $viewModel.showChangeSection){
@@ -49,7 +49,7 @@ struct ContentView: View {
                     .type(.floater())
                     .closeOnTap(false)
                     .closeOnTapOutside(true)
-                    .backgroundColor(.black.opacity(0.5))
+                    .backgroundColor(.cPrimary.opacity(0.2))
             }
             .sheet(isPresented: $viewModel.showCreateEvent) {
                 CreateEvent(editEvent_Cal: viewModel.editEvent_Cal, date: dayPlannerVM.currentDate, section_Cal: viewModel.createEvent_Section_Cal, display: $viewModel.showCreateEvent)

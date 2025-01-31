@@ -18,7 +18,6 @@ struct OneDay: View {
     
     private var calendarFetchRequest: FetchRequest<Cal>
     
-    
     init(date: Date, pos: ViewPosition, viewModel: ContentViewModel, dayPlannerVM: DayPlannerViewModel) {
         self.date = date
         
@@ -86,18 +85,20 @@ struct OneDay: View {
                                 
                                 Spacer()
                                 
-                                ZStack{
-                                    Circle()
-                                        .fill(.color1)
-                                        .frame(height: K.medium_size)
-                                        .onChange(of: viewModel.refresh) { _, _ in
-                                            print("viewModel.refreshed")
-                                        }
-                                    
-                                    Image(systemName: (ec.duration == -1 && ec.startTime == nil) ? "checkmark" : "play")
-                                        .onTapGesture {
-                                            print("Started / Ended")
-                                        }
+                                if ec.duration == -1 && ec.startTime == nil {
+                                    // Tick events
+                                    ZStack{
+                                        Circle()
+                                            .fill(.color1)
+                                            .frame(height: K.medium_size)
+                                            .onChange(of: viewModel.refresh) { _, _ in
+                                                print("viewModel.refreshed")
+                                            }
+                                        Image(systemName: "checkmark")
+                                    }
+                                }
+                                else{
+                                    ActionButtonView(viewModel: viewModel, ec: ec)
                                 }
                             }
                             .background()
@@ -107,34 +108,6 @@ struct OneDay: View {
                             }
                             
                             //For dragging capability
-                            .dropDestination(for: String.self) { items, location in
-                                draggingItem = nil
-                                viewModel.refresh.toggle()
-                                return false
-                            } isTargeted: { status in
-                                if let draggingItem, status, draggingItem.description != ec.description{
-                                    
-                                    if let events = sc.event_cals?.mutableCopy() as? NSMutableOrderedSet {
-                                        let e_index = events.index(of: ec)
-                                        let d_index = events.index(of: draggingItem)
-                                        
-                                        if e_index != d_index{
-                                            events.remove(draggingItem)
-                                            events.insert(draggingItem, at: e_index)
-                                        }
-                                        
-                                        sc.event_cals = events.copy() as? NSOrderedSet
-                                    }
-                                    
-                                    do{
-                                        try PersistenceController.shared.container.viewContext.save()
-                                    }
-                                    catch{
-                                        fatalError("unresolved error \(error)")
-                                    }
-                                    viewModel.refresh.toggle()
-                                }
-                            }
                             .draggable(ec.description){
                                 ZStack{
                                     Circle()
@@ -150,7 +123,36 @@ struct OneDay: View {
                                     draggingItem = ec
                                 }
                             }
-                            
+                            .dropDestination(for: String.self) { items, location in
+                                draggingItem = nil
+                                viewModel.refresh.toggle()
+                                return false
+                            } isTargeted: { status in
+                                withAnimation {
+                                    if let draggingItem, status, draggingItem.objectID != ec.objectID{
+                                        
+                                        if let events = sc.event_cals?.mutableCopy() as? NSMutableOrderedSet {
+                                            let e_index = events.index(of: ec)
+                                            let d_index = events.index(of: draggingItem)
+                                            
+                                            if e_index != d_index { //Logic needed to add: start time need to be ordered
+                                                events.remove(draggingItem)
+                                                events.insert(draggingItem, at: e_index)
+                                            }
+                                            
+                                            sc.event_cals = events.copy() as? NSOrderedSet
+                                        }
+                                        
+                                        do{
+                                            try PersistenceController.shared.container.viewContext.save()
+                                        }
+                                        catch{
+                                            fatalError("unresolved error \(error)")
+                                        }
+                                        viewModel.refresh.toggle()
+                                    }
+                                }
+                            }
                         }
                         
                         //Create new Event
@@ -170,6 +172,34 @@ struct OneDay: View {
                             Spacer()
                         }
                         .background()
+                        // On drop to put the event to the last part of the list
+                        .dropDestination(for: String.self) { items, location in
+                            draggingItem = nil
+                            viewModel.refresh.toggle()
+                            return false
+                        } isTargeted: { status in
+                            withAnimation {
+                                if let draggingItem{
+                                    if let events = sc.event_cals?.mutableCopy() as? NSMutableOrderedSet {
+                                        let e_index = events.index(of: draggingItem)
+                                        
+                                        if e_index != events.count - 1{
+                                            events.remove(draggingItem)
+                                            events.add(draggingItem)
+                                            sc.event_cals = events.copy() as? NSOrderedSet
+                                        }
+                                        
+                                    }
+                                    do{
+                                        try PersistenceController.shared.container.viewContext.save()
+                                    }
+                                    catch{
+                                        fatalError("unresolved error \(error)")
+                                    }
+                                    viewModel.refresh.toggle()
+                                }
+                            }
+                        }
                         .onTapGesture {
                             viewModel.createEvent_Section_Cal = sc
                             viewModel.editEvent_Cal = nil
@@ -208,7 +238,7 @@ struct OneDay: View {
                 //No event, show the image for event creation
                 ZStack{
                     Rectangle()
-                        .fill(.white)
+                        .fill(.background)
                     VStack{
                         Image("NoEventIcon")
                             .resizable()

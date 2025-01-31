@@ -5,7 +5,7 @@
 //  Created by Kai Hin Hung on 4/1/2025.
 //
 
-import Foundation
+import SwiftUI
 
 extension Section {
     
@@ -60,16 +60,16 @@ extension Section {
     }
     
     func remove(event: Event){
-        //        section.events.re
+        
     }
 }
 
 extension Section_Cal {
     
-    static func new() -> Section_Cal{
+    static func new(colorScheme: ColorScheme) -> Section_Cal{
         let section = Section_Cal(context: Model.viewContext)
         section.event_cals = NSMutableOrderedSet()
-        section.color = K.defaultSectionColor[0]
+        section.color = colorScheme == .light ? K.defaultSectionColor[0] : K.defaultSectionColorDark[0]
         section.name = "New Section"
         
         do {

@@ -45,7 +45,7 @@ enum Model{
         }
     }
     
-    static func duration_to_string(_ duration: Int32) -> String{
+    static func duration_to_string(min duration: Int32) -> String{
         var ans = ""
         if duration/60 == 1{
             ans += String(format: "1 hr ")
@@ -57,10 +57,22 @@ enum Model{
         if duration%60 == 1{
             ans += String(format: "1 min")
         }
-        else if duration%60 >= 2{
+        else {
             ans += String(format: "%d mins", duration%60)
         }
         
+        return ans
+    }
+    
+    static func duration_to_HHmmss(sec duration: Int32) -> String{
+        var ans = ""
+        var duration = duration
+        if duration/3600 >= 1{
+            //Have hour
+            ans = ans + String(format: "%2d:", duration/3600)
+            duration = duration%3600
+        }
+        ans = ans + String(format: "%02d:%02d", duration/60, duration%60)
         return ans
     }
 }

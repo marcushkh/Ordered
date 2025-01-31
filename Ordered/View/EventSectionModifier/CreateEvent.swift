@@ -40,9 +40,10 @@ struct CreateEvent: View {
     let data = DataLoader()
     @State private var debounceTask: Task<Void, Never>? = nil
     @Binding var display: Bool
+    @Environment(\.colorScheme) var colorScheme
     
     var body: some View {
-        Background(color: Color(.white), allFocusStates: [$eventNameTyping]){
+        Background(color: .cBackground, allFocusStates: [$eventNameTyping]){
             VStack{
                 HStack{
                     ZStack{
@@ -165,7 +166,7 @@ struct CreateEvent: View {
                                     ZStack {
                                         if selectedIndex == index {
                                             RoundedRectangle(cornerRadius: 8)
-                                                .fill(.white)
+                                                .fill(.cBackground)
                                                 .frame(height: 40)
                                                 .matchedGeometryEffect(id: "underline", in: underlineNamespace)
                                         }
@@ -196,9 +197,9 @@ struct CreateEvent: View {
                             HStack{ 
                                 ZStack{
                                     RoundedRectangle(cornerRadius: 8)
-                                        .fill(.white)
+                                        .fill(.cBackground)
                                         .frame(height: 40)
-                                    Text(Model.duration_to_string(Int32(customDuration)))
+                                    Text(Model.duration_to_string(min: Int32(customDuration)))
                                 }
                                 
                                 Image(systemName: "x.square.fill")
@@ -258,7 +259,7 @@ struct CreateEvent: View {
                             let cal = Cal.get(date: date.getYYMMDD()) ?? Cal.new(date: date.getYYMMDD())
                             
                             //if no Section_Cal -> create empty Cal
-                            let new_section_Cal: Section_Cal = section_Cal ?? Section_Cal.new()
+                            let new_section_Cal: Section_Cal = section_Cal ?? Section_Cal.new(colorScheme: colorScheme)
                             
                             //put the event_Cal into the Section_Cal
                             new_section_Cal.add(event: event_Cal)
@@ -328,7 +329,7 @@ struct CreateEvent: View {
                     .type(.floater())
                     .closeOnTap(false)
                     .closeOnTapOutside(true)
-                    .backgroundColor(.black.opacity(0.5))
+                    .backgroundColor(.cPrimary.opacity(0.2))
                     .dragToDismiss(false)
             }
             

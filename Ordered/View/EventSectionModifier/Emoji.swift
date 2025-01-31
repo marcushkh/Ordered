@@ -23,7 +23,6 @@ public class DataLoader{
     @Published var personalizedEmojiList = [Emoji]()
     @Published var personalizedEmojiEmbedded: [[Double]] = []
     
-    let embedding = NLEmbedding.sentenceEmbedding(for: .english)
     
     init(){
         load()
@@ -84,11 +83,11 @@ public class DataLoader{
             //turn description & keywords into a string and embed it
             var arr: [[Double]] = []
             for j in i.keywords{
-                if let embedded = embedding!.vector(for: j){
+                if let embedded = NLEmbedding.sentenceEmbedding(for: .english)?.vector(for: j){
                     arr.append(embedded)
                 }
             }
-            if let embedded = embedding!.vector(for: i.description){
+            if let embedded = NLEmbedding.sentenceEmbedding(for: .english)?.vector(for: i.description){
                 arr.append(embedded)
             }
             allEmojiEmbeddedArr.append(arr)
@@ -102,7 +101,7 @@ public class DataLoader{
         let personalizedEmojiEmbeddedURL = getDocumentsDirectory().appendingPathComponent("personalizedEmojiEmbedded")
         
         personalizedEmojiList.append(e)
-        personalizedEmojiEmbedded.append(embedding!.vector(for: description) ?? [])
+        personalizedEmojiEmbedded.append(NLEmbedding.sentenceEmbedding(for: .english)?.vector(for: description) ?? [])
         
         do {
             let jsonData = try JSONEncoder().encode(personalizedEmojiList)
@@ -152,48 +151,48 @@ public class DataLoader{
     }
     
     func getSuggestion(_ str: String, top_n: Int = 1, penalty: Double = 1.0) async -> String {
-        if let e = embedding{
-            if let v1 = e.vector(for: str){
-                var allMark: [Double] = []
-                var pMark: [Double] = []
+        
+        if let v1 = NLEmbedding.sentenceEmbedding(for: .english)?.vector(for: str){
+            var allMark: [Double] = []
+            var pMark: [Double] = []
+            
+            for i in allEmojiEmbedded{
+                var thisEmojiSimilarity: [Double] = []
+                var mark: Double = 0
+                for j in i{
+                    thisEmojiSimilarity.append(cosineSimilarity(v1, j))
+                }
+                thisEmojiSimilarity.sort()
                 
-                for i in allEmojiEmbedded{
-                    var thisEmojiSimilarity: [Double] = []
-                    var mark: Double = 0
-                    for j in i{
-                        thisEmojiSimilarity.append(cosineSimilarity(v1, j))
+                for j in 1...3 {
+                    if !thisEmojiSimilarity.isEmpty{
+                        mark += thisEmojiSimilarity.last!/Double(j)
+                        thisEmojiSimilarity.removeLast()
                     }
-                    thisEmojiSimilarity.sort()
-                    
-                    for j in 1...3 {
-                        if !thisEmojiSimilarity.isEmpty{
-                            mark += thisEmojiSimilarity.last!/Double(j)
-                            thisEmojiSimilarity.removeLast()
-                        }
-                    }
-                    allMark.append(mark)
                 }
-                for i in personalizedEmojiEmbedded{
-                    var mark: Double = 0
-                    mark = cosineSimilarity(v1, i)
-                    mark *= 1.84
-                    pMark.append(mark)
-                }
-                
-                let list = getBestIndex(top_n: top_n, array: allMark)
-                let pList = getBestIndex(top_n: top_n, array: pMark)
-                
-                if pMark.isEmpty {
-                    return allEmoji[list[0]].emoji
-                }
-                if allMark[list[0]] > pMark[pList[0]] {
-                    return allEmoji[list[0]].emoji
-                }
-                else{
-                    return personalizedEmojiList[pList[0]].emoji
-                }
+                allMark.append(mark)
+            }
+            for i in personalizedEmojiEmbedded{
+                var mark: Double = 0
+                mark = cosineSimilarity(v1, i)
+                mark *= 1.84
+                pMark.append(mark)
+            }
+            
+            let list = getBestIndex(top_n: top_n, array: allMark)
+            let pList = getBestIndex(top_n: top_n, array: pMark)
+            
+            if pMark.isEmpty {
+                return allEmoji[list[0]].emoji
+            }
+            if allMark[list[0]] > pMark[pList[0]] {
+                return allEmoji[list[0]].emoji
+            }
+            else{
+                return personalizedEmojiList[pList[0]].emoji
             }
         }
+        
         return "💡"
     }
     
