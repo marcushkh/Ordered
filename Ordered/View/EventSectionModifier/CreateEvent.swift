@@ -264,11 +264,13 @@ struct CreateEvent: View {
                             //put the event_Cal into the Section_Cal
                             new_section_Cal.add(event: event_Cal)
                             cal.add(new_section_Cal)
+                            cal.sort()
                             
                             print(cal.description)
                             
                             display = false
                         }
+                        
                     }
                 } label: {
                     ZStack{

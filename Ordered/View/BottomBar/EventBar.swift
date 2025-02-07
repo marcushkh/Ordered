@@ -8,89 +8,148 @@
 import SwiftUI
 
 struct EventBar: View {
+    @Environment(\.colorScheme) var colorScheme
+    @Environment(\.managedObjectContext) private var viewContext
+    
+    @ObservedObject var viewModel: ContentViewModel
+    @ObservedObject var dayPlannerVM: DayPlannerViewModel
+    
     @FetchRequest(
         sortDescriptors: [SortDescriptor(\.order, order: .forward)],
         predicate: NSPredicate(format: "isActive == true")
     )
     private var events: FetchedResults<Event>
     
+    @State var overlayHeight: CGFloat = UIScreen.main.bounds.height * 0.2
+    @State var lastHeight: CGFloat = UIScreen.main.bounds.height * 0.2
+    @GestureState private var dragOffset: CGFloat = 0
+    
+    let dismissHeight: CGFloat = 0
+    let minHeight: CGFloat = UIScreen.main.bounds.height * 0.2
+    let midHeight: CGFloat = UIScreen.main.bounds.height * 0.5
+    
     var body: some View {
         VStack(spacing: 0){
-            HStack{
-                Text("New")
-                    .bold()
-                
-                Spacer()
-                
-                Menu {
-                    Button {
-                        
-                    } label: {
-                        Text("Event")
-                    }
-                    Button {
-                        
-                    } label: {
-                        Text("Section")
-                    }
-                    Button {
-                        
-                    } label: {
-                        Text("Day")
-                    }
-                } label: {
-                    HStack{
-                        Text("Event")
-                            .bold()
-                        Image(systemName: "chevron.down")
-                            .font(.caption2)
-                            .padding(.leading, -5)
-                            .bold()
-                    }
+            
+            VStack{
+                // Drag Handle
+                HStack {
+                    Spacer()
+                    Capsule()
+                        .fill(Color.color3.opacity(0.5))
+                        .frame(width: 40, height: 5)
+                    Spacer()
                 }
                 
-                Spacer()
                 
-                Text("Edit")
-                    .bold()
+                HStack{
+                    Text("New")
+                        .bold()
+                    
+                    Spacer()
+                    
+                    Menu {
+                        Button {
+                            
+                        } label: {
+                            Text("Event")
+                        }
+                        Button {
+                            
+                        } label: {
+                            Text("Section")
+                        }
+                        Button {
+                            
+                        } label: {
+                            Text("Day")
+                        }
+                    } label: {
+                        HStack{
+                            Text("Event")
+                                .bold()
+                            Image(systemName: "chevron.down")
+                                .font(.caption2)
+                                .padding(.leading, -5)
+                                .bold()
+                        }
+                        .foregroundStyle(.cPrimary)
+                    }
+                    
+                    Spacer()
+                    
+                    Text("Edit")
+                        .bold()
+                }
             }
             .padding(.vertical)
             .padding(.horizontal, K.horizontal_padding)
-            .padding(.bottom)
+//            .padding(.bottom)
             .background(.color2)
             .clipShape(UnevenRoundedRectangle(topLeadingRadius: 30, topTrailingRadius: 30))
+            .gesture(
+                DragGesture()
+                    .onChanged { value in
+                        withAnimation {
+                            overlayHeight = lastHeight - value.translation.height
+                        }
+                    }
+                    .onEnded { value in
+                        let newHeight = lastHeight - value.translation.height
+                        
+                        if abs(newHeight - dismissHeight) < abs(newHeight - minHeight) {// Closer to dismiss Height
+                            withAnimation {
+                                viewModel.currentTab = .home
+                                viewModel.highlightedEC = nil
+                            }
+                        }
+                        
+                        // Snap to closest height
+                        let closestHeight = [minHeight, midHeight]
+                            .min(by: { abs($0 - newHeight) < abs($1 - newHeight) }) ?? minHeight
+                        
+                        withAnimation {
+                            overlayHeight = closestHeight
+                        }
+                        lastHeight = closestHeight
+                        
+                    }
+            )
             
             //Events
             ScrollView{
                 LazyVGrid(columns: [GridItem(), GridItem()],spacing: K.horizontal_padding, content: {
-                    ForEach(events) { event in
-                        
-                        HStack{
-                            ZStack{
-                                Circle()
-                                    .fill(.color1)
-                                    .frame(width: K.large_size)
-                                
-                                Text(event.icon ?? "")
-                                    .font(.title)
-                                    .shadow(radius: 10)
+                    ForEach(events) { e in
+                        EventInfo(e: e)
+                            .onTapGesture {
+                                withAnimation {
+                                    // Add event below the highlighted Event
+                                    let newEC = e.getEC()
+                                    
+                                    //if no Cal -> create Cal
+                                    let cal = Cal.get(date: dayPlannerVM.currentDate.getYYMMDD()) ?? Cal.new(date: dayPlannerVM.currentDate.getYYMMDD())
+                                    
+                                    if let sc = viewModel.highlightedEC?.section_cal{
+                                        sc.insert(newEC, after: viewModel.highlightedEC!)
+                                    }
+                                    else{
+                                        let new_section_Cal = Section_Cal.new(colorScheme: colorScheme)
+                                        
+                                        new_section_Cal.add(event: newEC)
+                                        cal.add(new_section_Cal)
+                                        cal.sort()
+                                    }
+                                    
+                                    viewModel.highlightedEC = newEC
+                                }
                             }
-                            
-                            VStack(alignment: .leading){
-                                Text(event.name ?? "")
-                                
-                                Text(String(event.duration))
-                                    .foregroundStyle(.secondary)
-                            }
-                            Spacer()
-                        }
-                        .padding(.horizontal)
-                        
-                        
                     }
                 })
             }
-            .frame(height: UIScreen.main.bounds.height * 0.2)
+            .onAppear{
+                overlayHeight = UIScreen.main.bounds.height * 0.2
+            }
+            .frame(height: max(overlayHeight, 0))
             .background(.color2)
         }
         
@@ -99,7 +158,7 @@ struct EventBar: View {
 #Preview {
     VStack{
         Spacer()
-        EventBar()
+        EventBar(viewModel: ContentViewModel(), dayPlannerVM: DayPlannerViewModel())
             .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
     }
 }

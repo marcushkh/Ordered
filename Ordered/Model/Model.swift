@@ -57,8 +57,13 @@ enum Model{
         if duration%60 == 1{
             ans += String(format: "1 min")
         }
-        else {
+        else if duration % 60 >= 2 {
             ans += String(format: "%d mins", duration%60)
+        }
+        else{
+            if ans.isEmpty {
+                ans = "0 mins"
+            }
         }
         
         return ans
@@ -66,13 +71,13 @@ enum Model{
     
     static func duration_to_HHmmss(sec duration: Int32) -> String{
         var ans = ""
-        var duration = duration
-        if duration/3600 >= 1{
+        var d = duration
+        if d/3600 >= 1{
             //Have hour
-            ans = ans + String(format: "%2d:", duration/3600)
-            duration = duration%3600
+            ans = String(format: "%2d:", duration/3600)
+            d = d%3600
         }
-        ans = ans + String(format: "%02d:%02d", duration/60, duration%60)
+        ans = ans + String(format: "%02d:%02d", d/60, d%60)
         return ans
     }
 }

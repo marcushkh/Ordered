@@ -54,7 +54,7 @@ struct EventPicker: View {
                 
                 ForEach(fetchedSection.first!.events?.array as! [Event], id: \.self){ e in
                     HStack{
-                        EventInfo(s: fetchedSection.first!, e: e)
+                        EventInfo(e: e)
                         
                         Spacer()
                         

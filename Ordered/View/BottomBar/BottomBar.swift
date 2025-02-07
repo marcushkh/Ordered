@@ -14,9 +14,6 @@ struct BottomBar: View {
         if [TabBarItem.home, TabBarItem.statistic, TabBarItem.setting].contains(viewModel.currentTab){
             TabBar(viewModel: viewModel)
         }
-        else if viewModel.currentTab == .plan{
-            EventBar()
-        }
     }
 }
 

@@ -47,35 +47,7 @@ extension Event {
 }
 
 extension Event_Cal{
-    func delete(){
-        print("Deleted")
-        if let ecs = self.section_cal?.event_cals?.mutableCopy() as? NSMutableOrderedSet {
-            ecs.remove(self)
-            
-            self.section_cal?.event_cals = ecs.copy() as? NSOrderedSet
-            
-            do {
-                try Model.viewContext.save()
-            } catch {
-                print("Failed to save event: \(error.localizedDescription)")
-            }
-        }
-    }
-    
-    func edit(name: String, icon: String, startTime: String?, endTime: String?, duration: Int?){
-        self.name = name
-        self.icon = icon
-        self.startTime = startTime
-        self.endTime = endTime
-        self.duration = Int32(duration ?? -1)
-        
-        do {
-            try Model.viewContext.save()
-        } catch {
-            print("Failed to save event: \(error.localizedDescription)")
-        }
-    }
-    
+    //Create and get the EC from a Event
     static func getEC(URL: URL) -> Event_Cal?{
         let persistentStoreCoordinator = Model.viewContext.persistentStoreCoordinator
         
@@ -92,4 +64,29 @@ extension Event_Cal{
         }
         return nil
     }
+    
+    func edit(name: String, icon: String, startTime: String?, endTime: String?, duration: Int?){
+        self.name = name
+        self.icon = icon
+        self.startTime = startTime
+        self.endTime = endTime
+        self.duration = Int32(duration ?? -1)
+        
+        do {
+            try Model.viewContext.save()
+        } catch {
+            print("Failed to save event: \(error.localizedDescription)")
+        }
+    }
+    
+    func delete(){
+        Model.viewContext.delete(self)
+        
+        do {
+            try Model.viewContext.save()
+        } catch {
+            print("Failed to save event: \(error.localizedDescription)")
+        }
+    }
+    
 }

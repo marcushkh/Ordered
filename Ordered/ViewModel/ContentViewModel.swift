@@ -22,4 +22,8 @@ class ContentViewModel: ObservableObject{
     @Published var showChangeSection = false
     @Published var changeSection_Cal: Section_Cal? = nil
     @Published var insertToCal: Cal? = nil
+    @Published var insertIndex: Int? = nil
+    
+    //For Planning page
+    @Published var highlightedEC: Event_Cal? = nil
 }

@@ -14,7 +14,7 @@ struct EventDetailPopup: View {
     var body: some View {
         VStack(spacing: 12){
             HStack{
-                ECInfo(ec: viewModel.eventDetail!)
+                ECInfo(ec: viewModel.eventDetail!, highlightedEC: $viewModel.highlightedEC)
                 Spacer()
             }
             .overlay(alignment: .topTrailing){

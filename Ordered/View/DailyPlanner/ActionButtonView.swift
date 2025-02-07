@@ -9,79 +9,135 @@ import SwiftUI
 struct ActionButtonView: View{
     
     @ObservedObject var viewModel: ContentViewModel
+    @ObservedObject var sc: Section_Cal
     @ObservedObject var ec: Event_Cal
     @ObservedObject var actionHandler = EventActionHandler.shared
     
     var body: some View{
-        // Scheduled events
-        if actionHandler.isCurrentEC(ec: ec){
-            ZStack{
-                Circle()
-                    .fill(.color1)
-                    .frame(height: K.medium_size)
-                    .onChange(of: viewModel.refresh) { _, _ in
-                        print("viewModel.refreshed")
-                    }
-                Image(systemName: "square")
-                    .onTapGesture {
-                        withAnimation {
-                            actionHandler.end(ec: ec)
-                        }
-                    }
+        var colorOfBase: Color{
+            if ec.aEndTime != nil{
+                return Color(.success)
             }
-            
-            //Current EC is in action
-            if actionHandler.startTime != nil{
-                //It is now running
-                ZStack{
-                    Circle()
-                        .fill(.color1)
-                        .frame(height: K.medium_size)
-                        .onChange(of: viewModel.refresh) { _, _ in
-                            print("viewModel.refreshed")
-                        }
-                    Image(systemName: "pause")
-                        .onTapGesture {
-                            withAnimation {
-                                actionHandler.pause(ec: ec)
-                            }
-                        }
-                }
+            else if ec.aStartTime != nil{
+                return Color(.info)
             }
             else{
-                //It is paused now
-                ZStack{
-                    Circle()
-                        .fill(.color1)
-                        .frame(height: K.medium_size)
-                        .onChange(of: viewModel.refresh) { _, _ in
-                            print("viewModel.refreshed")
-                        }
-                    Image(systemName: "play")
-                        .onTapGesture {
-                            withAnimation {
-                                actionHandler.resume(ec: ec)
-                            }
-                        }
+                return Color(.color1)
+            }
+        }
+        
+        if ec.duration == -1 && ec.startTime == nil {
+            // Tick events
+            ZStack{
+                Circle()
+                    .fill(colorOfBase)
+                    .frame(height: K.medium_size)
+                    .onChange(of: viewModel.refresh) { _, _ in
+                    }
+                
+                Image(systemName: "checkmark")
+            }
+            .onTapGesture {
+                withAnimation {
+                    ec.aStartTime = Date.now.getHHMM()
+                    ec.aEndTime = Date.now.getHHMM()
+                    viewModel.refresh.toggle()
                 }
             }
             
         }
         else{
-            // Not current EC
-            ZStack{
-                Circle()
-                    .fill(.color1)
-                    .frame(height: K.medium_size)
-                    .onChange(of: viewModel.refresh) { _, _ in
-                        print("viewModel.refreshed")
-                    }
-                Image(systemName: "play")
-                    .onTapGesture {
-                        withAnimation {
-                            actionHandler.start(ec: ec)
+            // Scheduled events and Duration events
+            if actionHandler.isCurrentEC(ec: ec){
+                //Current EC is in action
+                ZStack{
+                    Circle()
+                        .fill(colorOfBase)
+                        .frame(height: K.medium_size)
+                        .onChange(of: viewModel.refresh) { _, _ in
+                            
                         }
+                    Image(systemName: "square")
+                        .onTapGesture {
+                            withAnimation {
+                                actionHandler.end(ec: ec)
+                                viewModel.refresh.toggle()
+                            }
+                        }
+                }
+                
+                if actionHandler.startTime != nil{
+                    //It is now running
+                    ZStack{
+                        Circle()
+                            .fill(colorOfBase)
+                            .frame(height: K.medium_size)
+                            .onChange(of: viewModel.refresh) { _, _ in
+                            }
+                        Image(systemName: "pause")
+                            .onTapGesture {
+                                withAnimation {
+                                    actionHandler.pause(ec: ec)
+                                    viewModel.refresh.toggle()
+                                }
+                            }
                     }
+                }
+                else{
+                    //It is paused now
+                    ZStack{
+                        Circle()
+                            .fill(colorOfBase)
+                            .frame(height: K.medium_size)
+                            .onChange(of: viewModel.refresh) { _, _ in
+                                //                            print("viewModel.refreshed")
+                            }
+                        Image(systemName: "play")
+                            .onTapGesture {
+                                withAnimation {
+                                    actionHandler.resume(ec: ec)
+                                    viewModel.refresh.toggle()
+                                }
+                            }
+                    }
+                }
+                
+            }
+            else{
+                // Not current EC
+                ZStack{
+                    Circle()
+                        .fill(colorOfBase)
+                        .frame(height: K.medium_size)
+                        .onChange(of: viewModel.refresh) { _, _ in
+                            //                        print("viewModel.refreshed")
+                        }
+                    Image(systemName: "play")
+                        .onTapGesture {
+                            withAnimation {
+                                // If self already have aEndTime => Add a completely new Event_Cal and start now
+                                if ec.aEndTime != nil{ //Create new EC
+                                    if let newEC: Event_Cal = ec.parent?.getEC() as? Event_Cal{
+                                        print("Successful")
+                                        //Put in SC
+                                        sc.insert(newEC, after: ec)
+                                        
+                                        //Start EC
+                                        actionHandler.start(ec: newEC)
+                                        viewModel.refresh.toggle()
+                                    }
+                                    
+                                }
+                                else{
+                                    //If dont have aEndTime => just start
+                                    actionHandler.start(ec: ec)
+                                    viewModel.refresh.toggle()
+                                }
+                            }
+                        }
+                }
+                
+                
             }
         }
     }

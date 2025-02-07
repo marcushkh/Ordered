@@ -27,6 +27,10 @@ struct ContentView: View {
                 MainList(viewModel: viewModel, dayPlannerVM: dayPlannerVM)
                     .ignoresSafeArea()
                 
+                if viewModel.currentTab == .plan{
+                    EventBar(viewModel: viewModel, dayPlannerVM: dayPlannerVM)
+                }
+                
             }
             .frame(width: w, height: h)
             .overlay(alignment: .bottom){// TabBar
@@ -40,22 +44,18 @@ struct ContentView: View {
                     .closeOnTap(false)
                     .closeOnTapOutside(true)
                     .backgroundColor(.cPrimary.opacity(0.2))
-                    
             }
-            .popup(isPresented: $viewModel.showChangeSection){
-                ChangeSectionName(viewModel: viewModel)
-            } customize: {
-                $0
-                    .type(.floater())
-                    .closeOnTap(false)
-                    .closeOnTapOutside(true)
-                    .backgroundColor(.cPrimary.opacity(0.2))
+            .overlay{
+                if viewModel.showChangeSection{
+                    ChangeSectionName(viewModel: viewModel)
+                }
             }
             .sheet(isPresented: $viewModel.showCreateEvent) {
                 CreateEvent(editEvent_Cal: viewModel.editEvent_Cal, date: dayPlannerVM.currentDate, section_Cal: viewModel.createEvent_Section_Cal, display: $viewModel.showCreateEvent)
                     .presentationCornerRadius(K.presentationCornerRadius)
                     .onDisappear {
                         viewModel.createEvent_Section_Cal = nil
+                        viewModel.refresh.toggle()
                     }
                 
             }

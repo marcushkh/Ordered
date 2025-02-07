@@ -39,7 +39,7 @@ class EventActionHandler: ObservableObject{
     func start(ec: Event_Cal){
         //set the start time, already
         
-        //if something is running now
+        //if another event is running now => end the event  
         if let id = currentECID, let url = URL(string: id), let ec = Event_Cal.getEC(URL: url){
             end(ec: ec)
         }

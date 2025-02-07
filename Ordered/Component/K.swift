@@ -22,18 +22,18 @@ enum K{
     
     static let defaultSectionColor = [
         "DCEDFA",
-        "D2CAF3",
         "E3BCB5",
         "F0DCB8",
+        "D2CAF3",
         "FDFBCC",
         "E6EEDA"
     ]
     
     static let defaultSectionColorDark = [
         "88C0ED",
-        "7854EC",
         "C4819B",
         "D69569",
+        "7854EC",
         "C1BC63",
         "819A59"
     ]

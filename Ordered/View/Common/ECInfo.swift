@@ -15,6 +15,7 @@ struct ECInfo: View {
     
     @State var currentTimePassed = "00:00"
     @State private var timer: Timer? = nil
+    @Binding var highlightedEC: Event_Cal?
     
     var body: some View {
         HStack{
@@ -26,32 +27,48 @@ struct ECInfo: View {
                 Text(ec.icon ?? "")
                     .font(.custom("", size: K.large_size))
                     .shadow(radius: K.medium_size)
-                    
             }
             .padding(.trailing)
             
             VStack(alignment: .leading){
-                Text(ec.name ?? "")
-                    .font(.title3)
+                if highlightedEC == ec{
+                    HStack{
+                        Text(ec.name ?? "")
+                            .font(.title3)
+                            .bold()
+                        
+                        Image(systemName: "star.circle")
+                            .bold()
+                    }
+                    .foregroundStyle(.highlightText)
+                }
+                else{
+                    Text(ec.name ?? "")
+                        .font(.title3)
+                }
+                
                 
                 
                 // Schedule Event
-                if ec.aStartTime != nil{
-                    var str: String{
-                        var ans = String(ec.aStartTime ?? "")
+                if let aStartTime = ec.aStartTime{
+                    var timeBlock: String{
+                        var ans = String(aStartTime)
                         
                         if actionHandler.isCurrentEC(ec: ec){
                             ans = ans + " (" + currentTimePassed + ")"
                         }
                         else if let aEndTime = ec.aEndTime{
-                            ans = ans + "-" + String(aEndTime)
-                            ans = ans + " (" + Model.duration_to_string(min: ec.durationFinished) + ")"
+                            if aStartTime != aEndTime{
+                                // if start and end time is the same, no need to show
+                                ans = ans + "-" + String(aEndTime)
+                                ans = ans + " (" + Model.duration_to_string(min: ec.durationFinished) + ")"
+                            }
                         }
                         
                         return ans
                     }
                     
-                    Text(str)
+                    Text(timeBlock)
                         .font(.subheadline)
                         .foregroundStyle(Color(hex: "5a5a5f"))
                         .onAppear {
@@ -83,6 +100,7 @@ struct ECInfo: View {
                             }
                         }
                 }
+                // Schedule Event that have not started
                 else if ec.startTime != "-1" && ec.startTime != nil{
                     Text(String(ec.startTime ?? "") + "-" + String(ec.endTime ?? ""))
                         .font(.subheadline)
@@ -94,10 +112,6 @@ struct ECInfo: View {
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                 }
-                // Tick Event
-                else{
-                    Text("HI")
-                }
                 
             }
         }
@@ -108,5 +122,5 @@ struct ECInfo: View {
 }
 
 #Preview {
-    ECInfo(ec: Sample.sampleEC)
+    ECInfo(ec: Sample.sampleEC, highlightedEC: .constant(nil))
 }

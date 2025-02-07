@@ -31,11 +31,23 @@ extension Date {
         dateFormatter.dateFormat = "HH:mm"
         return dateFormatter.string(from: self)
     }
+    
     static func getDateFromHHMM(_ str: String) -> Date{
         let formatter = DateFormatter()
         formatter.dateFormat = "HH:mm"
         
         let d = formatter.date(from: str)
         return d ?? Date()
+    }
+    
+    static func greaterHHMM(_ str1: String, _ str2: String) -> Bool{
+        let date1 = getDateFromHHMM(str1)
+        let date2 = getDateFromHHMM(str2)
+        
+        if date1 >= date2 {
+            return true
+        } else {
+            return false
+        }
     }
 }

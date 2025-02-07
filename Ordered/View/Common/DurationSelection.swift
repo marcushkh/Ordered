@@ -66,7 +66,7 @@ struct DurationSelection: View{
                     
                     Text("Confirm")
                         .font(.title3)
-                        .foregroundStyle(.color3)
+                        .foregroundStyle(.cPrimary)
                 }
             }
         }

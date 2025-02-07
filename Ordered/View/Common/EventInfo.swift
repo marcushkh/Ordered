@@ -8,46 +8,49 @@
 import SwiftUI
 
 struct EventInfo: View {
-    @ObservedObject var s: Section
+    
     @ObservedObject var e: Event
     
     var body: some View {
         HStack{
             ZStack{
                 Circle()
-                    .fill(Color(hex: s.color))
-                    .frame(height: K.xlarge_size)
+                    .fill(.color1)
+                    .frame(width: K.large_size)
                 
                 Text(e.icon ?? "")
-                    .font(.custom("", size: K.large_size))
-                    .shadow(radius: K.medium_size)
+                    .font(.title)
+                    .shadow(radius: 10)
             }
-            .padding(.trailing)
             
             VStack(alignment: .leading){
                 Text(e.name ?? "")
-                    .font(.title3)
                 
-                if e.startTime != nil {
+                // Schedule Event
+                if let startTime = e.startTime {
                     HStack(spacing: 0){
-                        Text(e.startTime ?? "")
-                        Text(" - ")
-                        Text(e.endTime ?? "")
+                        Text(startTime)
+                        if let endTime = e.endTime{
+                            Text(" - ")
+                            Text(e.endTime ?? "")
+                        }
                     }
                     .font(.callout)
                     .foregroundStyle(.secondary)
                 }
+                // Duration Event
                 else if e.duration != -1{
-                    Text(String(e.duration))
+                    Text(Model.duration_to_string(min: e.duration))
                         .font(.callout)
                         .foregroundStyle(.secondary)
                 }
-                
             }
+            Spacer()
         }
+        .padding(.horizontal)
     }
 }
 
 #Preview {
-    EventInfo(s: Sample.sampleSection, e: Sample.sampleEvent)
+    EventInfo(e: Sample.sampleEvent)
 }
