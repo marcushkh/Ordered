@@ -26,7 +26,7 @@ struct ActionButtonView: View{
             }
         }
         
-        if ec.duration == -1 && ec.startTime == nil {
+        if ec.duration == nil && ec.startTime == nil {
             // Tick events
             ZStack{
                 Circle()
@@ -38,10 +38,12 @@ struct ActionButtonView: View{
                 Image(systemName: "checkmark")
             }
             .onTapGesture {
-                withAnimation {
-                    ec.aStartTime = Date.now.getHHMM()
-                    ec.aEndTime = Date.now.getHHMM()
-                    viewModel.refresh.toggle()
+                if ec.aEndTime == nil{
+                    withAnimation {
+                        ec.aStartTime = Date.now.getHHMM()
+                        ec.aEndTime = Date.now.getHHMM()
+                        viewModel.refresh.toggle()
+                    }
                 }
             }
             
@@ -92,13 +94,18 @@ struct ActionButtonView: View{
                             .onChange(of: viewModel.refresh) { _, _ in
                                 //                            print("viewModel.refreshed")
                             }
-                        Image(systemName: "play")
-                            .onTapGesture {
-                                withAnimation {
-                                    actionHandler.resume(ec: ec)
-                                    viewModel.refresh.toggle()
+                        if ec.aEndTime == nil{
+                            Image(systemName: "play")
+                                .onTapGesture {
+                                    withAnimation {
+                                        actionHandler.resume(ec: ec)
+                                        viewModel.refresh.toggle()
+                                    }
                                 }
-                            }
+                        }
+                        else{
+                            Image(systemName: "checkmark")
+                        }
                     }
                 }
                 
@@ -112,29 +119,34 @@ struct ActionButtonView: View{
                         .onChange(of: viewModel.refresh) { _, _ in
                             //                        print("viewModel.refreshed")
                         }
-                    Image(systemName: "play")
-                        .onTapGesture {
-                            withAnimation {
-                                // If self already have aEndTime => Add a completely new Event_Cal and start now
-                                if ec.aEndTime != nil{ //Create new EC
-                                    if let newEC: Event_Cal = ec.parent?.getEC() as? Event_Cal{
-                                        print("Successful")
-                                        //Put in SC
-                                        sc.insert(newEC, after: ec)
+                    if ec.aEndTime == nil{
+                        Image(systemName: "play")
+                            .onTapGesture {
+                                withAnimation {
+                                    // If self already have aEndTime => Add a completely new Event_Cal and start now
+                                    if ec.aEndTime != nil{ //Create new EC
+                                        if let newEC: Event_Cal = ec.parent?.getEC() as? Event_Cal{
+                                            print("Successful")
+                                            //Put in SC
+                                            sc.insert(newEC, after: ec)
+                                            
+                                            //Start EC
+                                            actionHandler.start(ec: newEC)
+                                            viewModel.refresh.toggle()
+                                        }
                                         
-                                        //Start EC
-                                        actionHandler.start(ec: newEC)
+                                    }
+                                    else{
+                                        //If dont have aEndTime => just start
+                                        actionHandler.start(ec: ec)
                                         viewModel.refresh.toggle()
                                     }
-                                    
-                                }
-                                else{
-                                    //If dont have aEndTime => just start
-                                    actionHandler.start(ec: ec)
-                                    viewModel.refresh.toggle()
                                 }
                             }
-                        }
+                    }
+                    else{
+                        Image(systemName: "checkmark")
+                    }
                 }
                 
                 

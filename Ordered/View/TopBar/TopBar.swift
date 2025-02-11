@@ -36,6 +36,10 @@ struct TopBar: View {
                         Text(dayPlannerVM.currentDate.monthYYYY())
                             .font(.title2)
                             .bold()
+                            .onTapGesture {
+                                //TODO: Finish this
+//                                dayPlannerVM.setCurrentDate(to: Date())
+                            }
                         
                         
                         Spacer()

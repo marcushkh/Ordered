@@ -16,6 +16,10 @@ struct MainList: View {
             SwipeableStack(dayPlannerVM.dates(), jumpTo: dayPlannerVM.currentDate) { d, pos in
                 OneDay(date: d, pos: pos, viewModel: viewModel, dayPlannerVM: dayPlannerVM)
             }
+            .onChange(of: dayPlannerVM.currentDate, { oldValue, newValue in
+                print("HI")
+                print(dayPlannerVM.currentDate)
+            })
             .frame(height: geo.size.height)
             
         }

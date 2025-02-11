@@ -65,8 +65,10 @@ struct CreateEvent: View {
                                 selectedEmoji = emojiPickerPicked
                                 giveSuggestion = false
                             })
-                            .onChange(of: eventName) { oldValue, newValue in
+                            .onChange(of: eventName, { oldValue, newValue in
                                 debounceTask?.cancel()
+                            })
+                            .onChange(of: eventName) { oldValue, newValue in
                                 debounceTask = Task {
                                     suggestedEmoji = await data.getSuggestion(newValue, top_n: 1)
                                     
@@ -91,136 +93,141 @@ struct CreateEvent: View {
                 }
                 .padding(.bottom)
                 
-                //Schedule
-                VStack{
-                    Toggle(isOn: $isSchedule) {
-                        Text("Schedule")
-                            .font(.system(size: 20))
-                            .bold()
-                    }
-                    .toggleStyle(SwitchToggleStyle(tint: .color3))
-                    .onChange(of: isSchedule) { oldValue, newValue in
-                        if newValue == true{
-                            isDuration = false
-                        }
-                    }
+                if editEvent_Cal?.aStartTime != nil{ //Already started
                     
-                    ZStack{
-                        RoundedRectangle(cornerRadius: 10)
-                            .fill(.color1)
-                            .shadow(radius: isSchedule ? 1 : 0)
-                            .frame(height: 100)
-                            
-                        VStack{
-                            DatePicker("Start Time: ", selection: $startTime, displayedComponents: .hourAndMinute)
-                                .padding(.horizontal)
-                                .tint(.color4)
-                                .onChange(of: startTime) { oldValue, newValue in
-                                    if newValue >= endTime {
-                                        endTime = Calendar.current.date(byAdding: .hour, value: 1, to: newValue) ?? newValue
-                                    }
-                                }
-                                .onAppear{
-                                    //TODO: Init Start and end time
-                                }
-                            
-                            DatePicker("End Time: ", selection: $endTime, displayedComponents: .hourAndMinute)
-                                .padding(.horizontal)
-                                .tint(.color4)
-                                .onChange(of: endTime) { oldValue, newValue in
-                                    if newValue <= startTime {
-                                        startTime = Calendar.current.date(byAdding: .hour, value: -1, to: newValue) ?? newValue
-                                    }
-                                }
-                                
-                        }
-                    }
-                    .padding(.vertical, 8)
-                    .opacity(isSchedule ? 1 : 0.5)
                 }
-                .padding(.bottom)
-                
-                //Duration
-                VStack{
-                    Toggle(isOn: $isDuration) {
-                        Text("Duration")
-                            .font(.system(size: 20))
-                            .bold()
-                    }
-                    .toggleStyle(SwitchToggleStyle(tint: .color3))
-                    .onChange(of: isDuration) { oldValue, newValue in
-                        if newValue == true{
-                            isSchedule = false
+                else{
+                    //Schedule
+                    VStack{
+                        Toggle(isOn: $isSchedule) {
+                            Text("Schedule")
+                                .font(.system(size: 20))
+                                .bold()
                         }
-                    }
-                    
-                    ZStack{
-                        RoundedRectangle(cornerRadius: 10)
-                            .fill(.color1)
-                            .frame(height: 60)
-                            .shadow(radius: isDuration ? 1 : 0)
+                        .toggleStyle(SwitchToggleStyle(tint: .color3))
+                        .onChange(of: isSchedule) { oldValue, newValue in
+                            if newValue == true{
+                                isDuration = false
+                            }
+                        }
                         
-                        if !useCustomDuration{
-                            LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 5)) {
-                                ForEach(0..<durationOptions.count, id: \.self) { index in
-                                    ZStack {
-                                        if selectedIndex == index {
-                                            RoundedRectangle(cornerRadius: 8)
-                                                .fill(.cBackground)
-                                                .frame(height: 40)
-                                                .matchedGeometryEffect(id: "underline", in: underlineNamespace)
-                                        }
-                                        
-                                        Text(durationOptions[index])
-                                            .foregroundColor(selectedIndex == index ? .color3 : .gray)
-                                            .onTapGesture {
-                                                withAnimation {
-                                                    selectedIndex = index
-                                                }
-                                            }
-                                        
-                                        
-                                    }
-                                }
-                                Text("More")
-                                    .foregroundColor(.gray)
-                                    .onTapGesture {
-                                        withAnimation {
-                                            showCustomDuration = true
-                                            eventNameTyping = false
+                        ZStack{
+                            RoundedRectangle(cornerRadius: 10)
+                                .fill(.color1)
+                                .shadow(radius: isSchedule ? 1 : 0)
+                                .frame(height: 100)
+                            
+                            VStack{
+                                DatePicker("Start Time: ", selection: $startTime, displayedComponents: .hourAndMinute)
+                                    .padding(.horizontal)
+                                    .tint(.color4)
+                                    .onChange(of: startTime) { oldValue, newValue in
+                                        if newValue >= endTime {
+                                            endTime = Calendar.current.date(byAdding: .hour, value: 1, to: newValue) ?? newValue
                                         }
                                     }
-                            }
-                            .padding()
-                        }
-                        else{
-                            HStack{ 
-                                ZStack{
-                                    RoundedRectangle(cornerRadius: 8)
-                                        .fill(.cBackground)
-                                        .frame(height: 40)
-                                    Text(Model.duration_to_string(min: Int32(customDuration)))
-                                }
+                                    .onAppear{
+                                        //TODO: Init Start and end time
+                                    }
                                 
-                                Image(systemName: "x.square.fill")
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fill)
-                                    .frame(width: 35, height: 40)
-                                    .cornerRadius(7.5)
-                                    .clipped()
-                                    .foregroundStyle(.black, .error)
-                                    .onTapGesture {
-                                        withAnimation {
-                                            useCustomDuration = false
+                                DatePicker("End Time: ", selection: $endTime, displayedComponents: .hourAndMinute)
+                                    .padding(.horizontal)
+                                    .tint(.color4)
+                                    .onChange(of: endTime) { oldValue, newValue in
+                                        if newValue <= startTime {
+                                            startTime = Calendar.current.date(byAdding: .hour, value: -1, to: newValue) ?? newValue
                                         }
                                     }
+                                
                             }
-                            .padding()
                         }
+                        .padding(.vertical, 8)
+                        .opacity(isSchedule ? 1 : 0.5)
                     }
-                    .opacity(isDuration ? 1 : 0.5)
+                    .padding(.bottom)
+                    
+                    //Duration
+                    VStack{
+                        Toggle(isOn: $isDuration) {
+                            Text("Duration")
+                                .font(.system(size: 20))
+                                .bold()
+                        }
+                        .toggleStyle(SwitchToggleStyle(tint: .color3))
+                        .onChange(of: isDuration) { oldValue, newValue in
+                            if newValue == true{
+                                isSchedule = false
+                            }
+                        }
+                        
+                        ZStack{
+                            RoundedRectangle(cornerRadius: 10)
+                                .fill(.color1)
+                                .frame(height: 60)
+                                .shadow(radius: isDuration ? 1 : 0)
+                            
+                            if !useCustomDuration{
+                                LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 5)) {
+                                    ForEach(0..<durationOptions.count, id: \.self) { index in
+                                        ZStack {
+                                            if selectedIndex == index {
+                                                RoundedRectangle(cornerRadius: 8)
+                                                    .fill(.cBackground)
+                                                    .frame(height: 40)
+                                                    .matchedGeometryEffect(id: "underline", in: underlineNamespace)
+                                            }
+                                            
+                                            Text(durationOptions[index])
+                                                .foregroundColor(selectedIndex == index ? .color3 : .gray)
+                                                .onTapGesture {
+                                                    withAnimation {
+                                                        selectedIndex = index
+                                                    }
+                                                }
+                                            
+                                            
+                                        }
+                                    }
+                                    Text("More")
+                                        .foregroundColor(.gray)
+                                        .onTapGesture {
+                                            withAnimation {
+                                                showCustomDuration = true
+                                                eventNameTyping = false
+                                            }
+                                        }
+                                }
+                                .padding()
+                            }
+                            else{
+                                HStack{
+                                    ZStack{
+                                        RoundedRectangle(cornerRadius: 8)
+                                            .fill(.cBackground)
+                                            .frame(height: 40)
+                                        Text(Model.duration_to_string(min: Int32(customDuration)))
+                                    }
+                                    
+                                    Image(systemName: "x.square.fill")
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fill)
+                                        .frame(width: 35, height: 40)
+                                        .cornerRadius(7.5)
+                                        .clipped()
+                                        .foregroundStyle(.black, .error)
+                                        .onTapGesture {
+                                            withAnimation {
+                                                useCustomDuration = false
+                                            }
+                                        }
+                                }
+                                .padding()
+                            }
+                        }
+                        .opacity(isDuration ? 1 : 0.5)
+                    }
                 }
-                
+                    
                 Spacer()
                 
                 Button {
@@ -240,9 +247,13 @@ struct CreateEvent: View {
                         default: duration = -1
                         }
                         
-                        if editEvent_Cal != nil{
-                            editEvent_Cal?.edit(name: eventName, icon: selectedEmoji, startTime: isSchedule ? startTime.getHHMM() : nil, endTime: isSchedule ? endTime.getHHMM() : nil, duration: isDuration ? (useCustomDuration ? customDuration : duration) : -1)
-                            
+                        if let ec = editEvent_Cal{
+                            if ec.aStartTime != nil{
+                                
+                            }
+                            else{
+                                ec.edit(name: eventName, icon: selectedEmoji, startTime: isSchedule ? startTime.getHHMM() : nil, endTime: isSchedule ? endTime.getHHMM() : nil, duration: isDuration ? (useCustomDuration ? customDuration : duration) : -1)
+                            }
                             display = false
                         }
                         else{
