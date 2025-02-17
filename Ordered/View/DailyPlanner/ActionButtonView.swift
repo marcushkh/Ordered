@@ -26,7 +26,7 @@ struct ActionButtonView: View{
             }
         }
         
-        if ec.duration == nil && ec.startTime == nil {
+        if ec.duration == -1 && ec.startTime == nil {
             // Tick events
             ZStack{
                 Circle()

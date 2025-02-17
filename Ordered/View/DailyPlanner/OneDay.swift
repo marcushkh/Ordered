@@ -128,7 +128,7 @@ struct OneDay: View {
                                             .fill(Color(hex: ec.section_cal?.color))
                                             .frame(height: K.xlarge_size)
                                         
-                                        Text(ec.icon ?? "")
+                                        Text(ec.parent?.icon ?? "")
                                             .font(.custom("", size: K.large_size))
                                             .shadow(radius: K.medium_size)
                                         

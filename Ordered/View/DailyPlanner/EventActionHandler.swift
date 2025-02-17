@@ -108,9 +108,14 @@ class EventActionHandler: ObservableObject{
     
     func getCurrentTimePassed() -> String{
         if let startTime = startTime{
-            var t = timePassed + Date.now.timeIntervalSince(startTime)
+            let t = timePassed + Date.now.timeIntervalSince(startTime)
             return Model.duration_to_HHmmss(sec: Int32(t))
         }
         return Model.duration_to_HHmmss(sec: Int32(timePassed))
+    }
+    
+    func AddCurrentTimePassed(min: Int) {
+        timePassed += Double(min * 60)
+        if timePassed < 0 {timePassed = 0}
     }
 }

@@ -17,13 +17,10 @@ struct MainList: View {
                 OneDay(date: d, pos: pos, viewModel: viewModel, dayPlannerVM: dayPlannerVM)
             }
             .onChange(of: dayPlannerVM.currentDate, { oldValue, newValue in
-                print("HI")
                 print(dayPlannerVM.currentDate)
             })
             .frame(height: geo.size.height)
-            
         }
-        
     }
 }
 

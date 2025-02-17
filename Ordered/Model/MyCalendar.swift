@@ -41,7 +41,7 @@ struct MyCalendar {
     }
     
     static func getDate(from date: Date) -> Date{
-        var calendar = Calendar(identifier: .iso8601)
+        let calendar = Calendar(identifier: .iso8601)
 //        calendar.timeZone = TimeZone(identifier: "UTC")!
         
         return calendar.date(from: calendar.dateComponents([.year, .month, .day], from: date)) ?? Date()

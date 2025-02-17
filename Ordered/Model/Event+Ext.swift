@@ -8,7 +8,7 @@ import SwiftUI
 import CoreData
 
 extension Event {
-    
+        
     static func save(icon: String, name: String, startTime: String? = nil, endTime: String? = nil, duration: Int = -1, event: Event? = nil) -> Event {
         let eventToSave = event ?? Event(context: Model.viewContext)
         
@@ -35,15 +35,51 @@ extension Event {
     func getEC() -> Event_Cal{
         let ec = Event_Cal(context: Model.viewContext)
         ec.duration = self.duration
-        ec.icon = self.icon
-        ec.name = self.name
         ec.startTime = self.startTime
         ec.endTime = self.endTime
         
         ec.parent = self
         return ec
     }
-
+    
+    func finished(on date: Date) -> Int{
+        let fetchRequest: NSFetchRequest<Event_Cal> = Event_Cal.fetchRequest()
+        let datePredicate = NSPredicate(format: "section_cal.cal.date == %@", date.getYYMMDD())
+        let parentPredicate = NSPredicate(format: "parent == %@", self)
+        let endTimePredicate = NSPredicate(format: "aEndTime != nil")
+        
+        fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [datePredicate, parentPredicate, endTimePredicate])
+        
+        do {
+            let events = try Model.viewContext.fetch(fetchRequest)
+            return events.count
+        } catch {
+            print("Failed to fetch events: \(error)")
+            return 0
+        }
+        
+    }
+    
+    func totalTime(on date: Date) -> Int{
+        let fetchRequest: NSFetchRequest<Event_Cal> = Event_Cal.fetchRequest()
+        let datePredicate = NSPredicate(format: "section_cal.cal.date == %@", date.getYYMMDD())
+        let parentPredicate = NSPredicate(format: "parent == %@", self)
+        let endTimePredicate = NSPredicate(format: "aEndTime != nil")
+        
+        fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [datePredicate, parentPredicate, endTimePredicate])
+        
+        do {
+            let events = try Model.viewContext.fetch(fetchRequest)
+            var total = 0
+            for event in events{
+                total += Int(event.durationFinished)
+            }
+            return total
+        } catch {
+            print("Failed to fetch events: \(error)")
+            return 0
+        }
+    }
 }
 
 extension Event_Cal{
@@ -65,12 +101,13 @@ extension Event_Cal{
         return nil
     }
     
-    func edit(name: String, icon: String, startTime: String?, endTime: String?, duration: Int?){
-        self.name = name
-        self.icon = icon
+    func edit(name: String, icon: String, startTime: String?, endTime: String?, duration: Int, aStartTime: String? = nil, aEndTime: String? = nil, durationFinished: Int = 0){
         self.startTime = startTime
         self.endTime = endTime
-        self.duration = Int32(duration ?? -1)
+        self.duration = Int32(duration)
+        self.aStartTime = aStartTime
+        self.aEndTime = aEndTime
+        self.durationFinished = Int32(durationFinished)
         
         do {
             try Model.viewContext.save()

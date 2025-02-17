@@ -12,64 +12,73 @@ struct TopBar: View {
     @ObservedObject var dayPlannerVM: DayPlannerViewModel
     
     var body: some View {
-        //TODO: Change the Top Bar Content depending on the Tab View
         
         VStack(spacing: 0){
             if viewModel.currentTab == .home{
-                VStack{
-                    //two icon + theme of day
-                    HStack{
-                        
-                        Button{
-                            
-                        } label: {
-                            Image(systemName: "calendar")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(height: K.xsmall_size)
-                                .foregroundStyle(.color3)
-                        }
-                        
-                        Spacer()
-                        
-                        
-                        Text(dayPlannerVM.currentDate.monthYYYY())
-                            .font(.title2)
-                            .bold()
-                            .onTapGesture {
-                                //TODO: Finish this
-//                                dayPlannerVM.setCurrentDate(to: Date())
-                            }
-                        
-                        
-                        Spacer()
-                        
-                        Button {
-                            
-                        } label: {
-                            Image(systemName: "exclamationmark.triangle")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(height: K.xsmall_size)
-                                .foregroundStyle(.color3)
-                        }
-                    }
-                    .padding(.vertical)
-                }
+                homeTopBar
+                    .padding(.horizontal, K.horizontal_padding)
+            }
+            else if viewModel.currentTab == .statistic{
+                StatTopBar(dayPlannerVM: dayPlannerVM)
             }
         }
-        .padding(.horizontal, K.horizontal_padding)
         .frame(width: UIScreen.main.bounds.width)
         .background(.color1, ignoresSafeAreaEdges: .top)
         
         
         if viewModel.currentTab == .home || viewModel.currentTab == .plan{
-            
             WeekBar(viewModel: viewModel, dayPlannerVM: dayPlannerVM)
                 .padding(.horizontal, K.horizontal_padding)
                 .padding(.bottom, K.xxxsmall_size)
                 .background(.color1)
-                .clipShape(UnevenRoundedRectangle(bottomLeadingRadius: 40, bottomTrailingRadius: 40))
+                .clipShape(UnevenRoundedRectangle(bottomLeadingRadius: 30, bottomTrailingRadius: 30))
+        }
+        else{
+            UnevenRoundedRectangle(bottomLeadingRadius: 30, bottomTrailingRadius: 30)
+                .fill(.color1)
+                .frame(width: UIScreen.main.bounds.size.width, height: K.horizontal_padding)
+        }
+    }
+    
+    var homeTopBar: some View{
+        VStack{
+            //two icon + theme of day
+            HStack{
+                
+                Button{
+                    
+                } label: {
+                    Image(systemName: "calendar")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: K.xsmall_size)
+                        .foregroundStyle(.color3)
+                }
+                
+                Spacer()
+                
+                
+                Text(dayPlannerVM.currentDate.monthYYYY())
+                    .font(.title2)
+                    .bold()
+                    .onTapGesture {
+                        dayPlannerVM.setCurrentDate(to: Date.now)
+                    }
+                
+                
+                Spacer()
+                
+                Button {
+                    
+                } label: {
+                    Image(systemName: "exclamationmark.triangle")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: K.xsmall_size)
+                        .foregroundStyle(.color3)
+                }
+            }
+            .padding(.vertical)
         }
     }
 }

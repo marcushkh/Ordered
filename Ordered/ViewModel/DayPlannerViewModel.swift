@@ -22,7 +22,7 @@ class DayPlannerViewModel: ObservableObject{
     }
     
     func setCurrentDate(to date: Date){
-        model.setCurrentDate(to: date)
+        model.setCurrentDate(to: MyCalendar.getDate(from: date))
     }
     
     func dates() -> [Date] {
@@ -38,7 +38,7 @@ class DayPlannerViewModel: ObservableObject{
     }
     
     func startDateOfWeek(from date: Date) -> Date{
-        model.startDateOfWeek(from: date)
+        model.startDateOfWeek(from: MyCalendar.getDate(from: date))
     }
     
     func startDateOfCurrentDate() -> Date{

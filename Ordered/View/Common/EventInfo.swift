@@ -32,7 +32,7 @@ struct EventInfo: View {
                         Text(startTime)
                         if let endTime = e.endTime{
                             Text(" - ")
-                            Text(e.endTime ?? "")
+                            Text(endTime)
                         }
                     }
                     .font(.callout)

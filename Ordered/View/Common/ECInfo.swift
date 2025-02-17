@@ -24,7 +24,7 @@ struct ECInfo: View {
                     .fill(Color(hex: ec.section_cal?.color))
                     .frame(height: K.xlarge_size)
                 
-                Text(ec.icon ?? "")
+                Text(ec.parent?.icon ?? "")
                     .font(.custom("", size: K.large_size))
                     .shadow(radius: K.medium_size)
             }
@@ -33,7 +33,7 @@ struct ECInfo: View {
             VStack(alignment: .leading){
                 if highlightedEC == ec{
                     HStack{
-                        Text(ec.name ?? "")
+                        Text((ec.parent?.name ?? "") + (ec.detail != nil ? ": " + ec.detail! : ""))
                             .font(.title3)
                             .bold()
                         
@@ -43,7 +43,7 @@ struct ECInfo: View {
                     .foregroundStyle(.highlightText)
                 }
                 else{
-                    Text(ec.name ?? "")
+                    Text((ec.parent?.name ?? "") + (ec.detail != nil ? ": " + ec.detail! : ""))
                         .font(.title3)
                 }
                 

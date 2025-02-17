@@ -96,7 +96,7 @@ public class DataLoader{
     }
     
     func learn(emoji: String, description: String){
-        var e = Emoji(emoji: emoji, description: description, keywords: [])
+        let e = Emoji(emoji: emoji, description: description, keywords: [])
         let personalizedEmojiListURL = getDocumentsDirectory().appendingPathComponent("personalizedEmojiList")
         let personalizedEmojiEmbeddedURL = getDocumentsDirectory().appendingPathComponent("personalizedEmojiEmbedded")
         
