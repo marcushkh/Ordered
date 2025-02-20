@@ -16,7 +16,9 @@ struct OrderedApp: App {
     @AppStorage("initData") var initData: Bool = false
     
     init(){
-        
+        if UserDefaults.standard.object(forKey: "firstWeekDay") == nil {
+            UserDefaults.standard.set(7, forKey: "firstWeekDay")
+        }
     }
     
     var body: some Scene {

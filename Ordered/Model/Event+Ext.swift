@@ -9,11 +9,15 @@ import CoreData
 
 extension Event {
         
-    static func save(icon: String, name: String, startTime: String? = nil, endTime: String? = nil, duration: Int = -1, event: Event? = nil) -> Event {
+    static func save(icon: String? = nil, name: String? = nil, startTime: String? = nil, endTime: String? = nil, duration: Int = -1, event: Event? = nil) -> Event {
         let eventToSave = event ?? Event(context: Model.viewContext)
         
-        eventToSave.icon = icon
-        eventToSave.name = name
+        if let icon = icon{
+            eventToSave.icon = icon
+        }
+        if let name = name{
+            eventToSave.name = name
+        }
         eventToSave.duration = Int32(duration)
         eventToSave.startTime = startTime
         eventToSave.endTime = endTime
@@ -30,6 +34,16 @@ extension Event {
         }
         
         return eventToSave
+    }
+    
+    func toggleIsFavorite() {
+        self.isFavourite.toggle()
+        
+        do {
+            try Model.viewContext.save()
+        } catch {
+            print("Failed to save event: \(error.localizedDescription)")
+        }
     }
     
     func getEC() -> Event_Cal{
@@ -101,13 +115,18 @@ extension Event_Cal{
         return nil
     }
     
-    func edit(name: String, icon: String, startTime: String?, endTime: String?, duration: Int, aStartTime: String? = nil, aEndTime: String? = nil, durationFinished: Int = 0){
+    func edit(detail: String?, startTime: String?, endTime: String?, duration: Int, aStartTime: String? = nil, aEndTime: String? = nil, durationFinished: Int = 0, parent: Event? = nil){
+        
+        self.detail = detail
         self.startTime = startTime
         self.endTime = endTime
         self.duration = Int32(duration)
         self.aStartTime = aStartTime
         self.aEndTime = aEndTime
         self.durationFinished = Int32(durationFinished)
+        if let p = parent{
+            self.parent = p
+        }
         
         do {
             try Model.viewContext.save()

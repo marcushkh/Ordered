@@ -11,7 +11,7 @@ struct BottomBar: View {
     @ObservedObject var viewModel: ContentViewModel
     
     var body: some View {
-        if [TabBarItem.home, TabBarItem.statistic, TabBarItem.setting].contains(viewModel.currentTab){
+        if [TabBarItem.home, TabBarItem.weeklyDefault, TabBarItem.statistic, TabBarItem.setting].contains(viewModel.currentTab){
             TabBar(viewModel: viewModel)
         }
     }

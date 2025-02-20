@@ -66,7 +66,7 @@ struct EventDetailPopup: View {
                     viewModel.showCreateEvent = true
                 }) {
                     VStack{
-                        Image(systemName: "square.and.pencil")
+                        Image(systemName: "pencil.line")
                         Text("Edit")
                     }
                     .frame(width: 90, height: 50)

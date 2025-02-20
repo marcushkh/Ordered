@@ -11,6 +11,9 @@ struct TopBar: View {
     @ObservedObject var viewModel: ContentViewModel
     @ObservedObject var dayPlannerVM: DayPlannerViewModel
     
+    @State var selectedDate: Date = Date.now
+    @State var showClear: Bool = false
+    
     var body: some View {
         
         VStack(spacing: 0){
@@ -18,16 +21,27 @@ struct TopBar: View {
                 homeTopBar
                     .padding(.horizontal, K.horizontal_padding)
             }
+            else if viewModel.currentTab == .weeklyDefault{
+                weeklyDefaultTopBar
+                    .padding(.horizontal, K.horizontal_padding)
+            }
             else if viewModel.currentTab == .statistic{
-                StatTopBar(dayPlannerVM: dayPlannerVM)
+                StatTopBar(viewModel: viewModel, dayPlannerVM: dayPlannerVM)
             }
         }
         .frame(width: UIScreen.main.bounds.width)
         .background(.color1, ignoresSafeAreaEdges: .top)
         
         
-        if viewModel.currentTab == .home || viewModel.currentTab == .plan{
+        if [TabBarItem.home, TabBarItem.plan].contains(viewModel.currentTab){
             WeekBar(viewModel: viewModel, dayPlannerVM: dayPlannerVM)
+                .padding(.horizontal, K.horizontal_padding)
+                .padding(.bottom, K.xxxsmall_size)
+                .background(.color1)
+                .clipShape(UnevenRoundedRectangle(bottomLeadingRadius: 30, bottomTrailingRadius: 30))
+        }
+        else if viewModel.currentTab == .weeklyDefault{
+            WeekDefaultTopBar()
                 .padding(.horizontal, K.horizontal_padding)
                 .padding(.bottom, K.xxxsmall_size)
                 .background(.color1)
@@ -44,16 +58,23 @@ struct TopBar: View {
         VStack{
             //two icon + theme of day
             HStack{
-                
-                Button{
-                    
-                } label: {
-                    Image(systemName: "calendar")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(height: K.xsmall_size)
-                        .foregroundStyle(.color3)
-                }
+                Image(systemName: "calendar")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(height: K.xsmall_size)
+                    .foregroundStyle(.color3)
+                    .overlay {
+                        DatePicker("", selection: $selectedDate, displayedComponents: .date)
+                            .blendMode(.destinationOver)
+                            .tint(.color4)
+                            .frame(width: K.xsmall_size, height: K.xsmall_size)
+                    }
+                    .onChange(of: selectedDate) { oldValue, newValue in
+                        dayPlannerVM.setCurrentDate(to: selectedDate)
+                    }
+                    .onChange(of: dayPlannerVM.currentDate) { oldValue, newValue in
+                        selectedDate = dayPlannerVM.currentDate
+                    }
                 
                 Spacer()
                 
@@ -69,12 +90,56 @@ struct TopBar: View {
                 Spacer()
                 
                 Button {
-                    
+                    showClear = true
                 } label: {
-                    Image(systemName: "exclamationmark.triangle")
+                    Image(systemName: "paintbrush")
                         .resizable()
                         .scaledToFit()
-                        .frame(height: K.xsmall_size)
+                        .frame(height: K.small_size)
+                        .foregroundStyle(.color3)
+                        .rotationEffect(Angle(degrees: 180))
+                }
+            }
+            .padding(.vertical)
+            .alert(isPresented: $showClear) {
+                Alert(  title: Text("CLEAR the Unfinished Events"),
+                        message: Text("Are you sure to remove all events and section in this day that are not started or finished?"),
+                        primaryButton: .destructive(Text("Clear")) {
+                            withAnimation {
+                                Cal.clear(date: dayPlannerVM.currentDate)
+                                viewModel.refresh.toggle()
+                            }
+                        },
+                        secondaryButton: .cancel())
+            }
+        }
+    }
+    
+    var weeklyDefaultTopBar: some View {
+        VStack{
+            //two icon + theme of day
+            HStack{
+                Image(systemName: "calendar")
+                    .resizable()
+                    .scaledToFit()
+                    .foregroundStyle(.color3)
+                    .frame(height: K.xsmall_size)
+                
+                Spacer()
+                
+                Text("Weekly Default")
+                    .font(.title2)
+                    .bold()
+                
+                Spacer()
+                
+                Button {
+                    
+                } label: {
+                    Image(systemName: "list.bullet.indent")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: K.xxsmall_size)
                         .foregroundStyle(.color3)
                 }
             }

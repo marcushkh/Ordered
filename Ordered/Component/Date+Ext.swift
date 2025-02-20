@@ -12,6 +12,11 @@ extension Date {
         return self.formatted(.dateTime.month(.wide).year())
     }
     
+    static func intToWeekAbbreviation(_ weekday: Int) -> String? {
+        let calendar = Calendar(identifier: .iso8601)
+        return calendar.shortWeekdaySymbols[weekday % 7]
+    }
+    
     func weekDayAbbrev() -> String {
         return self.formatted(.dateTime .weekday(.abbreviated))
     }

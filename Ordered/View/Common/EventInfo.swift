@@ -13,18 +13,12 @@ struct EventInfo: View {
     
     var body: some View {
         HStack{
-            ZStack{
-                Circle()
-                    .fill(.color1)
-                    .frame(width: K.large_size)
-                
-                Text(e.icon ?? "")
-                    .font(.title)
-                    .shadow(radius: 10)
-            }
+            Text(e.icon ?? "")
+                .font(.title) 
             
             VStack(alignment: .leading){
                 Text(e.name ?? "")
+                    .font(.title3)
                 
                 // Schedule Event
                 if let startTime = e.startTime {
@@ -47,7 +41,6 @@ struct EventInfo: View {
             }
             Spacer()
         }
-        .padding(.horizontal)
     }
 }
 

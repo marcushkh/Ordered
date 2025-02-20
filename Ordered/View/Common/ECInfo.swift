@@ -33,7 +33,7 @@ struct ECInfo: View {
             VStack(alignment: .leading){
                 if highlightedEC == ec{
                     HStack{
-                        Text((ec.parent?.name ?? "") + (ec.detail != nil ? ": " + ec.detail! : ""))
+                        Text((ec.parent?.name ?? "") + ((ec.detail != nil && ec.detail != "") ? ": " + ec.detail! : ""))
                             .font(.title3)
                             .bold()
                         
@@ -43,7 +43,7 @@ struct ECInfo: View {
                     .foregroundStyle(.highlightText)
                 }
                 else{
-                    Text((ec.parent?.name ?? "") + (ec.detail != nil ? ": " + ec.detail! : ""))
+                    Text((ec.parent?.name ?? "") + ((ec.detail != nil && ec.detail != "") ? ": " + ec.detail! : ""))
                         .font(.title3)
                 }
                 
@@ -80,8 +80,6 @@ struct ECInfo: View {
                                         timer = nil
                                     }
                                     currentTimePassed = actionHandler.getCurrentTimePassed()
-                                    
-                                    print("tick")
                                 }
                             }
                         }
@@ -94,8 +92,6 @@ struct ECInfo: View {
                                         timer = nil
                                     }
                                     currentTimePassed = actionHandler.getCurrentTimePassed()
-                                    
-                                    print("tick")
                                 }
                             }
                         }

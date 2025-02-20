@@ -48,7 +48,6 @@ struct TimeSelection: View {
                     
                     withAnimation {
                         if let e = event{
-                            print(e.description)
                             e.endTime = dateFormatter.string(from: selectedTime)
                             eventList.append(e)
                             isPresented = false

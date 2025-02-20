@@ -108,7 +108,6 @@ struct ActionButtonView: View{
                         }
                     }
                 }
-                
             }
             else{
                 // Not current EC

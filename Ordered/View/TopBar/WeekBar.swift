@@ -41,12 +41,35 @@ struct Week: View{
                     
                     
                     ZStack{
+                        var colorOfCircle: Color{
+                            if calendar.isDate(daysInAWeek[i], inSameDayAs: dayPlannerVM.currentDate){ //Selected Today
+                                if calendar.isDate(daysInAWeek[i], inSameDayAs: Date()){
+                                    return Color.color4
+                                }
+                                return Color.color2
+                            }
+                            else{ //Did not select Today
+                                return Color.cBackground
+                            }
+                        }
+                        var colorOfText: Color{
+                            if calendar.isDate(daysInAWeek[i], inSameDayAs: Date()){
+                                if calendar.isDate(daysInAWeek[i], inSameDayAs: dayPlannerVM.currentDate){
+                                    return Color.white
+                                }
+                                return Color.color4
+                            }
+                            else{
+                                return .cPrimary
+                            }
+                        }
                         Circle()
-                            .fill(calendar.isDate(daysInAWeek[i], inSameDayAs: dayPlannerVM.currentDate) ? .color3 : .color2)
+                            .fill(colorOfCircle)
                             .frame(width: K.large_size, height: K.large_size)
                         
                         Text(daysInAWeek[i].dayNum())
-                            .foregroundStyle(Color(calendar.isDate(daysInAWeek[i], inSameDayAs: dayPlannerVM.currentDate) ? .white : .black))
+                            .foregroundStyle(colorOfText)
+                            .bold(calendar.isDate(daysInAWeek[i], inSameDayAs: Date()) ? true : false)
                         
                     }
                     .onTapGesture {

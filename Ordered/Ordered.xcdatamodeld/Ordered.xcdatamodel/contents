@@ -10,6 +10,7 @@
         <attribute name="endTime" optional="YES" attributeType="String"/>
         <attribute name="icon" optional="YES" attributeType="String"/>
         <attribute name="isActive" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="isFavourite" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="order" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="startTime" optional="YES" attributeType="String"/>
@@ -40,6 +41,10 @@
         <relationship name="cal" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Cal" inverseName="section_cals" inverseEntity="Cal"/>
         <relationship name="event_cals" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Event_Cal" inverseName="section_cal" inverseEntity="Event_Cal"/>
         <relationship name="parent" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Section" inverseName="child" inverseEntity="Section"/>
+        <relationship name="week_default" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WeekDefault" inverseName="section_cals" inverseEntity="WeekDefault"/>
     </entity>
-    <entity name="WeekDefault" representedClassName="WeekDefault" syncable="YES" codeGenerationType="class"/>
+    <entity name="WeekDefault" representedClassName="WeekDefault" syncable="YES" codeGenerationType="class">
+        <attribute name="weekAb" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="section_cals" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Section_Cal" inverseName="week_default" inverseEntity="Section_Cal"/>
+    </entity>
 </model>

@@ -35,6 +35,20 @@ extension Cal {
         }
     }
     
+    static func get(date: Date) -> Cal? {
+        let fetchRequest: NSFetchRequest<Cal> = Cal.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "date == %@", date.getYYMMDD())
+        fetchRequest.fetchLimit = 1
+        
+        do {
+            let result = try Model.viewContext.fetch(fetchRequest)
+            return result.first
+        } catch {
+            print("Error fetching Cal object: \(error)")
+            return nil
+        }
+    }
+    
     static func new(date: String) -> Cal {
         let cal = Cal(context: Model.viewContext)
         cal.date = date
@@ -45,6 +59,38 @@ extension Cal {
         }
         
         return cal
+    }
+    
+    static func clear(date: Date) {
+        let cal = get(date: date)
+        
+        print(type(of: cal?.section_cals))
+        
+        for i in cal?.section_cals ?? []{
+            let i = i as? Section_Cal
+            
+            for j in i?.event_cals ?? []{
+                let j = j as? Event_Cal
+                if j?.aStartTime == nil{
+                    Model.viewContext.delete(j!)
+                    do {
+                        try Model.viewContext.save()
+                    } catch {
+                        print("Failed to save event: \(error.localizedDescription)")
+                    }
+                }
+            }
+            if i?.event_cals?.count == 0 {
+                Model.viewContext.delete(i!)
+            }
+        }
+        
+        do {
+            try Model.viewContext.save()
+        } catch {
+            print("Failed to save event: \(error.localizedDescription)")
+        }
+        
     }
     
     func add(_ section: Section_Cal){

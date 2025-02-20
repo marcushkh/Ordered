@@ -105,7 +105,12 @@ struct OneDay: View {
                                     Spacer()
                                     
                                     //Schedule events or Duration events
-                                    ActionButtonView(viewModel: viewModel, sc: sc, ec: ec)
+                                    if viewModel.currentTab == .home{
+                                        ActionButtonView(viewModel: viewModel, sc: sc, ec: ec)
+                                    }
+                                    else if viewModel.currentTab == .plan{
+                                        EditDeleteButtonView(viewModel: viewModel, sc: sc, ec: ec)
+                                    }
                                 }
                                 .background()
                                 .onTapGesture {
@@ -289,6 +294,11 @@ struct OneDay: View {
             }
             // For HighlighedEC
             .onChange(of: viewModel.currentTab) { _, _ in
+                if viewModel.currentTab == .home{
+                    withAnimation {
+                        viewModel.highlightedEC = nil
+                    }
+                }
                 if viewModel.currentTab == .plan && pos == .centerView{
                     withAnimation {
                         viewModel.highlightedEC = toDoForDate.first?.getLastFinishedEvent()
@@ -306,7 +316,7 @@ struct OneDay: View {
             .onChange(of: viewModel.highlightedEC) { _, _ in
                 withAnimation {
                     if pos == .centerView{
-                        proxy.scrollTo(viewModel.highlightedEC?.id)
+                        proxy.scrollTo(viewModel.highlightedEC?.id, anchor: .top)
                     }
                 }
             }

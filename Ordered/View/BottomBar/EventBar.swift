@@ -15,7 +15,10 @@ struct EventBar: View {
     @ObservedObject var dayPlannerVM: DayPlannerViewModel
     
     @FetchRequest(
-        sortDescriptors: [SortDescriptor(\.order, order: .forward)],
+        sortDescriptors: [
+            SortDescriptor(\.isFavourite, order: .reverse),
+            SortDescriptor(\.order, order: .forward)
+        ],
         predicate: NSPredicate(format: "isActive == true")
     )
     private var events: FetchedResults<Event>
@@ -43,11 +46,6 @@ struct EventBar: View {
                 
                 
                 HStack{
-                    Text("New")
-                        .bold()
-                    
-                    Spacer()
-                    
                     Menu {
                         Button {
                             
@@ -75,16 +73,10 @@ struct EventBar: View {
                         }
                         .foregroundStyle(.cPrimary)
                     }
-                    
-                    Spacer()
-                    
-                    Text("Edit")
-                        .bold()
                 }
             }
             .padding(.vertical)
             .padding(.horizontal, K.horizontal_padding)
-//            .padding(.bottom)
             .background(.color2)
             .clipShape(UnevenRoundedRectangle(topLeadingRadius: 30, topTrailingRadius: 30))
             .gesture(
@@ -99,8 +91,12 @@ struct EventBar: View {
                         
                         if abs(newHeight - dismissHeight) < abs(newHeight - minHeight) {// Closer to dismiss Height
                             withAnimation {
-                                viewModel.currentTab = .home
+                                if viewModel.currentTab == .plan{
+                                    viewModel.currentTab = .home
+                                }
                                 viewModel.highlightedEC = nil
+                                viewModel.showEventBar = false
+                                viewModel.selectedWeekAb = nil
                             }
                         }
                         
@@ -121,26 +117,52 @@ struct EventBar: View {
                 LazyVGrid(columns: [GridItem(), GridItem()],spacing: K.horizontal_padding, content: {
                     ForEach(events) { e in
                         EventInfo(e: e)
+                            .padding(.horizontal)
                             .onTapGesture {
                                 withAnimation {
                                     // Add event below the highlighted Event
                                     let newEC = e.getEC()
                                     
-                                    //if no Cal -> create Cal
-                                    let cal = Cal.get(date: dayPlannerVM.currentDate.getYYMMDD()) ?? Cal.new(date: dayPlannerVM.currentDate.getYYMMDD())
-                                    
-                                    if let sc = viewModel.highlightedEC?.section_cal{
-                                        sc.insert(newEC, after: viewModel.highlightedEC!)
-                                    }
-                                    else{
-                                        let new_section_Cal = Section_Cal.new(colorScheme: colorScheme)
+                                    if viewModel.currentTab == .plan && viewModel.highlightedEC != nil{ //in planning page
+                                        //if no Cal -> create Cal
+                                        let cal = Cal.get(date: dayPlannerVM.currentDate.getYYMMDD()) ?? Cal.new(date: dayPlannerVM.currentDate.getYYMMDD())
                                         
-                                        new_section_Cal.add(event: newEC)
-                                        cal.add(new_section_Cal)
+                                        if let sc = viewModel.highlightedEC?.section_cal{
+                                            sc.insert(newEC, after: viewModel.highlightedEC!)
+                                        }
+                                        else{
+                                            let new_section_Cal = Section_Cal.new(colorScheme: colorScheme)
+                                            
+                                            new_section_Cal.add(event: newEC)
+                                            cal.add(new_section_Cal)
+                                        }
                                         cal.sort()
+                                        viewModel.highlightedEC = newEC
+                                        viewModel.selectedWeekAb = nil
                                     }
-                                    
-                                    viewModel.highlightedEC = newEC
+                                    else if viewModel.currentTab == .weeklyDefault, let weekAb = viewModel.selectedWeekAb{ // in weekly default page
+                                        let weekDefault: WeekDefault = WeekDefault.get(weekAb) ?? WeekDefault.new(weekAb)
+                                        print("BEGIN WEEKDEFAULT = " + weekDefault.description)
+                                        if let highlightedEC = viewModel.highlightedEC{
+                                            highlightedEC.section_cal?.insert(newEC, after: viewModel.highlightedEC!)
+                                        }
+                                        else if weekDefault.section_cals?.lastObject != nil{
+                                            print("ELSE IF")
+                                            let sc = weekDefault.section_cals?.lastObject as! Section_Cal
+                                            sc.add(event: newEC)
+                                        }
+                                        else{
+                                            print("ELSE")
+                                            let new_section_Cal = Section_Cal.new(colorScheme: colorScheme)
+                                            
+                                            new_section_Cal.add(event: newEC)
+                                            weekDefault.add(new_section_Cal)
+                                        }
+                                        weekDefault.sort()
+                                        print(weekDefault)
+                                        viewModel.highlightedEC = newEC
+                                    }
+                                    viewModel.refresh.toggle()
                                 }
                             }
                     }

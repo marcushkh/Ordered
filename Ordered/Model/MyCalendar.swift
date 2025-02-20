@@ -12,8 +12,7 @@ struct MyCalendar {
     let dateFormatter = DateFormatter()
     
     init() {
-//        calendar.timeZone = TimeZone(identifier: "UTC")!
-//        dateFormatter.timeZone = TimeZone(identifier: "UTC")!
+        calendar.firstWeekday = UserDefaults.standard.integer(forKey: "firstWeekDay")
         dateFormatter.dateFormat = "yyyyMMdd"
         
         today = calendar.date(from: calendar.dateComponents([.year, .month, .day], from: Date())) ?? Date()
@@ -77,5 +76,29 @@ struct MyCalendar {
     func startDateOfWeek(from date: Date) -> Date{
         let currentWeek = calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: date)
         return calendar.date(from: currentWeek)!
+    }
+    
+    static func getWeekOrder() -> [Int] {
+        var calendar = Calendar(identifier: .iso8601)
+        calendar.firstWeekday = UserDefaults.standard.integer(forKey: "firstWeekDay")
+        
+        let isoWeekdays = [0, 1, 2, 3, 4, 5, 6]
+        let firstWeekdayIndex = calendar.firstWeekday - 1
+        
+        let weekdayNumbers: [Int] = Array(isoWeekdays[firstWeekdayIndex...] + isoWeekdays[..<firstWeekdayIndex])
+        
+        return weekdayNumbers
+    }
+    
+    static func getWeekAbreviation() -> [String] {
+        var calendar = Calendar(identifier: .iso8601)
+        calendar.firstWeekday = UserDefaults.standard.integer(forKey: "firstWeekDay")
+        
+        let symbols = calendar.shortWeekdaySymbols
+        
+        let firstWeekdayIndex = calendar.firstWeekday - 1
+        let weekAbbreviations: [String] = Array(symbols[firstWeekdayIndex...] + symbols[..<firstWeekdayIndex])
+        
+        return weekAbbreviations
     }
 }

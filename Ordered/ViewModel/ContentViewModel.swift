@@ -26,4 +26,12 @@ class ContentViewModel: ObservableObject{
     
     //For Planning page
     @Published var highlightedEC: Event_Cal? = nil
+    
+    //For Weekly Default
+    @Published var showEventBar: Bool = false
+    @Published var selectedWeekAb: Int? = nil
+    
+    //For Stat page
+    @Published var selectedEvent: Event? = nil
+    @Published var searchEventName: String = ""
 }
