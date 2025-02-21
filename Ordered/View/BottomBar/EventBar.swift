@@ -97,6 +97,7 @@ struct EventBar: View {
                                 viewModel.highlightedEC = nil
                                 viewModel.showEventBar = false
                                 viewModel.selectedWeekAb = nil
+                                viewModel.showWeekDetail = false
                             }
                         }
                         
@@ -123,7 +124,7 @@ struct EventBar: View {
                                     // Add event below the highlighted Event
                                     let newEC = e.getEC()
                                     
-                                    if viewModel.currentTab == .plan && viewModel.highlightedEC != nil{ //in planning page
+                                    if viewModel.currentTab == .plan /*&& viewModel.highlightedEC != nil*/{ //in planning page
                                         //if no Cal -> create Cal
                                         let cal = Cal.get(date: dayPlannerVM.currentDate.getYYMMDD()) ?? Cal.new(date: dayPlannerVM.currentDate.getYYMMDD())
                                         

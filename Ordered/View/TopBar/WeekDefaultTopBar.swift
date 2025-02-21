@@ -7,7 +7,53 @@
 
 import SwiftUI
 
+struct WeekDefaultFunctionBar: View {
+    @ObservedObject var viewModel: ContentViewModel
+    var body: some View {
+        VStack{
+            //two icon + theme of day
+            HStack{
+                Image(systemName: "calendar")
+                    .resizable()
+                    .scaledToFit()
+                    .foregroundStyle(.color3)
+                    .frame(height: K.xsmall_size)
+                
+                Spacer()
+                
+                Text("Weekly Default")
+                    .font(.title2)
+                    .bold()
+                
+                Spacer()
+                
+                Menu {
+                    if viewModel.highlightedEC != nil{
+                        Button {
+                            
+                        } label: {
+                            Text("New Section")
+                            Image(systemName: "folder")
+                        }
+                    }
+                    
+                } label: {
+                    Image(systemName: "ellipsis")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: K.xsmall_size, height: K.xsmall_size)
+                        .foregroundStyle(.color3)
+                        .padding(.trailing, 4)
+                }
+            }
+            .padding(.vertical)
+        }
+    }
+}
+
+
 struct WeekDefaultTopBar: View {
+    @ObservedObject var viewModel: ContentViewModel
     let weekList = MyCalendar.getWeekOrder()
     
     var body: some View {
@@ -15,13 +61,26 @@ struct WeekDefaultTopBar: View {
             ForEach(weekList, id: \.self) { i in
                 VStack{
                     ZStack{
+                        var colorOfCircle: Color{
+                            if viewModel.selectedWeekAb == i && viewModel.showWeekDetail == true {
+                                return .color4
+                            }
+                            return .color2
+                        }
                         Circle()
-                            .fill(.color2)
+                            .fill(colorOfCircle)
                             .frame(width: K.large_size, height: K.large_size)
                         
                         Text(Date.intToWeekAbbreviation(i) ?? "")
                             .font(.caption)
                             .foregroundStyle(.cPrimary)
+                    }
+                    .onTapGesture {
+                        withAnimation {
+                            viewModel.showEventBar = true
+                            viewModel.selectedWeekAb = i
+                            viewModel.showWeekDetail = true
+                        }
                     }
                 }
                 if i != weekList.last{
@@ -32,6 +91,3 @@ struct WeekDefaultTopBar: View {
     }
 }
 
-#Preview {
-    WeekDefaultTopBar()
-}

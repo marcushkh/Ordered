@@ -104,4 +104,9 @@ extension WeekDefault{
             print("Failed to save event: \(error.localizedDescription)")
         }
     }
+    
+    func getLastFinishedEvent() -> Event_Cal? {
+        let sections: [Section_Cal] = self.section_cals?.array as? [Section_Cal] ?? []
+        return sections.last?.event_cals?.lastObject as? Event_Cal ?? nil
+    }
 }

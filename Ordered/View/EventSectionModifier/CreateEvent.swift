@@ -10,6 +10,8 @@ import MCEmojiPicker
 import CoreData
  
 struct CreateEvent: View {
+    @ObservedObject var viewModel: ContentViewModel
+    
     @Namespace private var underlineNamespace
     
     @State var editEvent_Cal: Event_Cal? = nil
@@ -507,18 +509,27 @@ struct CreateEvent: View {
             let event_Cal = event.getEC()
             event_Cal.detail = description
             
-            //if no Cal -> create Cal
-            let cal = Cal.get(date: date.getYYMMDD()) ?? Cal.new(date: date.getYYMMDD())
-            
             //if no Section_Cal -> create empty Cal
             let new_section_Cal: Section_Cal = section_Cal ?? Section_Cal.new(colorScheme: colorScheme)
             
             //put the event_Cal into the Section_Cal
             new_section_Cal.add(event: event_Cal)
-            cal.add(new_section_Cal)
-            cal.sort()
             
-            print(cal.description)
+            if viewModel.currentTab != .weeklyDefault{
+                //if no Cal -> create Cal
+                let cal = Cal.get(date: date.getYYMMDD()) ?? Cal.new(date: date.getYYMMDD())
+                
+                cal.add(new_section_Cal)
+                cal.sort()
+            }
+            else {
+                if let weekAb = viewModel.selectedWeekAb{
+                    let wd = WeekDefault.get(weekAb) ?? WeekDefault.new(weekAb)
+                    
+                    wd.add(new_section_Cal)
+                    wd.sort()
+                }
+            }
             
             display = false
         }
@@ -578,5 +589,5 @@ struct CreateEvent: View {
 }
 
 #Preview {
-    CreateEvent(display: .constant(false))
+    CreateEvent(viewModel: ContentViewModel(), display: .constant(false))
 }

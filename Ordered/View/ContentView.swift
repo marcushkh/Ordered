@@ -35,8 +35,13 @@ struct ContentView: View {
                             .ignoresSafeArea()
                     }
                     else if viewModel.currentTab == .weeklyDefault{
-                        WeekDefaultView(viewModel: viewModel)
-                            .padding(.horizontal, K.horizontal_padding)
+                        if viewModel.showWeekDetail{
+                            WeekDefaultMainList(viewModel: viewModel)
+                        }
+                        else{
+                            WeekDefaultView(viewModel: viewModel)
+                                .padding(.horizontal, K.horizontal_padding)
+                        }
                     }
                     else if viewModel.currentTab == .statistic{
                         HStack {
@@ -87,13 +92,25 @@ struct ContentView: View {
                     }
                 }
                 .sheet(isPresented: $viewModel.showCreateEvent) {
-                    CreateEvent(editEvent_Cal: viewModel.editEvent_Cal, date: dayPlannerVM.currentDate, section_Cal: viewModel.createEvent_Section_Cal, display: $viewModel.showCreateEvent)
+                    CreateEvent(viewModel: viewModel, editEvent_Cal: viewModel.editEvent_Cal, date: dayPlannerVM.currentDate, section_Cal: viewModel.createEvent_Section_Cal, display: $viewModel.showCreateEvent)
                         .presentationCornerRadius(K.presentationCornerRadius)
                         .onDisappear {
                             viewModel.createEvent_Section_Cal = nil
                             viewModel.refresh.toggle()
                         }
                     
+                }
+                .onChange(of: viewModel.currentTab) { oldValue, newValue in
+                    if viewModel.currentTab != .weeklyDefault || viewModel.currentTab != .plan{
+                        withAnimation {
+                            viewModel.highlightedEC = nil
+                        }
+                    }
+                    if viewModel.currentTab != .weeklyDefault{
+                        viewModel.showEventBar = false
+                        viewModel.selectedWeekAb = nil
+                        viewModel.showWeekDetail = false
+                    }
                 }
             }
             

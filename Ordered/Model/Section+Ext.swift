@@ -119,6 +119,44 @@ extension Section_Cal {
         }
     }
     
+    static func save(name: String? = nil, color: String? = nil, sc: Section_Cal? = nil, wd: WeekDefault? = nil, insertIndex: Int? = nil){
+        // If have sc -> change the sc name and color
+        if let scToSave = sc {
+            if let n = name{
+                scToSave.name = n
+            }
+            if let c = color{
+                scToSave.color = c
+            }
+        }
+        // If dont have sc -> create a sc and put it at the end of cal
+        else{
+            let scToSave = Section_Cal(context: Model.viewContext)
+            if let n = name{
+                scToSave.name = n
+            }
+            if let c = color{
+                scToSave.color = c
+            }
+            if let w = wd{
+                let sectionCals = w.section_cals?.mutableCopy() as? NSMutableOrderedSet
+                if let i = insertIndex{
+                    sectionCals?.insert(scToSave, at: i)
+                }
+                else{
+                    sectionCals?.add(scToSave)
+                }
+                wd?.section_cals = sectionCals
+            }
+        }
+        
+        do{
+            try Model.viewContext.save()
+        }catch{
+            print("Error")
+        }
+    }
+    
     func delete(){
         for i in self.event_cals ?? []{
             Model.viewContext.delete(i as! NSManagedObject)

@@ -22,7 +22,7 @@ struct TopBar: View {
                     .padding(.horizontal, K.horizontal_padding)
             }
             else if viewModel.currentTab == .weeklyDefault{
-                weeklyDefaultTopBar
+                WeekDefaultFunctionBar(viewModel: viewModel)
                     .padding(.horizontal, K.horizontal_padding)
             }
             else if viewModel.currentTab == .statistic{
@@ -41,7 +41,7 @@ struct TopBar: View {
                 .clipShape(UnevenRoundedRectangle(bottomLeadingRadius: 30, bottomTrailingRadius: 30))
         }
         else if viewModel.currentTab == .weeklyDefault{
-            WeekDefaultTopBar()
+            WeekDefaultTopBar(viewModel: viewModel)
                 .padding(.horizontal, K.horizontal_padding)
                 .padding(.bottom, K.xxxsmall_size)
                 .background(.color1)
@@ -115,37 +115,7 @@ struct TopBar: View {
         }
     }
     
-    var weeklyDefaultTopBar: some View {
-        VStack{
-            //two icon + theme of day
-            HStack{
-                Image(systemName: "calendar")
-                    .resizable()
-                    .scaledToFit()
-                    .foregroundStyle(.color3)
-                    .frame(height: K.xsmall_size)
-                
-                Spacer()
-                
-                Text("Weekly Default")
-                    .font(.title2)
-                    .bold()
-                
-                Spacer()
-                
-                Button {
-                    
-                } label: {
-                    Image(systemName: "list.bullet.indent")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(height: K.xxsmall_size)
-                        .foregroundStyle(.color3)
-                }
-            }
-            .padding(.vertical)
-        }
-    }
+    
 }
 
 

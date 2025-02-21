@@ -17,6 +17,26 @@ struct ChangeSectionName: View{
     @ObservedObject var viewModel: ContentViewModel
 
     var body: some View{
+        var colorSuggested: String{
+            if colorScheme == .light{
+                if let cal = viewModel.insertToCal{
+                    return K.defaultSectionColor[(cal.section_cals?.count ?? 0) % K.defaultSectionColor.count]
+                }
+                else if let wd = viewModel.insertToWeek{
+                    return K.defaultSectionColor[(wd.section_cals?.count ?? 0) % K.defaultSectionColor.count]
+                }
+            }
+            else{
+                if let cal = viewModel.insertToCal{
+                    return K.defaultSectionColorDark[(cal.section_cals?.count ?? 0) % K.defaultSectionColorDark.count]
+                }
+                else if let wd = viewModel.insertToWeek{
+                    return K.defaultSectionColor[(wd.section_cals?.count ?? 0) % K.defaultSectionColor.count]
+                }
+            }
+            return K.defaultSection[0]
+        }
+        
         ZStack{
             //Background
             Color(.cPrimary.opacity(0.2))
@@ -33,14 +53,6 @@ struct ChangeSectionName: View{
                     ColorPicker("", selection: Binding(get: {
                         Color(hex: color)
                     }, set: { c in
-                        var colorSuggested: String{
-                            if colorScheme == .light{
-                                K.defaultSectionColor[(viewModel.insertToCal?.section_cals?.count ?? 0) % K.defaultSectionColor.count]
-                            }
-                            else{
-                                K.defaultSectionColorDark[(viewModel.insertToCal?.section_cals?.count ?? 0) % K.defaultSectionColorDark.count]
-                            }
-                        }
                         color = c.toHex() ?? colorSuggested
                     }))
                     .labelsHidden()
@@ -88,7 +100,12 @@ struct ChangeSectionName: View{
                         }
                         else{
                             withAnimation{
-                                Section_Cal.save(name: name, color: color, sc: viewModel.changeSection_Cal, cal: viewModel.insertToCal, insertIndex: viewModel.insertIndex)
+                                if let cal = viewModel.insertToCal{
+                                    Section_Cal.save(name: name, color: color, sc: viewModel.changeSection_Cal, cal: viewModel.insertToCal, insertIndex: viewModel.insertIndex)
+                                }
+                                else if let wd = viewModel.insertToWeek{
+                                    Section_Cal.save(name: name, color: color, sc: viewModel.changeSection_Cal, wd: wd, insertIndex: viewModel.insertIndex)
+                                }
 
                                 dismiss()
                             }
@@ -106,14 +123,6 @@ struct ChangeSectionName: View{
                     
                 }
                 .onAppear{
-                    var colorSuggested: String{
-                        if colorScheme == .light{
-                            K.defaultSectionColor[(viewModel.insertToCal?.section_cals?.count ?? 0) % K.defaultSectionColor.count]
-                        }
-                        else{
-                            K.defaultSectionColorDark[(viewModel.insertToCal?.section_cals?.count ?? 0) % K.defaultSectionColorDark.count]
-                        }
-                    }
                     name = viewModel.changeSection_Cal?.name ?? ""
                     color = viewModel.changeSection_Cal?.color ?? colorSuggested
                     typingSectionName = true
@@ -140,6 +149,7 @@ struct ChangeSectionName: View{
         viewModel.changeSection_Cal = nil
         viewModel.insertToCal = nil
         viewModel.insertIndex = nil
+        viewModel.insertToWeek = nil
         viewModel.refresh.toggle()
     }
 }

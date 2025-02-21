@@ -294,11 +294,6 @@ struct OneDay: View {
             }
             // For HighlighedEC
             .onChange(of: viewModel.currentTab) { _, _ in
-                if viewModel.currentTab == .home{
-                    withAnimation {
-                        viewModel.highlightedEC = nil
-                    }
-                }
                 if viewModel.currentTab == .plan && pos == .centerView{
                     withAnimation {
                         viewModel.highlightedEC = toDoForDate.first?.getLastFinishedEvent()
