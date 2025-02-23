@@ -33,10 +33,10 @@ extension WeekDefault{
         return wd
     }
     
-    func add(_ section: Section_Cal){
-        if let section_cals = self.section_cals?.mutableCopy() as? NSMutableOrderedSet {
-            section_cals.add(section)
-            self.section_cals = section_cals
+    func add(_ section: Section){
+        if let sections = self.sections?.mutableCopy() as? NSMutableOrderedSet {
+            sections.add(section)
+            self.sections = sections
         }
         
         do {
@@ -47,7 +47,7 @@ extension WeekDefault{
     }
     
     func sort(){ // The sorting algorithm we use is to put the incorrectly ordered items on top of the earliest start time which is sorted (insertion sort)
-        let sections: [Section_Cal] = self.section_cals?.array as? [Section_Cal] ?? []
+        let sections: [Section] = self.sections?.array as? [Section] ?? []
         var allEvents: [Event_Cal] = []
         
         //Extract all events from cal
@@ -96,7 +96,7 @@ extension WeekDefault{
                 }
             }
         }
-        self.section_cals = NSOrderedSet(array: sections)
+        self.sections = NSOrderedSet(array: sections)
         
         do {
             try Model.viewContext.save()
@@ -106,7 +106,7 @@ extension WeekDefault{
     }
     
     func getLastFinishedEvent() -> Event_Cal? {
-        let sections: [Section_Cal] = self.section_cals?.array as? [Section_Cal] ?? []
+        let sections: [Section] = self.sections?.array as? [Section] ?? []
         return sections.last?.event_cals?.lastObject as? Event_Cal ?? nil
     }
 }

@@ -20,11 +20,11 @@ struct WeekDefaultView: View {
                         VStack{
                             let weekDefault = WeekDefault.get(i)
                             //For each
-                            ForEach(weekDefault?.section_cals?.array as? [Section_Cal] ?? [], id: \.self){ sc in
-                                ForEach(sc.event_cals?.array as? [Event_Cal] ?? [], id: \.self){ ec in
+                            ForEach(weekDefault?.sections?.array as? [Section] ?? [], id: \.self){ s in
+                                ForEach(s.event_cals?.array as? [Event_Cal] ?? [], id: \.self){ ec in
                                     ZStack{
                                         Circle()
-                                            .fill(Color(hex: sc.color))
+                                            .fill(Color(hex: s.color))
                                             .frame(width: K.large_size, height: K.large_size)
                                             .overlay{
                                                 if let highlightedEC = viewModel.highlightedEC, highlightedEC == ec {
@@ -35,6 +35,7 @@ struct WeekDefaultView: View {
                                             }
                                         
                                         Text(ec.parent?.icon ?? "")
+                                            .font(.title2)
                                     }
                                     .id(ec.id)
                                     .onTapGesture {
@@ -49,7 +50,7 @@ struct WeekDefaultView: View {
                                     .draggable(ec.description){
                                         ZStack{
                                             Circle()
-                                                .fill(Color(hex: sc.color))
+                                                .fill(.clear)
                                                 .frame(height: K.xlarge_size)
                                             
                                             Text(ec.parent?.icon ?? "")
@@ -71,13 +72,13 @@ struct WeekDefaultView: View {
                                             if let draggingItem, status, draggingItem.objectID != ec.objectID{
                                                 
                                                 //Logic needed to add: start time need to be ordered
-                                                if let events = sc.event_cals?.mutableCopy() as? NSMutableOrderedSet {
+                                                if let events = s.event_cals?.mutableCopy() as? NSMutableOrderedSet {
                                                     let e_index = events.index(of: ec)
                                                     
                                                     events.remove(draggingItem)
                                                     events.insert(draggingItem, at: e_index)
                                                     
-                                                    sc.event_cals = events.copy() as? NSOrderedSet
+                                                    s.event_cals = events.copy() as? NSOrderedSet
                                                     weekDefault?.sort()
                                                 }
                                                 
@@ -93,7 +94,6 @@ struct WeekDefaultView: View {
                                     }
                                 }
                             }
-                            
                             ZStack{
                                 Circle()
                                     .fill(.color3)
@@ -108,13 +108,19 @@ struct WeekDefaultView: View {
                             .id(i)
                             .onTapGesture {
                                 withAnimation{
-                                    viewModel.highlightedEC = nil
-                                    viewModel.selectedWeekAb = i
-                                    viewModel.showEventBar = true
-                                    viewModel.refresh.toggle()
+                                    if viewModel.showEventBar{
+                                        viewModel.selectedWeekAb = i
+                                        viewModel.showWeekDetail = true
+                                        viewModel.refresh.toggle()
+                                    }
+                                    else{
+                                        viewModel.highlightedEC = nil
+                                        viewModel.selectedWeekAb = i
+                                        viewModel.showEventBar = true
+                                        viewModel.refresh.toggle()
+                                    }
                                 }
                             }
-                            
                         }
                         if i != weekList.last{
                             Spacer()
@@ -124,8 +130,8 @@ struct WeekDefaultView: View {
                 .padding(.vertical)
                 .padding(.bottom, 24)
                 .onChange(of: viewModel.refresh) { _, _ in
-                    
                 }
+                .padding(.horizontal, K.horizontal_padding)
             }
             .onChange(of: viewModel.highlightedEC) { _, _ in
                 withAnimation {
@@ -138,7 +144,6 @@ struct WeekDefaultView: View {
                 }
             }
         }
-        .padding(.vertical)
     }
 }
 

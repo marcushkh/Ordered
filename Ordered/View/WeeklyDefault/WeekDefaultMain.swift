@@ -23,14 +23,13 @@ struct WeekDefaultMainList: View{
 }
 
 struct WeekDefaultMain: View {
-    
     var weekAb: Int
     var pos: ViewPosition
     @ObservedObject var viewModel: ContentViewModel
-    
     @State var draggingItem: Event_Cal? = nil
     
     private var weekDefaultFetchRequest: FetchRequest<WeekDefault>
+    @State var showAlert: Bool = false
     
     init(weekAb: Int, pos: ViewPosition, viewModel: ContentViewModel) {
         self.weekAb = weekAb
@@ -52,15 +51,15 @@ struct WeekDefaultMain: View {
     var body: some View {
         ScrollViewReader{ proxy in
             ScrollView{
-                if weekDefault.first != nil && weekDefault.first?.section_cals?.count != 0{
+                if weekDefault.first != nil && weekDefault.first?.sections?.count != 0{
                     
-                    ForEach(weekDefault.first?.section_cals?.array as! [Section_Cal], id: \.self){ sc in
+                    ForEach(weekDefault.first?.sections?.array as! [Section], id: \.self){ s in
                         
                         VStack{
                             //Section Header
                             HStack(alignment: .center){
                                 
-                                Text(sc.name ?? "")
+                                Text(s.name ?? "")
                                     .font(.title3)
                                     .bold()
                                 
@@ -68,24 +67,33 @@ struct WeekDefaultMain: View {
                                 
                                 Menu {
                                     Button {
-                                        edit(sc: sc)
-                                    } label: {
-                                        Text("Edit Section")
-                                        Image(systemName: "pencil.line")
-                                    }
-                                    
-                                    Button {
-                                        createSection(above: sc)
+                                        createSection(above: s)
                                     } label: {
                                         Text("Add Section Above")
                                         Image(systemName: "arrow.up")
                                     }
                                     
                                     Button {
-                                        createSection(below: sc)
+                                        createSection(below: s)
                                     } label: {
                                         Text("Add Section Below")
                                         Image(systemName: "arrow.down")
+                                    }
+                                    
+                                    Button {
+                                        edit(s: s)
+                                    } label: {
+                                        Text("Edit Section")
+                                        Image(systemName: "pencil.line")
+                                    }
+                                    
+                                    Button(role: .destructive) {
+                                        showAlert = true
+                                    } label: {
+                                        Text("Delete Section")
+                                            .foregroundColor(.red)
+                                        Image(systemName: "trash")
+                                            .foregroundColor(.red)
                                     }
                                     
                                 } label: {
@@ -98,11 +106,19 @@ struct WeekDefaultMain: View {
                                     }
                                     .background()
                                 }
+                                .alert(isPresented: $showAlert) {
+                                    Alert(  title: Text("Delete Section"),
+                                            message: Text("Are you sure you want to delete this Section?"),
+                                            primaryButton: .destructive(Text("Delete")) {
+                                                s.delete()
+                                            },
+                                            secondaryButton: .cancel())
+                                }
                             }
                             .onTapGesture {
-                                edit(sc: sc)
+                                edit(s: s)
                             }
-                            .id(sc.id)
+                            .id(s.id)
                             
                             Divider()
                                 .background(Color(.blue))
@@ -110,19 +126,19 @@ struct WeekDefaultMain: View {
                                 .padding(.top, -8)
                             
                             //Events
-                            ForEach(sc.event_cals?.array as! [Event_Cal], id: \.self){ ec in
+                            ForEach(s.event_cals?.array as! [Event_Cal], id: \.self){ ec in
                                 HStack{
                                     ECInfo(ec: ec, refresh: viewModel.refresh, highlightedEC: $viewModel.highlightedEC)
                                     
                                     Spacer()
                                     
                                     //Schedule events or Duration events
-                                    if viewModel.currentTab == .home{
-                                        ActionButtonView(viewModel: viewModel, sc: sc, ec: ec)
-                                    }
-                                    else if viewModel.currentTab == .plan{
-                                        EditDeleteButtonView(viewModel: viewModel, sc: sc, ec: ec)
-                                    }
+//                                    if viewModel.currentTab == .home{
+//                                        ActionButtonView(viewModel: viewModel, sc: s, ec: ec)
+//                                    }
+//                                    else if viewModel.currentTab == .plan{
+//                                        EditDeleteButtonView(viewModel: viewModel, sc: sc, ec: ec)
+//                                    }
                                 }
                                 .background()
                                 .onTapGesture {
@@ -165,13 +181,13 @@ struct WeekDefaultMain: View {
                                         if let draggingItem, status, draggingItem.objectID != ec.objectID{
                                             
                                             //Logic needed to add: start time need to be ordered
-                                            if let events = sc.event_cals?.mutableCopy() as? NSMutableOrderedSet {
+                                            if let events = s.event_cals?.mutableCopy() as? NSMutableOrderedSet {
                                                 let e_index = events.index(of: ec)
                                                 
                                                 events.remove(draggingItem)
                                                 events.insert(draggingItem, at: e_index)
                                                 
-                                                sc.event_cals = events.copy() as? NSOrderedSet
+                                                s.event_cals = events.copy() as? NSOrderedSet
                                                 weekDefault.first?.sort()
                                             }
                                             
@@ -191,7 +207,7 @@ struct WeekDefaultMain: View {
                             HStack{
                                 ZStack{
                                     Circle()
-                                        .fill(Color(hex: sc.color))
+                                        .fill(Color(hex: s.color))
                                         .frame(height: K.xlarge_size)
                                         .bold()
                                     Image(systemName: "plus")
@@ -212,14 +228,14 @@ struct WeekDefaultMain: View {
                             } isTargeted: { status in
                                 withAnimation {
                                     if let draggingItem{
-                                        if let events = sc.event_cals?.mutableCopy() as? NSMutableOrderedSet {
+                                        if let events = s.event_cals?.mutableCopy() as? NSMutableOrderedSet {
                                             let e_index = events.index(of: draggingItem)
                                             
                                             if e_index != events.count - 1{
                                                 events.remove(draggingItem)
                                                 events.add(draggingItem)
                                                 
-                                                sc.event_cals = events.copy() as? NSOrderedSet
+                                                s.event_cals = events.copy() as? NSOrderedSet
                                                 weekDefault.first?.sort()
                                             }
                                         }
@@ -235,7 +251,7 @@ struct WeekDefaultMain: View {
                             }
                             .onTapGesture {
                                 //Create event
-                                viewModel.createEvent_Section_Cal = sc
+                                viewModel.createEvent_Section = s
                                 viewModel.editEvent_Cal = nil
                                 viewModel.showCreateEvent = true
                             }
@@ -279,7 +295,7 @@ struct WeekDefaultMain: View {
                                 .frame(height: 300)
                                 .onTapGesture {
                                     viewModel.editEvent_Cal = nil
-                                    viewModel.createEvent_Section_Cal = nil
+                                    viewModel.createEvent_Section = nil
                                     viewModel.showCreateEvent = true
                                 }
                             
@@ -330,21 +346,24 @@ struct WeekDefaultMain: View {
         }
     }
     
-    func edit(sc: Section_Cal){
+    //TODO: TO do this change this to Section Type
+    func edit(s: Section){
         viewModel.showChangeSection = true
-        viewModel.changeSection_Cal = sc
+        viewModel.changeSection_Cal = nil
+        viewModel.changeSection = s
         viewModel.insertToWeek = weekDefault.first
     }
-    func createSection(above: Section_Cal? = nil, below: Section_Cal? = nil){
-        if let sc = above{
-            viewModel.insertIndex = weekDefault.first?.section_cals?.index(of: sc)
+    func createSection(above: Section? = nil, below: Section? = nil){
+        if let s = above{
+            viewModel.insertIndex = weekDefault.first?.sections?.index(of: s)
         }
-        else if let sc = below{
-            viewModel.insertIndex = (weekDefault.first?.section_cals?.index(of: sc) ?? 0) + 1
+        else if let s = below{
+            viewModel.insertIndex = (weekDefault.first?.sections?.index(of: s) ?? 0) + 1
         }
         //Put it at the very end
         viewModel.showChangeSection = true
         viewModel.changeSection_Cal = nil
+        viewModel.changeSection = nil
         viewModel.insertToWeek = weekDefault.first
     }
 }

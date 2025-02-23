@@ -16,11 +16,15 @@ class ContentViewModel: ObservableObject{
     @Published var eventDetail: Event_Cal? = nil
     @Published var editEvent_Cal: Event_Cal? = nil
     
+    //Create Event
     @Published var showCreateEvent = false
     @Published var createEvent_Section_Cal: Section_Cal? = nil
+    @Published var createEvent_Section: Section? = nil
     
+    //Change Section
     @Published var showChangeSection = false
     @Published var changeSection_Cal: Section_Cal? = nil
+    @Published var changeSection: Section? = nil
     @Published var insertToCal: Cal? = nil
     @Published var insertIndex: Int? = nil
     

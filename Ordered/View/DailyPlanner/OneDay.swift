@@ -15,6 +15,7 @@ struct OneDay: View {
     @ObservedObject var dayPlannerVM: DayPlannerViewModel
     
     @State var draggingItem: Event_Cal? = nil
+    @State var showAlert: Bool = false
     
     private var calendarFetchRequest: FetchRequest<Cal>
     
@@ -56,13 +57,6 @@ struct OneDay: View {
                                 
                                 Menu {
                                     Button {
-                                        edit(sc: sc)
-                                    } label: {
-                                        Text("Edit Section")
-                                        Image(systemName: "pencil.line")
-                                    }
-                                    
-                                    Button {
                                         createSection(above: sc)
                                     } label: {
                                         Text("Add Section Above")
@@ -76,6 +70,21 @@ struct OneDay: View {
                                         Image(systemName: "arrow.down")
                                     }
                                     
+                                    Button {
+                                        edit(sc: sc)
+                                    } label: {
+                                        Text("Edit Section")
+                                        Image(systemName: "pencil.line")
+                                    }
+                                    
+                                    Button(role: .destructive) {
+                                        showAlert = true
+                                    } label: {
+                                        Text("Delete Section")
+                                            .foregroundColor(.red)
+                                        Image(systemName: "trash")
+                                            .foregroundColor(.red)
+                                    }
                                 } label: {
                                     ZStack{
                                         Image(systemName: "ellipsis.circle.fill")
@@ -85,6 +94,14 @@ struct OneDay: View {
                                             .frame(width: K.medium_size)
                                     }
                                     .background()
+                                }
+                                .alert(isPresented: $showAlert) {
+                                    Alert(  title: Text("Delete Section"),
+                                            message: Text("Are you sure you want to delete this Section?"),
+                                            primaryButton: .destructive(Text("Delete")) {
+                                                sc.delete()
+                                            },
+                                            secondaryButton: .cancel())
                                 }
                             }
                             .onTapGesture {
@@ -321,6 +338,7 @@ struct OneDay: View {
     func edit(sc: Section_Cal){
         viewModel.showChangeSection = true
         viewModel.changeSection_Cal = sc
+        viewModel.changeSection = nil
         viewModel.insertToCal = toDoForDate.first
     }
     func createSection(above: Section_Cal? = nil, below: Section_Cal? = nil){
@@ -333,6 +351,7 @@ struct OneDay: View {
         //Put it at the very end
         viewModel.showChangeSection = true
         viewModel.changeSection_Cal = nil
+        viewModel.changeSection = nil
         viewModel.insertToCal = toDoForDate.first
     }
 }

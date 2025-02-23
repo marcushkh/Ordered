@@ -9,6 +9,7 @@ import SwiftUI
 
 struct WeekDefaultFunctionBar: View {
     @ObservedObject var viewModel: ContentViewModel
+    @Environment(\.colorScheme) var colorScheme
     var body: some View {
         VStack{
             //two icon + theme of day
@@ -28,9 +29,11 @@ struct WeekDefaultFunctionBar: View {
                 Spacer()
                 
                 Menu {
+                    //TODO: Why does this not work in Real time?
                     if viewModel.highlightedEC != nil{
                         Button {
-                            
+                            viewModel.highlightedEC?.toNewSection(colorScheme: colorScheme)
+                            viewModel.refresh.toggle()
                         } label: {
                             Text("New Section")
                             Image(systemName: "folder")
@@ -47,6 +50,9 @@ struct WeekDefaultFunctionBar: View {
                 }
             }
             .padding(.vertical)
+        }
+        .onChange(of: viewModel.refresh) { oldValue, newValue in
+            
         }
     }
 }
@@ -71,7 +77,7 @@ struct WeekDefaultTopBar: View {
                             .fill(colorOfCircle)
                             .frame(width: K.large_size, height: K.large_size)
                         
-                        Text(Date.intToWeekAbbreviation(i) ?? "")
+                        Text(Date.intToWeekAbbreviation(i))
                             .font(.caption)
                             .foregroundStyle(.cPrimary)
                     }

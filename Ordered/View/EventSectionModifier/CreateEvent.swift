@@ -17,7 +17,6 @@ struct CreateEvent: View {
     @State var editEvent_Cal: Event_Cal? = nil
     
     @State var date: Date = Date()
-    @State var section_Cal: Section_Cal? = nil
     
     @State var showEmojiPicker: Bool = false
     @State var selectedEmoji: String = "💡"
@@ -509,13 +508,10 @@ struct CreateEvent: View {
             let event_Cal = event.getEC()
             event_Cal.detail = description
             
-            //if no Section_Cal -> create empty Cal
-            let new_section_Cal: Section_Cal = section_Cal ?? Section_Cal.new(colorScheme: colorScheme)
-            
-            //put the event_Cal into the Section_Cal
-            new_section_Cal.add(event: event_Cal)
-            
             if viewModel.currentTab != .weeklyDefault{
+                let new_section_Cal: Section_Cal = viewModel.createEvent_Section_Cal ?? Section_Cal.new(colorScheme: colorScheme)
+                new_section_Cal.add(event: event_Cal)
+                
                 //if no Cal -> create Cal
                 let cal = Cal.get(date: date.getYYMMDD()) ?? Cal.new(date: date.getYYMMDD())
                 
@@ -524,9 +520,12 @@ struct CreateEvent: View {
             }
             else {
                 if let weekAb = viewModel.selectedWeekAb{
+                    let new_section: Section = viewModel.createEvent_Section ?? Section.new(colorScheme: colorScheme)
+                    new_section.add(event: event_Cal)
+                    
                     let wd = WeekDefault.get(weekAb) ?? WeekDefault.new(weekAb)
                     
-                    wd.add(new_section_Cal)
+                    wd.add(new_section)
                     wd.sort()
                 }
             }

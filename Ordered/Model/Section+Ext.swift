@@ -9,19 +9,44 @@ import SwiftUI
 import CoreData
 
 extension Section {
+    func getSC() -> Section_Cal{
+        let sc = Section_Cal(context: Model.viewContext)
+        sc.color = self.color
+        sc.name = self.name
+        sc.event_cals = self.event_cals
+        sc.parent = self
+        return sc
+    }
     
-    static func save(name: String?, color: String?, section: Section? = nil) -> Section {
-        let sectionToSave = section ?? Section(context: Model.viewContext)
-        
-        if let n = name{
-            sectionToSave.name = n
+    static func save(name: String? = nil, color: String? = nil, section: Section? = nil, wd: WeekDefault? = nil, insertIndex: Int? = nil){
+        // If have sc -> change the sc name and color
+        if let sectionToSave = section {
+            if let n = name{
+                sectionToSave.name = n
+            }
+            if let c = color{
+                sectionToSave.color = c
+            }
         }
-        if let c = color{
-            sectionToSave.color = c
-        }
-        
-        if section == nil{
-            sectionToSave.order = Model.getHighestOrder(c: Model.Section) + 1
+        // If dont have sc -> create a sc and put it at the end of cal
+        else{
+            let sectionToSave = Section(context: Model.viewContext)
+            if let n = name{
+                sectionToSave.name = n
+            }
+            if let c = color{
+                sectionToSave.color = c
+            }
+            if let w = wd{
+                let sections = w.sections?.mutableCopy() as? NSMutableOrderedSet
+                if let i = insertIndex{
+                    sections?.insert(sectionToSave, at: i)
+                }
+                else{
+                    sections?.add(sectionToSave)
+                }
+                wd?.sections = sections
+            }
         }
         
         do{
@@ -29,13 +54,26 @@ extension Section {
         }catch{
             print("Error")
         }
-        return sectionToSave
     }
     
-    func add(event: Event){
-        if let events = self.events?.mutableCopy() as? NSMutableOrderedSet {
+    static func new(colorScheme: ColorScheme, name: String? = nil, count: Int = 0) -> Section{
+        let section = Section(context: Model.viewContext)
+        section.event_cals = NSMutableOrderedSet()
+        section.color = colorScheme == .light ? K.defaultSectionColor[count % K.defaultSectionColor.count] : K.defaultSectionColorDark[count % K.defaultSectionColorDark.count]
+        section.name = name ?? "New Section"
+        
+        do {
+            try Model.viewContext.save()
+        } catch {
+            print("Failed to save event: \(error.localizedDescription)")
+        }
+        return section
+    }
+    
+    func add(event: Event_Cal){
+        if let events = self.event_cals?.mutableCopy() as? NSMutableOrderedSet {
             events.add(event)
-            self.events = events
+            self.event_cals = events
         }
         
         do {
@@ -45,14 +83,11 @@ extension Section {
         }
     }
     
-    func add(event: [Event]){
-        if let events = self.events?.mutableCopy() as? NSMutableOrderedSet {
-            for i in event{
-                events.add(i)
-            }
-            self.events = events
+    func insert(_ event1: Event_Cal, after event2: Event_Cal){
+        if let events = self.event_cals?.mutableCopy() as? NSMutableOrderedSet{
+            events.insert(event1, at: events.index(of: event2) + 1)
+            self.event_cals = events.copy() as? NSOrderedSet
         }
-        
         do {
             try Model.viewContext.save()
         } catch {
@@ -60,18 +95,27 @@ extension Section {
         }
     }
     
-    func remove(event: Event){
+    func delete(){
+        for i in self.event_cals ?? []{
+            Model.viewContext.delete(i as! NSManagedObject)
+        }
+        Model.viewContext.delete(self)
         
+        do {
+            try Model.viewContext.save()
+        } catch {
+            print("Failed to save event: \(error.localizedDescription)")
+        }
     }
 }
 
 extension Section_Cal {
     
-    static func new(colorScheme: ColorScheme) -> Section_Cal{
+    static func new(colorScheme: ColorScheme, name: String? = nil, count: Int = 0) -> Section_Cal{
         let section = Section_Cal(context: Model.viewContext)
         section.event_cals = NSMutableOrderedSet()
-        section.color = colorScheme == .light ? K.defaultSectionColor[0] : K.defaultSectionColorDark[0]
-        section.name = "New Section"
+        section.color = colorScheme == .light ? K.defaultSectionColor[count % K.defaultSectionColor.count] : K.defaultSectionColorDark[count % K.defaultSectionColorDark.count]
+        section.name = name ?? "New Section"
         
         do {
             try Model.viewContext.save()
@@ -139,14 +183,14 @@ extension Section_Cal {
                 scToSave.color = c
             }
             if let w = wd{
-                let sectionCals = w.section_cals?.mutableCopy() as? NSMutableOrderedSet
+                let sections = w.sections?.mutableCopy() as? NSMutableOrderedSet
                 if let i = insertIndex{
-                    sectionCals?.insert(scToSave, at: i)
+                    sections?.insert(scToSave, at: i)
                 }
                 else{
-                    sectionCals?.add(scToSave)
+                    sections?.add(scToSave)
                 }
-                wd?.section_cals = sectionCals
+                wd?.sections = sections
             }
         }
         

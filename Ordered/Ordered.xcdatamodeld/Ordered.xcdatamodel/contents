@@ -15,7 +15,6 @@
         <attribute name="order" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="startTime" optional="YES" attributeType="String"/>
         <relationship name="child" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Event_Cal" inverseName="parent" inverseEntity="Event_Cal"/>
-        <relationship name="section" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Section" inverseName="events" inverseEntity="Section"/>
     </entity>
     <entity name="Event_Cal" representedClassName="Event_Cal" syncable="YES" codeGenerationType="class">
         <attribute name="aEndTime" optional="YES" attributeType="String"/>
@@ -26,6 +25,7 @@
         <attribute name="endTime" optional="YES" attributeType="String"/>
         <attribute name="startTime" optional="YES" attributeType="String"/>
         <relationship name="parent" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Event" inverseName="child" inverseEntity="Event"/>
+        <relationship name="section" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Section" inverseName="event_cals" inverseEntity="Section"/>
         <relationship name="section_cal" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Section_Cal" inverseName="event_cals" inverseEntity="Section_Cal"/>
     </entity>
     <entity name="Section" representedClassName="Section" syncable="YES" codeGenerationType="class">
@@ -33,7 +33,8 @@
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="order" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="child" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Section_Cal" inverseName="parent" inverseEntity="Section_Cal"/>
-        <relationship name="events" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Event" inverseName="section" inverseEntity="Event"/>
+        <relationship name="event_cals" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Event_Cal" inverseName="section" inverseEntity="Event_Cal"/>
+        <relationship name="week_default" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WeekDefault" inverseName="sections" inverseEntity="WeekDefault"/>
     </entity>
     <entity name="Section_Cal" representedClassName="Section_Cal" syncable="YES" codeGenerationType="class">
         <attribute name="color" optional="YES" attributeType="String"/>
@@ -41,10 +42,9 @@
         <relationship name="cal" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Cal" inverseName="section_cals" inverseEntity="Cal"/>
         <relationship name="event_cals" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Event_Cal" inverseName="section_cal" inverseEntity="Event_Cal"/>
         <relationship name="parent" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Section" inverseName="child" inverseEntity="Section"/>
-        <relationship name="week_default" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WeekDefault" inverseName="section_cals" inverseEntity="WeekDefault"/>
     </entity>
     <entity name="WeekDefault" representedClassName="WeekDefault" syncable="YES" codeGenerationType="class">
         <attribute name="weekAb" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
-        <relationship name="section_cals" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Section_Cal" inverseName="week_default" inverseEntity="Section_Cal"/>
+        <relationship name="sections" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Section" inverseName="week_default" inverseEntity="Section"/>
     </entity>
 </model>

@@ -8,6 +8,22 @@
 import CoreData
 
 extension Cal {
+    func setWeeklyDefault(){
+        let weekInt = Date.getDateFromYYMMDD(self.date!).getWeekInt()
+        let wd = WeekDefault.get(weekInt)
+        
+        for i in wd?.sections?.array as? [Section] ?? []{
+            print(i.description)
+            self.add(i.getSC())
+        }
+        
+        do {
+            try Model.viewContext.save()
+        } catch {
+            print("Failed to save event: \(error.localizedDescription)")
+        }
+    }
+    
     static func exist(date: String) -> Bool{
         let fetchRequest: NSFetchRequest<Cal> = Cal.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "date == %@", date)
@@ -61,6 +77,19 @@ extension Cal {
         return cal
     }
     
+    static func new(date: Date) -> Cal {
+        let cal = Cal(context: Model.viewContext)
+        var d = date.getYYMMDD()
+        cal.date = d
+        do {
+            try Model.viewContext.save()
+        } catch {
+            print("Failed to save event: \(error.localizedDescription)")
+        }
+        
+        return cal
+    }
+    
     static func clear(date: Date) {
         let cal = get(date: date)
         
@@ -94,6 +123,19 @@ extension Cal {
     }
     
     func add(_ section: Section_Cal){
+        if let section_cals = self.section_cals?.mutableCopy() as? NSMutableOrderedSet {
+            section_cals.add(section)
+            self.section_cals = section_cals
+        }
+        
+        do {
+            try Model.viewContext.save()
+        } catch {
+            print("Failed to save event: \(error.localizedDescription)")
+        }
+    }
+    
+    func add(_ section: [Section_Cal]){
         if let section_cals = self.section_cals?.mutableCopy() as? NSMutableOrderedSet {
             section_cals.add(section)
             self.section_cals = section_cals

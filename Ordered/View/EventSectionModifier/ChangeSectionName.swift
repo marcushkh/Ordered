@@ -23,7 +23,7 @@ struct ChangeSectionName: View{
                     return K.defaultSectionColor[(cal.section_cals?.count ?? 0) % K.defaultSectionColor.count]
                 }
                 else if let wd = viewModel.insertToWeek{
-                    return K.defaultSectionColor[(wd.section_cals?.count ?? 0) % K.defaultSectionColor.count]
+                    return K.defaultSectionColor[(wd.sections?.count ?? 0) % K.defaultSectionColor.count]
                 }
             }
             else{
@@ -31,7 +31,7 @@ struct ChangeSectionName: View{
                     return K.defaultSectionColorDark[(cal.section_cals?.count ?? 0) % K.defaultSectionColorDark.count]
                 }
                 else if let wd = viewModel.insertToWeek{
-                    return K.defaultSectionColor[(wd.section_cals?.count ?? 0) % K.defaultSectionColor.count]
+                    return K.defaultSectionColorDark[(wd.sections?.count ?? 0) % K.defaultSectionColorDark.count]
                 }
             }
             return K.defaultSection[0]
@@ -69,7 +69,7 @@ struct ChangeSectionName: View{
                     
                     // Delete / Cancel button
                     Button{
-                        if viewModel.changeSection_Cal != nil{ // Delete
+                        if viewModel.changeSection_Cal != nil && viewModel.changeSection == nil{ // Delete
                             showAlert = true
                         }
                         else{
@@ -82,7 +82,7 @@ struct ChangeSectionName: View{
                                 .fill(.error)
                                 .frame(width: 40, height: 25)
                             
-                            if viewModel.changeSection_Cal != nil{
+                            if viewModel.changeSection_Cal != nil && viewModel.changeSection == nil{
                                 Image(systemName: "trash")
                                     .foregroundStyle(.cPrimary)
                             }
@@ -104,7 +104,7 @@ struct ChangeSectionName: View{
                                     Section_Cal.save(name: name, color: color, sc: viewModel.changeSection_Cal, cal: viewModel.insertToCal, insertIndex: viewModel.insertIndex)
                                 }
                                 else if let wd = viewModel.insertToWeek{
-                                    Section_Cal.save(name: name, color: color, sc: viewModel.changeSection_Cal, wd: wd, insertIndex: viewModel.insertIndex)
+                                    Section.save(name: name, color: color, section: viewModel.changeSection, wd: wd, insertIndex: viewModel.insertIndex)
                                 }
 
                                 dismiss()
@@ -123,15 +123,16 @@ struct ChangeSectionName: View{
                     
                 }
                 .onAppear{
-                    name = viewModel.changeSection_Cal?.name ?? ""
-                    color = viewModel.changeSection_Cal?.color ?? colorSuggested
+                    name = viewModel.changeSection_Cal?.name ?? viewModel.changeSection?.name ?? ""
+                    color = viewModel.changeSection_Cal?.color ?? viewModel.changeSection?.color ?? colorSuggested
                     typingSectionName = true
                 }
                 .alert(isPresented: $showAlert) {
-                    Alert(  title: Text("Delete SectionX"),
+                    Alert(  title: Text("Delete Section"),
                             message: Text("Are you sure you want to delete this Section?"),
                             primaryButton: .destructive(Text("Delete")) {
                                 viewModel.changeSection_Cal?.delete()
+                                viewModel.changeSection?.delete()
                                 dismiss()
                             },
                             secondaryButton: .cancel())
@@ -147,6 +148,7 @@ struct ChangeSectionName: View{
         typingSectionName = false
         viewModel.showChangeSection = false
         viewModel.changeSection_Cal = nil
+        viewModel.changeSection = nil
         viewModel.insertToCal = nil
         viewModel.insertIndex = nil
         viewModel.insertToWeek = nil

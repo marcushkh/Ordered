@@ -107,9 +107,8 @@ struct EventBar: View {
                         
                         withAnimation {
                             overlayHeight = closestHeight
+                            lastHeight = closestHeight
                         }
-                        lastHeight = closestHeight
-                        
                     }
             )
             
@@ -143,21 +142,19 @@ struct EventBar: View {
                                     }
                                     else if viewModel.currentTab == .weeklyDefault, let weekAb = viewModel.selectedWeekAb{ // in weekly default page
                                         let weekDefault: WeekDefault = WeekDefault.get(weekAb) ?? WeekDefault.new(weekAb)
-                                        print("BEGIN WEEKDEFAULT = " + weekDefault.description)
+                                        
                                         if let highlightedEC = viewModel.highlightedEC{
-                                            highlightedEC.section_cal?.insert(newEC, after: viewModel.highlightedEC!)
+                                            highlightedEC.section?.insert(newEC, after: viewModel.highlightedEC!)
                                         }
-                                        else if weekDefault.section_cals?.lastObject != nil{
-                                            print("ELSE IF")
-                                            let sc = weekDefault.section_cals?.lastObject as! Section_Cal
-                                            sc.add(event: newEC)
+                                        else if weekDefault.sections?.lastObject != nil{
+                                            let s = weekDefault.sections?.lastObject as! Section
+                                            s.add(event: newEC)
                                         }
                                         else{
-                                            print("ELSE")
-                                            let new_section_Cal = Section_Cal.new(colorScheme: colorScheme)
+                                            let new_section = Section.new(colorScheme: colorScheme)
                                             
-                                            new_section_Cal.add(event: newEC)
-                                            weekDefault.add(new_section_Cal)
+                                            new_section.add(event: newEC)
+                                            weekDefault.add(new_section)
                                         }
                                         weekDefault.sort()
                                         print(weekDefault)
@@ -168,6 +165,7 @@ struct EventBar: View {
                             }
                     }
                 })
+                .padding(.bottom, viewModel.currentTab == .weeklyDefault ? 60 : 0)
             }
             .onAppear{
                 overlayHeight = UIScreen.main.bounds.height * 0.2

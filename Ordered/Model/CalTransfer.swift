@@ -16,7 +16,7 @@ struct CalTransfer{
     static func sectionToSC(_ section: Section) -> Section_Cal{
         var arr: [Event_Cal] = []
         
-        for i in section.events?.array ?? []{
+        for i in section.event_cals?.array ?? []{
             arr.append((i as! Event).getEC())
         }
         

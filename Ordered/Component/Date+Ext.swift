@@ -8,13 +8,23 @@
 import Foundation
 
 extension Date {
+    static func intToWeekAbbreviation(_ weekday: Int) -> String {
+        let calendar = Calendar(identifier: .iso8601)
+        return calendar.shortWeekdaySymbols[weekday % 7]
+    }
+    
+    static func intToFullName(_ weekday: Int) -> String {
+        let calendar = Calendar(identifier: .iso8601)
+        return calendar.weekdaySymbols[(weekday) % 7]
+    }
+    
     func monthYYYY() -> String {
         return self.formatted(.dateTime.month(.wide).year())
     }
     
-    static func intToWeekAbbreviation(_ weekday: Int) -> String? {
+    func getWeekInt() -> Int {
         let calendar = Calendar(identifier: .iso8601)
-        return calendar.shortWeekdaySymbols[weekday % 7]
+        return calendar.component(.weekday, from: self) == 1 ? 7 : calendar.component(.weekday, from: self) - 1
     }
     
     func weekDayAbbrev() -> String {
@@ -29,6 +39,14 @@ extension Date {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyMMdd"
         return dateFormatter.string(from: self)
+    }
+    
+    static func getDateFromYYMMDD(_ str: String) -> Date{
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyMMdd"
+        
+        let d = formatter.date(from: str)
+        return d ?? Date()
     }
     
     func getHHMM() -> String {

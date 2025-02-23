@@ -17,7 +17,7 @@ struct OrderedApp: App {
     
     init(){
         if UserDefaults.standard.object(forKey: "firstWeekDay") == nil {
-            UserDefaults.standard.set(7, forKey: "firstWeekDay")
+            UserDefaults.standard.set(1, forKey: "firstWeekDay")
         }
     }
     
