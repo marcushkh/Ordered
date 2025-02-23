@@ -13,7 +13,12 @@ extension Section {
         let sc = Section_Cal(context: Model.viewContext)
         sc.color = self.color
         sc.name = self.name
-        sc.event_cals = self.event_cals
+        
+        var ecs: [Event_Cal] = []
+        for ec in self.event_cals?.array as? [Event_Cal] ?? [] {
+            ecs.append(ec.createNew())
+        }
+        sc.event_cals = NSOrderedSet(array: ecs)
         sc.parent = self
         return sc
     }

@@ -14,7 +14,8 @@ extension Date {
     }
     
     static func intToFullName(_ weekday: Int) -> String {
-        let calendar = Calendar(identifier: .iso8601)
+        var calendar = Calendar(identifier: .iso8601)
+        calendar.locale = Locale(identifier: "en_US")
         return calendar.weekdaySymbols[(weekday) % 7]
     }
     
@@ -24,7 +25,7 @@ extension Date {
     
     func getWeekInt() -> Int {
         let calendar = Calendar(identifier: .iso8601)
-        return calendar.component(.weekday, from: self) == 1 ? 7 : calendar.component(.weekday, from: self) - 1
+        return calendar.component(.weekday, from: self) - 1
     }
     
     func weekDayAbbrev() -> String {

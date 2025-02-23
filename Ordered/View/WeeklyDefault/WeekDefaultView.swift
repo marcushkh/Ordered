@@ -108,7 +108,7 @@ struct WeekDefaultView: View {
                             .id(i)
                             .onTapGesture {
                                 withAnimation{
-                                    if viewModel.showEventBar{
+                                    if viewModel.selectedWeekAb == i && viewModel.highlightedEC == nil{
                                         viewModel.selectedWeekAb = i
                                         viewModel.showWeekDetail = true
                                         viewModel.refresh.toggle()

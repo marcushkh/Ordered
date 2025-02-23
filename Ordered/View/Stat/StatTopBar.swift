@@ -39,6 +39,7 @@ struct StatTopBar: View {
                 }
                 .pickerStyle(.segmented)
                 .padding(.horizontal, w*0.075)
+                .disabled(true)
                 
                 ScrollViewReader{ proxy in
                     ScrollView(.horizontal, showsIndicators: false) {

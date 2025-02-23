@@ -12,7 +12,7 @@ struct MyCalendar {
     let dateFormatter = DateFormatter()
     
     init() {
-        calendar.firstWeekday = UserDefaults.standard.integer(forKey: "firstWeekDay")
+        calendar.firstWeekday = Calendar.autoupdatingCurrent.firstWeekday
         dateFormatter.dateFormat = "yyyyMMdd"
         
         today = calendar.date(from: calendar.dateComponents([.year, .month, .day], from: Date())) ?? Date()
@@ -80,7 +80,7 @@ struct MyCalendar {
     
     static func getWeekOrder() -> [Int] {
         var calendar = Calendar(identifier: .iso8601)
-        calendar.firstWeekday = UserDefaults.standard.integer(forKey: "firstWeekDay")
+        calendar.firstWeekday = Calendar.autoupdatingCurrent.firstWeekday
         
         let isoWeekdays = [0, 1, 2, 3, 4, 5, 6]
         let firstWeekdayIndex = calendar.firstWeekday - 1

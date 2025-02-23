@@ -105,6 +105,16 @@ extension WeekDefault{
         }
     }
     
+    func delete(){
+        self.sections = nil
+        
+        do {
+            try Model.viewContext.save()
+        } catch {
+            print("Failed to save event: \(error.localizedDescription)")
+        }
+    }
+    
     func getLastFinishedEvent() -> Event_Cal? {
         let sections: [Section] = self.sections?.array as? [Section] ?? []
         return sections.last?.event_cals?.lastObject as? Event_Cal ?? nil

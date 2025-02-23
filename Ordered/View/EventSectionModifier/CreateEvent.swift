@@ -529,7 +529,9 @@ struct CreateEvent: View {
                     wd.sort()
                 }
             }
-            
+            if viewModel.currentTab == .plan || viewModel.currentTab == .weeklyDefault{
+                viewModel.highlightedEC = event_Cal
+            }
             display = false
         }
         
@@ -582,8 +584,12 @@ struct CreateEvent: View {
                 }
                 
             }
+            if viewModel.currentTab == .plan || viewModel.currentTab == .weeklyDefault{
+                viewModel.highlightedEC = ec
+            }
             display = false
         }
+        
     }
 }
 

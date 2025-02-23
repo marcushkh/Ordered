@@ -11,6 +11,7 @@ extension Cal {
     func setWeeklyDefault(){
         let weekInt = Date.getDateFromYYMMDD(self.date!).getWeekInt()
         let wd = WeekDefault.get(weekInt)
+        print(weekInt)
         
         for i in wd?.sections?.array as? [Section] ?? []{
             print(i.description)

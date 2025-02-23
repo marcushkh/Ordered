@@ -173,4 +173,18 @@ extension Event_Cal{
             }
         }
     }
+    
+    func createNew() -> Event_Cal{
+        let ec = Event_Cal(context: Model.viewContext)
+        ec.parent = self.parent
+        ec.detail = self.detail
+        ec.startTime = self.startTime
+        ec.endTime = self.endTime
+        ec.duration = self.duration
+        ec.durationFinished = self.durationFinished
+        ec.aStartTime = self.aStartTime
+        ec.aEndTime = self.aEndTime
+        
+        return ec
+    }
 }

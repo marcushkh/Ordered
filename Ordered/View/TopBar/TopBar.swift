@@ -118,7 +118,6 @@ struct TopBar: View {
                 Spacer()
                 
                 Menu {
-                    
                     if currentCase == .home{ // && not yet imported
                         Button{
                             var cal = Cal.get(date: dayPlannerVM.currentDate) ?? Cal.new(date: dayPlannerVM.currentDate)
@@ -141,21 +140,38 @@ struct TopBar: View {
                         }
                     }
                     
+                    var clearText: String {
+                        switch currentCase {
+                        case .home:
+                            "Clear Unfinished Events"
+                        case .weekDefaultWithSelectedDay:
+                            "Clear " + String(Date.intToFullName(viewModel.selectedWeekAb!))
+                        case .weekDefaultWithoutSelectedDay:
+                            "Clear All Weekly Default"
+                        }
+                    }
                     Button(role: .destructive) {
                         showClear = true
                     } label: {
-                        Text("Clear Day")
+                        
+                        Text(clearText)
                         Image(systemName: "paintbrush")
                             .rotationEffect(Angle(degrees: 180))
                     }
                     
                 } label: {
-                    Image(systemName: "ellipsis")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: K.xsmall_size, height: K.xsmall_size)
-                        .foregroundStyle(.color3)
-                        .padding(.trailing, 4)
+                    ZStack{
+                        Rectangle()
+                            .fill(Color.color1)
+                        
+                        Image(systemName: "ellipsis")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: K.xsmall_size, height: K.xsmall_size)
+                            .foregroundStyle(.color3)
+                            .padding(.trailing, 4)
+                    }
+                    .frame(width: K.xsmall_size, height: K.xsmall_size)
                 }
                 
             }
@@ -165,22 +181,24 @@ struct TopBar: View {
                     Alert(  title: Text("CLEAR the Unfinished Events"),
                             message: Text("Are you sure to remove all events and section in this day that are not started or finished?"),
                             primaryButton: .destructive(Text("Clear")) {
-                        withAnimation {
-                            Cal.clear(date: dayPlannerVM.currentDate)
-                            viewModel.refresh.toggle()
-                        }
+                            withAnimation {
+                                Cal.clear(date: dayPlannerVM.currentDate)
+                                viewModel.refresh.toggle()
+                            }
                     },
                             secondaryButton: .cancel())
                 }
                 else if currentCase == .weekDefaultWithSelectedDay{//viewModel.currentTab == .weeklyDefault
                     Alert(  title: Text("CLEAR Weekly Default for " + String(Date.intToFullName(viewModel.selectedWeekAb!))),
-                                message: Text("Are you sure to REMOVE ALL events and section for " + String(Date.intToFullName(viewModel.selectedWeekAb!))),
-                                primaryButton: .destructive(Text("Clear")) {
-                                    withAnimation {
-                                        // Remove all Week Default
-                                    }
-                                },
-                                secondaryButton: .cancel())
+                            message: Text("Are you sure to REMOVE ALL events and section for " + String(Date.intToFullName(viewModel.selectedWeekAb!))),
+                            primaryButton: .destructive(Text("Clear")) {
+                                withAnimation {
+                                    // Remove all Week Default
+                                    WeekDefault.get(viewModel.selectedWeekAb!)?.delete()
+                                    viewModel.refresh.toggle()
+                                }
+                            },
+                            secondaryButton: .cancel())
                 }
                 else{
                     Alert(  title: Text("CLEAR ALL Weekly Default"),
@@ -188,6 +206,10 @@ struct TopBar: View {
                             primaryButton: .destructive(Text("Clear")) {
                                 withAnimation {
                                     // Remove all Week Default
+                                    for i in Range(0...6){
+                                        WeekDefault.get(i)?.delete()
+                                    }
+                                    viewModel.refresh.toggle()
                                 }
                             },
                             secondaryButton: .cancel())
