@@ -96,7 +96,7 @@ struct WeekDefaultView: View {
                             }
                             ZStack{
                                 Circle()
-                                    .fill(.color3)
+                                    .fill(.color1)
                                     .frame(width: K.large_size, height: K.large_size)
                                     .overlay{
                                         if viewModel.selectedWeekAb == i && viewModel.highlightedEC == nil{
