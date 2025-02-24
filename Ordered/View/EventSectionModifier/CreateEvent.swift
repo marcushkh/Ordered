@@ -550,6 +550,7 @@ struct CreateEvent: View {
                 
                 ec.edit(detail: description, startTime: isSchedule ? startTime.getHHMM() : nil, endTime: isSchedule ? endTime.getHHMM() : nil, duration: isDuration ? (useCustomDuration ? customDuration : duration) : -1, aStartTime: nil, aEndTime: nil, parent: event)
                 
+                
             }
             else{ // Started
                 if eventName != event?.name{

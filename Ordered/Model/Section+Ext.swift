@@ -23,9 +23,11 @@ extension Section {
         return sc
     }
     
-    static func save(name: String? = nil, color: String? = nil, section: Section? = nil, wd: WeekDefault? = nil, insertIndex: Int? = nil){
+    static func save(name: String? = nil, color: String? = nil, section: Section? = nil, wd: WeekDefault? = nil, insertIndex: Int? = nil) -> Section{
         // If have sc -> change the sc name and color
-        if let sectionToSave = section {
+        var sectionToSave: Section
+        if section != nil {
+            sectionToSave = section!
             if let n = name{
                 sectionToSave.name = n
             }
@@ -35,7 +37,7 @@ extension Section {
         }
         // If dont have sc -> create a sc and put it at the end of cal
         else{
-            let sectionToSave = Section(context: Model.viewContext)
+            sectionToSave = Section(context: Model.viewContext)
             if let n = name{
                 sectionToSave.name = n
             }
@@ -59,6 +61,7 @@ extension Section {
         }catch{
             print("Error")
         }
+        return sectionToSave
     }
     
     static func new(colorScheme: ColorScheme, name: String? = nil, count: Int = 0) -> Section{
@@ -104,7 +107,9 @@ extension Section {
         for i in self.event_cals ?? []{
             Model.viewContext.delete(i as! NSManagedObject)
         }
-        Model.viewContext.delete(self)
+        var sections = self.week_default?.sections?.mutableCopy() as! NSMutableOrderedSet
+        sections.remove(self)
+        self.week_default?.sections = sections as NSOrderedSet?
         
         do {
             try Model.viewContext.save()

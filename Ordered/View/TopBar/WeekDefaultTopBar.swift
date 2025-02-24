@@ -22,7 +22,7 @@ struct WeekDefaultFunctionBar: View {
                 
                 Spacer()
                 
-                Text("Weekly Default")
+                Text("Weekly Schedule")
                     .font(.title2)
                     .bold()
                 

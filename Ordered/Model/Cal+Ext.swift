@@ -14,7 +14,10 @@ extension Cal {
         print(weekInt)
         
         for i in wd?.sections?.array as? [Section] ?? []{
-            print(i.description)
+            if (self.section_cals?.array as? [Section_Cal] ?? [])
+                .contains(where: { $0.parent == i }) {
+                continue
+            }
             self.add(i.getSC())
         }
         

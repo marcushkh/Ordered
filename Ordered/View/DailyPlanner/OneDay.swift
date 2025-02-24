@@ -292,6 +292,28 @@ struct OneDay: View {
                                 .font(.title2)
                                 .bold()
                             
+                            if WeekDefault.exist(date: date){
+                                Button{
+                                    withAnimation {
+                                        let cal = Cal.get(date: dayPlannerVM.currentDate) ?? Cal.new(date: dayPlannerVM.currentDate)
+                                        cal.setWeeklyDefault()
+                                    }
+                                } label: {
+                                    ZStack{
+                                        RoundedRectangle(cornerRadius: 20)
+                                            .fill(.color1)
+                                        
+                                        HStack{
+                                            Text("Apply Weekly Schedule")
+                                                .foregroundStyle(.cPrimary)
+                                            Image(systemName: "list.clipboard")
+                                                .foregroundStyle(.cPrimary)
+                                        }
+                                    }
+                                    .frame(width: 250, height: 45)
+                                }
+                                .padding()
+                            }
                             Spacer()
                         }
                         

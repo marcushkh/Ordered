@@ -100,7 +100,7 @@ struct ChangeSectionName: View{
                         }
                         else{
                             withAnimation{
-                                if let cal = viewModel.insertToCal{
+                                if viewModel.insertToCal != nil{
                                     Section_Cal.save(name: name, color: color, sc: viewModel.changeSection_Cal, cal: viewModel.insertToCal, insertIndex: viewModel.insertIndex)
                                 }
                                 else if let wd = viewModel.insertToWeek{

@@ -21,6 +21,21 @@ extension WeekDefault{
         }
     }
     
+    static func exist(date: Date) -> Bool{
+        let fetchRequest: NSFetchRequest<WeekDefault> = WeekDefault.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "weekAb == %d", date.getWeekInt())
+        print(date)
+        
+        do {
+            let wd = try Model.viewContext.fetch(fetchRequest)
+            let count = wd.first?.sections?.count ?? 0
+            return count > 0
+        } catch {
+            print("Error checking existence: \(error)")
+            return false
+        }
+    }
+    
     static func new(_ weekInt: Int) -> WeekDefault {
         let wd = WeekDefault(context: Model.viewContext)
         wd.weekAb = Int16(weekInt % 7)

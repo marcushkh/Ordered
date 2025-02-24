@@ -109,7 +109,7 @@ struct TopBar: View {
                         }
                 }
                 if currentCase == .weekDefaultWithSelectedDay || currentCase == .weekDefaultWithoutSelectedDay{
-                    Text("Weekly Default")
+                    Text("Weekly Schedule")
                         .font(.title2)
                         .bold()
                 }
@@ -118,12 +118,14 @@ struct TopBar: View {
                 Spacer()
                 
                 Menu {
-                    if currentCase == .home{ // && not yet imported
+                    if currentCase == .home{
                         Button{
-                            var cal = Cal.get(date: dayPlannerVM.currentDate) ?? Cal.new(date: dayPlannerVM.currentDate)
-                            cal.setWeeklyDefault()
+                            withAnimation {
+                                let cal = Cal.get(date: dayPlannerVM.currentDate) ?? Cal.new(date: dayPlannerVM.currentDate)
+                                cal.setWeeklyDefault()
+                            }
                         } label: {
-                            Text("Use Week Default")
+                            Text("Apply Weekly Schedule")
                             Image(systemName: "list.clipboard")
                         }
                     }
@@ -147,7 +149,7 @@ struct TopBar: View {
                         case .weekDefaultWithSelectedDay:
                             "Clear " + String(Date.intToFullName(viewModel.selectedWeekAb!))
                         case .weekDefaultWithoutSelectedDay:
-                            "Clear All Weekly Default"
+                            "Clear All Weekly Schedule"
                         }
                     }
                     Button(role: .destructive) {
@@ -189,7 +191,7 @@ struct TopBar: View {
                             secondaryButton: .cancel())
                 }
                 else if currentCase == .weekDefaultWithSelectedDay{//viewModel.currentTab == .weeklyDefault
-                    Alert(  title: Text("CLEAR Weekly Default for " + String(Date.intToFullName(viewModel.selectedWeekAb!))),
+                    Alert(  title: Text("CLEAR Weekly Schedule for " + String(Date.intToFullName(viewModel.selectedWeekAb!))),
                             message: Text("Are you sure to REMOVE ALL events and section for " + String(Date.intToFullName(viewModel.selectedWeekAb!))),
                             primaryButton: .destructive(Text("Clear")) {
                                 withAnimation {
@@ -201,7 +203,7 @@ struct TopBar: View {
                             secondaryButton: .cancel())
                 }
                 else{
-                    Alert(  title: Text("CLEAR ALL Weekly Default"),
+                    Alert(  title: Text("CLEAR ALL Weekly Schedule"),
                             message: Text("Are you sure to REMOVE ALL events and section for ALL WEEKDAYS?"),
                             primaryButton: .destructive(Text("Clear")) {
                                 withAnimation {
