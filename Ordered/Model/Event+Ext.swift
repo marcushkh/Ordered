@@ -24,7 +24,18 @@ extension Event {
         
         if event == nil {
             eventToSave.isActive = true
-            eventToSave.order = Model.getHighestOrder(c: Model.Event) + 1
+            
+            let allEvent = fetchEvents(isFavourite: false)
+            print(allEvent)
+            
+            var order: Int16 = 0
+            if allEvent.count != 0{
+                order = allEvent[0].order
+            }
+            for i in allEvent{
+                i.order = i.order + 1
+            }
+            eventToSave.order = order
         }
         
         do {
@@ -34,6 +45,24 @@ extension Event {
         }
         
         return eventToSave
+    }
+    
+    static func fetchEvents(isFavourite: Bool? = nil) -> [Event] {
+        let request: NSFetchRequest<Event> = Event.fetchRequest()
+        request.sortDescriptors = [
+            NSSortDescriptor(keyPath: \Event.isFavourite, ascending: false),
+            NSSortDescriptor(keyPath: \Event.order, ascending: true)
+        ]
+        if let isFavourite = isFavourite {
+            request.predicate = NSPredicate(format: "isFavourite == %@", NSNumber(value: isFavourite))
+        }
+
+        do {
+            return try Model.viewContext.fetch(request)
+        } catch {
+            print("Fetch failed: \(error)")
+            return []
+        }
     }
     
     func toggleIsFavorite() {
