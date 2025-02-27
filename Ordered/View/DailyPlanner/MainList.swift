@@ -23,8 +23,3 @@ struct MainList: View {
         }
     }
 }
-
-#Preview {
-    MainList(viewModel: ContentViewModel(), dayPlannerVM: DayPlannerViewModel())
-        .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
-}

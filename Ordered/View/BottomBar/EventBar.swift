@@ -176,10 +176,3 @@ struct EventBar: View {
         
     }
 }
-#Preview {
-    VStack{
-        Spacer()
-        EventBar(viewModel: ContentViewModel(), dayPlannerVM: DayPlannerViewModel())
-            .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
-    }
-}

@@ -146,7 +146,3 @@ struct WeekDefaultView: View {
         }
     }
 }
-
-#Preview{
-    WeekDefaultView(viewModel: ContentViewModel())
-}

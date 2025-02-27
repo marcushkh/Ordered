@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import ActivityKit
 
 struct TopBar: View {
     @ObservedObject var viewModel: ContentViewModel
@@ -120,6 +121,13 @@ struct TopBar: View {
                 Menu {
                     if currentCase == .home{
                         Button{
+                            LiveActivityActions.startLiveActivity()
+                        } label: {
+                            Text("Activate Live Activity")
+                            Image(systemName: "platter.filled.bottom.iphone")
+                        }
+
+                        Button{
                             withAnimation {
                                 let cal = Cal.get(date: dayPlannerVM.currentDate) ?? Cal.new(date: dayPlannerVM.currentDate)
                                 cal.setWeeklyDefault()
@@ -221,10 +229,3 @@ struct TopBar: View {
     }
 }
 
-#Preview {
-    VStack(spacing: 0){
-        TopBar(viewModel: ContentViewModel(), dayPlannerVM: DayPlannerViewModel())
-        Spacer()
-    }
-    
-}

@@ -41,15 +41,6 @@ struct TabBar: View {
 }
 
 
-#Preview {
-    VStack{
-        Spacer()
-        TabBar(viewModel: ContentViewModel())
-        
-    }
-    
-}
-
 enum TabBarItem: String, CaseIterable, Identifiable {
     case home
     case plan

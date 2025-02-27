@@ -52,15 +52,15 @@ struct ECInfo: View {
                 // Schedule Event
                 if let aStartTime = ec.aStartTime{
                     var timeBlock: String{
-                        var ans = String(aStartTime)
+                        var ans = String(aStartTime.HHmmssPresentation())
                         
                         if actionHandler.isCurrentEC(ec: ec){
                             ans = ans + " (" + currentTimePassed + ")"
                         }
                         else if let aEndTime = ec.aEndTime{
-                            if aStartTime != aEndTime{
+                            if ec.durationFinished != 0{
                                 // if start and end time is the same, no need to show
-                                ans = ans + "-" + String(aEndTime)
+                                ans = ans + "-" + String(aEndTime.HHmmssPresentation())
                                 ans = ans + " (" + Model.duration_to_string(min: ec.durationFinished) + ")"
                             }
                         }
@@ -98,7 +98,7 @@ struct ECInfo: View {
                 }
                 // Schedule Event that have not started
                 else if ec.startTime != "-1" && ec.startTime != nil{
-                    Text(String(ec.startTime ?? "") + "-" + String(ec.endTime ?? ""))
+                    Text(String(ec.startTime?.HHmmssPresentation() ?? "") + "-" + String(ec.endTime?.HHmmssPresentation() ?? ""))
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                 }
@@ -117,6 +117,3 @@ struct ECInfo: View {
     }
 }
 
-#Preview {
-    ECInfo(ec: Sample.sampleEC, highlightedEC: .constant(nil))
-}

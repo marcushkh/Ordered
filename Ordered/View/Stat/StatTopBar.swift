@@ -117,10 +117,3 @@ struct StatTopBar: View {
     }
 }
 
-#Preview {
-    VStack{
-        StatTopBar(viewModel: ContentViewModel(), dayPlannerVM: DayPlannerViewModel())
-            .background(.color1)
-        Spacer()
-    }
-}

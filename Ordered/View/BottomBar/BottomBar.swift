@@ -16,13 +16,3 @@ struct BottomBar: View {
         }
     }
 }
-
-#Preview {
-    VStack{
-        Spacer()
-        BottomBar(viewModel: ContentViewModel())
-        
-    }
-    
-}
-

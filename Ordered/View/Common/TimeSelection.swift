@@ -12,7 +12,7 @@ struct TimeSelection: View {
     @State var isSelectStartTime = true
     var dateFormatter: DateFormatter {
         let formatter = DateFormatter()
-        formatter.dateFormat = "HH:mm"
+        formatter.dateFormat = "HH:mm:ss"
         return formatter
     }
     
@@ -71,7 +71,3 @@ struct TimeSelection: View {
     }
 }
 
-#Preview {
-    TimeSelection(isPresented: .constant(true), event: .constant(Sample.sampleEvent), eventList: .constant([]))
-        .border(.black)
-}

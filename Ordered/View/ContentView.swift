@@ -112,14 +112,12 @@ struct ContentView: View {
                         viewModel.showWeekDetail = false
                     }
                 }
+                //On change of Cal
+                .onChange(of: viewModel.refresh) { oldValue, newValue in
+                    LiveActivityActions.refreshLiveActivities()
+                }
             }
-            
         }
     }
 }
 
-
-#Preview {
-    ContentView()
-        .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
-}

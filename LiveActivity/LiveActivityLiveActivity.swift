@@ -12,24 +12,93 @@ import SwiftUI
 struct LiveActivityAttributes: ActivityAttributes {
     public struct ContentState: Codable, Hashable {
         // Dynamic stateful properties about your activity go here!
-        var emoji: String
+        var currentLocation: Int = 0
+        var CustomEventList: [CustomEvent]
+        var nextColorLocation: Int = 0
     }
-
     // Fixed non-changing properties about your activity go here!
-    var name: String
 }
 
 struct LiveActivityLiveActivity: Widget {
+    var i = EventActionHandler.shared
+    
     var body: some WidgetConfiguration {
-        ActivityConfiguration(for: LiveActivityAttributes.self) { context in
-            // Lock screen/banner UI goes here
-            VStack {
-                Text("Hello \(context.state.emoji)")
+    ActivityConfiguration(for: LiveActivityAttributes.self) { context in
+        VStack{
+            HStack{
+                Text(context.state.CustomEventList[context.state.currentLocation].name)
+                    .font(.title3)
+                    .bold()
+                    
+                Spacer()
+                
+                Text(context.state.CustomEventList[context.state.currentLocation].aStartTime?.HHmmssPresentation() ?? "")
+                    .foregroundStyle(.secondary)
             }
-            .activityBackgroundTint(Color.cyan)
-            .activitySystemActionForegroundColor(Color.black)
-
-        } dynamicIsland: { context in
+            
+            HStack(spacing: 0) {
+                //For each
+                ForEach(Array(context.state.CustomEventList.dropFirst(context.state.currentLocation).prefix(3).enumerated()), id: \.element.objectId) { index, event in
+                    ZStack{
+                        Circle()
+                            .fill(Color(hex: event.color))
+                            .frame(width: 30, height: 30)
+                            .overlay{
+                                if index == 0{
+                                    Circle()
+                                        .stroke(lineWidth: 3)
+                                        .fill(.cPrimary)
+                                }
+                            }
+                            
+                        Text(event.icon)
+                            .font(.title3)
+                    }
+                    
+                    if index != 2{
+                        Rectangle()
+                            .fill(.color3)
+                            .frame(width: 20, height: 3)
+                    }
+                }
+                Spacer()
+                
+                if context.state.nextColorLocation != 0 && context.state.nextColorLocation > context.state.currentLocation + 3{
+                    Line()
+                        .stroke(style: StrokeStyle(lineWidth: 3, dash: [5]))
+                        .frame(height: 3)
+                        .frame(maxWidth: .infinity)
+                        .foregroundStyle(.color3)
+                        .padding(.top, 3)
+                    
+                    ZStack{
+                        Circle()
+                            .fill(Color(hex: context.state.CustomEventList[context.state.nextColorLocation].color))
+                            .frame(width: 30, height: 30)
+                        
+                        Text(context.state.CustomEventList[context.state.nextColorLocation].icon)
+                            .font(.title3)
+                    }
+                    .padding(.trailing)
+                }
+                
+                //Case handling
+                Button(intent: MoveForward()) {
+                    Image(systemName: "forward.fill")
+                        .foregroundStyle(.cPrimary, .color3)
+                }
+                .buttonBorderShape(.circle)
+                
+                Button(intent: Start()) {
+                    Image(systemName: "play.fill")
+                        .foregroundStyle(.cPrimary, .color3)
+                }
+                .buttonBorderShape(.circle)
+                
+            }
+        }
+        .padding()
+    } dynamicIsland: { context in
             DynamicIsland {
                 // Expanded UI goes here.  Compose the expanded UI through
                 // various regions, like leading/trailing/center/bottom
@@ -40,41 +109,18 @@ struct LiveActivityLiveActivity: Widget {
                     Text("Trailing")
                 }
                 DynamicIslandExpandedRegion(.bottom) {
-                    Text("Bottom \(context.state.emoji)")
+                    Text("Bottom")
                     // more content
                 }
             } compactLeading: {
                 Text("L")
             } compactTrailing: {
-                Text("T \(context.state.emoji)")
+                Text("T")
             } minimal: {
-                Text(context.state.emoji)
+                Text("HI")
             }
             .widgetURL(URL(string: "http://www.apple.com"))
             .keylineTint(Color.red)
         }
     }
-}
-
-extension LiveActivityAttributes {
-    fileprivate static var preview: LiveActivityAttributes {
-        LiveActivityAttributes(name: "World")
-    }
-}
-
-extension LiveActivityAttributes.ContentState {
-    fileprivate static var smiley: LiveActivityAttributes.ContentState {
-        LiveActivityAttributes.ContentState(emoji: "😀")
-     }
-     
-     fileprivate static var starEyes: LiveActivityAttributes.ContentState {
-         LiveActivityAttributes.ContentState(emoji: "🤩")
-     }
-}
-
-#Preview("Notification", as: .content, using: LiveActivityAttributes.preview) {
-   LiveActivityLiveActivity()
-} contentStates: {
-    LiveActivityAttributes.ContentState.smiley
-    LiveActivityAttributes.ContentState.starEyes
 }

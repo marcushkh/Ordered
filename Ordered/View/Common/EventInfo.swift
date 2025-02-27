@@ -23,10 +23,10 @@ struct EventInfo: View {
                 // Schedule Event
                 if let startTime = e.startTime {
                     HStack(spacing: 0){
-                        Text(startTime)
+                        Text(startTime.HHmmssPresentation())
                         if let endTime = e.endTime{
                             Text(" - ")
-                            Text(endTime)
+                            Text(endTime.HHmmssPresentation())
                         }
                     }
                     .font(.callout)
@@ -42,8 +42,4 @@ struct EventInfo: View {
             Spacer()
         }
     }
-}
-
-#Preview {
-    EventInfo(e: Sample.sampleEvent)
 }

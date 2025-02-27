@@ -52,13 +52,13 @@ extension Date {
     
     func getHHMM() -> String {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "HH:mm"
+        dateFormatter.dateFormat = "HH:mm:ss"
         return dateFormatter.string(from: self)
     }
     
     static func getDateFromHHMM(_ str: String) -> Date{
         let formatter = DateFormatter()
-        formatter.dateFormat = "HH:mm"
+        formatter.dateFormat = "HH:mm:ss"
         
         let d = formatter.date(from: str)
         return d ?? Date()

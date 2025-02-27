@@ -35,6 +35,14 @@ class EventActionHandler: ObservableObject{
         self.currentECID = UserDefaults.standard.string(forKey: "currentECID")
     }
 
+    func tick(ec: Event_Cal){
+        if ec.aEndTime == nil{
+            ec.aStartTime = Date.now.getHHMM()
+            ec.aEndTime = Date.now.getHHMM()
+            LiveActivityActions.startLiveActivity()
+        }
+        LiveActivityActions.refreshLiveActivities()
+    }
     
     func start(ec: Event_Cal){
         //set the start time, already
@@ -49,6 +57,8 @@ class EventActionHandler: ObservableObject{
         currentECID = ec.objectID.uriRepresentation().absoluteString
         
         ec.aStartTime = Date.now.getHHMM()
+        LiveActivityActions.startLiveActivity()
+        LiveActivityActions.refreshLiveActivities()
         do {
             try Model.viewContext.save()
         } catch {
@@ -64,6 +74,7 @@ class EventActionHandler: ObservableObject{
             timePassed += timeinterval
         }
         startTime = nil
+        LiveActivityActions.refreshLiveActivities()
         print("paused")
     }
     
@@ -74,6 +85,7 @@ class EventActionHandler: ObservableObject{
         else{
             start(ec: ec)
         }
+        LiveActivityActions.refreshLiveActivities()
     }
     
     func end(ec: Event_Cal){
@@ -97,6 +109,8 @@ class EventActionHandler: ObservableObject{
         timePassed = 0
         startTime = nil
         currentECID = nil
+        LiveActivityActions.refreshLiveActivities()
+        //Put the activity one forward
     }
     
     func isCurrentEC(ec: Event_Cal) -> Bool{

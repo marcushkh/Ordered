@@ -9,22 +9,22 @@ import Foundation
 import CoreData
 
 enum Model{
-    case Event, Section
-    
     static var viewContext = PersistenceController.shared.container.viewContext
+    
+    case Event_, Section_
     
     static func getHighestOrder(c: Model) -> Int16 {
         switch(c){
-        case .Event:
+        case .Event_:
             do{
-                let allItems = try viewContext.fetch(Ordered.Event.fetchRequest()) as? [Event]
+                let allItems = try viewContext.fetch(Event.fetchRequest()) as? [Event]
                 return allItems?.max { $0.order < $1.order }?.order ?? 1
             }catch{
                 fatalError("Unresolved error \(error)")
             }
-        case .Section:
+        case .Section_:
             do{
-                let allItems = try viewContext.fetch(Ordered.Section.fetchRequest()) as? [Section]
+                let allItems = try viewContext.fetch(Section.fetchRequest()) as? [Section]
                 return allItems?.max { $0.order < $1.order }?.order ?? 1
             }catch{
                 fatalError("Unresolved error \(error)")

@@ -97,7 +97,3 @@ enum ViewPosition{
     case nextView
 }
 
-
-#Preview {
-    WeekBar(viewModel: ContentViewModel(), dayPlannerVM: DayPlannerViewModel())
-}

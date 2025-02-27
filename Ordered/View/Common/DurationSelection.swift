@@ -80,7 +80,3 @@ struct DurationSelection: View{
         }
     }
 }
-
-#Preview {
-    DurationSelection(duration: .constant(90), successful: .constant(true), isPresented: .constant(true))
-}

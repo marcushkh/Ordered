@@ -112,9 +112,9 @@ struct CreateEvent: View {
             
             if ec.aStartTime != nil{
                 isSchedule = true
-                startTime = Date.getDateFromHHMM(editEvent_Cal?.aStartTime ?? "00:00")
+                startTime = Date.getDateFromHHMM(editEvent_Cal?.aStartTime ?? "00:00:00")
                 if ec.aEndTime != nil{
-                    endTime = Date.getDateFromHHMM(editEvent_Cal?.aEndTime ?? "00:00")
+                    endTime = Date.getDateFromHHMM(editEvent_Cal?.aEndTime ?? "00:00:00")
                 }
             }
             else if ec.duration != -1{
@@ -132,8 +132,8 @@ struct CreateEvent: View {
             }
             else if ec.startTime != nil{
                 isSchedule = true
-                startTime = Date.getDateFromHHMM(editEvent_Cal?.startTime ?? "00:00")
-                endTime = Date.getDateFromHHMM(editEvent_Cal?.endTime ?? "00:00")
+                startTime = Date.getDateFromHHMM(editEvent_Cal?.startTime ?? "00:00:00")
+                endTime = Date.getDateFromHHMM(editEvent_Cal?.endTime ?? "00:00:00")
             }
             else{
                 isDuration = false
@@ -151,8 +151,8 @@ struct CreateEvent: View {
             
             if newValue?.startTime != nil && newValue?.endTime != nil{
                 isSchedule = true
-                startTime = Date.getDateFromHHMM(newValue?.startTime! ?? "00:00")
-                endTime = Date.getDateFromHHMM(newValue?.endTime! ?? "00:00")
+                startTime = Date.getDateFromHHMM(newValue?.startTime! ?? "00:00:00")
+                endTime = Date.getDateFromHHMM(newValue?.endTime! ?? "00:00:00")
             }
             else if newValue?.duration != -1 && newValue?.duration != nil{
                 isDuration = true
@@ -592,8 +592,4 @@ struct CreateEvent: View {
         }
         
     }
-}
-
-#Preview {
-    CreateEvent(viewModel: ContentViewModel(), display: .constant(false))
 }

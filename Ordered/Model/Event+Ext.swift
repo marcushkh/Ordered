@@ -164,6 +164,13 @@ extension Event_Cal{
         }
     }
     
+    func copyFunction() -> Event_Cal?{
+        var newEC = self.parent?.getEC()
+        newEC?.detail = self.detail
+        
+        return newEC
+    }
+    
     func delete(){
         Model.viewContext.delete(self)
         
@@ -215,5 +222,32 @@ extension Event_Cal{
         ec.aEndTime = self.aEndTime
         
         return ec
+    }
+}
+
+enum EventStatus: String{
+    case TickEvent
+    case NotStarted
+    case InProgress
+    case Paused
+    case Completed
+    
+    static func get(from ec: Event_Cal) -> EventStatus{
+        let actionHandler = EventActionHandler.shared
+        if ec.aEndTime != nil{
+            return .Completed
+        }
+        if ec.duration == -1 && ec.startTime == nil {
+            return .TickEvent
+        }
+        if actionHandler.isCurrentEC(ec: ec) {
+            if actionHandler.startTime != nil{
+                return .InProgress
+            }
+            else{
+                return .Paused
+            }
+        }
+        return .NotStarted
     }
 }

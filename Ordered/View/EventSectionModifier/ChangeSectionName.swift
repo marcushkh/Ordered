@@ -155,7 +155,3 @@ struct ChangeSectionName: View{
         viewModel.refresh.toggle()
     }
 }
-
-#Preview {
-    ChangeSectionName(viewModel: ContentViewModel())
-}

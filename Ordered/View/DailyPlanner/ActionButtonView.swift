@@ -38,12 +38,9 @@ struct ActionButtonView: View{
                 Image(systemName: "checkmark")
             }
             .onTapGesture {
-                if ec.aEndTime == nil{
-                    withAnimation {
-                        ec.aStartTime = Date.now.getHHMM()
-                        ec.aEndTime = Date.now.getHHMM()
-                        viewModel.refresh.toggle()
-                    }
+                withAnimation {
+                    actionHandler.tick(ec: ec)
+                    viewModel.refresh.toggle()
                 }
             }
             

@@ -329,6 +329,7 @@ struct OneDay: View {
                 //sort everytime something refreshes
                 withAnimation {
                     toDoForDate.first?.sort()
+                    LiveActivityActions.refreshLiveActivities()
                 }
             }
             // For HighlighedEC
@@ -376,9 +377,4 @@ struct OneDay: View {
         viewModel.changeSection = nil
         viewModel.insertToCal = toDoForDate.first
     }
-}
-
-#Preview {
-    OneDay(date: MyCalendar.getDate(from: "240826"), pos: .centerView, viewModel: ContentViewModel(), dayPlannerVM: DayPlannerViewModel())
-        .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
 }

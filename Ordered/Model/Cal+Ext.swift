@@ -234,4 +234,41 @@ extension Cal {
             print("Failed to save event: \(error.localizedDescription)")
         }
     }
+    
+    func getCustomEventList() -> [CustomEvent] {
+        var customEventList: [CustomEvent] = []
+        for sc in self.section_cals?.array as? [Section_Cal] ?? [] {
+            for ec in sc.event_cals?.array as? [Event_Cal] ?? [] {
+                let customEvent = CustomEvent(color: sc.color ?? "", name: (ec.parent?.name ?? "" + ": " + (ec.detail ?? "")), icon: (ec.parent?.icon ?? ""), objectId: ec.objectID.uriRepresentation(), duration: Int(ec.duration), startTime: ec.startTime, endTime: ec.endTime, aStartTime: ec.aStartTime, durationFinished: Int(ec.durationFinished))
+                customEventList.append(customEvent)
+            }
+        }
+        return customEventList
+    }
+    
+    func getCurrentLocation() -> Int{
+        var currentLocation: Int = 0
+        var count : Int = 0
+        for sc in self.section_cals?.array as? [Section_Cal] ?? [] {
+            for ec in sc.event_cals?.array as? [Event_Cal] ?? [] {
+                count += 1
+                if ec.aStartTime != nil{
+                    currentLocation = count
+                }
+                if ec.aEndTime != nil{
+                    currentLocation = count + 1
+                }
+            }
+        }
+        if currentLocation > count{
+            currentLocation = count
+        }
+        
+        if currentLocation >= 1{
+            return currentLocation - 1
+        }
+        else{
+            return 0
+        }
+    }
 }
