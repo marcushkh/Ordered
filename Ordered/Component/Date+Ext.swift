@@ -57,11 +57,19 @@ extension Date {
     }
     
     static func getDateFromHHMM(_ str: String) -> Date{
-        let formatter = DateFormatter()
-        formatter.dateFormat = "HH:mm:ss"
+        let dateFormatter = DateFormatter()
         
-        let d = formatter.date(from: str)
-        return d ?? Date()
+        let currentDate = Date()
+        let calendar = Calendar.current
+        let year = calendar.component(.year, from: currentDate)
+        let month = calendar.component(.month, from: currentDate)
+        let day = calendar.component(.day, from: currentDate)
+        
+        let dateString = String(format: "%04d%02d%02d%@", year, month, day, str)
+        
+        dateFormatter.dateFormat = "yyyyMMddHH:mm:ss"
+        
+        return dateFormatter.date(from: dateString) ?? Date()
     }
     
     static func greaterHHMM(_ str1: String, _ str2: String) -> Bool{

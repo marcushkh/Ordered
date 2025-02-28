@@ -48,7 +48,7 @@ class EventActionHandler: ObservableObject{
         //set the start time, already
         
         //if another event is running now => end the event  
-        if let id = currentECID, let url = URL(string: id), let ec = Event_Cal.getEC(URL: url){
+        if let id = currentECID, let url = URL(string: id), let ec = Event_Cal.getEC(url){
             end(ec: ec)
         }
         
@@ -94,7 +94,7 @@ class EventActionHandler: ObservableObject{
             let timeinterval = Date.now.timeIntervalSince(startTime)
             timePassed += timeinterval
         }
-        if let id = currentECID, let url = URL(string: id), let ec = Event_Cal.getEC(URL: url){
+        if let id = currentECID, let url = URL(string: id), let ec = Event_Cal.getEC(url){
             ec.aEndTime = Date.now.getHHMM()
             ec.durationFinished += Int32(timePassed/60) //Duration finished is using minute
             do {

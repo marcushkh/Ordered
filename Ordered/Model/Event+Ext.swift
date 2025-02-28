@@ -127,10 +127,27 @@ extension Event {
 
 extension Event_Cal{
     //Create and get the EC from a Event
-    static func getEC(URL: URL) -> Event_Cal?{
+    static func getEC(_ URL: URL) -> Event_Cal?{
         let persistentStoreCoordinator = Model.viewContext.persistentStoreCoordinator
         
         if let objectID = persistentStoreCoordinator?.managedObjectID(forURIRepresentation: URL) {
+            do {
+                let managedObject = try Model.viewContext.existingObject(with: objectID)
+                print("Fetched object: \(managedObject)")
+                return managedObject as? Event_Cal
+            } catch {
+                print("Error fetching object: \(error)")
+            }
+        } else {
+            print("Invalid objectID")
+        }
+        return nil
+    }
+    
+    static func getEC(_ string: String) -> Event_Cal?{
+        let persistentStoreCoordinator = Model.viewContext.persistentStoreCoordinator
+        
+        if let objectID = persistentStoreCoordinator?.managedObjectID(forURIRepresentation: URL(string: string)!) {
             do {
                 let managedObject = try Model.viewContext.existingObject(with: objectID)
                 print("Fetched object: \(managedObject)")

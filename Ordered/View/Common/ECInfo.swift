@@ -69,6 +69,7 @@ struct ECInfo: View {
                     }
                     
                     Text(timeBlock)
+                        .monospacedDigit()
                         .font(.subheadline)
                         .foregroundStyle(Color(hex: "5a5a5f"))
                         .onAppear {

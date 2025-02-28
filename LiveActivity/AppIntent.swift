@@ -18,6 +18,99 @@ struct ConfigurationAppIntent: WidgetConfigurationIntent {
     var favoriteEmoji: String
 }
 
+struct Start: LiveActivityIntent{
+    static var title: LocalizedStringResource = "Start Event"
+    static var description = IntentDescription("Event in Current Location is started now")
+    
+    func perform() async throws -> some IntentResult {
+        for activity in Activity<LiveActivityAttributes>.activities {
+            
+             await MainActor.run {
+                Task {
+                    do {
+                        if let ec = Event_Cal.getEC(activity.contentState.CustomEventList[activity.contentState.currentLocation].objectId){
+                            EventActionHandler.shared.start(ec: ec)
+                        }
+                    } catch {
+                        print("Error updating Live Activity: \(error.localizedDescription)")
+                    }
+                }
+            }
+        }
+        return .result()
+    }
+}
+
+struct Pause: LiveActivityIntent{
+    static var title: LocalizedStringResource = "Pause Event"
+    static var description = IntentDescription("Event in Current Location is paused now")
+    
+    func perform() async throws -> some IntentResult {
+        for activity in Activity<LiveActivityAttributes>.activities {
+            
+             await MainActor.run {
+                Task {
+                    do {
+                        if let ec = Event_Cal.getEC(activity.contentState.CustomEventList[activity.contentState.currentLocation].objectId){
+                            EventActionHandler.shared.pause(ec: ec)
+                        }
+                    } catch {
+                        print("Error updating Live Activity: \(error.localizedDescription)")
+                    }
+                }
+            }
+        }
+        return .result()
+    }
+}
+
+struct Resume: LiveActivityIntent{
+    static var title: LocalizedStringResource = "Resume Event"
+    static var description = IntentDescription("Event in Current Location is resume now")
+    
+    func perform() async throws -> some IntentResult {
+        for activity in Activity<LiveActivityAttributes>.activities {
+            
+             await MainActor.run {
+                Task {
+                    do {
+                        if let ec = Event_Cal.getEC(activity.contentState.CustomEventList[activity.contentState.currentLocation].objectId){
+                            EventActionHandler.shared.resume(ec: ec)
+                        }
+                    } catch {
+                        print("Error updating Live Activity: \(error.localizedDescription)")
+                    }
+                }
+            }
+        }
+        return .result()
+    }
+}
+
+struct End: LiveActivityIntent{
+    static var title: LocalizedStringResource = "End Event"
+    static var description = IntentDescription("Event in Current Location is ended now")
+    
+    func perform() async throws -> some IntentResult {
+        for activity in Activity<LiveActivityAttributes>.activities {
+            
+             await MainActor.run {
+                Task {
+                    do {
+                        if let ec = Event_Cal.getEC(activity.contentState.CustomEventList[activity.contentState.currentLocation].objectId){
+                            EventActionHandler.shared.end(ec: ec)
+                        }
+                    } catch {
+                        print("Error updating Live Activity: \(error.localizedDescription)")
+                    }
+                }
+            }
+            LiveActivityActions.refreshLiveActivities()
+        }
+        return .result()
+    }
+}
+
 struct MoveForward: LiveActivityIntent {
     
     static var title: LocalizedStringResource = "Move Forward"
@@ -29,25 +122,13 @@ struct MoveForward: LiveActivityIntent {
     }
 }
 
-struct Start: LiveActivityIntent{
-    static var title: LocalizedStringResource = "Start Event"
-    static var description = IntentDescription("Event in Current Location is started now")
+struct Reset: LiveActivityIntent {
+    
+    static var title: LocalizedStringResource = "Reset Current Location"
+    static var description = IntentDescription("Current Location is reset to 0")
     
     func perform() async throws -> some IntentResult {
-        for activity in Activity<LiveActivityAttributes>.activities {
-            
-             await MainActor.run {
-                Task {
-                    do {
-                        if let ec = Event_Cal.getEC(URL: activity.contentState.CustomEventList[activity.contentState.currentLocation].objectId){
-                            EventActionHandler.shared.start(ec: ec)
-                        }
-                    } catch {
-                        print("Error updating Live Activity: \(error.localizedDescription)")
-                    }
-                }
-            }
-        }
+        LiveActivityActions.resetCurrentLocation()
         return .result()
     }
 }

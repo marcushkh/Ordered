@@ -178,6 +178,7 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				AppIntent.swift,
+				Assets.xcassets,
 				LiveActivityActions.swift,
 				LiveActivityLiveActivity.swift,
 			);

@@ -9,19 +9,23 @@ import ActivityKit
 
 struct LiveActivityActions{
     static func startLiveActivity() {
-
+        
         if Activity<LiveActivityAttributes>.activities.isEmpty {
             let attributes = LiveActivityAttributes()
             
             let currentLocation = Cal.get(date: Date.now)?.getCurrentLocation() ?? 0
-            let customEventList = Cal.get(date: Date.now)?.getCustomEventList() ?? []
+            var customEventList = Cal.get(date: Date.now)?.getCustomEventList() ?? []
+            customEventList = Array(customEventList.dropFirst(currentLocation).prefix(10))
             
             let initialContentState = LiveActivityAttributes.ContentState(
-                currentLocation: currentLocation,
                 CustomEventList: customEventList,
-                nextColorLocation: getNextColorLocation(events: customEventList, currentLocation: currentLocation)
+                currentLocation: 0,
+                nextColorLocation: getNextColorLocation(events: customEventList, currentLocation: 0),
+                startTime: EventActionHandler.shared.startTime,
+                timePassed: EventActionHandler.shared.timePassed,
+                currentECID: EventActionHandler.shared.currentECID
             )
-        
+            
             do {
                 var liveActivity = try Activity<LiveActivityAttributes>.request(
                     attributes: attributes,
@@ -40,35 +44,26 @@ struct LiveActivityActions{
         for activity in activeActivities {
             
             let currentLocation = Cal.get(date: Date.now)?.getCurrentLocation() ?? 0
-            let customEventList = Cal.get(date: Date.now)?.getCustomEventList() ?? []
+            var customEventList = Cal.get(date: Date.now)?.getCustomEventList() ?? []
+            customEventList = Array(customEventList.dropFirst(currentLocation).prefix(10))
+            
+            Task{
+                if customEventList.isEmpty {
+                    await activity.end(dismissalPolicy: .immediate)
+                }
+            }
             
             let updatedContentState = LiveActivityAttributes.ContentState(
-                currentLocation: currentLocation,
                 CustomEventList: customEventList,
-                nextColorLocation: getNextColorLocation(events: customEventList, currentLocation: currentLocation)
+                currentLocation: 0,
+                nextColorLocation: getNextColorLocation(events: customEventList, currentLocation: 0),
+                startTime: EventActionHandler.shared.startTime,
+                timePassed: EventActionHandler.shared.timePassed,
+                currentECID: EventActionHandler.shared.currentECID
             )
             
             Task {
-                 await activity.update(using: updatedContentState)
-            }
-        }
-    }
-    
-    //Move CurrentLocation forward
-    static func CurrentLocationIncrement(){
-        for activity in Activity<LiveActivityAttributes>.activities {
-            if activity.contentState.currentLocation + 1 >= activity.contentState.CustomEventList.count {
-                continue
-            }
-            
-            let updatedState = LiveActivityAttributes.ContentState(
-                currentLocation: activity.contentState.currentLocation + 1,
-                CustomEventList: activity.contentState.CustomEventList,
-                nextColorLocation: getNextColorLocation(events: activity.contentState.CustomEventList, currentLocation: activity.contentState.currentLocation + 1)
-            )
-            
-            Task{
-                try await activity.update(using: updatedState)
+                await activity.update(using: updatedContentState)
             }
         }
     }
@@ -80,5 +75,47 @@ struct LiveActivityActions{
             }
         }
         return events.count - 1
+    }
+    
+    //Move CurrentLocation forward
+    static func CurrentLocationIncrement(){
+        for activity in Activity<LiveActivityAttributes>.activities {
+            if activity.contentState.currentLocation + 1 >= activity.contentState.CustomEventList.count {
+                //Remove Live Activity
+                continue
+            }
+            
+            let updatedState = LiveActivityAttributes.ContentState(
+                CustomEventList: activity.contentState.CustomEventList,
+                currentLocation: activity.contentState.currentLocation + 1,
+                nextColorLocation: getNextColorLocation(events: activity.contentState.CustomEventList, currentLocation: activity.contentState.currentLocation + 1),
+                startTime: EventActionHandler.shared.startTime,
+                timePassed: EventActionHandler.shared.timePassed,
+                currentECID: EventActionHandler.shared.currentECID
+            )
+            
+            Task{
+                try await activity.update(using: updatedState)
+            }
+        }
+    }
+    
+    //Move CurrentLocation forward
+    static func resetCurrentLocation(){
+        for activity in Activity<LiveActivityAttributes>.activities {
+            
+            let updatedState = LiveActivityAttributes.ContentState(
+                CustomEventList: activity.contentState.CustomEventList,
+                currentLocation: 0,
+                nextColorLocation: getNextColorLocation(events: activity.contentState.CustomEventList, currentLocation: 0),
+                startTime: EventActionHandler.shared.startTime,
+                timePassed: EventActionHandler.shared.timePassed,
+                currentECID: EventActionHandler.shared.currentECID
+            )
+            
+            Task{
+                try await activity.update(using: updatedState)
+            }
+        }
     }
 }

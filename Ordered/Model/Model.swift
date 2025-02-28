@@ -74,10 +74,14 @@ enum Model{
         var d = duration
         if d/3600 >= 1{
             //Have hour
-            ans = String(format: "%2d:", duration/3600)
+            ans = String(format: String(duration/3600) + ":")
             d = d%3600
+            ans = ans + String(format: "%02d:%02d", d/60, d%60)
         }
-        ans = ans + String(format: "%02d:%02d", d/60, d%60)
+        else{
+            ans = ans + String(format: String(d/60) + ":%02d", d%60)
+        }
+        
         return ans
     }
 }

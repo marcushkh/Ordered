@@ -11,7 +11,7 @@ struct CustomEvent: Codable, Hashable{
     var color: String
     var name: String
     var icon: String
-    var objectId: URL
+    var objectId: String
     
     var duration: Int?
     var startTime: String?
