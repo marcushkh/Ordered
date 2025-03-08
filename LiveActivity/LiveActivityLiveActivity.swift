@@ -30,7 +30,7 @@ struct LiveActivityLiveActivity: Widget {
             let currentEvent = context.state.CustomEventList[context.state.currentLocation]
             let currentLocation = context.state.currentLocation
             let eventList = context.state.CustomEventList
-            let nextColorLocation = context.state.nextColorLocation
+        let nextColorLocation = context.state.nextColorLocation
             let startTime = context.state.startTime
             let timePassed = context.state.timePassed
             
@@ -132,7 +132,14 @@ struct LiveActivityLiveActivity: Widget {
                         .buttonBorderShape(.circle)
                     }
                     
-                    if currentEvent.aStartTime == nil{
+                    if currentEvent.startTime == nil && (currentEvent.duration == nil || currentEvent.duration == -1){
+                        Button(intent: Tick()) {
+                            Image(systemName: "checkmark")
+                                .foregroundStyle(Color.b)
+                        }
+                        .buttonBorderShape(.circle)
+                    }
+                    else if currentEvent.aStartTime == nil{
                         Button(intent: Start()) {
                             Image(systemName: "play.fill")
                                 .foregroundStyle(Color.b)
@@ -162,15 +169,136 @@ struct LiveActivityLiveActivity: Widget {
             DynamicIsland {
                 // Expanded UI goes here.  Compose the expanded UI through
                 // various regions, like leading/trailing/center/bottom
+                let currentEvent = context.state.CustomEventList[context.state.currentLocation]
+                let currentLocation = context.state.currentLocation
+                let eventList = context.state.CustomEventList
+                let nextColorLocation = context.state.nextColorLocation
+                let startTime = context.state.startTime
+                let timePassed = context.state.timePassed
+                
                 DynamicIslandExpandedRegion(.leading) {
-                    Text("Leading")
+                    Text(currentEvent.name)
+                        .font(.title3)
+                        .bold()
+                        .padding(.top, 4)
+                        .padding(.horizontal, 2)
                 }
                 DynamicIslandExpandedRegion(.trailing) {
-                    Text("Trailing")
+                    VStack{
+                        if let currentECID = context.state.currentECID, currentECID == currentEvent.objectId{
+                            if let startTime = context.state.startTime {
+                                Text(timerInterval: (Calendar.current.date(byAdding: .second, value: Int(timePassed) * -1, to: startTime) ?? Date.now)...Date.distantFuture, countsDown: false)
+                                    .monospacedDigit()
+                                    .foregroundStyle(.secondary)
+                                    .multilineTextAlignment(.trailing)
+                            }
+                            else{
+                                if timePassed != 0{
+                                    Text(Model.duration_to_HHmmss(sec: Int32(timePassed)))
+                                        .foregroundStyle(.secondary)
+                                }
+                            }
+                        }
+                    }
+                    .padding(.top, 4)
+                    .padding(.horizontal, 2)
                 }
                 DynamicIslandExpandedRegion(.bottom) {
-                    Text("Bottom")
-                    // more content
+                    HStack(spacing: 0) {
+                        //For each
+                        ForEach(Array(eventList.dropFirst(currentLocation).prefix(3).enumerated()), id: \.element.objectId) { index, event in
+                            ZStack{
+                                Circle()
+                                    .fill(Color(hex: event.color))
+                                    .frame(width: 30, height: 30)
+                                    .overlay{
+                                        if index == 0{
+                                            Circle()
+                                                .stroke(lineWidth: 2)
+                                                .fill(.cPrimary)
+                                        }
+                                    }
+                                
+                                Text(event.icon)
+                                    .font(.title3)
+                            }
+                            
+                            if index != 2 && eventList.count - currentLocation - 1 > index {
+                                Rectangle()
+                                    .fill(.color3)
+                                    .frame(width: index == 0 ? 17 : 20, height: 3)
+                                    .padding(.leading, index == 0 ? 2 : 0)
+                            }
+                        }
+                        Spacer()
+                        
+                        if nextColorLocation != 0 && nextColorLocation > currentLocation + 2{
+                            Line()
+                                .stroke(style: StrokeStyle(lineWidth: 3, dash: [5]))
+                                .frame(height: 3)
+                                .frame(maxWidth: .infinity)
+                                .foregroundStyle(.color3)
+                                .padding(.top, 3)
+                            
+                            ZStack{
+                                Circle()
+                                    .fill(Color(hex: eventList[nextColorLocation].color))
+                                    .frame(width: 30, height: 30)
+                                
+                                Text(eventList[nextColorLocation].icon)
+                                    .font(.title3)
+                            }
+                            .padding(.trailing)
+                        }
+                        
+                        HStack(spacing: 4){
+                            //Case handling
+                            if currentEvent.aStartTime == nil{
+                                Button(intent: MoveForward()) {
+                                    Image(systemName: "forward.fill")
+                                        .foregroundStyle(Color.b)
+                                }
+                                .buttonBorderShape(.circle)
+                            }
+                            else{
+                                Button(intent: End()) {
+                                    Image(systemName: "stop.fill")
+                                        .foregroundStyle(Color.b)
+                                }
+                                .buttonBorderShape(.circle)
+                            }
+                            
+                            if currentEvent.startTime == nil && (currentEvent.duration == nil || currentEvent.duration == -1){
+                                Button(intent: Tick()) {
+                                    Image(systemName: "checkmark")
+                                        .foregroundStyle(Color.b)
+                                }
+                                .buttonBorderShape(.circle)
+                            }
+                            else if currentEvent.aStartTime == nil{
+                                Button(intent: Start()) {
+                                    Image(systemName: "play.fill")
+                                        .foregroundStyle(Color.b)
+                                }
+                                .buttonBorderShape(.circle)
+                            }
+                            else if startTime == nil{
+                                Button(intent: Resume()) {
+                                    Image(systemName: "play.fill")
+                                        .foregroundStyle(Color.b)
+                                }
+                                .buttonBorderShape(.circle)
+                            }
+                            else if startTime != nil{
+                                Button(intent: Pause()) {
+                                    Image(systemName: "pause.fill")
+                                        .foregroundStyle(Color.b)
+                                }
+                                .buttonBorderShape(.circle)
+                            }
+                        }
+                    }
+                    .padding(.horizontal, 2)
                 }
             } compactLeading: {
                 ZStack{
@@ -181,7 +309,25 @@ struct LiveActivityLiveActivity: Widget {
                         .font(.title3)
                 }
             } compactTrailing: {
-                Text("T")
+                let startTime = context.state.startTime
+                let timePassed = context.state.timePassed
+                let currentEvent = context.state.CustomEventList[context.state.currentLocation]
+                
+                if let currentECID = context.state.currentECID, currentECID == currentEvent.objectId{
+                    if let startTime = context.state.startTime {
+                        Text(timerInterval: (Calendar.current.date(byAdding: .second, value: Int(timePassed) * -1, to: startTime) ?? Date.now)...Date.distantFuture, countsDown: false)
+                            .monospacedDigit()
+                            .foregroundStyle(.secondary)
+                            .multilineTextAlignment(.trailing)
+                            .frame(width: 43)
+                    }
+                    else{
+                        if timePassed != 0{
+                            Text(Model.duration_to_HHmmss(sec: Int32(timePassed)))
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                }
             } minimal: {
                 ZStack{
                     Circle()
@@ -196,4 +342,5 @@ struct LiveActivityLiveActivity: Widget {
             .keylineTint(Color.red)
         }
     }
+    
 }

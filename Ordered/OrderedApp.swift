@@ -12,8 +12,7 @@ import UIKit
 struct OrderedApp: App {
     let persistenceController = PersistenceController.shared
     
-    @AppStorage("welcomeScreen") var welcomeScreen: Bool = false
-    @AppStorage("initData") var initData: Bool = false
+    @AppStorage("welcomeScreen") var welcomeScreen: Bool = true
     
     init(){
         
@@ -21,12 +20,19 @@ struct OrderedApp: App {
     
     var body: some Scene {
         WindowGroup {
-            
-            ContentView()
-                .environment(\.managedObjectContext, persistenceController.container.viewContext)
-                .task{
-                    //Load Data
-                }
+            if welcomeScreen {
+                WelcomeScreenMaster(isWelcomeScreen: $welcomeScreen)
+                    .onAppear{
+                        UserDefaults.standard.set(4, forKey: "DayStartTime")
+                    }
+            }
+            else{
+                ContentView()
+                    .environment(\.managedObjectContext, persistenceController.container.viewContext)
+                    .task{
+                        //Load Data
+                    }
+            }
             
         }
     }

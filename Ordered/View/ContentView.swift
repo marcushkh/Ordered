@@ -15,6 +15,7 @@ struct ContentView: View {
     @StateObject var dayPlannerVM = DayPlannerViewModel()
     
     @FocusState var searchTyping: Bool
+    @Environment(\.scenePhase) private var scenePhase
     
     var body: some View {
         GeometryReader{ geo in
@@ -115,6 +116,25 @@ struct ContentView: View {
                 //On change of Cal
                 .onChange(of: viewModel.refresh) { oldValue, newValue in
                     LiveActivityActions.refreshLiveActivities()
+                }
+                // when the app is re-entered set to current date
+                .onChange(of: scenePhase, { oldValue, newValue in
+                    if newValue == .active {
+                        dayPlannerVM.setCurrentDate(to: Date.now)
+                    }
+                })
+            }
+            .onTapGesture {
+                withAnimation {
+                    if viewModel.currentTab == .plan || viewModel.currentTab == .weeklyDefault{
+                        if viewModel.currentTab == .plan{
+                            viewModel.currentTab = .home
+                        }
+                        viewModel.highlightedEC = nil
+                        viewModel.showEventBar = false
+                        viewModel.selectedWeekAb = nil
+                        viewModel.showWeekDetail = false
+                    }
                 }
             }
         }

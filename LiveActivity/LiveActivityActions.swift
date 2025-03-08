@@ -15,7 +15,7 @@ struct LiveActivityActions{
             
             let currentLocation = Cal.get(date: Date.now)?.getCurrentLocation() ?? 0
             var customEventList = Cal.get(date: Date.now)?.getCustomEventList() ?? []
-            customEventList = Array(customEventList.dropFirst(currentLocation).prefix(10))
+            customEventList = Array(customEventList.dropFirst(currentLocation).prefix(8))
             
             let initialContentState = LiveActivityAttributes.ContentState(
                 CustomEventList: customEventList,
@@ -69,11 +69,17 @@ struct LiveActivityActions{
     }
     
     static func getNextColorLocation(events: [CustomEvent], currentLocation: Int) -> Int{
-        for ec in events.dropFirst(currentLocation){
-            if ec.color != events[currentLocation].color{
-                return events.firstIndex(of: ec)!
+        if events.dropFirst(currentLocation).count >= 3{
+            for ec in events.dropFirst(currentLocation + 2){
+                if events.dropFirst(currentLocation).count >= 3{
+                    if ec.color != events[2 + currentLocation].color{
+                        print(events.firstIndex(of: ec)!)
+                        return events.firstIndex(of: ec)!
+                    }
+                }
             }
         }
+        
         return events.count - 1
     }
     

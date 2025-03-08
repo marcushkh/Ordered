@@ -377,4 +377,5 @@ struct OneDay: View {
         viewModel.changeSection = nil
         viewModel.insertToCal = toDoForDate.first
     }
+    
 }

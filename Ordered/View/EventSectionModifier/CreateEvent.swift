@@ -31,6 +31,7 @@ struct CreateEvent: View {
     @State var event: Event? = nil
     @State var isNewEvent: Bool = false
     
+    @State var isFinished: Bool = false
     @State var isSchedule: Bool = false
     @State private var startTime = Date()
     @State private var endTime: Date = Calendar.current.date(byAdding: .hour, value: 1, to: Date()) ?? Date()
@@ -66,7 +67,7 @@ struct CreateEvent: View {
                     if editEvent_Cal?.aStartTime != nil{ //Already started
                         aStartEndTimeSelection
                     }
-                    else{
+                    if editEvent_Cal?.aStartTime == nil || !isFinished{
                         typeSelection
                     }
                     
@@ -99,7 +100,7 @@ struct CreateEvent: View {
         }
     }
     
-    func initialize(){
+    func initialize(changeToNotFinished: Bool = false){
         eventNameTyping = true
         descriptionTyping = true
         
@@ -110,8 +111,8 @@ struct CreateEvent: View {
             selectedEmoji = event?.icon ?? "💡"
             description = ec.detail ?? ""
             
-            if ec.aStartTime != nil{
-                isSchedule = true
+            if ec.aStartTime != nil && !changeToNotFinished{
+                isFinished = true
                 startTime = Date.getDateFromHHMM(editEvent_Cal?.aStartTime ?? "00:00:00")
                 if ec.aEndTime != nil{
                     endTime = Date.getDateFromHHMM(editEvent_Cal?.aEndTime ?? "00:00:00")
@@ -389,48 +390,71 @@ struct CreateEvent: View {
     
     var aStartEndTimeSelection: some View{
         VStack{
-            Toggle(isOn: $isSchedule) {
+            Toggle(isOn: $isFinished) {
                 Text(editEvent_Cal?.aEndTime == nil ? "On Going: " : "Finished: ")
                         .font(.system(size: 20))
                         .bold()
                 }
                 .toggleStyle(SwitchToggleStyle(tint: .color3))
-                .onChange(of: isSchedule) { oldValue, newValue in
+                .onChange(of: isFinished) { oldValue, newValue in
                     if newValue == true{
+                        isSchedule = false
                         isDuration = false
+                    }
+                    else{
+                        print("INININI")
+                        initialize(changeToNotFinished: true)
                     }
                 }
             
-            ZStack{
-                RoundedRectangle(cornerRadius: 10)
-                    .fill(.color1)
-                    .shadow(radius: isSchedule ? 1 : 0)
-                    .frame(height: editEvent_Cal?.aEndTime == nil ? 50 : 100)
-                
-                VStack{
-                    DatePicker("Start Time: ", selection: $startTime, displayedComponents: .hourAndMinute)
-                        .padding(.horizontal)
-                        .tint(.color4)
-                        .onChange(of: startTime) { oldValue, newValue in
-                            if endTime <= newValue {
-                                endTime = startTime
+            if isFinished{
+                ZStack{
+                    if editEvent_Cal?.aStartTime != editEvent_Cal?.aEndTime{
+                        
+                    RoundedRectangle(cornerRadius: 10)
+                        .fill(.color1)
+                        .shadow(radius: isFinished ? 1 : 0)
+                        .frame(height: editEvent_Cal?.aEndTime == nil ? 50 : 100)
+                    
+                        VStack{
+                            DatePicker("Start Time: ", selection: $startTime, displayedComponents: .hourAndMinute)
+                                .padding(.horizontal)
+                                .tint(.color4)
+                                .onChange(of: startTime) { oldValue, newValue in
+                                    if endTime <= newValue {
+                                        endTime = startTime
+                                    }
+                                }
+                            
+                            if editEvent_Cal?.aEndTime != nil{
+                                DatePicker("End Time: ", selection: $endTime, displayedComponents: .hourAndMinute)
+                                    .padding(.horizontal)
+                                    .tint(.color4)
+                                    .onChange(of: endTime) { oldValue, newValue in
+                                        if newValue <= startTime {
+                                            startTime = endTime
+                                        }
+                                    }
                             }
                         }
-                    
-                    if editEvent_Cal?.aEndTime != nil{
-                        DatePicker("End Time: ", selection: $endTime, displayedComponents: .hourAndMinute)
+                    }
+                    else{//Tick event
+                        RoundedRectangle(cornerRadius: 10)
+                            .fill(.color1)
+                            .shadow(radius: isFinished ? 1 : 0)
+                            .frame(height: 50)
+                        
+                        DatePicker("Tick Time: ", selection: $startTime, displayedComponents: .hourAndMinute)
                             .padding(.horizontal)
                             .tint(.color4)
-                            .onChange(of: endTime) { oldValue, newValue in
-                                if newValue <= startTime {
-                                    startTime = endTime
-                                }
+                            .onChange(of: startTime) { oldValue, newValue in
+                                endTime = startTime
                             }
                     }
                     
                 }
+                .padding(.vertical, 8)
             }
-            .padding(.vertical, 8)
         }
     }
     
@@ -562,13 +586,18 @@ struct CreateEvent: View {
                 
                 if ec.aEndTime == nil{ // On Going
                     if EventActionHandler.shared.currentECID == ec.objectID.uriRepresentation().absoluteString {
-                        let oStartTime = Date.getDateFromHHMM(ec.aStartTime!)
-                        let changeInMin = Calendar.current.dateComponents([.minute], from: startTime, to: oStartTime).minute!
-                        EventActionHandler.shared.AddCurrentTimePassed(min: changeInMin)
+                        if !isFinished{
+                            EventActionHandler.shared.reset()
+                        }
+                        else{
+                            let oStartTime = Date.getDateFromHHMM(ec.aStartTime!)
+                            let changeInMin = Calendar.current.dateComponents([.minute], from: startTime, to: oStartTime).minute!
+                            EventActionHandler.shared.AddCurrentTimePassed(min: changeInMin)
+                        }
                     }
                     
                     //Edit time
-                    ec.edit(detail: description, startTime: ec.startTime, endTime: ec.endTime, duration: Int(ec.duration), aStartTime: isSchedule ? startTime.getHHMM() : nil, aEndTime: nil, parent: event)
+                    ec.edit(detail: description, startTime: ec.startTime, endTime: ec.endTime, duration: Int(ec.duration), aStartTime: isFinished ? startTime.getHHMM() : nil, aEndTime: nil, parent: event)
                 }
                 else{ //Finished
                     //edit duration
@@ -581,7 +610,7 @@ struct CreateEvent: View {
                     d += changeInMin
                     if d < 0{ d = 0 }
                     
-                    ec.edit(detail: description, startTime: ec.startTime, endTime: ec.endTime, duration: Int(ec.duration), aStartTime: isSchedule ? startTime.getHHMM() : nil, aEndTime: isSchedule ? endTime.getHHMM() : nil, durationFinished: d, parent: event)
+                    ec.edit(detail: description, startTime: ec.startTime, endTime: ec.endTime, duration: Int(ec.duration), aStartTime: isFinished ? startTime.getHHMM() : nil, aEndTime: isFinished ? endTime.getHHMM() : nil, durationFinished: d, parent: event)
                 }
                 
             }

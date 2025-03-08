@@ -82,7 +82,7 @@ extension WeekDefault{
             var j = i-1
             
             // allEvents must have startTime or aStartTime
-            while j >= 0 && temp.aStartTime ?? temp.startTime! < allEvents[j].aStartTime ?? allEvents[j].startTime!{
+            while j >= 0 && Date.greaterHHMM(allEvents[j].aStartTime ?? allEvents[j].startTime!, temp.aStartTime ?? temp.startTime!){
                 //If in here => need to swap
                 allEvents[j+1] = allEvents[j]
                 j -= 1

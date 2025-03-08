@@ -85,6 +85,7 @@ class EventActionHandler: ObservableObject{
         else{
             start(ec: ec)
         }
+        LiveActivityActions.startLiveActivity()
         LiveActivityActions.refreshLiveActivities()
     }
     
@@ -131,5 +132,11 @@ class EventActionHandler: ObservableObject{
     func AddCurrentTimePassed(min: Int) {
         timePassed += Double(min * 60)
         if timePassed < 0 {timePassed = 0}
+    }
+    
+    func reset(){
+        timePassed = 0
+        startTime = nil
+        currentECID = nil
     }
 }

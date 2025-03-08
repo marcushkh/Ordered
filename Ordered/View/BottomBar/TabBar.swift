@@ -72,7 +72,7 @@ enum TabBarItem: String, CaseIterable, Identifiable {
         case .plan:
             return "Plan"
         case .weeklyDefault:
-            return "Start"
+            return "Weekly Default"
         case .statistic:
             return "Statistic"
         case .setting:

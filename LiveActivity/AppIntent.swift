@@ -18,6 +18,29 @@ struct ConfigurationAppIntent: WidgetConfigurationIntent {
     var favoriteEmoji: String
 }
 
+struct Tick: LiveActivityIntent{
+    static var title: LocalizedStringResource = "Start Event"
+    static var description = IntentDescription("Event in Current Location is started now")
+    
+    func perform() async throws -> some IntentResult {
+        for activity in Activity<LiveActivityAttributes>.activities {
+            
+             await MainActor.run {
+                Task {
+                    do {
+                        if let ec = Event_Cal.getEC(activity.contentState.CustomEventList[activity.contentState.currentLocation].objectId){
+                            EventActionHandler.shared.tick(ec: ec)
+                        }
+                    } catch {
+                        print("Error updating Live Activity: \(error.localizedDescription)")
+                    }
+                }
+            }
+        }
+        return .result()
+    }
+}
+
 struct Start: LiveActivityIntent{
     static var title: LocalizedStringResource = "Start Event"
     static var description = IntentDescription("Event in Current Location is started now")

@@ -40,12 +40,16 @@
 		2C74CB3D2C59DD9D00716233 /* ContentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C74CB3C2C59DD9D00716233 /* ContentViewModel.swift */; };
 		2C74CB3F2C59DE6F00716233 /* Sample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C74CB3E2C59DE6F00716233 /* Sample.swift */; };
 		2C784E052D325C6400A56D72 /* DurationSelection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C784E042D325C5D00A56D72 /* DurationSelection.swift */; };
-		2C81ADC62D37869000D2AA98 /* PythonKit in Frameworks */ = {isa = PBXBuildFile; productRef = 2C81ADC52D37869000D2AA98 /* PythonKit */; };
 		2C96053B2C82D21900A1736D /* WelcomeVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C96053A2C82D21900A1736D /* WelcomeVM.swift */; };
 		2C99B6AA2D6833C00001AEB5 /* WeekDefaultMain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C99B6A92D6833BA0001AEB5 /* WeekDefaultMain.swift */; };
 		2CA35CD32D28E16300011B89 /* Cal+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA35CD22D28E15900011B89 /* Cal+Ext.swift */; };
 		2CA35CD52D28E1F200011B89 /* Event+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA35CD42D28E1EE00011B89 /* Event+Ext.swift */; };
 		2CA35CD72D290ECC00011B89 /* Section+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA35CD62D290EC300011B89 /* Section+Ext.swift */; };
+		2CA38C852D774C36002D07D9 /* WelcomeScreenMaster.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA38C842D774C36002D07D9 /* WelcomeScreenMaster.swift */; };
+		2CA38C872D774C86002D07D9 /* WelcomeScreen1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA38C862D774C81002D07D9 /* WelcomeScreen1.swift */; };
+		2CA38C892D774C90002D07D9 /* WelcomeScreen2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA38C882D774C8B002D07D9 /* WelcomeScreen2.swift */; };
+		2CA38C8B2D774C9F002D07D9 /* WelcomeScreen3.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA38C8A2D774C9C002D07D9 /* WelcomeScreen3.swift */; };
+		2CA38C8D2D774CA6002D07D9 /* WelcomeScreen4.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA38C8C2D774CA3002D07D9 /* WelcomeScreen4.swift */; };
 		2CC16CED2C63B2A2002DCF79 /* MyCalendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC16CEC2C63B2A2002DCF79 /* MyCalendar.swift */; };
 		2CC16CEF2C63B2D0002DCF79 /* DayPlannerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC16CEE2C63B2D0002DCF79 /* DayPlannerViewModel.swift */; };
 		2CC7ECA82D66F29900B3BF56 /* EditDeleteButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC7ECA72D66F28E00B3BF56 /* EditDeleteButtonView.swift */; };
@@ -147,6 +151,11 @@
 		2CA35CD22D28E15900011B89 /* Cal+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Cal+Ext.swift"; sourceTree = "<group>"; };
 		2CA35CD42D28E1EE00011B89 /* Event+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Event+Ext.swift"; sourceTree = "<group>"; };
 		2CA35CD62D290EC300011B89 /* Section+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Section+Ext.swift"; sourceTree = "<group>"; };
+		2CA38C842D774C36002D07D9 /* WelcomeScreenMaster.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeScreenMaster.swift; sourceTree = "<group>"; };
+		2CA38C862D774C81002D07D9 /* WelcomeScreen1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeScreen1.swift; sourceTree = "<group>"; };
+		2CA38C882D774C8B002D07D9 /* WelcomeScreen2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeScreen2.swift; sourceTree = "<group>"; };
+		2CA38C8A2D774C9C002D07D9 /* WelcomeScreen3.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeScreen3.swift; sourceTree = "<group>"; };
+		2CA38C8C2D774CA3002D07D9 /* WelcomeScreen4.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeScreen4.swift; sourceTree = "<group>"; };
 		2CC16CEC2C63B2A2002DCF79 /* MyCalendar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyCalendar.swift; sourceTree = "<group>"; };
 		2CC16CEE2C63B2D0002DCF79 /* DayPlannerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayPlannerViewModel.swift; sourceTree = "<group>"; };
 		2CC7ECA72D66F28E00B3BF56 /* EditDeleteButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditDeleteButtonView.swift; sourceTree = "<group>"; };
@@ -196,7 +205,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				2C40F3EA2C7B0A0D004DF24C /* PopupView in Frameworks */,
-				2C81ADC62D37869000D2AA98 /* PythonKit in Frameworks */,
 				2CFC59A32D43844800529099 /* MCEmojiPicker in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -280,6 +288,7 @@
 			children = (
 				2C15B7FB2C3D0F3600B008DB /* ContentView.swift */,
 				2C9605392C82D15100A1736D /* Common */,
+				2CA38C832D774C1E002D07D9 /* WelcomeScreen */,
 				2C3F2CE22C562110008BD72A /* TopBar */,
 				2C5DC1192C5B37870021E54A /* DailyPlanner */,
 				2C71A3922D3E825D00534C9A /* EventSectionModifier */,
@@ -386,6 +395,18 @@
 			path = Common;
 			sourceTree = "<group>";
 		};
+		2CA38C832D774C1E002D07D9 /* WelcomeScreen */ = {
+			isa = PBXGroup;
+			children = (
+				2CA38C842D774C36002D07D9 /* WelcomeScreenMaster.swift */,
+				2CA38C862D774C81002D07D9 /* WelcomeScreen1.swift */,
+				2CA38C882D774C8B002D07D9 /* WelcomeScreen2.swift */,
+				2CA38C8A2D774C9C002D07D9 /* WelcomeScreen3.swift */,
+				2CA38C8C2D774CA3002D07D9 /* WelcomeScreen4.swift */,
+			);
+			path = WelcomeScreen;
+			sourceTree = "<group>";
+		};
 		2CEFEE5D2D64DF63009E105F /* WeeklyDefault */ = {
 			isa = PBXGroup;
 			children = (
@@ -415,7 +436,6 @@
 			name = Ordered;
 			packageProductDependencies = (
 				2C40F3E92C7B0A0D004DF24C /* PopupView */,
-				2C81ADC52D37869000D2AA98 /* PythonKit */,
 				2CFC59A22D43844800529099 /* MCEmojiPicker */,
 			);
 			productName = Ordered;
@@ -473,7 +493,6 @@
 			mainGroup = 2C15B7ED2C3D0F3600B008DB;
 			packageReferences = (
 				2C40F3E82C7B0A0D004DF24C /* XCRemoteSwiftPackageReference "PopupView" */,
-				2C81ADC42D37869000D2AA98 /* XCRemoteSwiftPackageReference "PythonKit" */,
 				2CFC59A12D43844800529099 /* XCRemoteSwiftPackageReference "MCEmojiPicker" */,
 			);
 			productRefGroup = 2C15B7F72C3D0F3600B008DB /* Products */;
@@ -518,13 +537,17 @@
 				2C01D5142C81670300D33BDA /* ECInfo.swift in Sources */,
 				2C96053B2C82D21900A1736D /* WelcomeVM.swift in Sources */,
 				2CEFEE5F2D64DF82009E105F /* WeekDefaultView.swift in Sources */,
+				2CA38C8D2D774CA6002D07D9 /* WelcomeScreen4.swift in Sources */,
 				2C0272FC2D6434C20033FC5B /* EventList.swift in Sources */,
 				2C6A82D92CC17364006B533E /* CreateEvent.swift in Sources */,
 				2CA35CD52D28E1F200011B89 /* Event+Ext.swift in Sources */,
 				2C5C1C9B2C576E9B0079482A /* TopBar.swift in Sources */,
+				2CA38C8B2D774C9F002D07D9 /* WelcomeScreen3.swift in Sources */,
 				2CC16CED2C63B2A2002DCF79 /* MyCalendar.swift in Sources */,
 				2C68C9962C607E7000D38FBC /* CalTransfer.swift in Sources */,
 				2C024C3B2D5E338B009A3F1F /* StatTopBar.swift in Sources */,
+				2CA38C872D774C86002D07D9 /* WelcomeScreen1.swift in Sources */,
+				2CA38C892D774C90002D07D9 /* WelcomeScreen2.swift in Sources */,
 				2CFCE0412C777E33001B915B /* EventDetailPopup.swift in Sources */,
 				2CC7ECA82D66F29900B3BF56 /* EditDeleteButtonView.swift in Sources */,
 				2CA35CD32D28E16300011B89 /* Cal+Ext.swift in Sources */,
@@ -550,6 +573,7 @@
 				2C601C5C2C5B411A00FBC8E2 /* Color+Ext.swift in Sources */,
 				2C74CB3F2C59DE6F00716233 /* Sample.swift in Sources */,
 				2C4BCF9F2C84D0560001AD4C /* EventInfo.swift in Sources */,
+				2CA38C852D774C36002D07D9 /* WelcomeScreenMaster.swift in Sources */,
 				2C99B6AA2D6833C00001AEB5 /* WeekDefaultMain.swift in Sources */,
 				2C74CB3D2C59DD9D00716233 /* ContentViewModel.swift in Sources */,
 				2CFC59B62D44D1CA00529099 /* Ordered.xcdatamodeld in Sources */,
@@ -884,14 +908,6 @@
 				minimumVersion = 3.0.6;
 			};
 		};
-		2C81ADC42D37869000D2AA98 /* XCRemoteSwiftPackageReference "PythonKit" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/pvieito/PythonKit";
-			requirement = {
-				branch = master;
-				kind = branch;
-			};
-		};
 		2CFC59A12D43844800529099 /* XCRemoteSwiftPackageReference "MCEmojiPicker" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/izyumkin/MCEmojiPicker";
@@ -907,11 +923,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 2C40F3E82C7B0A0D004DF24C /* XCRemoteSwiftPackageReference "PopupView" */;
 			productName = PopupView;
-		};
-		2C81ADC52D37869000D2AA98 /* PythonKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 2C81ADC42D37869000D2AA98 /* XCRemoteSwiftPackageReference "PythonKit" */;
-			productName = PythonKit;
 		};
 		2CFC59A22D43844800529099 /* MCEmojiPicker */ = {
 			isa = XCSwiftPackageProductDependency;

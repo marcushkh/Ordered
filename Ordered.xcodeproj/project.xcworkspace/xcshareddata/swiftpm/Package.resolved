@@ -1,5 +1,5 @@
 {
-  "originHash" : "d5371e06def0be164d5db641bdafd6b62355608c49704ed0994ac5932012b256",
+  "originHash" : "8cad26b2f67f342e2214f6c196e0179c60b8959e18409cdb4381c28ceb22161c",
   "pins" : [
     {
       "identity" : "mcemojipicker",
@@ -17,15 +17,6 @@
       "state" : {
         "revision" : "4c8a021abc5914a639762338ee790f79c2b4e2c8",
         "version" : "3.0.6"
-      }
-    },
-    {
-      "identity" : "pythonkit",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/pvieito/PythonKit",
-      "state" : {
-        "branch" : "master",
-        "revision" : "6fee7617cfa910fbac7035276e295ba967adbbb4"
       }
     },
     {
