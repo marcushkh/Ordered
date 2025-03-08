@@ -15,10 +15,10 @@ struct MyCalendar {
         calendar.firstWeekday = Calendar.autoupdatingCurrent.firstWeekday
         dateFormatter.dateFormat = "yyyyMMdd"
         
-        today = calendar.date(from: calendar.dateComponents([.year, .month, .day], from: Date())) ?? Date()
+        let dayStartTime = UserDefaults.standard.integer(forKey: "DayStartTime")
+        today = calendar.date(from: calendar.dateComponents([.year, .month, .day], from: calendar.date(byAdding: .hour, value: dayStartTime * -1, to: Date.now) ?? Date())) ?? Date()
         currentDate = today
         startOfYear = calendar.date(from: DateComponents(year: 2025, month: 1, day: 1))!
-        
     }
     
     mutating func setCurrentDate(to dateStr: String) {
@@ -33,7 +33,6 @@ struct MyCalendar {
     
     static func getDate(from dateString: String) -> Date{
         let dateFormatter = DateFormatter()
-//        dateFormatter.timeZone = TimeZone(identifier: "UTC")!
         dateFormatter.dateFormat = "yyyyMMdd"
         
         return dateFormatter.date(from: dateString) ?? Date()
@@ -41,7 +40,6 @@ struct MyCalendar {
     
     static func getDate(from date: Date) -> Date{
         let calendar = Calendar(identifier: .iso8601)
-//        calendar.timeZone = TimeZone(identifier: "UTC")!
         
         return calendar.date(from: calendar.dateComponents([.year, .month, .day], from: date)) ?? Date()
     }

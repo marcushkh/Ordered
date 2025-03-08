@@ -13,8 +13,10 @@ struct LiveActivityActions{
         if Activity<LiveActivityAttributes>.activities.isEmpty {
             let attributes = LiveActivityAttributes()
             
-            let currentLocation = Cal.get(date: Date.now)?.getCurrentLocation() ?? 0
-            var customEventList = Cal.get(date: Date.now)?.getCustomEventList() ?? []
+            let dayStartTime = UserDefaults.standard.integer(forKey: "DayStartTime")
+            
+            let currentLocation = Cal.get(date: Calendar.current.date(byAdding: .hour, value: dayStartTime * -1, to: Date.now) ?? Date())?.getCurrentLocation() ?? 0
+            var customEventList = Cal.get(date: Calendar.current.date(byAdding: .hour, value: dayStartTime * -1, to: Date.now) ?? Date())?.getCustomEventList() ?? []
             customEventList = Array(customEventList.dropFirst(currentLocation).prefix(8))
             
             let initialContentState = LiveActivityAttributes.ContentState(
@@ -43,8 +45,9 @@ struct LiveActivityActions{
         let activeActivities = Activity<LiveActivityAttributes>.activities
         for activity in activeActivities {
             
-            let currentLocation = Cal.get(date: Date.now)?.getCurrentLocation() ?? 0
-            var customEventList = Cal.get(date: Date.now)?.getCustomEventList() ?? []
+            let dayStartTime = UserDefaults.standard.integer(forKey: "DayStartTime")
+            let currentLocation = Cal.get(date: Calendar.current.date(byAdding: .hour, value: dayStartTime * -1, to: Date.now) ?? Date())?.getCurrentLocation() ?? 0
+            var customEventList = Cal.get(date: Calendar.current.date(byAdding: .hour, value: dayStartTime * -1, to: Date.now) ?? Date())?.getCustomEventList() ?? []
             customEventList = Array(customEventList.dropFirst(currentLocation).prefix(10))
             
             Task{

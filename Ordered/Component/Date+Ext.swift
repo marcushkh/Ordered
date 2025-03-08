@@ -73,10 +73,21 @@ extension Date {
     }
     
     static func greaterHHMM(_ str1: String, _ str2: String) -> Bool{
-        let date1 = getDateFromHHMM(str1)
-        let date2 = getDateFromHHMM(str2)
+        let calendar = Calendar.current
+        let dayStartTime = UserDefaults.standard.integer(forKey: "DayStartTime")
+        print(dayStartTime)
         
-        if date1 >= date2 {
+        var date1 = getDateFromHHMM(str1)
+        var date2 = getDateFromHHMM(str2)
+        
+        if calendar.component(.hour, from: date1) < dayStartTime {
+            date1 = calendar.date(byAdding: .day, value: 1, to: date1) ?? date1
+        }
+        if calendar.component(.hour, from: date2) < dayStartTime {
+            date2 = calendar.date(byAdding: .day, value: 1, to: date2) ?? date2
+        }
+        
+        if date1 > date2 {
             return true
         } else {
             return false
