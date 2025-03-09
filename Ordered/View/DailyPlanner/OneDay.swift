@@ -125,8 +125,8 @@ struct OneDay: View {
                                     if viewModel.currentTab == .home{
                                         ActionButtonView(viewModel: viewModel, sc: sc, ec: ec)
                                     }
-                                    else if viewModel.currentTab == .plan{
-                                        EditDeleteButtonView(viewModel: viewModel, sc: sc, ec: ec)
+                                    else if viewModel.currentTab == .plan || viewModel.currentTab == .weeklyDefault{
+                                        EditDeleteButtonView(viewModel: viewModel, ec: ec)
                                     }
                                 }
                                 .background()

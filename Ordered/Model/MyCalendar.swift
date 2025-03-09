@@ -16,8 +16,10 @@ struct MyCalendar {
         dateFormatter.dateFormat = "yyyyMMdd"
         
         let dayStartTime = UserDefaults.standard.integer(forKey: "DayStartTime")
-        today = calendar.date(from: calendar.dateComponents([.year, .month, .day], from: calendar.date(byAdding: .hour, value: dayStartTime * -1, to: Date.now) ?? Date())) ?? Date()
+        
+        today = calendar.date(from: calendar.dateComponents([.year, .month, .day], from: MyCalendar.getToday())) ?? Date.now
         currentDate = today
+        
         startOfYear = calendar.date(from: DateComponents(year: 2025, month: 1, day: 1))!
     }
     
@@ -86,5 +88,12 @@ struct MyCalendar {
         let weekdayNumbers: [Int] = Array(isoWeekdays[firstWeekdayIndex...] + isoWeekdays[..<firstWeekdayIndex])
         
         return weekdayNumbers
+    }
+    
+    static func getToday() -> Date{
+        let calendar = Calendar.current
+        let dayStartTime = UserDefaults.standard.integer(forKey: "DayStartTime")
+        
+        return calendar.date(from: calendar.dateComponents([.year, .month, .day], from: calendar.date(byAdding: .hour, value: dayStartTime * -1, to: Date.now) ?? Date())) ?? Date()
     }
 }

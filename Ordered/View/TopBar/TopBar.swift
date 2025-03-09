@@ -14,7 +14,7 @@ struct TopBar: View {
     
     @Environment(\.colorScheme) var colorScheme
     
-    @State var selectedDate: Date = Date.now
+    @State var selectedDate: Date = MyCalendar.getToday()
     @State var showClear: Bool = false
     
     var body: some View {
@@ -106,7 +106,7 @@ struct TopBar: View {
                         .font(.title2)
                         .bold()
                         .onTapGesture {
-                            dayPlannerVM.setCurrentDate(to: Date.now)
+                            dayPlannerVM.setCurrentDate(to: MyCalendar.getToday())
                         }
                 }
                 if currentCase == .weekDefaultWithSelectedDay || currentCase == .weekDefaultWithoutSelectedDay{

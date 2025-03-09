@@ -121,6 +121,7 @@ struct WeekDefaultView: View {
                                     }
                                 }
                             }
+                            
                         }
                         if i != weekList.last{
                             Spacer()

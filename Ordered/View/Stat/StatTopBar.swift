@@ -12,11 +12,10 @@ struct StatTopBar: View {
     @ObservedObject var viewModel: ContentViewModel
     @ObservedObject var dayPlannerVM: DayPlannerViewModel
     
-    @State private var selectedSegment = "Week"
-    let segments = ["Week", "Month", "Year"]
-    
     @State var currentDate = Date.now
     @State private var selectedEventID: ObjectIdentifier? = nil
+    
+    @Environment(\.colorScheme) var colorScheme
     
     @FetchRequest(
         entity: Event.entity(),
@@ -32,14 +31,61 @@ struct StatTopBar: View {
             let w = geo.size.width
             
             VStack(spacing: 8){
-                Picker("Select Timeframe", selection: $selectedSegment) {
-                    ForEach(segments, id: \.self) { segment in
-                        Text(segment).tag(segment)
+                ZStack{
+                    RoundedRectangle(cornerRadius: 15)
+                        .fill(.color5)
+                        .frame(height: 40)
+                    
+                    HStack{
+                        var dateString: String{
+                            let formatter = DateFormatter()
+                            formatter.dateFormat = "d MMM"
+                            
+                            if currentDate.getYYMMDD() == Date.now.getYYMMDD(){
+                                return "This Week"
+                            }
+                            else if currentDate.getYYMMDD() == Calendar.current.date(byAdding: .day, value: -7, to: Date.now)?.getYYMMDD(){
+                                return "Last Week"
+                            }
+                            else{
+                                return formatter.string(from: dayPlannerVM.datesInAWeek(from: dayPlannerVM.startDateOfWeek(from: currentDate))[0]) + " - " + formatter.string(from: dayPlannerVM.datesInAWeek(from: dayPlannerVM.startDateOfWeek(from: currentDate))[6])
+                            }
+                        }
+                        Text(dateString)
+                        
+                        Spacer()
+                        
+                        Button {
+                            withAnimation {
+                                currentDate = Calendar.current.date(byAdding: .day, value: -7, to: currentDate) ?? currentDate
+                            }
+                        } label: {
+                            Image(systemName: "play.fill")
+                                .rotationEffect(.degrees(180))
+                                .font(.system(size: 12))
+                                .foregroundColor(.cPrimary)
+                                .padding(8)
+                                .background(colorScheme == .dark ? .color3 : .color2)
+                                .clipShape(Circle())
+                        }
+                        
+                        Button {
+                            withAnimation {
+                                var nextWeek = Calendar.current.date(byAdding: .day, value: 7, to: currentDate) ?? currentDate
+                                currentDate = nextWeek > Date.now ? Date.now : nextWeek
+                            }
+                        } label: {
+                            Image(systemName: "play.fill")
+                                .font(.system(size: 12))
+                                .foregroundColor(.cPrimary)
+                                .padding(8)
+                                .background(colorScheme == .dark ? .color3 : .color2)
+                                .clipShape(Circle())
+                        }
                     }
+                    .padding(.horizontal)
                 }
-                .pickerStyle(.segmented)
                 .padding(.horizontal, w*0.075)
-                .disabled(true)
                 
                 ScrollViewReader{ proxy in
                     ScrollView(.horizontal, showsIndicators: false) {

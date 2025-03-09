@@ -9,7 +9,6 @@ import SwiftUI
 
 struct EditDeleteButtonView: View{
     @ObservedObject var viewModel: ContentViewModel
-    @ObservedObject var sc: Section_Cal
     @ObservedObject var ec: Event_Cal
     @State var showAlert: Bool = false
     

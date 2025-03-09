@@ -59,7 +59,7 @@ extension Date {
     static func getDateFromHHMM(_ str: String) -> Date{
         let dateFormatter = DateFormatter()
         
-        let currentDate = Date()
+        let currentDate = MyCalendar.getToday()
         let calendar = Calendar.current
         let year = calendar.component(.year, from: currentDate)
         let month = calendar.component(.month, from: currentDate)

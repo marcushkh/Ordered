@@ -133,12 +133,7 @@ struct WeekDefaultMain: View {
                                     Spacer()
                                     
                                     //Schedule events or Duration events
-//                                    if viewModel.currentTab == .home{
-//                                        ActionButtonView(viewModel: viewModel, sc: s, ec: ec)
-//                                    }
-//                                    else if viewModel.currentTab == .plan{
-//                                        EditDeleteButtonView(viewModel: viewModel, sc: sc, ec: ec)
-//                                    }
+                                    EditDeleteButtonView(viewModel: viewModel, ec: ec)
                                 }
                                 .background()
                                 .onTapGesture {

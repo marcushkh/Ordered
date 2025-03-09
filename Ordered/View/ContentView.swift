@@ -120,7 +120,7 @@ struct ContentView: View {
                 // when the app is re-entered set to current date
                 .onChange(of: scenePhase, { oldValue, newValue in
                     if newValue == .active {
-                        dayPlannerVM.setCurrentDate(to: Date.now)
+                        dayPlannerVM.setCurrentDate(to: MyCalendar.getToday())
                     }
                 })
             }
