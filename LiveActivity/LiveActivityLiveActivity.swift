@@ -30,7 +30,7 @@ struct LiveActivityLiveActivity: Widget {
             let currentEvent = context.state.CustomEventList[context.state.currentLocation]
             let currentLocation = context.state.currentLocation
             let eventList = context.state.CustomEventList
-        let nextColorLocation = context.state.nextColorLocation
+            let nextColorLocation = context.state.nextColorLocation
             let startTime = context.state.startTime
             let timePassed = context.state.timePassed
             

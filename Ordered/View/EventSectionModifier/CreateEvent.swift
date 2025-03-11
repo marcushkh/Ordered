@@ -591,7 +591,13 @@ struct CreateEvent: View {
                         }
                         else{
                             let oStartTime = Date.getDateFromHHMM(ec.aStartTime!)
-                            let changeInMin = Calendar.current.dateComponents([.minute], from: startTime, to: oStartTime).minute!
+                            var changeInMin = Calendar.current.dateComponents([.minute], from: startTime, to: oStartTime).minute!
+                            if changeInMin > 720{
+                                changeInMin -= 24*60
+                            }
+                            if changeInMin < -720{
+                                changeInMin += 24*60
+                            }
                             EventActionHandler.shared.AddCurrentTimePassed(min: changeInMin)
                         }
                     }

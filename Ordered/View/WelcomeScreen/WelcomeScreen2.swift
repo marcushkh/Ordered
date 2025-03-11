@@ -6,15 +6,28 @@
 //
 
 import SwiftUI
+import AVKit
 
 struct WelcomeScreen2: View {
+    @Environment(\.colorScheme) var colorScheme
     var body: some View {
         GeometryReader{ geo in
             VStack{
-                Image("Welcome2")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: geo.size.width * 0.9)
+                VStack{
+                    if let path = Bundle.main.path(forResource: colorScheme == .dark ? "Welcome2VidDark" : "Welcome2Vid", ofType: "mp4") {
+                        let player = AVPlayer(url: URL(fileURLWithPath: path))
+                        VideoPlayer(player: player)
+                            .onAppear() {
+                                player.play()
+                            }
+                            .onTapGesture {
+                                player.play()
+                            }
+                    } else {
+                        Text("Video not found")
+                    }
+                }
+                .frame(width: geo.size.width * 0.9, height: geo.size.height*0.484)
                 
                 Text("Stack Your Events Like a Pro")
                     .font(.title)

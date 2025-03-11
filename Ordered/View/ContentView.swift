@@ -59,6 +59,9 @@ struct ContentView: View {
                             .padding(.horizontal, w * 0.075)
                             .padding(.bottom, searchTyping ? 0 : 70)
                     }
+                    else if viewModel.currentTab == .setting{
+                        SettingView()
+                    }
                     
                     
                     // Bottom Bar

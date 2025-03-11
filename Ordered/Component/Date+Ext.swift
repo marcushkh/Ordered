@@ -56,10 +56,9 @@ extension Date {
         return dateFormatter.string(from: self)
     }
     
-    static func getDateFromHHMM(_ str: String) -> Date{
+    static func getDateFromHHMM(_ str: String, currentDate: Date = Date()) -> Date{
         let dateFormatter = DateFormatter()
         
-        let currentDate = MyCalendar.getToday()
         let calendar = Calendar.current
         let year = calendar.component(.year, from: currentDate)
         let month = calendar.component(.month, from: currentDate)
@@ -75,10 +74,9 @@ extension Date {
     static func greaterHHMM(_ str1: String, _ str2: String) -> Bool{
         let calendar = Calendar.current
         let dayStartTime = UserDefaults.standard.integer(forKey: "DayStartTime")
-        print(dayStartTime)
         
-        var date1 = getDateFromHHMM(str1)
-        var date2 = getDateFromHHMM(str2)
+        var date1 = getDateFromHHMM(str1, currentDate: MyCalendar.getToday())
+        var date2 = getDateFromHHMM(str2, currentDate: MyCalendar.getToday())
         
         if calendar.component(.hour, from: date1) < dayStartTime {
             date1 = calendar.date(byAdding: .day, value: 1, to: date1) ?? date1
