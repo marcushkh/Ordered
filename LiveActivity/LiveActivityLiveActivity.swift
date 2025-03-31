@@ -301,12 +301,18 @@ struct LiveActivityLiveActivity: Widget {
                     .padding(.horizontal, 2)
                 }
             } compactLeading: {
-                ZStack{
-                    Circle()
-                        .fill(Color(hex: context.state.CustomEventList[context.state.nextColorLocation].color))
-                    
-                    Text(context.state.CustomEventList[context.state.nextColorLocation].icon)
-                        .font(.title3)
+                let currentEvent = context.state.CustomEventList[context.state.currentLocation]
+                let currentLocation = context.state.currentLocation
+                let eventList = context.state.CustomEventList
+                
+                ForEach(Array(eventList.dropFirst(currentLocation).prefix(1).enumerated()), id: \.element.objectId) { index, event in
+                    ZStack{
+                        Circle()
+                            .fill(Color(hex: event.color))
+                        
+                        Text(event.icon)
+                            .font(.title3)
+                    }
                 }
             } compactTrailing: {
                 let startTime = context.state.startTime

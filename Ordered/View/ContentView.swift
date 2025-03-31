@@ -55,7 +55,7 @@ struct ContentView: View {
                         .padding(.vertical)
                         .padding(.horizontal, w * 0.075)
                         
-                        EventList(eventName: $viewModel.searchEventName, selectedEvent: $viewModel.selectedEvent, isChangeSelectedEvent: true)
+                        EventList(viewModel: viewModel, eventName: $viewModel.searchEventName, selectedEvent: $viewModel.selectedEvent, isChangeSelectedEvent: true)
                             .padding(.horizontal, w * 0.075)
                             .padding(.bottom, searchTyping ? 0 : 70)
                     }
@@ -88,6 +88,9 @@ struct ContentView: View {
                         .closeOnTap(false)
                         .closeOnTapOutside(true)
                         .backgroundColor(.cPrimary.opacity(0.2))
+                }
+                .sheet(isPresented: $viewModel.showChangeEvent){
+                    ChangeEvent(viewModel: viewModel)
                 }
                 .overlay{
                     if viewModel.showChangeSection{

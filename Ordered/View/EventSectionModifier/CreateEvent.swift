@@ -50,12 +50,14 @@ struct CreateEvent: View {
     @Binding var display: Bool
     @Environment(\.colorScheme) var colorScheme
     
+    @State private var isInitializing = true
+    
     var body: some View {
         Background(color: .cBackground, allFocusStates: [$eventNameTyping, $descriptionTyping]){
             VStack{
                 if !isNewEvent && event == nil{ //Give suggestion to use previous events
                     eventAndEmoji
-                    EventList(eventName: $eventName, selectedEvent: $event, isChangeSelectedEvent: false)
+                    EventList(viewModel: viewModel, eventName: $eventName, selectedEvent: $event, isChangeSelectedEvent: false)
                     
                     Spacer()
                     
@@ -77,10 +79,14 @@ struct CreateEvent: View {
                 }
                 
             }
-            .onChange(of: event) { newValue in
-                if editEvent_Cal?.aStartTime == nil{
+            .onChange(of: event) { oldValue, newValue in
+                if oldValue == nil{
+                    isInitializing = false
+                }
+                if !isInitializing{
                     initEvent(newValue: newValue)
                 }
+                isInitializing = false
             }
             .padding(.horizontal, K.horizontal_padding * 2)
             .padding(.top)
@@ -101,6 +107,7 @@ struct CreateEvent: View {
     }
     
     func initialize(changeToNotFinished: Bool = false){
+        print("initialize")
         eventNameTyping = true
         descriptionTyping = true
         
@@ -141,12 +148,15 @@ struct CreateEvent: View {
                 isSchedule = false
             }
         }
+        
+        
     }
     
     func initEvent(newValue: Event?){
         
         withAnimation {
             //TODO: Set the init for next page
+            print("INIT is used")
             selectedEmoji = newValue?.icon ?? "💡"
             eventName = newValue?.name ?? ""
             
@@ -166,6 +176,12 @@ struct CreateEvent: View {
                 default:
                     useCustomDuration = true
                     customDuration = Int(newValue?.duration ?? 90)
+                }
+            }
+            if isFinished{
+                startTime = Date.getDateFromHHMM(editEvent_Cal?.aStartTime ?? "00:00:00")
+                if editEvent_Cal?.aEndTime != nil{
+                    endTime = Date.getDateFromHHMM(editEvent_Cal?.aEndTime ?? "00:00:00")
                 }
             }
         }
@@ -400,10 +416,11 @@ struct CreateEvent: View {
                     if newValue == true{
                         isSchedule = false
                         isDuration = false
+                        startTime = Date.getDateFromHHMM(editEvent_Cal?.aStartTime ?? startTime.getHHMM())
+                        endTime = Date.getDateFromHHMM(editEvent_Cal?.aEndTime ?? endTime.getHHMM())
                     }
                     else{
-                        print("INININI")
-                        initialize(changeToNotFinished: true)
+                        initEvent(newValue: event)
                     }
                 }
             
@@ -497,7 +514,6 @@ struct CreateEvent: View {
                     .font(.system(size: 20))
                     .foregroundStyle(Color(.white))
                     .bold()
-                
             }
         }
         .padding(.bottom)
@@ -561,28 +577,13 @@ struct CreateEvent: View {
         
         if let ec = editEvent_Cal{ //Edit event
             if ec.aStartTime == nil{ // Normal Edit event
-                
-                if eventName != event?.name{
-                    event = Event.save(icon: selectedEmoji, name: eventName, startTime: isSchedule ? startTime.getHHMM() : nil, endTime: isSchedule ? endTime.getHHMM() : nil, duration: isDuration ? (useCustomDuration ? customDuration : duration) : -1)
-                }
-                else if selectedEmoji != event?.icon{
-                    event = Event.save(icon: selectedEmoji, startTime: isSchedule ? startTime.getHHMM() : nil, endTime: isSchedule ? endTime.getHHMM() : nil, duration: isDuration ? (useCustomDuration ? customDuration : duration) : -1, event: ec.parent)
-                }
-                else if isSchedule || isDuration{
-                    event = Event.save(startTime: isSchedule ? startTime.getHHMM() : nil, endTime: isSchedule ? endTime.getHHMM() : nil, duration: isDuration ? (useCustomDuration ? customDuration : duration) : -1, event: ec.parent)
+                if isSchedule || isDuration{
+                    event = Event.save(startTime: isSchedule ? startTime.getHHMM() : nil, endTime: isSchedule ? endTime.getHHMM() : nil, duration: isDuration ? (useCustomDuration ? customDuration : duration) : -1, event: event)
                 }
                 
                 ec.edit(detail: description, startTime: isSchedule ? startTime.getHHMM() : nil, endTime: isSchedule ? endTime.getHHMM() : nil, duration: isDuration ? (useCustomDuration ? customDuration : duration) : -1, aStartTime: nil, aEndTime: nil, parent: event)
-                
-                
             }
             else{ // Started
-                if eventName != event?.name{
-                    event = Event.save(icon: selectedEmoji, name: eventName, startTime: isSchedule ? startTime.getHHMM() : nil, endTime: isSchedule ? endTime.getHHMM() : nil, duration: isDuration ? (useCustomDuration ? customDuration : duration) : -1)
-                }
-                else if selectedEmoji != event?.icon{
-                    event = Event.save(icon: selectedEmoji, startTime: isSchedule ? startTime.getHHMM() : nil, endTime: isSchedule ? endTime.getHHMM() : nil, duration: isDuration ? (useCustomDuration ? customDuration : duration) : -1, event: ec.parent)
-                }
                 
                 if ec.aEndTime == nil{ // On Going
                     if EventActionHandler.shared.currentECID == ec.objectID.uriRepresentation().absoluteString {

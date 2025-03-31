@@ -21,7 +21,7 @@ struct WelcomeScreen1: View {
                     .bold()
                     .padding()
                 
-                Text("Make Your Schedule Flexible!\nNo Start and End Time Required! Just Plan and Record!")
+                Text("Make Your Life Ordered Again!\nReclaim Control Over Your Day!")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)

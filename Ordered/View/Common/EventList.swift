@@ -9,6 +9,8 @@ import SwiftUI
 import CoreData
 
 struct EventList: View {
+    @ObservedObject var viewModel: ContentViewModel
+    
     @State var allEvents: [Event] = []
     @Binding var eventName: String
     @Binding var selectedEvent: Event?
@@ -30,6 +32,12 @@ struct EventList: View {
                             EventInfo(e: e)
                             
                             Spacer()
+                            
+                            Image(systemName: "pencil.line")
+                                .onTapGesture {
+                                    viewModel.showChangeEvent = true
+                                    viewModel.changeEvent = e
+                                }
                             
                             Image(systemName: e.isFavourite ? "heart.fill" : "heart")
                                 .bold()

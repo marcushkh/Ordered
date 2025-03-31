@@ -19,8 +19,6 @@
         "emoji": "💩",
         "description": "pile of poo",
         "keywords": [
-            "pile",
-            "poo"
         ]
     },
     {
@@ -34,21 +32,18 @@
         "emoji": "👻",
         "description": "ghost",
         "keywords": [
-            "ghost"
         ]
     },
     {
         "emoji": "👽",
         "description": "alien",
         "keywords": [
-            "alien"
         ]
     },
     {
         "emoji": "🤖",
         "description": "robot",
         "keywords": [
-            "robot"
         ]
     },
     {
@@ -58,8 +53,6 @@
             "romance",
             "love",
             "affection",
-            "red",
-            "heart",
             "Valentine",
             "Lover"
         ]
@@ -83,8 +76,7 @@
         "emoji": "💅",
         "description": "nail polish",
         "keywords": [
-            "nail",
-            "polish"
+
         ]
     },
     {
@@ -953,8 +945,6 @@
         "emoji": "🧧",
         "description": "red envelope",
         "keywords": [
-            "envelope",
-            "red",
             "chinese new year"
         ]
     },
@@ -962,15 +952,12 @@
         "emoji": "🎁",
         "description": "wrapped gift",
         "keywords": [
-            "wrapped",
-            "gift"
         ]
     },
     {
         "emoji": "🎫",
         "description": "ticket",
         "keywords": [
-            "ticket"
         ]
     },
     {
@@ -987,167 +974,133 @@
         "emoji": "⚽",
         "description": "soccer ball",
         "keywords": [
-            "soccer"
         ]
     },
     {
         "emoji": "⚾",
         "description": "baseball",
         "keywords": [
-            "baseball"
         ]
     },
     {
         "emoji": "🥎",
         "description": "softball",
         "keywords": [
-            "softball"
         ]
     },
     {
         "emoji": "🏀",
         "description": "basketball",
         "keywords": [
-            "basketball"
         ]
     },
     {
         "emoji": "🏐",
         "description": "volleyball",
         "keywords": [
-            "volleyball"
         ]
     },
     {
         "emoji": "🏈",
         "description": "american football",
         "keywords": [
-            "football",
-            "american"
         ]
     },
     {
         "emoji": "🏉",
         "description": "rugby football",
         "keywords": [
-            "rugby",
-            "football"
         ]
     },
     {
         "emoji": "🎾",
         "description": "tennis",
         "keywords": [
-            "tennis"
         ]
     },
     {
         "emoji": "🥏",
         "description": "flying disc",
         "keywords": [
-            "disc",
-            "flying"
         ]
     },
     {
         "emoji": "🎳",
         "description": "bowling",
         "keywords": [
-            "bowling"
         ]
     },
     {
         "emoji": "🏏",
         "description": "cricket game",
         "keywords": [
-            "game",
-            "cricket"
         ]
     },
     {
         "emoji": "🏑",
         "description": "field hockey",
         "keywords": [
-            "hockey",
-            "field"
         ]
     },
     {
         "emoji": "🏒",
         "description": "ice hockey",
         "keywords": [
-            "hockey",
-            "ice"
         ]
     },
     {
         "emoji": "🥍",
         "description": "lacrosse",
         "keywords": [
-            "lacrosse"
         ]
     },
     {
         "emoji": "🏓",
         "description": "ping pong",
         "keywords": [
-            "table tennis"
         ]
     },
     {
         "emoji": "🏸",
         "description": "badminton",
         "keywords": [
-            "badminton"
         ]
     },
     {
         "emoji": "🥊",
         "description": "boxing glove",
         "keywords": [
-            "boxing",
-            "glove"
         ]
     },
     {
         "emoji": "🥋",
         "description": "martial arts uniform",
         "keywords": [
-            "martial",
-            "arts",
-            "uniform"
         ]
     },
     {
         "emoji": "🥅",
         "description": "goal net",
         "keywords": [
-            "goal",
-            "net"
         ]
     },
     {
         "emoji": "⛳",
         "description": "flag in hole",
         "keywords": [
-            "hole",
-            "flag"
         ]
     },
     {
         "emoji": "⛸",
         "description": "ice skate",
         "keywords": [
-            "ice",
-            "skate"
         ]
     },
     {
         "emoji": "🎣",
         "description": "fishing pole",
         "keywords": [
-            "fishing",
-            "pole"
+            "fishing"
         ]
     },
     {
@@ -1177,15 +1130,12 @@
         "emoji": "🛷",
         "description": "sled",
         "keywords": [
-            "sled"
         ]
     },
     {
         "emoji": "🥌",
         "description": "curling stone",
         "keywords": [
-            "stone",
-            "curling"
         ]
     },
     {
@@ -1409,23 +1359,19 @@
         "emoji": "📄",
         "description": "page facing up",
         "keywords": [
-            "page",
-            "up",
-            "facing"
+            "page"
         ]
     },
     {
         "emoji": "📰",
         "description": "newspaper",
         "keywords": [
-            "newspaper"
         ]
     },
     {
         "emoji": "📧",
         "description": "e-mail",
         "keywords": [
-            "e-mail"
         ]
     },
     {
@@ -1463,21 +1409,18 @@
         "emoji": "🚽",
         "description": "toilet",
         "keywords": [
-            "toilet"
         ]
     },
     {
         "emoji": "🚿",
         "description": "shower",
         "keywords": [
-            "shower"
         ]
     },
     {
         "emoji": "🛁",
         "description": "bathtub",
         "keywords": [
-            "bathtub",
             "bath"
         ]
     },
@@ -1485,7 +1428,6 @@
         "emoji": "🧺",
         "description": "basket",
         "keywords": [
-            "basket",
             "Laundry"
         ]
     },
@@ -1493,7 +1435,6 @@
         "emoji": "🪥",
         "description": "toothbrush",
         "keywords": [
-            "toothbrush",
             "brush",
             "teeth"
         ]
