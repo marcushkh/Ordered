@@ -617,7 +617,7 @@ struct CreateEvent: View {
                     d += changeInMin
                     if d < 0{ d = 0 }
                     
-                    ec.edit(detail: description, startTime: ec.startTime, endTime: ec.endTime, duration: Int(ec.duration), aStartTime: isFinished ? startTime.getHHMM() : nil, aEndTime: isFinished ? endTime.getHHMM() : nil, durationFinished: d, parent: event)
+                    ec.edit(detail: description, startTime: ec.startTime, endTime: ec.endTime, duration: Int(ec.duration), aStartTime: isFinished ? startTime.getHHMM() : nil, aEndTime: isFinished ? endTime.getHHMM() : nil, durationFinished: isFinished ? d : 0, parent: event)
                 }
                 
             }

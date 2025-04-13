@@ -15,7 +15,7 @@ struct OneDay: View {
     @ObservedObject var dayPlannerVM: DayPlannerViewModel
     
     @State var draggingItem: Event_Cal? = nil
-    @State var showAlert: Bool = false
+    @State var activeAlert: ActiveAlert?
     
     private var calendarFetchRequest: FetchRequest<Cal>
     
@@ -37,6 +37,7 @@ struct OneDay: View {
     var toDoForDate: FetchedResults<Cal> {
         calendarFetchRequest.wrappedValue
     }
+    
     
     var body: some View {
         ScrollViewReader{ proxy in
@@ -78,7 +79,7 @@ struct OneDay: View {
                                     }
                                     
                                     Button(role: .destructive) {
-                                        showAlert = true
+                                        activeAlert = .deleteSectionCal(sc)
                                     } label: {
                                         Text("Delete Section")
                                             .foregroundColor(.red)
@@ -95,14 +96,7 @@ struct OneDay: View {
                                     }
                                     .background()
                                 }
-                                .alert(isPresented: $showAlert) {
-                                    Alert(  title: Text("Delete Section"),
-                                            message: Text("Are you sure you want to delete this Section?"),
-                                            primaryButton: .destructive(Text("Delete")) {
-                                                sc.delete()
-                                            },
-                                            secondaryButton: .cancel())
-                                }
+                                
                             }
                             .onTapGesture {
                                 edit(sc: sc)
@@ -126,7 +120,7 @@ struct OneDay: View {
                                         ActionButtonView(viewModel: viewModel, sc: sc, ec: ec)
                                     }
                                     else if viewModel.currentTab == .plan || viewModel.currentTab == .weeklyDefault{
-                                        EditDeleteButtonView(viewModel: viewModel, ec: ec)
+                                        EditDeleteButtonView(viewModel: viewModel, ec: ec, activeAlert: $activeAlert)
                                     }
                                 }
                                 .background()
@@ -249,6 +243,78 @@ struct OneDay: View {
                         .padding(.top)
                         .padding(.horizontal, K.horizontal_padding)
                     }
+                    .alert(item: $activeAlert) { alert in
+                        switch alert {
+                        case .deleteSectionCal(let sc):
+                            return Alert(
+                                title: Text("Delete Section"),
+                                message: Text("Are you sure you want to delete this Section?"),
+                                primaryButton: .destructive(Text("Delete")) {
+                                    sc.delete()
+                                },
+                                secondaryButton: .cancel()
+                            )
+                        case .deleteEvent(let ec_del):
+                            return Alert(
+                                title: Text("Delete Event"),
+                                message: Text("Are you sure you want to delete this event?"),
+                                primaryButton: .destructive(Text("Delete")) {
+                                    withAnimation {
+                                        if viewModel.highlightedEC == ec_del{
+                                            var i: Int?{
+                                                return ec_del.section_cal?.event_cals?.index(of: ec_del)
+                                            }
+                                            var size: Int?{
+                                                return ec_del.section_cal?.event_cals?.count
+                                            }
+                                            
+                                            
+                                            
+                                            if let i = i, let size = size{
+                                                if i > 0 {// if there is item on top
+                                                    // if deleted highlightedEC -> select the higher one
+                                                    viewModel.highlightedEC = ec_del.section_cal?.event_cals![i-1] as? Event_Cal ?? ec_del
+                                                }
+                                                else if size > 1{//if there is item on bottom
+                                                    viewModel.highlightedEC = ec_del.section_cal?.event_cals![i+1] as? Event_Cal ?? ec_del
+                                                }
+                                                else{ //no item on top nor on bottom
+                                                    var index_of_section : Int?
+                                                    if ec_del.section_cal != nil{
+                                                        index_of_section = toDoForDate.first?.section_cals?.index(of: ec_del.section_cal!)
+                                                        if index_of_section ?? 0 > 0{
+                                                            let sc = toDoForDate.first?.section_cals?[index_of_section! - 1] as? Section_Cal
+                                                            viewModel.highlightedEC = sc?.event_cals?.lastObject as? Event_Cal
+                                                        }
+                                                        else if toDoForDate.first?.section_cals?.count ?? 0 > 0{
+                                                            let sc = toDoForDate.first?.section_cals?[index_of_section! + 1] as? Section_Cal
+                                                            viewModel.highlightedEC = sc?.event_cals?.firstObject as? Event_Cal
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        
+                                        ec_del.delete()
+                                        viewModel.showEventDetail = false
+                                    }
+                                    
+                                },
+                                secondaryButton: .cancel()
+                            )
+                        case .deleteSection(_):
+                            return Alert(
+                                title: Text("Error"),
+                                message: Text("Are you sure you want to delete this Section?"),
+                                primaryButton: .destructive(Text("Delete")) {
+                                    
+                                },
+                                secondaryButton: .cancel()
+                            )
+                        }
+                    }
+                    
+                    
                     //Create new Section
                     HStack{
                         Rectangle()
@@ -378,4 +444,18 @@ struct OneDay: View {
         viewModel.insertToCal = toDoForDate.first
     }
     
+}
+
+enum ActiveAlert: Identifiable {
+    case deleteSectionCal(Section_Cal)
+    case deleteSection(Section)
+    case deleteEvent(Event_Cal)
+    
+    var id: String {
+        switch self {
+        case .deleteSection(let s): return "deleteSection-\(s.objectID)"
+        case .deleteSectionCal(let sc): return "deleteSection-\(sc.objectID)"
+        case .deleteEvent(let ec): return "deleteEvent-\(ec.objectID)"
+        }
+    }
 }

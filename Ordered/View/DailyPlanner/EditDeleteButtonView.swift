@@ -10,7 +10,7 @@ import SwiftUI
 struct EditDeleteButtonView: View{
     @ObservedObject var viewModel: ContentViewModel
     @ObservedObject var ec: Event_Cal
-    @State var showAlert: Bool = false
+    @Binding var activeAlert: ActiveAlert?
     
     var body: some View{
         HStack{
@@ -39,7 +39,7 @@ struct EditDeleteButtonView: View{
             }
 
             Button{
-                showAlert = true
+                activeAlert = .deleteEvent(ec)
             } label: {
                 ZStack{
                     Circle()
@@ -51,18 +51,6 @@ struct EditDeleteButtonView: View{
                 }
             }
             
-        }
-        .alert(isPresented: $showAlert) {
-            Alert(  title: Text("Delete Event"),
-                    message: Text("Are you sure you want to delete this item?"),
-                    primaryButton: .destructive(Text("Delete")) {
-                withAnimation {
-                    ec.delete()
-                    viewModel.showEventDetail = false
-                }
-                
-            },
-                    secondaryButton: .cancel())
         }
         
     }

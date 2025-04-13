@@ -72,6 +72,9 @@ struct ContentView: View {
                                 viewModel.showEventBar = false
                                 viewModel.selectedWeekAb = nil
                             }
+                            .onTapGesture {
+                                
+                            }
                     }
                 }
                 .frame(width: w, height: h)
