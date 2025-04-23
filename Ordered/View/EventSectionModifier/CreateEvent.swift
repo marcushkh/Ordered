@@ -548,28 +548,17 @@ struct CreateEvent: View {
             let event_Cal = event.getEC()
             event_Cal.detail = description
             
-            if viewModel.currentTab != .weeklyDefault{
-                let new_section_Cal: Section_Cal = viewModel.createEvent_Section_Cal ?? Section_Cal.new(colorScheme: colorScheme)
-                new_section_Cal.add(event: event_Cal)
-                
-                //if no Cal -> create Cal
-                let cal = Cal.get(date: date.getYYMMDD()) ?? Cal.new(date: date.getYYMMDD())
-                
-                cal.add(new_section_Cal)
-                cal.sort()
-            }
-            else {
-                if let weekAb = viewModel.selectedWeekAb{
-                    let new_section: Section = viewModel.createEvent_Section ?? Section.new(colorScheme: colorScheme)
-                    new_section.add(event: event_Cal)
-                    
-                    let wd = WeekDefault.get(weekAb) ?? WeekDefault.new(weekAb)
-                    
-                    wd.add(new_section)
-                    wd.sort()
-                }
-            }
-            if viewModel.currentTab == .plan || viewModel.currentTab == .weeklyDefault{
+            let new_section_Cal: Section_Cal = viewModel.createEvent_Section_Cal ?? Section_Cal.new(colorScheme: colorScheme)
+            new_section_Cal.add(event: event_Cal)
+            
+            //if no Cal -> create Cal
+            let cal = Cal.get(date: date.getYYMMDD()) ?? Cal.new(date: date.getYYMMDD())
+            
+            cal.add(new_section_Cal)
+            cal.sort()
+            
+
+            if viewModel.currentTab == .plan{
                 viewModel.highlightedEC = event_Cal
             }
             display = false
@@ -621,7 +610,7 @@ struct CreateEvent: View {
                 }
                 
             }
-            if viewModel.currentTab == .plan || viewModel.currentTab == .weeklyDefault{
+            if viewModel.currentTab == .plan {
                 viewModel.highlightedEC = ec
             }
             display = false

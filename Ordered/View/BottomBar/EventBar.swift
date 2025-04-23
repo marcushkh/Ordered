@@ -140,32 +140,13 @@ struct EventBar: View {
                                         viewModel.highlightedEC = newEC
                                         viewModel.selectedWeekAb = nil
                                     }
-                                    else if viewModel.currentTab == .weeklyDefault, let weekAb = viewModel.selectedWeekAb{ // in weekly default page
-                                        let weekDefault: WeekDefault = WeekDefault.get(weekAb) ?? WeekDefault.new(weekAb)
-                                        
-                                        if let highlightedEC = viewModel.highlightedEC{
-                                            highlightedEC.section?.insert(newEC, after: viewModel.highlightedEC!)
-                                        }
-                                        else if weekDefault.sections?.lastObject != nil{
-                                            let s = weekDefault.sections?.lastObject as! Section
-                                            s.add(event: newEC)
-                                        }
-                                        else{
-                                            let new_section = Section.new(colorScheme: colorScheme)
-                                            
-                                            new_section.add(event: newEC)
-                                            weekDefault.add(new_section)
-                                        }
-                                        weekDefault.sort()
-                                        print(weekDefault)
-                                        viewModel.highlightedEC = newEC
-                                    }
+                                
                                     viewModel.refresh.toggle()
                                 }
                             }
                     }
                 })
-                .padding(.bottom, viewModel.currentTab == .weeklyDefault ? 60 : 0)
+                .padding(.bottom, 0)
             }
             .onAppear{
                 overlayHeight = UIScreen.main.bounds.height * 0.2

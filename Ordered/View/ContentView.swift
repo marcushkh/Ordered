@@ -35,14 +35,6 @@ struct ContentView: View {
                         MainList(viewModel: viewModel, dayPlannerVM: dayPlannerVM)
                             .ignoresSafeArea()
                     }
-                    else if viewModel.currentTab == .weeklyDefault{
-                        if viewModel.showWeekDetail{
-                            WeekDefaultMainList(viewModel: viewModel)
-                        }
-                        else{
-                            WeekDefaultView(viewModel: viewModel)
-                        }
-                    }
                     else if viewModel.currentTab == .statistic{
                         HStack {
                             Image(systemName: "magnifyingglass")
@@ -59,13 +51,19 @@ struct ContentView: View {
                             .padding(.horizontal, w * 0.075)
                             .padding(.bottom, searchTyping ? 0 : 70)
                     }
+                    else if viewModel.currentTab == .map{
+                        VStack{
+                            Text("This is the Map Tab")
+                            Spacer()
+                        }
+                    }
                     else if viewModel.currentTab == .setting{
                         SettingView()
                     }
                     
                     
                     // Bottom Bar
-                    if viewModel.currentTab == .plan || (viewModel.currentTab == .weeklyDefault && viewModel.showEventBar){
+                    if viewModel.currentTab == .plan{
                         EventBar(viewModel: viewModel, dayPlannerVM: dayPlannerVM)
                             .onDisappear{
                                 viewModel.highlightedEC = nil
@@ -111,16 +109,16 @@ struct ContentView: View {
                     
                 }
                 .onChange(of: viewModel.currentTab) { oldValue, newValue in
-                    if viewModel.currentTab != .weeklyDefault || viewModel.currentTab != .plan{
+                    if viewModel.currentTab != .plan{
                         withAnimation {
                             viewModel.highlightedEC = nil
                         }
                     }
-                    if viewModel.currentTab != .weeklyDefault{
-                        viewModel.showEventBar = false
-                        viewModel.selectedWeekAb = nil
-                        viewModel.showWeekDetail = false
-                    }
+                    
+                    viewModel.showEventBar = false
+                    viewModel.selectedWeekAb = nil
+                    viewModel.showWeekDetail = false
+                    
                 }
                 //On change of Cal
                 .onChange(of: viewModel.refresh) { oldValue, newValue in
@@ -135,7 +133,7 @@ struct ContentView: View {
             }
             .onTapGesture {
                 withAnimation {
-                    if viewModel.currentTab == .plan || viewModel.currentTab == .weeklyDefault{
+                    if viewModel.currentTab == .plan{
                         if viewModel.currentTab == .plan{
                             viewModel.currentTab = .home
                         }

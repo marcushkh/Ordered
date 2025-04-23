@@ -44,7 +44,7 @@ struct TabBar: View {
 enum TabBarItem: String, CaseIterable, Identifiable {
     case home
     case plan
-    case weeklyDefault
+    case map
     case statistic
     case setting
     
@@ -56,8 +56,8 @@ enum TabBarItem: String, CaseIterable, Identifiable {
             return "house"
         case .plan:
             return "list.bullet.indent"
-        case .weeklyDefault:
-            return "list.clipboard"
+        case .map:
+            return "map"
         case .statistic:
             return "chart.bar"
         case .setting:
@@ -71,7 +71,7 @@ enum TabBarItem: String, CaseIterable, Identifiable {
             return "Home"
         case .plan:
             return "Plan"
-        case .weeklyDefault:
+        case .map:
             return "Weekly Default"
         case .statistic:
             return "Statistic"

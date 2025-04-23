@@ -23,7 +23,7 @@ extension Section {
         return sc
     }
     
-    static func save(name: String? = nil, color: String? = nil, section: Section? = nil, wd: WeekDefault? = nil, insertIndex: Int? = nil) -> Section{
+    static func save(name: String? = nil, color: String? = nil, section: Section? = nil, insertIndex: Int? = nil) -> Section{
         // If have sc -> change the sc name and color
         var sectionToSave: Section
         if section != nil {
@@ -43,16 +43,6 @@ extension Section {
             }
             if let c = color{
                 sectionToSave.color = c
-            }
-            if let w = wd{
-                let sections = w.sections?.mutableCopy() as? NSMutableOrderedSet
-                if let i = insertIndex{
-                    sections?.insert(sectionToSave, at: i)
-                }
-                else{
-                    sections?.add(sectionToSave)
-                }
-                wd?.sections = sections
             }
         }
         
@@ -107,9 +97,6 @@ extension Section {
         for i in self.event_cals ?? []{
             Model.viewContext.delete(i as! NSManagedObject)
         }
-        var sections = self.week_default?.sections?.mutableCopy() as! NSMutableOrderedSet
-        sections.remove(self)
-        self.week_default?.sections = sections as NSOrderedSet?
         
         do {
             try Model.viewContext.save()
@@ -173,7 +160,7 @@ extension Section_Cal {
         }
     }
     
-    static func save(name: String? = nil, color: String? = nil, sc: Section_Cal? = nil, wd: WeekDefault? = nil, insertIndex: Int? = nil){
+    static func save(name: String? = nil, color: String? = nil, sc: Section_Cal? = nil, insertIndex: Int? = nil){
         // If have sc -> change the sc name and color
         if let scToSave = sc {
             if let n = name{
@@ -191,16 +178,6 @@ extension Section_Cal {
             }
             if let c = color{
                 scToSave.color = c
-            }
-            if let w = wd{
-                let sections = w.sections?.mutableCopy() as? NSMutableOrderedSet
-                if let i = insertIndex{
-                    sections?.insert(scToSave, at: i)
-                }
-                else{
-                    sections?.add(scToSave)
-                }
-                wd?.sections = sections
             }
         }
         

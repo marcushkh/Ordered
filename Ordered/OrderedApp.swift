@@ -20,19 +20,17 @@ struct OrderedApp: App {
     
     var body: some Scene {
         WindowGroup {
-            if welcomeScreen {
-                WelcomeScreenMaster(isWelcomeScreen: $welcomeScreen)
-                    .onAppear{
-                        UserDefaults.standard.set(4, forKey: "DayStartTime")
-                    }
-            }
-            else{
+            //Tutorial
+//            if welcomeScreen {
+//
+//            }
+//            else{
                 ContentView()
                     .environment(\.managedObjectContext, persistenceController.container.viewContext)
                     .task{
                         //Load Data
                     }
-            }
+//            }
             
         }
     }

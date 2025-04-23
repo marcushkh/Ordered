@@ -20,7 +20,7 @@ struct TopBar: View {
     var body: some View {
         
         VStack(spacing: 0){
-            if viewModel.currentTab == .home || viewModel.currentTab == .weeklyDefault{
+            if viewModel.currentTab == .home{
                 homeTopBar
                     .padding(.horizontal, K.horizontal_padding)
             }
@@ -34,13 +34,6 @@ struct TopBar: View {
         
         if [TabBarItem.home, TabBarItem.plan].contains(viewModel.currentTab){
             WeekBar(viewModel: viewModel, dayPlannerVM: dayPlannerVM)
-                .padding(.horizontal, K.horizontal_padding)
-                .padding(.bottom, K.xxxsmall_size)
-                .background(.color1)
-                .clipShape(UnevenRoundedRectangle(bottomLeadingRadius: 30, bottomTrailingRadius: 30))
-        }
-        else if viewModel.currentTab == .weeklyDefault{
-            WeekDefaultTopBar(viewModel: viewModel)
                 .padding(.horizontal, K.horizontal_padding)
                 .padding(.bottom, K.xxxsmall_size)
                 .background(.color1)
@@ -64,14 +57,6 @@ struct TopBar: View {
     var currentCase: TopBarCases{
         if viewModel.currentTab == .home{
             return .home
-        }
-        if viewModel.currentTab == .weeklyDefault{
-            if viewModel.selectedWeekAb == nil{
-                return .weekDefaultWithoutSelectedDay
-            }
-            else{
-                return .weekDefaultWithSelectedDay
-            }
         }
         return .home
     }
@@ -117,113 +102,29 @@ struct TopBar: View {
                 
                 
                 Spacer()
-                
-                Menu {
-                    if currentCase == .home{
-                        Button{
-                            LiveActivityActions.startLiveActivity()
-                        } label: {
-                            Text("Activate Live Activity")
-                            Image(systemName: "platter.filled.bottom.iphone")
-                        }
 
-                        Button{
-                            withAnimation {
-                                let cal = Cal.get(date: dayPlannerVM.currentDate) ?? Cal.new(date: dayPlannerVM.currentDate)
-                                cal.setWeeklyDefault()
-                            }
-                        } label: {
-                            Text("Apply Weekly Schedule")
-                            Image(systemName: "list.clipboard")
-                        }
-                    }
-                    
-                    if viewModel.highlightedEC != nil{
-                        Button {
-                            withAnimation {
-                                viewModel.highlightedEC?.toNewSection(colorScheme: colorScheme)
-                                viewModel.refresh.toggle()
-                            }
-                        } label: {
-                            Text("Start New Section")
-                            Image(systemName: "folder")
-                        }
-                    }
-                    
-                    var clearText: String {
-                        switch currentCase {
-                        case .home:
-                            "Clear Unfinished Events"
-                        case .weekDefaultWithSelectedDay:
-                            "Clear " + String(Date.intToFullName(viewModel.selectedWeekAb!))
-                        case .weekDefaultWithoutSelectedDay:
-                            "Clear All Weekly Schedule"
-                        }
-                    }
-                    Button(role: .destructive) {
+                Image(systemName: "paintbrush")
+                    .bold()
+                    .rotationEffect(Angle(degrees: 180))
+                    .frame(height: K.small_size)
+                    .foregroundStyle(.color3)
+                    .onTapGesture {
                         showClear = true
-                    } label: {
-                        
-                        Text(clearText)
-                        Image(systemName: "paintbrush")
-                            .rotationEffect(Angle(degrees: 180))
                     }
-                    
-                } label: {
-                    ZStack{
-                        Rectangle()
-                            .fill(Color.color1)
-                        
-                        Image(systemName: "ellipsis")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: K.xsmall_size, height: K.xsmall_size)
-                            .foregroundStyle(.color3)
-                            .padding(.trailing, 4)
-                    }
-                    .frame(width: K.xsmall_size, height: K.xsmall_size)
-                }
+                
                 
             }
             .padding(.vertical)
             .alert(isPresented: $showClear) {
-                if currentCase == .home{
-                    Alert(  title: Text("CLEAR the Unfinished Events"),
-                            message: Text("Are you sure to remove all events and section in this day that are not started or finished?"),
-                            primaryButton: .destructive(Text("Clear")) {
-                            withAnimation {
-                                Cal.clear(date: dayPlannerVM.currentDate)
-                                viewModel.refresh.toggle()
-                            }
-                    },
-                            secondaryButton: .cancel())
-                }
-                else if currentCase == .weekDefaultWithSelectedDay{//viewModel.currentTab == .weeklyDefault
-                    Alert(  title: Text("CLEAR Weekly Schedule for " + String(Date.intToFullName(viewModel.selectedWeekAb!))),
-                            message: Text("Are you sure to REMOVE ALL events and section for " + String(Date.intToFullName(viewModel.selectedWeekAb!))),
-                            primaryButton: .destructive(Text("Clear")) {
-                                withAnimation {
-                                    // Remove all Week Default
-                                    WeekDefault.get(viewModel.selectedWeekAb!)?.delete()
-                                    viewModel.refresh.toggle()
-                                }
-                            },
-                            secondaryButton: .cancel())
-                }
-                else{
-                    Alert(  title: Text("CLEAR ALL Weekly Schedule"),
-                            message: Text("Are you sure to REMOVE ALL events and section for ALL WEEKDAYS?"),
-                            primaryButton: .destructive(Text("Clear")) {
-                                withAnimation {
-                                    // Remove all Week Default
-                                    for i in Range(0...6){
-                                        WeekDefault.get(i)?.delete()
-                                    }
-                                    viewModel.refresh.toggle()
-                                }
-                            },
-                            secondaryButton: .cancel())
-                }
+                Alert(  title: Text("CLEAR the Unfinished Events"),
+                        message: Text("Are you sure to remove all events and section in this day that are not started or finished?"),
+                        primaryButton: .destructive(Text("Clear")) {
+                    withAnimation {
+                        Cal.clear(date: dayPlannerVM.currentDate)
+                        viewModel.refresh.toggle()
+                    }
+                },
+                        secondaryButton: .cancel())
             }
         }
     }

@@ -22,16 +22,10 @@ struct ChangeSectionName: View{
                 if let cal = viewModel.insertToCal{
                     return K.defaultSectionColor[(cal.section_cals?.count ?? 0) % K.defaultSectionColor.count]
                 }
-                else if let wd = viewModel.insertToWeek{
-                    return K.defaultSectionColor[(wd.sections?.count ?? 0) % K.defaultSectionColor.count]
-                }
             }
             else{
                 if let cal = viewModel.insertToCal{
                     return K.defaultSectionColorDark[(cal.section_cals?.count ?? 0) % K.defaultSectionColorDark.count]
-                }
-                else if let wd = viewModel.insertToWeek{
-                    return K.defaultSectionColorDark[(wd.sections?.count ?? 0) % K.defaultSectionColorDark.count]
                 }
             }
             return K.defaultSection[0]
@@ -103,9 +97,6 @@ struct ChangeSectionName: View{
                                 if viewModel.insertToCal != nil{
                                     Section_Cal.save(name: name, color: color, sc: viewModel.changeSection_Cal, cal: viewModel.insertToCal, insertIndex: viewModel.insertIndex)
                                 }
-                                else if let wd = viewModel.insertToWeek{
-                                    Section.save(name: name, color: color, section: viewModel.changeSection, wd: wd, insertIndex: viewModel.insertIndex)
-                                }
 
                                 dismiss()
                             }
@@ -151,7 +142,6 @@ struct ChangeSectionName: View{
         viewModel.changeSection = nil
         viewModel.insertToCal = nil
         viewModel.insertIndex = nil
-        viewModel.insertToWeek = nil
         viewModel.refresh.toggle()
     }
 }

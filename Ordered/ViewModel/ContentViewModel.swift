@@ -40,7 +40,6 @@ class ContentViewModel: ObservableObject{
     @Published var showEventBar: Bool = false
     @Published var selectedWeekAb: Int? = nil
     @Published var showWeekDetail: Bool = false
-    @Published var insertToWeek: WeekDefault? = nil
     
     //For Stat page
     @Published var selectedEvent: Event? = nil

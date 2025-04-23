@@ -8,25 +8,6 @@
 import CoreData
 
 extension Cal {
-    func setWeeklyDefault(){
-        let weekInt = Date.getDateFromYYMMDD(self.date!).getWeekInt()
-        let wd = WeekDefault.get(weekInt)
-        print(weekInt)
-        
-        for i in wd?.sections?.array as? [Section] ?? []{
-            if (self.section_cals?.array as? [Section_Cal] ?? [])
-                .contains(where: { $0.parent == i }) {
-                continue
-            }
-            self.add(i.getSC())
-        }
-        
-        do {
-            try Model.viewContext.save()
-        } catch {
-            print("Failed to save event: \(error.localizedDescription)")
-        }
-    }
     
     static func exist(date: String) -> Bool{
         let fetchRequest: NSFetchRequest<Cal> = Cal.fetchRequest()
