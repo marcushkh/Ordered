@@ -50,6 +50,9 @@ struct ContentView: View {
                         EventList(viewModel: viewModel, eventName: $viewModel.searchEventName, selectedEvent: $viewModel.selectedEvent, isChangeSelectedEvent: true)
                             .padding(.horizontal, w * 0.075)
                             .padding(.bottom, searchTyping ? 0 : 70)
+                            .onAppear{
+                                viewModel.selectedEvent = nil
+                            }
                     }
                     else if viewModel.currentTab == .map{
                         VStack{
@@ -67,8 +70,6 @@ struct ContentView: View {
                         EventBar(viewModel: viewModel, dayPlannerVM: dayPlannerVM)
                             .onDisappear{
                                 viewModel.highlightedEC = nil
-                                viewModel.showEventBar = false
-                                viewModel.selectedWeekAb = nil
                             }
                             .onTapGesture {
                                 
@@ -115,10 +116,6 @@ struct ContentView: View {
                         }
                     }
                     
-                    viewModel.showEventBar = false
-                    viewModel.selectedWeekAb = nil
-                    viewModel.showWeekDetail = false
-                    
                 }
                 //On change of Cal
                 .onChange(of: viewModel.refresh) { oldValue, newValue in
@@ -138,9 +135,6 @@ struct ContentView: View {
                             viewModel.currentTab = .home
                         }
                         viewModel.highlightedEC = nil
-                        viewModel.showEventBar = false
-                        viewModel.selectedWeekAb = nil
-                        viewModel.showWeekDetail = false
                     }
                 }
             }

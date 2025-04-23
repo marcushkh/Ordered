@@ -615,6 +615,5 @@ struct CreateEvent: View {
             }
             display = false
         }
-        
     }
 }

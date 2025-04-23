@@ -29,6 +29,7 @@ struct EventList: View {
                             .fill(.color1)
                         
                         HStack{
+                            
                             EventInfo(e: e)
                             
                             Spacer()
@@ -45,6 +46,7 @@ struct EventList: View {
                                 .onTapGesture {
                                     withAnimation {
                                         e.toggleIsFavorite()
+                                        
                                         if isChangeSelectedEvent{
                                             selectedEvent = e
                                         }
@@ -112,6 +114,7 @@ struct EventList: View {
         .onAppear {
             withAnimation {
                 fetchEvents()
+                saveOrder()
             }
         }
     }

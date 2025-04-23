@@ -95,9 +95,6 @@ struct EventBar: View {
                                     viewModel.currentTab = .home
                                 }
                                 viewModel.highlightedEC = nil
-                                viewModel.showEventBar = false
-                                viewModel.selectedWeekAb = nil
-                                viewModel.showWeekDetail = false
                             }
                         }
                         
@@ -138,7 +135,6 @@ struct EventBar: View {
                                         }
                                         cal.sort()
                                         viewModel.highlightedEC = newEC
-                                        viewModel.selectedWeekAb = nil
                                     }
                                 
                                     viewModel.refresh.toggle()
