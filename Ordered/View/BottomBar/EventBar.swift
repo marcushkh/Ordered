@@ -62,9 +62,10 @@ struct EventBar: View {
             .background(.color2)
             .clipShape(UnevenRoundedRectangle(topLeadingRadius: 30, topTrailingRadius: 30))
             .gesture(
-                DragGesture()
+                DragGesture(minimumDistance: 0, coordinateSpace: .global)
                     .onChanged { value in
-                        withAnimation {
+                        // Remove withAnimation to prevent flickering during drag
+                        withAnimation{
                             overlayHeight = lastHeight - value.translation.height
                         }
                     }
@@ -84,7 +85,7 @@ struct EventBar: View {
                         let closestHeight = [minHeight, midHeight]
                             .min(by: { abs($0 - newHeight) < abs($1 - newHeight) }) ?? minHeight
                         
-                        withAnimation {
+                        withAnimation{
                             overlayHeight = closestHeight
                             lastHeight = closestHeight
                         }
