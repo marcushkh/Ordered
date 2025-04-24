@@ -13,8 +13,9 @@ struct CustomMapView: View {
     @State private var scrollOffset = CGPoint.zero
     @State private var hasCentered = false
     @State private var isDragging = false
+    @State private var selectedRectangleId: UUID? = nil
     @State private var rectangles: [DraggableRectangle] = [
-        DraggableRectangle(id: UUID(), position: CGPoint(x: 100, y: 100), size: CGSize(width: 80, height: 40))
+        DraggableRectangle(id: UUID(), position: CGPoint(x: 300, y: 300), size: CGSize(width: 80, height: 40))
     ]
 
     var body: some View {
@@ -31,64 +32,108 @@ struct CustomMapView: View {
                 isScrollingEnabled: !isDragging
             ) {
                 ZStack {
+                    // Background with tap gesture to exit positioning mode
                     GridBackground()
                         .frame(width: width, height: height)
-
-                    // Map all draggable rectangles
-                    ForEach(rectangles) { rect in
-                        Rectangle()
-                            .frame(width: rect.size.width, height: rect.size.height)
-                            .foregroundStyle(.black)
-                            .position(rect.position)
-                            .gesture(
-                                DragGesture()
-                                    .onChanged { value in
-                                        isDragging = true
-                                        if let index = rectangles.firstIndex(where: { $0.id == rect.id }) {
-                                            rectangles[index].position = value.location
-                                        }
-                                    }
-                                    .onEnded { _ in
-                                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                                            isDragging = false
-                                        }
-                                    }
-                            )
-                    }
-                    
-                    // Add Rectangle button
-                    VStack {
-                        Spacer()
-                        HStack {
-                            Spacer()
-                            Button(action: {
-                                // Add a new rectangle at the center of the visible area
-                                let centerPosition = CGPoint(
-                                    x: scrollOffset.x + geo.size.width/2,
-                                    y: scrollOffset.y + geo.size.height/2
-                                )
-                                rectangles.append(
-                                    DraggableRectangle(
-                                        id: UUID(),
-                                        position: centerPosition,
-                                        size: CGSize(width: 80, height: 40)
-                                    )
-                                )
-                            }) {
-                                Image(systemName: "plus.rectangle")
-                                    .font(.system(size: 24))
-                                    .padding()
-                                    .background(Color.white.opacity(0.8))
-                                    .clipShape(Circle())
+                        .onTapGesture {
+                            // Exit positioning mode when tapping on the background
+                            if isDragging {
+                                isDragging = false
+                                selectedRectangleId = nil
                             }
-                            .padding()
+                            print("tapped the background")
                         }
+                        .zIndex(0) // Ensure grid is at the bottom of the stack
+                    
+                    // Map all draggable rectangles
+                    ForEach(rectangles.indices, id: \.self) { index in
+                        DraggableRectangleView(
+                            rectangleIndex: index,
+                            rectangles: $rectangles,
+                            isDragging: $isDragging,
+                            selectedRectangleId: $selectedRectangleId
+                        )
+                        .zIndex(1) // Make rectangles above the grid
                     }
                 }
                 .frame(width: width, height: height)
             }
         }
         .ignoresSafeArea()
+    }
+}
+
+struct DraggableRectangleView: View {
+    let rectangleIndex: Int
+    @Binding var rectangles: [DraggableRectangle]
+    @Binding var isDragging: Bool
+    @Binding var selectedRectangleId: UUID?
+    @GestureState private var dragOffset: CGSize = .zero
+    
+    private var rectangle: DraggableRectangle {
+        rectangles[rectangleIndex]
+    }
+    
+    // Computed property to check if this rectangle is in positioning mode
+    private var isPositioning: Bool {
+        isDragging && selectedRectangleId == rectangle.id
+    }
+    
+    var body: some View {
+        Rectangle()
+            .frame(width: rectangle.size.width, height: rectangle.size.height)
+            .foregroundStyle(.black)
+            // Ensure hit testing is limited to visible rectangle
+            .contentShape(Rectangle())
+            // Only apply the gesture when in positioning mode
+            .gesture(
+                DragGesture(minimumDistance: 0, coordinateSpace: .global)
+                    .updating($dragOffset) { value, state, _ in
+                        if isPositioning {
+                            state = CGSize(
+                                width: value.translation.width,
+                                height: value.translation.height
+                            )
+                        }
+                    }
+                    .onEnded { value in
+                        // Only update position if in positioning mode
+                        if isPositioning {
+                            let newPosition = CGPoint(
+                                x: rectangle.position.x + value.translation.width,
+                                y: rectangle.position.y + value.translation.height
+                            )
+                            rectangles[rectangleIndex].position = newPosition
+                            print("Moved rectangle to: \(newPosition)")
+                        }
+                    }
+            )
+            // Add a context menu with "Change position" option
+            .contextMenu {
+                Button("Change position") {
+                    // Enter positioning mode for this rectangle
+                    isDragging = true
+                    selectedRectangleId = rectangle.id
+                    print("Positioning mode activated for rectangle \(rectangle.id)")
+                }
+            }
+            // Visual indication that we're in positioning mode
+            .overlay(
+                isPositioning ?
+                    RoundedRectangle(cornerRadius: 2)
+                        .stroke(Color.blue, lineWidth: 2)
+                        .frame(width: rectangle.size.width + 4, height: rectangle.size.height + 4)
+                    : nil
+            )
+            .position(
+                CGPoint(
+                    x: rectangle.position.x + (isPositioning ? dragOffset.width : 0),
+                    y: rectangle.position.y + (isPositioning ? dragOffset.height : 0)
+                )
+            )
+            .animation(.interactiveSpring(), value: isPositioning)
+            // Ensure this view doesn't capture taps outside its visible area
+            .background(Color.clear)
     }
 }
 
