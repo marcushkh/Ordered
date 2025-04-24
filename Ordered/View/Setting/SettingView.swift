@@ -9,10 +9,39 @@ import SwiftUI
 
 struct SettingView: View{
     @AppStorage("DayStartTime") private var dayStartTime: Int = 4
+    @AppStorage("DefaultPage") private var defaultPage: TabBarItem = TabBarItem.home
     
     var body: some View{
         
         List {
+            VStack(alignment: .leading){
+                HStack{
+                    Text("Default Page")
+                    Spacer()
+                    
+                    Menu {
+                        Button {
+                            defaultPage = TabBarItem.home
+                        } label: {
+                            Text(TabBarItem.home.rawValue)
+                        }
+                        
+                        Button {
+                            defaultPage = TabBarItem.map
+                        } label: {
+                            Text(TabBarItem.map.rawValue)
+                        }
+                        
+                    } label: {
+                        HStack{
+                            Text(defaultPage.rawValue)
+                            Image(systemName: "chevron.down")
+                                .font(.footnote)
+                        }
+                        .foregroundStyle(.cPrimary)
+                    }
+                }
+            }
             VStack(alignment: .leading){
                 HStack{
                     Text("The start of your day")

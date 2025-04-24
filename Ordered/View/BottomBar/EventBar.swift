@@ -31,6 +31,9 @@ struct EventBar: View {
     let minHeight: CGFloat = UIScreen.main.bounds.height * 0.2
     let midHeight: CGFloat = UIScreen.main.bounds.height * 0.5
     
+    @State private var selection = "Event"
+    let options = ["Event", "Location", "Section"]
+    
     var body: some View {
         VStack(spacing: 0){
             
@@ -46,33 +49,12 @@ struct EventBar: View {
                 
                 
                 HStack{
-                    Menu {
-                        Button {
-                            
-                        } label: {
-                            Text("Event")
+                    Picker("", selection: $selection) {
+                        ForEach(options, id: \.self) { option in
+                            Text(option)
                         }
-                        Button {
-                            
-                        } label: {
-                            Text("Section")
-                        }
-                        Button {
-                            
-                        } label: {
-                            Text("Day")
-                        }
-                    } label: {
-                        HStack{
-                            Text("Event")
-                                .bold()
-                            Image(systemName: "chevron.down")
-                                .font(.caption2)
-                                .padding(.leading, -5)
-                                .bold()
-                        }
-                        .foregroundStyle(.cPrimary)
                     }
+                    .pickerStyle(.segmented)
                 }
             }
             .padding(.vertical)

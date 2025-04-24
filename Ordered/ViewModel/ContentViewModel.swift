@@ -8,9 +8,11 @@
 import SwiftUI
 
 class ContentViewModel: ObservableObject{
+    
     @Published var refresh = false
     
-    @Published var currentTab = TabBarItem.home
+    @AppStorage("DefaultPage") private var defaultPage: TabBarItem = TabBarItem.home
+    @Published var currentTab: TabBarItem = TabBarItem.home
     
     @Published var showEventDetail = false
     @Published var eventDetail: Event_Cal? = nil
@@ -39,4 +41,8 @@ class ContentViewModel: ObservableObject{
     //For Stat page
     @Published var selectedEvent: Event? = nil
     @Published var searchEventName: String = ""
+    
+    init(){
+        currentTab = defaultPage
+    }
 }

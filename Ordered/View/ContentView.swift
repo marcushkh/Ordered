@@ -55,10 +55,7 @@ struct ContentView: View {
                             }
                     }
                     else if viewModel.currentTab == .map{
-                        VStack{
-                            Text("This is the Map Tab")
-                            Spacer()
-                        }
+                        CustomMapView()
                     }
                     else if viewModel.currentTab == .setting{
                         SettingView()
