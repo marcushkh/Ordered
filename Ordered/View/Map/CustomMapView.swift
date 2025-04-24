@@ -7,23 +7,45 @@
 
 import SwiftUI
 import MapKit
+import CoreData
+
+// Add the MapStyle enum
+enum MapStyle: String, CaseIterable {
+    case grid = "grid"
+    case dots = "dots"
+}
 
 struct CustomMapView: View {
+    @AppStorage("mapStyle") private var mapStyle: String = MapStyle.grid.rawValue
     @State private var scale: CGFloat = 1.0
     @State private var scrollOffset = CGPoint.zero
     @State private var hasCentered = false
     @State private var isDragging = false
-    @State private var selectedRectangleId: UUID? = nil
+    @State private var selectedLocationObjectID: NSManagedObjectID? = nil
     @State private var isScrolling = false
-    @State private var rectangles: [DraggableRectangle] = [
-        DraggableRectangle(id: UUID(), position: CGPoint(x: 300, y: 300), size: CGSize(width: 80, height: 40))
-    ]
+    @State private var canvasSize: CGSize = .zero
+    
+    // Add Environment for CoreData context
+    @Environment(\.managedObjectContext) private var viewContext
+    
+    // FetchRequest for Location entities
+    @FetchRequest(
+        sortDescriptors: [
+            SortDescriptor(\.name, order: .forward)
+        ]
+    )
+    private var locations: FetchedResults<Location>
+    
+    // Computed property to determine current map style
+    private var currentMapStyle: MapStyle {
+        MapStyle(rawValue: mapStyle) ?? .grid
+    }
 
     var body: some View {
         GeometryReader { geo in
             let width = geo.size.width * 2
             let height = geo.size.height * 2
-
+            
             ScrollableView(
                 contentSize: CGSize(width: width, height: height),
                 containerSize: geo.size,
@@ -40,62 +62,75 @@ struct CustomMapView: View {
                 }
             ) {
                 ZStack {
-                    // Background with better tap gesture handling
-                    GridBackground()
+                    // First layer: background style
+                    BackgroundView(style: currentMapStyle)
                         .frame(width: width, height: height)
+                        .zIndex(0)
+                    
+                    // Second layer: transparent tap detector
+                    Color.clear
+                        .frame(width: width, height: height)
+                        .contentShape(Rectangle())
                         .onTapGesture {
-                            // Only process tap if we're not scrolling
                             if !isScrolling {
-                                // Exit positioning mode when tapping on the background
                                 if isDragging {
                                     withAnimation(.spring()) {
                                         isDragging = false
-                                        selectedRectangleId = nil
+                                        selectedLocationObjectID = nil
                                     }
                                 }
                                 print("tapped the background")
                             }
                         }
-                        .zIndex(0) // Ensure grid is at the bottom of the stack
+                        .zIndex(1)
                     
-                    // Map all draggable rectangles
-                    ForEach(rectangles.indices, id: \.self) { index in
-                        DraggableRectangleView(
-                            rectangleIndex: index,
-                            rectangles: $rectangles,
+                    // Third layer: draggable rectangles from Location entities
+                    ForEach(locations) { location in
+                        LocationRectangleView(
+                            location: location,
                             isDragging: $isDragging,
-                            selectedRectangleId: $selectedRectangleId
+                            selectedLocationObjectID: $selectedLocationObjectID
                         )
-                        .zIndex(1) // Make rectangles above the grid
+                        .zIndex(2)
                     }
                 }
                 .frame(width: width, height: height)
+                .onAppear {
+                    print("Canvas initialized")
+                    canvasSize = CGSize(width: width, height: height)
+                }
             }
         }
         .ignoresSafeArea()
     }
 }
 
-struct DraggableRectangleView: View {
-    let rectangleIndex: Int
-    @Binding var rectangles: [DraggableRectangle]
+// Modified view to use Location entity instead of DraggableRectangle
+struct LocationRectangleView: View {
+    let location: Location
     @Binding var isDragging: Bool
-    @Binding var selectedRectangleId: UUID?
+    @Binding var selectedLocationObjectID: NSManagedObjectID?
     @GestureState private var dragOffset: CGSize = .zero
     
-    private var rectangle: DraggableRectangle {
-        rectangles[rectangleIndex]
+    // Computed property to check if this location is in positioning mode
+    private var isPositioning: Bool {
+        isDragging && selectedLocationObjectID == location.objectID
     }
     
-    // Computed property to check if this rectangle is in positioning mode
-    private var isPositioning: Bool {
-        isDragging && selectedRectangleId == rectangle.id
+    // Get position from Location entity
+    private var position: CGPoint {
+        CGPoint(
+            x: CGFloat(location.positionX),
+            y: CGFloat(location.positionY)
+        )
     }
+    
+    // Default size for the rectangle
+    private let size = CGSize(width: 80, height: 40)
     
     var body: some View {
-        // Use a direct Rectangle without any background to limit hit testing area
         Rectangle()
-            .frame(width: rectangle.size.width, height: rectangle.size.height)
+            .frame(width: size.width, height: size.height)
             .foregroundStyle(.black)
             // Ensure hit testing is limited to visible rectangle
             .contentShape(Rectangle())
@@ -114,23 +149,25 @@ struct DraggableRectangleView: View {
                         // Only update position if in positioning mode
                         if isPositioning {
                             let newPosition = CGPoint(
-                                x: rectangle.position.x + value.translation.width,
-                                y: rectangle.position.y + value.translation.height
+                                x: position.x + value.translation.width,
+                                y: position.y + value.translation.height
                             )
-                            rectangles[rectangleIndex].position = newPosition
-                            print("Moved rectangle to: \(newPosition)")
+                            // In the full implementation, we would update location.positionX/Y here
+                            print("Would move location to: \(newPosition)")
+                            
+                            // For now, we're not modifying the database as requested
                         }
                     }
             )
             // Add a context menu with "Change position" option
             .contextMenu {
                 Button("Change position") {
-                    // Enter positioning mode for this rectangle
+                    // Enter positioning mode for this location
                     withAnimation(.spring()) {
                         isDragging = true
-                        selectedRectangleId = rectangle.id
+                        selectedLocationObjectID = location.objectID
                     }
-                    print("Positioning mode activated for rectangle \(rectangle.id)")
+                    print("Positioning mode activated for location: \(location.name ?? "Unnamed")")
                 }
             }
             // Visual indication that we're in positioning mode
@@ -138,19 +175,37 @@ struct DraggableRectangleView: View {
                 isPositioning ?
                     RoundedRectangle(cornerRadius: 2)
                         .stroke(Color.blue, lineWidth: 2)
-                        .frame(width: rectangle.size.width + 4, height: rectangle.size.height + 4)
+                        .frame(width: size.width + 4, height: size.height + 4)
                     : nil
             )
             .position(
                 CGPoint(
-                    x: rectangle.position.x + (isPositioning ? dragOffset.width : 0),
-                    y: rectangle.position.y + (isPositioning ? dragOffset.height : 0)
+                    x: position.x + (isPositioning ? dragOffset.width : 0),
+                    y: position.y + (isPositioning ? dragOffset.height : 0)
                 )
             )
             .animation(.interactiveSpring(), value: isPositioning)
     }
 }
 
+// New BackgroundView component that handles both grid and dot styles
+struct BackgroundView: View {
+    var style: MapStyle
+    var gridSize: CGFloat = 40
+    var color: Color = .gray
+    
+    var body: some View {
+        Group {
+            if style == .grid {
+                GridBackground(gridSize: gridSize, color: color)
+            } else {
+                DottedBackground(dotSpacing: gridSize, color: color)
+            }
+        }
+    }
+}
+
+// Keep the original GridBackground
 struct GridBackground: View {
     var gridSize: CGFloat = 40
     var color: Color = .gray
@@ -173,6 +228,33 @@ struct GridBackground: View {
                 }
 
                 context.stroke(path, with: .color(color.opacity(0.3)), lineWidth: 1)
+            }
+            .background(Color.white)
+        }
+    }
+}
+
+// Add new DottedBackground for the dots style
+struct DottedBackground: View {
+    var dotSpacing: CGFloat = 40
+    var color: Color = .gray
+    var dotSize: CGFloat = 4
+    
+    var body: some View {
+        GeometryReader { geo in
+            Canvas { context, size in
+                // Draw dots at intersection points
+                for x in stride(from: 0, to: size.width, by: dotSpacing) {
+                    for y in stride(from: 0, to: size.height, by: dotSpacing) {
+                        let dotPath = Path(ellipseIn: CGRect(
+                            x: x - dotSize/2,
+                            y: y - dotSize/2,
+                            width: dotSize,
+                            height: dotSize
+                        ))
+                        context.fill(dotPath, with: .color(color.opacity(0.5)))
+                    }
+                }
             }
             .background(Color.white)
         }
@@ -303,19 +385,6 @@ struct ScrollableView<Content: View>: UIViewRepresentable {
         func scrollViewDidScroll(_ scrollView: UIScrollView) {
             scrollOffset = scrollView.contentOffset
         }
-    }
-}
-
-// Model to represent a draggable rectangle
-struct DraggableRectangle: Identifiable {
-    let id: UUID
-    var position: CGPoint
-    var size: CGSize
-    
-    init(id: UUID = UUID(), position: CGPoint, size: CGSize) {
-        self.id = id
-        self.position = position
-        self.size = size
     }
 }
 

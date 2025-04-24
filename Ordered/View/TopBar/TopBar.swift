@@ -46,21 +46,6 @@ struct TopBar: View {
         }
     }
     
-    enum TopBarCases: String, CaseIterable, Identifiable{
-        case home
-        case weekDefaultWithSelectedDay
-        case weekDefaultWithoutSelectedDay
-        
-        var id: String { self.rawValue }
-    }
-    
-    var currentCase: TopBarCases{
-        if viewModel.currentTab == .home{
-            return .home
-        }
-        return .home
-    }
-    
     var homeTopBar: some View{
         
         VStack{
@@ -86,20 +71,12 @@ struct TopBar: View {
                 
                 Spacer()
                 
-                if currentCase == .home{
-                    Text(dayPlannerVM.currentDate.monthYYYY())
-                        .font(.title2)
-                        .bold()
-                        .onTapGesture {
-                            dayPlannerVM.setCurrentDate(to: MyCalendar.getToday())
-                        }
-                }
-                if currentCase == .weekDefaultWithSelectedDay || currentCase == .weekDefaultWithoutSelectedDay{
-                    Text("Weekly Schedule")
-                        .font(.title2)
-                        .bold()
-                }
-                
+                Text(dayPlannerVM.currentDate.monthYYYY())
+                    .font(.title2)
+                    .bold()
+                    .onTapGesture {
+                        dayPlannerVM.setCurrentDate(to: MyCalendar.getToday())
+                    }
                 
                 Spacer()
 

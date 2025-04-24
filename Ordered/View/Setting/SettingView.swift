@@ -9,6 +9,7 @@ import SwiftUI
 
 struct SettingView: View{
     @AppStorage("DayStartTime") private var dayStartTime: Int = 4
+    @AppStorage("mapStyle") private var mapStyle: MapStyle = MapStyle.grid
     @AppStorage("DefaultPage") private var defaultPage: TabBarItem = TabBarItem.home
     
     var body: some View{
@@ -42,6 +43,36 @@ struct SettingView: View{
                     }
                 }
             }
+            
+            VStack(alignment: .leading){
+                HStack{
+                    Text("Map Style")
+                    Spacer()
+                    
+                    Menu {
+                        Button {
+                            mapStyle = MapStyle.grid
+                        } label: {
+                            Text(MapStyle.grid.rawValue.capitalizedFirst)
+                        }
+                        
+                        Button {
+                            mapStyle = MapStyle.dots
+                        } label: {
+                            Text(MapStyle.dots.rawValue.capitalizedFirst)
+                        }
+                        
+                    } label: {
+                        HStack{
+                            Text(mapStyle.rawValue.capitalizedFirst)
+                            Image(systemName: "chevron.down")
+                                .font(.footnote)
+                        }
+                        .foregroundStyle(.cPrimary)
+                    }
+                }
+            }
+            
             VStack(alignment: .leading){
                 HStack{
                     Text("The start of your day")
