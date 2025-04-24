@@ -17,4 +17,7 @@ extension String{
         }
         return self
     }
+    var capitalizedFirst: String {
+        return prefix(1).uppercased() + dropFirst()
+    }
 }

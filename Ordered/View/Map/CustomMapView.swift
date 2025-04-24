@@ -14,6 +14,7 @@ struct CustomMapView: View {
     @State private var hasCentered = false
     @State private var isDragging = false
     @State private var selectedRectangleId: UUID? = nil
+    @State private var isScrolling = false
     @State private var rectangles: [DraggableRectangle] = [
         DraggableRectangle(id: UUID(), position: CGPoint(x: 300, y: 300), size: CGSize(width: 80, height: 40))
     ]
@@ -29,19 +30,31 @@ struct CustomMapView: View {
                 scale: $scale,
                 scrollOffset: $scrollOffset,
                 hasCentered: $hasCentered,
-                isScrollingEnabled: !isDragging
+                onScrollStarted: {
+                    isScrolling = true
+                },
+                onScrollEnded: {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        isScrolling = false
+                    }
+                }
             ) {
                 ZStack {
-                    // Background with tap gesture to exit positioning mode
+                    // Background with better tap gesture handling
                     GridBackground()
                         .frame(width: width, height: height)
                         .onTapGesture {
-                            // Exit positioning mode when tapping on the background
-                            if isDragging {
-                                isDragging = false
-                                selectedRectangleId = nil
+                            // Only process tap if we're not scrolling
+                            if !isScrolling {
+                                // Exit positioning mode when tapping on the background
+                                if isDragging {
+                                    withAnimation(.spring()) {
+                                        isDragging = false
+                                        selectedRectangleId = nil
+                                    }
+                                }
+                                print("tapped the background")
                             }
-                            print("tapped the background")
                         }
                         .zIndex(0) // Ensure grid is at the bottom of the stack
                     
@@ -80,6 +93,7 @@ struct DraggableRectangleView: View {
     }
     
     var body: some View {
+        // Use a direct Rectangle without any background to limit hit testing area
         Rectangle()
             .frame(width: rectangle.size.width, height: rectangle.size.height)
             .foregroundStyle(.black)
@@ -112,8 +126,10 @@ struct DraggableRectangleView: View {
             .contextMenu {
                 Button("Change position") {
                     // Enter positioning mode for this rectangle
-                    isDragging = true
-                    selectedRectangleId = rectangle.id
+                    withAnimation(.spring()) {
+                        isDragging = true
+                        selectedRectangleId = rectangle.id
+                    }
                     print("Positioning mode activated for rectangle \(rectangle.id)")
                 }
             }
@@ -132,8 +148,6 @@ struct DraggableRectangleView: View {
                 )
             )
             .animation(.interactiveSpring(), value: isPositioning)
-            // Ensure this view doesn't capture taps outside its visible area
-            .background(Color.clear)
     }
 }
 
@@ -182,11 +196,16 @@ struct ScrollableView<Content: View>: UIViewRepresentable {
     @Binding var scale: CGFloat
     @Binding var scrollOffset: CGPoint
     @Binding var hasCentered: Bool
-    let isScrollingEnabled: Bool
+    let onScrollStarted: () -> Void
+    let onScrollEnded: () -> Void
     let content: () -> Content
 
     func makeCoordinator() -> Coordinator {
-        Coordinator(scale: $scale, scrollOffset: $scrollOffset, hasCentered: $hasCentered)
+        Coordinator(scale: $scale, 
+                    scrollOffset: $scrollOffset, 
+                    hasCentered: $hasCentered,
+                    onScrollStarted: onScrollStarted,
+                    onScrollEnded: onScrollEnded)
     }
 
     func makeUIView(context: Context) -> UIScrollView {
@@ -215,7 +234,6 @@ struct ScrollableView<Content: View>: UIViewRepresentable {
 
     func updateUIView(_ uiView: UIScrollView, context: Context) {
         uiView.layoutIfNeeded()
-        uiView.isScrollEnabled = isScrollingEnabled
         
         let contentWidth = contentSize.width * uiView.zoomScale
         let contentHeight = contentSize.height * uiView.zoomScale
@@ -242,16 +260,44 @@ struct ScrollableView<Content: View>: UIViewRepresentable {
         @Binding var scale: CGFloat
         @Binding var scrollOffset: CGPoint
         @Binding var hasCentered: Bool
+        let onScrollStarted: () -> Void
+        let onScrollEnded: () -> Void
         weak var hostingView: UIView?
+        private var isScrolling = false
 
-        init(scale: Binding<CGFloat>, scrollOffset: Binding<CGPoint>, hasCentered: Binding<Bool>) {
+        init(scale: Binding<CGFloat>, 
+             scrollOffset: Binding<CGPoint>, 
+             hasCentered: Binding<Bool>,
+             onScrollStarted: @escaping () -> Void,
+             onScrollEnded: @escaping () -> Void) {
             _scale = scale
             _scrollOffset = scrollOffset
             _hasCentered = hasCentered
+            self.onScrollStarted = onScrollStarted
+            self.onScrollEnded = onScrollEnded
         }
 
         func viewForZooming(in scrollView: UIScrollView) -> UIView? {
             return nil
+        }
+
+        func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+            if !isScrolling {
+                isScrolling = true
+                onScrollStarted()
+            }
+        }
+        
+        func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+            if !decelerate {
+                isScrolling = false
+                onScrollEnded()
+            }
+        }
+        
+        func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+            isScrolling = false
+            onScrollEnded()
         }
 
         func scrollViewDidScroll(_ scrollView: UIScrollView) {
