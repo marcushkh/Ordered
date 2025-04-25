@@ -45,6 +45,9 @@
 		2CA35CD32D28E16300011B89 /* Cal+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA35CD22D28E15900011B89 /* Cal+Ext.swift */; };
 		2CA35CD52D28E1F200011B89 /* Event+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA35CD42D28E1EE00011B89 /* Event+Ext.swift */; };
 		2CA35CD72D290ECC00011B89 /* Section+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA35CD62D290EC300011B89 /* Section+Ext.swift */; };
+		2CA36DFB2DBA548F0001B538 /* MapTopBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA36DFA2DBA548F0001B538 /* MapTopBar.swift */; };
+		2CA36DFD2DBA55FD0001B538 /* Location+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA36DFC2DBA55FD0001B538 /* Location+Ext.swift */; };
+		2CA36DFE2DBA55FD0001B538 /* Location+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA36DFC2DBA55FD0001B538 /* Location+Ext.swift */; };
 		2CC16CED2C63B2A2002DCF79 /* MyCalendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC16CEC2C63B2A2002DCF79 /* MyCalendar.swift */; };
 		2CC16CEF2C63B2D0002DCF79 /* DayPlannerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC16CEE2C63B2D0002DCF79 /* DayPlannerViewModel.swift */; };
 		2CC7ECA82D66F29900B3BF56 /* EditDeleteButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC7ECA72D66F28E00B3BF56 /* EditDeleteButtonView.swift */; };
@@ -144,6 +147,8 @@
 		2CA35CD22D28E15900011B89 /* Cal+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Cal+Ext.swift"; sourceTree = "<group>"; };
 		2CA35CD42D28E1EE00011B89 /* Event+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Event+Ext.swift"; sourceTree = "<group>"; };
 		2CA35CD62D290EC300011B89 /* Section+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Section+Ext.swift"; sourceTree = "<group>"; };
+		2CA36DFA2DBA548F0001B538 /* MapTopBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapTopBar.swift; sourceTree = "<group>"; };
+		2CA36DFC2DBA55FD0001B538 /* Location+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Location+Ext.swift"; sourceTree = "<group>"; };
 		2CC16CEC2C63B2A2002DCF79 /* MyCalendar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyCalendar.swift; sourceTree = "<group>"; };
 		2CC16CEE2C63B2D0002DCF79 /* DayPlannerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayPlannerViewModel.swift; sourceTree = "<group>"; };
 		2CC7ECA72D66F28E00B3BF56 /* EditDeleteButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditDeleteButtonView.swift; sourceTree = "<group>"; };
@@ -290,6 +295,7 @@
 		2C3F2CDC2C56184C008BD72A /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				2CA36DFC2DBA55FD0001B538 /* Location+Ext.swift */,
 				2C68C9952C607E7000D38FBC /* CalTransfer.swift */,
 				2CC16CEC2C63B2A2002DCF79 /* MyCalendar.swift */,
 				2C14A3172C75A95B00807FFB /* Model.swift */,
@@ -393,6 +399,7 @@
 		2CEB6B612DB9DF0100700265 /* Map */ = {
 			isa = PBXGroup;
 			children = (
+				2CA36DFA2DBA548F0001B538 /* MapTopBar.swift */,
 				2CEB6B4C2DB9DEE400700265 /* CustomMapView.swift */,
 			);
 			path = Map;
@@ -532,6 +539,7 @@
 				2CA35CD32D28E16300011B89 /* Cal+Ext.swift in Sources */,
 				2C5C1C992C5622300079482A /* WeekBar.swift in Sources */,
 				2C15B8032C3D0F3800B008DB /* Persistence.swift in Sources */,
+				2CA36DFE2DBA55FD0001B538 /* Location+Ext.swift in Sources */,
 				2CEB6B622DB9DF1A00700265 /* CustomMapView.swift in Sources */,
 				2C71A3912D3E3D8C00534C9A /* ChangeSectionName.swift in Sources */,
 				2CFF02DA2C60A07000627CDF /* BottomBar.swift in Sources */,
@@ -542,6 +550,7 @@
 				2CA35CD72D290ECC00011B89 /* Section+Ext.swift in Sources */,
 				2CC16CEF2C63B2D0002DCF79 /* DayPlannerViewModel.swift in Sources */,
 				2C14A3182C75A95B00807FFB /* Model.swift in Sources */,
+				2CA36DFB2DBA548F0001B538 /* MapTopBar.swift in Sources */,
 				2CE4B7922D6E1C19001AD492 /* CustomEvent.swift in Sources */,
 				2C14A3102C6A0DEE00807FFB /* Date+Ext.swift in Sources */,
 				2CFC59B82D45038400529099 /* ActionButtonView.swift in Sources */,
@@ -578,6 +587,7 @@
 				2CE4B77A2D6D79D5001AD492 /* EventActionHandler.swift in Sources */,
 				2CE4B77B2D6D79E5001AD492 /* View+Ext.swift in Sources */,
 				2CE4B7912D6E1C19001AD492 /* CustomEvent.swift in Sources */,
+				2CA36DFD2DBA55FD0001B538 /* Location+Ext.swift in Sources */,
 				2CE4B77C2D6D79E5001AD492 /* Date+Ext.swift in Sources */,
 				2CE4B77D2D6D79E5001AD492 /* K.swift in Sources */,
 				2CC8BC302D6F78A50049E579 /* Line.swift in Sources */,

@@ -55,7 +55,7 @@ struct ContentView: View {
                             }
                     }
                     else if viewModel.currentTab == .map{
-                        CustomMapView()
+                        CustomMapView(viewModel: viewModel)
                     }
                     else if viewModel.currentTab == .setting{
                         SettingView()

@@ -16,14 +16,13 @@ enum MapStyle: String, CaseIterable {
 }
 
 struct CustomMapView: View {
+    @ObservedObject var viewModel: ContentViewModel
     @AppStorage("mapStyle") private var mapStyle: String = MapStyle.grid.rawValue
     @State private var scale: CGFloat = 1.0
-    @State private var scrollOffset = CGPoint.zero
-    @State private var hasCentered = false
+    @State private var isScrolling = false
     @State private var isDragging = false
     @State private var selectedLocationObjectID: NSManagedObjectID? = nil
-    @State private var isScrolling = false
-    @State private var canvasSize: CGSize = .zero
+    @State private var scrollViewID = UUID() // ID for ScrollViewReader
     
     // Add Environment for CoreData context
     @Environment(\.managedObjectContext) private var viewContext
@@ -46,78 +45,116 @@ struct CustomMapView: View {
             let width = geo.size.width * 2
             let height = geo.size.height * 2
             
-            ScrollableView(
-                contentSize: CGSize(width: width, height: height),
-                containerSize: geo.size,
-                scale: $scale,
-                scrollOffset: $scrollOffset,
-                hasCentered: $hasCentered,
-                onScrollStarted: {
-                    isScrolling = true
-                },
-                onScrollEnded: {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                        isScrolling = false
-                    }
-                }
-            ) {
-                ZStack {
-                    // First layer: background style
-                    BackgroundView(style: currentMapStyle)
-                        .frame(width: width, height: height)
-                        .zIndex(0)
-                    
-                    // Second layer: transparent tap detector
-                    Color.clear
-                        .frame(width: width, height: height)
-                        .contentShape(Rectangle())
-                        .onTapGesture {
-                            if !isScrolling {
-                                if isDragging {
-                                    withAnimation(.spring()) {
-                                        isDragging = false
-                                        selectedLocationObjectID = nil
+            // Calculate center position for content
+            let centerX = (width - geo.size.width) / 2
+            let centerY = (height - geo.size.height) / 2
+            
+            // Native ScrollView with ScrollViewReader for programmatic scrolling
+            ScrollViewReader { scrollProxy in
+                ScrollView([.horizontal, .vertical], showsIndicators: false) {
+                    ZStack {
+                        // First layer: background style
+                        BackgroundView(style: currentMapStyle)
+                            .frame(width: width, height: height)
+                            .zIndex(0)
+                        
+                        // Second layer: transparent tap detector
+                        Color.clear
+                            .frame(width: width, height: height)
+                            .contentShape(Rectangle())
+                            .onTapGesture {
+                                if !isScrolling {
+                                    if isDragging {
+                                        withAnimation(.spring()) {
+                                            isDragging = false
+                                            selectedLocationObjectID = nil
+                                        }
                                     }
                                 }
-                                print("tapped the background")
+                            }
+                            .zIndex(1)
+                        
+                        // Third layer: draggable rectangles from Location entities
+                        ForEach(locations) { location in
+                            LocationRectangleView(
+                                location: location,
+                                isDragging: $isDragging,
+                                selectedLocationObjectID: $selectedLocationObjectID,
+                                viewModel: viewModel
+                            )
+                            .zIndex(2)
+                        }
+                        .onChange(of: viewModel.refresh) { oldValue, newValue in
+                            // Refresh handling
+                        }
+                        
+                        // Center point marker - hidden but used for scrolling to center
+                        Color.clear
+                            .frame(width: 1, height: 1)
+                            .id("center")
+                            .position(x: width/2, y: height/2)
+                    }
+                    .frame(width: width, height: height)
+                    // Add padding to ensure content can scroll to edges
+                    .padding(EdgeInsets(
+                        top: geo.size.height/2,
+                        leading: geo.size.width/2,
+                        bottom: geo.size.height/2,
+                        trailing: geo.size.width/2
+                    ))
+                }
+                // Track scrolling state using a gesture
+                .gesture(
+                    DragGesture(minimumDistance: 10)
+                        .onChanged { _ in
+                            isScrolling = true
+                        }
+                        .onEnded { _ in
+                            // Small delay to prevent tap detection immediately after scrolling
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                isScrolling = false
                             }
                         }
-                        .zIndex(1)
-                    
-                    // Third layer: draggable rectangles from Location entities
-                    ForEach(locations) { location in
-                        LocationRectangleView(
-                            location: location,
-                            isDragging: $isDragging,
-                            selectedLocationObjectID: $selectedLocationObjectID
-                        )
-                        .zIndex(2)
+                )
+                .onAppear {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        withAnimation {
+                            scrollProxy.scrollTo("center", anchor: .center)
+                        }
                     }
                 }
-                .frame(width: width, height: height)
-                .onAppear {
-                    print("Canvas initialized")
-                    canvasSize = CGSize(width: width, height: height)
+                .onChange(of: viewModel.currentTab){
+                    withAnimation {
+                        scrollProxy.scrollTo("center", anchor: .center)
+                    }
                 }
+                .onChange(of: viewModel.refresh) {
+                }
+                .id(scrollViewID)
             }
         }
         .ignoresSafeArea()
     }
 }
 
-// Modified view to use Location entity instead of DraggableRectangle
 struct LocationRectangleView: View {
     let location: Location
     @Binding var isDragging: Bool
     @Binding var selectedLocationObjectID: NSManagedObjectID?
     @GestureState private var dragOffset: CGSize = .zero
+    @Environment(\.managedObjectContext) private var viewContext
+    @State private var isContextMenuPresented = false
+    // Timer to distinguish between taps and scrolls
+    @State private var tapTimer: Timer?
+    @State private var potentialTap = false
+    // State for delete confirmation
+    @State private var showDeleteAlert = false
+    @ObservedObject var viewModel: ContentViewModel
     
-    // Computed property to check if this location is in positioning mode
     private var isPositioning: Bool {
         isDragging && selectedLocationObjectID == location.objectID
     }
     
-    // Get position from Location entity
     private var position: CGPoint {
         CGPoint(
             x: CGFloat(location.positionX),
@@ -125,66 +162,144 @@ struct LocationRectangleView: View {
         )
     }
     
-    // Default size for the rectangle
-    private let size = CGSize(width: 80, height: 40)
+    private let size = CGSize(width: 100, height: 100)
     
     var body: some View {
-        Rectangle()
-            .frame(width: size.width, height: size.height)
-            .foregroundStyle(.black)
-            // Ensure hit testing is limited to visible rectangle
-            .contentShape(Rectangle())
-            // Only apply the gesture when in positioning mode
-            .gesture(
-                DragGesture(minimumDistance: 0, coordinateSpace: .global)
-                    .updating($dragOffset) { value, state, _ in
-                        if isPositioning {
-                            state = CGSize(
-                                width: value.translation.width,
-                                height: value.translation.height
-                            )
+        ZStack {
+            if isPositioning {
+                // The actual rectangle when in positioning mode
+                Rectangle()
+                    .frame(width: size.width, height: size.height)
+                    .foregroundStyle(.black)
+                    .contentShape(Rectangle())
+                    .gesture(
+                        DragGesture(minimumDistance: 0, coordinateSpace: .global)
+                            .updating($dragOffset) { value, state, _ in
+                                state = CGSize(
+                                    width: value.translation.width,
+                                    height: value.translation.height
+                                )
+                            }
+                            .onEnded { value in
+                                let newPosition = CGPoint(
+                                    x: position.x + value.translation.width,
+                                    y: position.y + value.translation.height
+                                )
+                                
+                                // Update the database with new position
+                                // Convert from CGFloat to Int16 for database
+                                let newPosX = Int16(max(0, min(Int(newPosition.x), Int(Int16.max))))
+                                let newPosY = Int16(max(0, min(Int(newPosition.y), Int(Int16.max))))
+                                
+                                // Call the update method from our extension
+                                location.updatePosition(posX: newPosX, posY: newPosY, context: viewContext)
+                            }
+                    )
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 2)
+                            .stroke(Color.blue, lineWidth: 2)
+                            .frame(width: size.width + 4, height: size.height + 4)
+                    )
+            } else {
+                // Main rectangle with conditional border based on context menu state
+                Rectangle()
+                    .frame(width: size.width, height: size.height)
+                    .foregroundStyle(.black)
+                    .overlay(
+                        isContextMenuPresented ? 
+                            RoundedRectangle(cornerRadius: 2)
+//                                .stroke(.color3, lineWidth: 4)
+                                .frame(width: size.width + 4, height: size.height + 4)
+                            : nil
+                    )
+                    .allowsHitTesting(false) // Don't react to touches for scrolling purposes
+                
+                // Gesture and menu handler (invisible)
+                Rectangle()
+                    .fill(Color.clear)
+                    .frame(width: size.width, height: size.height)
+                    .contentShape(Rectangle())
+                    // Combined gesture that handles both taps and long-press
+                    .gesture(
+                        TapGesture()
+                            .onEnded {
+                                print("The rectangle is tapped")
+                                print("Location: \(location.name ?? "Unnamed")")
+                            }
+                    )
+                    // Separate context menu for long press
+                    .contextMenu {
+                        Button("Change position") {
+                            withAnimation(.spring()) {
+                                isDragging = true
+                                selectedLocationObjectID = location.objectID
+                            }
                         }
-                    }
-                    .onEnded { value in
-                        // Only update position if in positioning mode
-                        if isPositioning {
-                            let newPosition = CGPoint(
-                                x: position.x + value.translation.width,
-                                y: position.y + value.translation.height
-                            )
-                            // In the full implementation, we would update location.positionX/Y here
-                            print("Would move location to: \(newPosition)")
+                        
+                        Divider()
+                        
+                        Button(role: .destructive, action: {
+                            showDeleteAlert = true
+                        }) {
+                            Label("Delete location", systemImage: "trash")
+                        }
+                    } preview: {
+                        // Custom preview showing the actual rectangle
+                        VStack {
+                            Rectangle()
+                                .frame(width: size.width, height: size.height)
+                                .foregroundStyle(.black)
+                                .cornerRadius(2)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 2)
+//                                        .stroke(.color3, lineWidth: 4)
+                                )
+                                .onAppear { isContextMenuPresented = true }
+                                .onDisappear { isContextMenuPresented = false }
                             
-                            // For now, we're not modifying the database as requested
+                            if let name = location.name, !name.isEmpty {
+                                Text(name)
+                                    .font(.caption)
+                            }
                         }
+                        .padding(5)
+                        .background(Color.gray.opacity(0.1))
+                        .cornerRadius(8)
                     }
-            )
-            // Add a context menu with "Change position" option
-            .contextMenu {
-                Button("Change position") {
-                    // Enter positioning mode for this location
-                    withAnimation(.spring()) {
-                        isDragging = true
-                        selectedLocationObjectID = location.objectID
+                    // Use simultaneousGesture with DragGesture with high minimum distance
+                    // to detect when user scrolls and cancel the tap
+                    .simultaneousGesture(
+                        DragGesture(minimumDistance: 10)
+                            .onChanged { _ in
+                                // If dragging beyond threshold, it's a scroll, not a tap
+                                // This is handled by the parent ScrollView
+                            }
+                    )
+                    // Alert for delete confirmation
+                    .alert("Delete Location?", isPresented: $showDeleteAlert) {
+                        Button("Cancel", role: .cancel) {
+                            // Do nothing, just close the alert
+                        }
+                        
+                        Button("Delete", role: .destructive) {
+                            // Call delete method from Location+Ext
+                            if location.delete(from: viewContext) {
+                                // Trigger refresh to update UI after successful deletion
+                                viewModel.refresh.toggle()
+                            }
+                        }
+                    } message: {
+                        Text("Are you sure you want to delete '\(location.name ?? "this location")'? This action cannot be undone.")
                     }
-                    print("Positioning mode activated for location: \(location.name ?? "Unnamed")")
-                }
             }
-            // Visual indication that we're in positioning mode
-            .overlay(
-                isPositioning ?
-                    RoundedRectangle(cornerRadius: 2)
-                        .stroke(Color.blue, lineWidth: 2)
-                        .frame(width: size.width + 4, height: size.height + 4)
-                    : nil
+        }
+        .position(
+            CGPoint(
+                x: position.x + (isPositioning ? dragOffset.width : 0),
+                y: position.y + (isPositioning ? dragOffset.height : 0)
             )
-            .position(
-                CGPoint(
-                    x: position.x + (isPositioning ? dragOffset.width : 0),
-                    y: position.y + (isPositioning ? dragOffset.height : 0)
-                )
-            )
-            .animation(.interactiveSpring(), value: isPositioning)
+        )
+        .animation(.interactiveSpring(), value: isPositioning)
     }
 }
 
@@ -261,133 +376,3 @@ struct DottedBackground: View {
     }
 }
 
-class CenteringScrollView: UIScrollView {
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        guard let contentView = subviews.first else { return }
-        var frame = contentView.frame
-        frame.origin.x = contentView.frame.width  < bounds.width  ? (bounds.width  - contentView.frame.width ) / 2 : 0
-        frame.origin.y = contentView.frame.height < bounds.height ? (bounds.height - contentView.frame.height) / 2 : 0
-        contentView.frame = frame
-    }
-}
-
-struct ScrollableView<Content: View>: UIViewRepresentable {
-    let contentSize: CGSize
-    let containerSize: CGSize
-    @Binding var scale: CGFloat
-    @Binding var scrollOffset: CGPoint
-    @Binding var hasCentered: Bool
-    let onScrollStarted: () -> Void
-    let onScrollEnded: () -> Void
-    let content: () -> Content
-
-    func makeCoordinator() -> Coordinator {
-        Coordinator(scale: $scale, 
-                    scrollOffset: $scrollOffset, 
-                    hasCentered: $hasCentered,
-                    onScrollStarted: onScrollStarted,
-                    onScrollEnded: onScrollEnded)
-    }
-
-    func makeUIView(context: Context) -> UIScrollView {
-        let scrollView = CenteringScrollView()
-        scrollView.delegate = context.coordinator
-        scrollView.minimumZoomScale = 1.0
-        scrollView.maximumZoomScale = 1.0
-        scrollView.bounces = false
-        scrollView.bouncesZoom = false
-        scrollView.showsHorizontalScrollIndicator = false
-        scrollView.showsVerticalScrollIndicator = false
-
-        let hosting = UIHostingController(rootView: content())
-        hosting.view.translatesAutoresizingMaskIntoConstraints = true
-        hosting.view.frame = CGRect(origin: .zero, size: contentSize)
-        scrollView.addSubview(hosting.view)
-        context.coordinator.hostingView = hosting.view
-
-        scrollView.contentSize = contentSize
-        scrollView.contentInsetAdjustmentBehavior = .never
-        scrollView.contentInset = .zero
-        scrollView.clipsToBounds = true
-
-        return scrollView
-    }
-
-    func updateUIView(_ uiView: UIScrollView, context: Context) {
-        uiView.layoutIfNeeded()
-        
-        let contentWidth = contentSize.width * uiView.zoomScale
-        let contentHeight = contentSize.height * uiView.zoomScale
-        let boundsWidth = uiView.bounds.width
-        let boundsHeight = uiView.bounds.height
-
-        let insetX = max((boundsWidth - contentWidth) / 2, 0)
-        let insetY = max((boundsHeight - contentHeight) / 2, 0)
-
-        uiView.contentInset = UIEdgeInsets(top: insetY, left: insetX, bottom: insetY, right: insetX)
-
-        if !hasCentered {
-            DispatchQueue.main.async {
-                uiView.layoutIfNeeded()
-                let offsetX = max((uiView.contentSize.width - uiView.bounds.width) / 2, 0)
-                let offsetY = max((uiView.contentSize.height - uiView.bounds.height) / 2, 0)
-                uiView.setContentOffset(CGPoint(x: offsetX, y: offsetY), animated: false)
-                hasCentered = true
-            }
-        }
-    }
-
-    class Coordinator: NSObject, UIScrollViewDelegate {
-        @Binding var scale: CGFloat
-        @Binding var scrollOffset: CGPoint
-        @Binding var hasCentered: Bool
-        let onScrollStarted: () -> Void
-        let onScrollEnded: () -> Void
-        weak var hostingView: UIView?
-        private var isScrolling = false
-
-        init(scale: Binding<CGFloat>, 
-             scrollOffset: Binding<CGPoint>, 
-             hasCentered: Binding<Bool>,
-             onScrollStarted: @escaping () -> Void,
-             onScrollEnded: @escaping () -> Void) {
-            _scale = scale
-            _scrollOffset = scrollOffset
-            _hasCentered = hasCentered
-            self.onScrollStarted = onScrollStarted
-            self.onScrollEnded = onScrollEnded
-        }
-
-        func viewForZooming(in scrollView: UIScrollView) -> UIView? {
-            return nil
-        }
-
-        func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-            if !isScrolling {
-                isScrolling = true
-                onScrollStarted()
-            }
-        }
-        
-        func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-            if !decelerate {
-                isScrolling = false
-                onScrollEnded()
-            }
-        }
-        
-        func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-            isScrolling = false
-            onScrollEnded()
-        }
-
-        func scrollViewDidScroll(_ scrollView: UIScrollView) {
-            scrollOffset = scrollView.contentOffset
-        }
-    }
-}
-
-#Preview {
-    CustomMapView()
-}

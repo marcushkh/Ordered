@@ -27,6 +27,10 @@ struct TopBar: View {
             else if viewModel.currentTab == .statistic{
                 StatTopBar(viewModel: viewModel, dayPlannerVM: dayPlannerVM)
             }
+            else if viewModel.currentTab == .map {  // Add this case
+                MapTopBar(viewModel: viewModel)
+                    .padding(.horizontal, K.horizontal_padding)
+            }
         }
         .frame(width: UIScreen.main.bounds.width)
         .background(.color1, ignoresSafeAreaEdges: .top)
