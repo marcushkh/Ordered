@@ -76,23 +76,9 @@ struct CustomMapView: View {
                             .frame(width: width, height: height)
                             .background(Color.white) // Ensure background has color
                             .zIndex(0)
+                            .allowsHitTesting(false) // Disable hit testing on background
                         
-                        // Visual indicators for allowed position squares
-                        ForEach(0..<Location.allowedPositions.count, id: \.self) { index in
-                            let position = Location.allowedPositions[index]
-                            
-                            // Only show the rectangle if the position is not occupied
-                            if !Location.isPositionOccupied(at: position, context: viewContext) {
-                                RoundedRectangle(cornerRadius: 8)
-                                    .stroke(Color.blue, lineWidth: 2)
-                                    .frame(width: 120, height: 120)
-                                    .position(position)
-                                    .zIndex(1)
-                            }
-                        }
-                        
-                        // Main drop area covering the entire map
-                        // This needs to be below the location images but receive all drag events
+                        // Main drop area covering the entire map for tap gestures only
                         Color.clear
                             .frame(width: width, height: height)
                             .contentShape(Rectangle())
@@ -106,10 +92,25 @@ struct CustomMapView: View {
                                     }
                                 }
                             }
-                            .onDrop(of: [.text], isTargeted: $isDraggingOver) { providers, location in
-                                handleDrop(providers: providers, at: location)
+                            .zIndex(0) // Lowest zIndex
+                        
+                        // Visual indicators for allowed position squares
+                        ForEach(0..<Location.allowedPositions.count, id: \.self) { index in
+                            let position = Location.allowedPositions[index]
+                            
+                            // Individual state for each drop target to improve responsiveness
+                            let isOccupied = Location.isPositionOccupied(at: position, context: viewContext)
+                            
+                            // Show blue rectangles for unoccupied positions
+                            if !isOccupied {
+                                RoundedRectangle(cornerRadius: 8)
+                                    .stroke(Color.blue, lineWidth: 2)
+                                    .frame(width: 120, height: 120)
+                                    .position(position)
+                                    .zIndex(1)
+                                    .allowsHitTesting(false)
                             }
-                            .zIndex(1)
+                        }
                         
                         // Third layer: draggable rectangles from Location entities
                         ForEach(locations) { location in
@@ -117,10 +118,11 @@ struct CustomMapView: View {
                                 location: location,
                                 isDragging: $isDragging,
                                 selectedLocationObjectID: $selectedLocationObjectID,
-                                viewModel: viewModel
+                                viewModel: viewModel,
+                                isDraggingOver: $isDraggingOver,
+                                allowedPositions: Location.allowedPositions
                             )
-                            .zIndex(3)
-                            .allowsHitTesting(!isDraggingOver) // Disable hit testing when dragging from toolbar
+                            .zIndex(2) 
                         }
                         .onChange(of: viewModel.refresh) { oldValue, newValue in
                             // Refresh handling
@@ -188,80 +190,6 @@ struct CustomMapView: View {
         .ignoresSafeArea()
     }
 
-    // Handle drop from top bar
-    private func handleDrop(providers: [NSItemProvider], at dropPoint: CGPoint) -> Bool {
-        // Get the dragged item name
-        guard let provider = providers.first else {
-            return false
-        }
-        
-        // Load the text from the provider
-        provider.loadObject(ofClass: NSString.self) { string, error in
-            if let error = error {
-                print("Error loading drop item: \(error)")
-                return
-            }
-            
-            guard let imageName = string as? String,
-                  Location.availableImages.contains(imageName) else {
-                return
-            }
-            
-            // Check if the drop point is inside any of our allowed position squares
-            var targetPosition: CGPoint? = nil
-            
-            for position in Location.allowedPositions {
-                // Calculate the square boundaries
-                let squareSize: CGFloat = 120 // Match the size of our visual rectangles
-                let halfSize = squareSize / 2
-                let minX = position.x - halfSize
-                let maxX = position.x + halfSize
-                let minY = position.y - halfSize
-                let maxY = position.y + halfSize
-                
-                // Check if the drop point is inside this square
-                if dropPoint.x >= minX && dropPoint.x <= maxX && 
-                   dropPoint.y >= minY && dropPoint.y <= maxY {
-                    targetPosition = position
-                    break
-                }
-            }
-            
-            // Only proceed if the drop was inside an allowed square
-            if let position = targetPosition {
-                DispatchQueue.main.async {
-                    // Check if this position is already occupied
-                    let isOccupied = Location.isPositionOccupied(at: position, context: viewContext)
-                    
-                    if isOccupied {
-                        // Find and remove the existing location at this position
-                        if let existingLocation = findLocationAt(position: position) {
-                            // Delete the existing location
-                            existingLocation.delete(from: viewContext)
-                        }
-                    }
-                    
-                    // Create new location at the exact position
-                    let newLocation = Location(context: viewContext)
-                    newLocation.imageName = imageName
-                    newLocation.positionX = Int16(position.x)
-                    newLocation.positionY = Int16(position.y)
-                    
-                    // Save to database
-                    do {
-                        try viewContext.save()
-                        print("New location created with image: \(imageName) at position (\(position.x), \(position.y))")
-                        viewModel.refresh.toggle()
-                    } catch {
-                        print("Error saving new location: \(error.localizedDescription)")
-                    }
-                }
-            }
-        }
-        
-        return true
-    }
-    
     // Helper method to find a location at a specific position
     private func findLocationAt(position: CGPoint) -> Location? {
         let request: NSFetchRequest<Location> = Location.fetchRequest()
@@ -280,6 +208,73 @@ struct CustomMapView: View {
         
         return nil
     }
+    
+    // Handle drop from top bar - legacy handler that calls the optimized one
+    private func handleDrop(providers: [NSItemProvider], at dropPoint: CGPoint) -> Bool {
+        // Find which position the drop point corresponds to
+        for position in Location.allowedPositions {
+            // Calculate the square boundaries
+            let squareSize: CGFloat = 120 // Match the size of our visual rectangles
+            let halfSize = squareSize / 2
+            let minX = position.x - halfSize
+            let maxX = position.x + halfSize
+            let minY = position.y - halfSize
+            let maxY = position.y + halfSize
+            
+            // Check if the drop point is inside this square
+            if dropPoint.x >= minX && dropPoint.x <= maxX && 
+               dropPoint.y >= minY && dropPoint.y <= maxY {
+                // We found an empty square, create a new location
+                guard let provider = providers.first else { return false }
+                
+                provider.loadObject(ofClass: NSString.self) { string, error in
+                    if let error = error {
+                        print("Error loading drop item: \(error)")
+                        return
+                    }
+                    
+                    guard let imageName = string as? String,
+                          Location.availableImages.contains(imageName) else {
+                        return
+                    }
+                    
+                    // Process on main thread
+                    DispatchQueue.main.async {
+                        // Check if this position is already occupied
+                        let isOccupied = Location.isPositionOccupied(at: position, context: self.viewContext)
+                        
+                        if isOccupied {
+                            // Find and remove the existing location at this position
+                            if let existingLocation = self.findLocationAt(position: position) {
+                                // Delete the existing location
+                                existingLocation.delete(from: self.viewContext)
+                            }
+                        }
+                        
+                        // Create new location at the exact position
+                        let newLocation = Location(context: self.viewContext)
+                        newLocation.imageName = imageName
+                        newLocation.positionX = Int16(position.x)
+                        newLocation.positionY = Int16(position.y)
+                        
+                        // Save to database
+                        do {
+                            try self.viewContext.save()
+                            print("New location created with image: \(imageName) at position (\(position.x), \(position.y))")
+                            self.viewModel.refresh.toggle()
+                        } catch {
+                            print("Error saving new location: \(error.localizedDescription)")
+                        }
+                    }
+                }
+                
+                return true
+            }
+        }
+        
+        // No matching position found
+        return false
+    }
 }
 
 struct LocationRectangleView: View {
@@ -289,12 +284,11 @@ struct LocationRectangleView: View {
     @GestureState private var dragOffset: CGSize = .zero
     @Environment(\.managedObjectContext) private var viewContext
     @State private var isContextMenuPresented = false
-    // Timer to distinguish between taps and scrolls
-    @State private var tapTimer: Timer?
-    @State private var potentialTap = false
     // State for delete confirmation
     @State private var showDeleteAlert = false
     @ObservedObject var viewModel: ContentViewModel
+    @Binding var isDraggingOver: Bool
+    let allowedPositions: [CGPoint]
     
     private var isPositioning: Bool {
         isDragging && selectedLocationObjectID == location.objectID
@@ -345,7 +339,7 @@ struct LocationRectangleView: View {
                                 // Find if we're over an allowed position
                                 var targetPosition: CGPoint? = nil
                                 
-                                for position in Location.allowedPositions {
+                                for position in allowedPositions {
                                     // Calculate the square boundaries
                                     let squareSize: CGFloat = 120 // Match the size of our visual rectangles
                                     let halfSize = squareSize / 2
@@ -391,76 +385,97 @@ struct LocationRectangleView: View {
                     .overlay(
                         isContextMenuPresented ? 
                             RoundedRectangle(cornerRadius: 2)
-//                                .stroke(.color3, lineWidth: 4)
                                 .frame(width: size.width + 4, height: size.height + 4)
                             : nil
                     )
-                    .allowsHitTesting(false) // Don't react to touches for scrolling purposes
                 
-                // Gesture and menu handler (invisible)
-                Rectangle()
-                    .fill(Color.clear)
-                    .frame(width: size.width, height: size.height)
-                    .contentShape(Rectangle())
-                    // Combined gesture that handles both taps and long-press
-                    .gesture(
-                        TapGesture()
-                            .onEnded {
-                                print("The location is tapped")
-                                print("Location: \(location.imageName ?? "Unnamed")")
+                // Only show the interactive overlay when not dragging from toolbar
+                if !isDraggingOver {
+                    Rectangle()
+                        .fill(Color.clear)
+                        .frame(width: size.width, height: size.height)
+                        .contentShape(Rectangle())
+                        .contextMenu {
+                            Button("Change position") {
+                                withAnimation(.spring()) {
+                                    isDragging = true
+                                    selectedLocationObjectID = location.objectID
+                                }
                             }
-                    )
-                    // Separate context menu for long press
-                    .contextMenu {
-                        Button("Change position") {
-                            withAnimation(.spring()) {
-                                isDragging = true
-                                selectedLocationObjectID = location.objectID
+                            
+                            Divider()
+                            
+                            Button(role: .destructive, action: {
+                                showDeleteAlert = true
+                            }) {
+                                Label("Delete location", systemImage: "trash")
                             }
+                        } preview: {
+                            Image(imageName)
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 100, height: 100)
+                                .onAppear { isContextMenuPresented = true }
+                                .onDisappear { isContextMenuPresented = false }
                         }
-                        
-                        Divider()
-                        
-                        Button(role: .destructive, action: {
-                            showDeleteAlert = true
-                        }) {
-                            Label("Delete location", systemImage: "trash")
+                        .onTapGesture {
+                            print("The location is tapped")
+                            print("Location: \(location.imageName ?? "Unnamed")")
                         }
-                    } preview: {
-                        // Use the location image directly as the preview
-                        Image(imageName)
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 100, height: 100)
-                            .onAppear { isContextMenuPresented = true }
-                            .onDisappear { isContextMenuPresented = false }
-                    }
-                    // Use simultaneousGesture with DragGesture with high minimum distance
-                    // to detect when user scrolls and cancel the tap
-                    .simultaneousGesture(
-                        DragGesture(minimumDistance: 10)
-                            .onChanged { _ in
-                                // If dragging beyond threshold, it's a scroll, not a tap
-                                // This is handled by the parent ScrollView
-                            }
-                    )
-                    // Alert for delete confirmation
-                    .alert("Delete Location?", isPresented: $showDeleteAlert) {
-                        Button("Cancel", role: .cancel) {
-                            // Do nothing, just close the alert
-                        }
-                        
-                        Button("Delete", role: .destructive) {
-                            // Call delete method from Location+Ext
-                            if location.delete(from: viewContext) {
-                                // Trigger refresh to update UI after successful deletion
-                                viewModel.refresh.toggle()
-                            }
-                        }
-                    } message: {
-                        Text("Are you sure you want to delete this \(imageName)? This action cannot be undone.")
-                    }
+                }
             }
+        }
+        .frame(width: size.width, height: size.height)
+        .onDrop(of: [.text], isTargeted: $isDraggingOver) { providers, _ in
+            // Find which allowed position this location is at
+            let currentPos = position
+            
+            // Helper function to handle drop at this location's position
+            func handleDrop() -> Bool {
+                // Set dragging state to block context menus during drop
+                isDraggingOver = true
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                    isDraggingOver = false
+                }
+                
+                guard let provider = providers.first else { return false }
+                
+                // Get image name synchronously if possible
+                if let imageName = provider.suggestedName, 
+                   Location.availableImages.contains(imageName) {
+                    // Replace existing location
+                    location.imageName = imageName
+                    try? viewContext.save()
+                    viewModel.refresh.toggle()
+                    return true
+                }
+                
+                // Fallback to async loading
+                provider.loadObject(ofClass: NSString.self) { string, _ in
+                    guard let imageName = string as? String,
+                          Location.availableImages.contains(imageName) else { return }
+                    
+                    DispatchQueue.main.async {
+                        location.imageName = imageName
+                        try? viewContext.save()
+                        viewModel.refresh.toggle()
+                    }
+                }
+                return true
+            }
+            
+            return handleDrop()
+        }
+        .alert("Delete Location?", isPresented: $showDeleteAlert) {
+            Button("Cancel", role: .cancel) { }
+            
+            Button("Delete", role: .destructive) {
+                if location.delete(from: viewContext) {
+                    viewModel.refresh.toggle()
+                }
+            }
+        } message: {
+            Text("Are you sure you want to delete this \(imageName)? This action cannot be undone.")
         }
         .position(
             CGPoint(

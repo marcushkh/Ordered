@@ -65,15 +65,17 @@ struct DraggableLocationButton: View {
                 // Set the data for the drag operation and update state
                 isDragging = true
                 
-                // Use a timer to reset dragging state after a short delay
-                // since we don't have onDragEnd
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                // Use a shorter timer to reset dragging state
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                     isDragging = false
                 }
                 
-                // Create an item provider with the image name
+                // Create a simpler item provider with the image name
+                // Use UTType.text to ensure fast drag operation
                 let provider = NSItemProvider(object: imageName as NSString)
-                provider.suggestedName = imageName // This helps identify it later
+                
+                // Skip preview handling to make drag more responsive
+                provider.suggestedName = imageName
                 return provider
             } preview: {
                 // A more distinctive preview that clearly shows what's being dragged

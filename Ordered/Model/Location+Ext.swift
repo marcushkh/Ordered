@@ -21,7 +21,7 @@ extension Location {
     static let allowedPositions: [CGPoint] = [
         CGPoint(x: 100, y: 100),  // Top-left position
         CGPoint(x: 300, y: 300),  // Middle position
-        CGPoint(x: 500, y: 500)   // Bottom-right position
+        CGPoint(x: 500, y: 100)   // Bottom-right position
     ]
     
     // Check if a position is already occupied
