@@ -11,21 +11,27 @@ import SwiftUI
 
 extension Location {
     
+    // Available image names for locations
+    static let availableImages = [
+        "home", "school", "company", "cafe", "restaurant", "park", 
+        "gym", "library", "store"
+    ]
+    
     // Create a new Location entity with default values
     static func createNew(in context: NSManagedObjectContext, 
-                         name: String = "New Location",
+                         imageName: String = "home",
                          posX: Int16 = 500,  // Default position in the center area
                          posY: Int16 = 500) -> Location {
         
         let newLocation = Location(context: context)
-        newLocation.name = name
+        newLocation.imageName = imageName
         newLocation.positionX = posX
         newLocation.positionY = posY
         
         // Save the context
         do {
             try context.save()
-            print("New location created: \(name)")
+            print("New location created with image: \(imageName)")
             return newLocation
         } catch {
             print("Error saving new location: \(error.localizedDescription)")
@@ -41,7 +47,7 @@ extension Location {
         
         do {
             try context.save()
-            print("Updated position for: \(self.name ?? "Unnamed location") to (\(posX), \(posY))")
+            print("Updated location position to (\(posX), \(posY))")
         } catch {
             print("Error updating location position: \(error.localizedDescription)")
             // Position is updated in memory but not saved to database
@@ -50,15 +56,13 @@ extension Location {
     
     // Delete a location entity
     func delete(from context: NSManagedObjectContext) -> Bool {
-        let name = self.name ?? "Unnamed location"
-        
         // Delete the entity
         context.delete(self)
         
         // Save the context
         do {
             try context.save()
-            print("Successfully deleted location: \(name)")
+            print("Successfully deleted location")
             return true
         } catch {
             print("Error deleting location: \(error.localizedDescription)")

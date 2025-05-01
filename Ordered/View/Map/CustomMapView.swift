@@ -15,6 +15,21 @@ enum MapStyle: String, CaseIterable {
     case dots = "dots"
 }
 
+// Add these preference key structures for size reporting
+struct SizePreferenceKey: PreferenceKey {
+    static var defaultValue: CGSize = .zero
+    static func reduce(value: inout CGSize, nextValue: () -> CGSize) {
+        value = nextValue()
+    }
+}
+
+struct ContentSizePreferenceKey: PreferenceKey {
+    static var defaultValue: CGSize = .zero
+    static func reduce(value: inout CGSize, nextValue: () -> CGSize) {
+        value = nextValue()
+    }
+}
+
 struct CustomMapView: View {
     @ObservedObject var viewModel: ContentViewModel
     @AppStorage("mapStyle") private var mapStyle: String = MapStyle.grid.rawValue
@@ -24,14 +39,17 @@ struct CustomMapView: View {
     @State private var selectedLocationObjectID: NSManagedObjectID? = nil
     @State private var scrollViewID = UUID() // ID for ScrollViewReader
     
+    // Add states to track and limit scroll position
+    @State private var contentOffset: CGPoint = .zero
+    @State private var scrollViewSize: CGSize = .zero
+    @State private var contentSize: CGSize = .zero
+    
     // Add Environment for CoreData context
     @Environment(\.managedObjectContext) private var viewContext
     
     // FetchRequest for Location entities
     @FetchRequest(
-        sortDescriptors: [
-            SortDescriptor(\.name, order: .forward)
-        ]
+        sortDescriptors: []
     )
     private var locations: FetchedResults<Location>
     
@@ -45,10 +63,6 @@ struct CustomMapView: View {
             let width = geo.size.width * 2
             let height = geo.size.height * 2
             
-            // Calculate center position for content
-            let centerX = (width - geo.size.width) / 2
-            let centerY = (height - geo.size.height) / 2
-            
             // Native ScrollView with ScrollViewReader for programmatic scrolling
             ScrollViewReader { scrollProxy in
                 ScrollView([.horizontal, .vertical], showsIndicators: false) {
@@ -56,9 +70,10 @@ struct CustomMapView: View {
                         // First layer: background style
                         BackgroundView(style: currentMapStyle)
                             .frame(width: width, height: height)
+                            .background(Color.white) // Ensure background has color
                             .zIndex(0)
                         
-                        // Second layer: transparent tap detector
+                        // Second layer: transparent tap detector and drop receiver
                         Color.clear
                             .frame(width: width, height: height)
                             .contentShape(Rectangle())
@@ -71,6 +86,31 @@ struct CustomMapView: View {
                                         }
                                     }
                                 }
+                            }
+                            .dropDestination(for: String.self) { items, location in
+                                // Only proceed if we have an item and it's one of our location images
+                                guard let imageName = items.first, 
+                                      Location.availableImages.contains(imageName) else {
+                                    return false
+                                }
+                                
+                                // Calculate position within the entire scrollable area
+                                // Offset the drop position by the content offset to get the absolute position
+                                let posX = Int16(max(0, min(location.x, CGFloat(Int16.max))))
+                                let posY = Int16(max(0, min(location.y, CGFloat(Int16.max))))
+                                
+                                // Create location at the drop point
+                                let _ = Location.createNew(
+                                    in: viewContext,
+                                    imageName: imageName,
+                                    posX: posX,
+                                    posY: posY
+                                )
+                                
+                                // Refresh the view
+                                viewModel.refresh.toggle()
+                                
+                                return true
                             }
                             .zIndex(1)
                         
@@ -95,19 +135,35 @@ struct CustomMapView: View {
                             .position(x: width/2, y: height/2)
                     }
                     .frame(width: width, height: height)
-                    // Add padding to ensure content can scroll to edges
-                    .padding(EdgeInsets(
-                        top: geo.size.height/2,
-                        leading: geo.size.width/2,
-                        bottom: geo.size.height/2,
-                        trailing: geo.size.width/2
-                    ))
+                    // Use preference key to report content size
+                    .background(
+                        GeometryReader { contentGeo in
+                            Color.clear
+                                .preference(key: ContentSizePreferenceKey.self, value: CGSize(width: width, height: height))
+                        }
+                    )
                 }
                 // Track scrolling state using a gesture
                 .gesture(
                     DragGesture(minimumDistance: 10)
-                        .onChanged { _ in
+                        .onChanged { value in
                             isScrolling = true
+                            
+                            // Calculate new proposed offset
+                            let newOffset = CGPoint(
+                                x: contentOffset.x - value.translation.width,
+                                y: contentOffset.y - value.translation.height
+                            )
+                            
+                            // Apply bounds to ensure we can't scroll past content edges
+                            let maxOffsetX = max(0, contentSize.width - scrollViewSize.width)
+                            let maxOffsetY = max(0, contentSize.height - scrollViewSize.height)
+                            
+                            // Update offset with constraints
+                            contentOffset = CGPoint(
+                                x: max(0, min(newOffset.x, maxOffsetX)),
+                                y: max(0, min(newOffset.y, maxOffsetY))
+                            )
                         }
                         .onEnded { _ in
                             // Small delay to prevent tap detection immediately after scrolling
@@ -116,6 +172,22 @@ struct CustomMapView: View {
                             }
                         }
                 )
+                // Use preference key to report scroll view size
+                .background(
+                    GeometryReader { scrollGeo in
+                        Color.white
+                            .preference(key: SizePreferenceKey.self, value: scrollGeo.size)
+                    }
+                )
+                .clipped() // Clip content to bounds
+                .onPreferenceChange(SizePreferenceKey.self) { newSize in
+                    // Update scroll view size when the preference value changes
+                    scrollViewSize = newSize
+                }
+                .onPreferenceChange(ContentSizePreferenceKey.self) { newSize in
+                    // Update content size when the preference value changes
+                    contentSize = newSize
+                }
                 .onAppear {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                         withAnimation {
@@ -162,15 +234,20 @@ struct LocationRectangleView: View {
         )
     }
     
+    // Get the image name from location, with fallback to "home"
+    private var imageName: String {
+        location.imageName ?? "home"
+    }
+    
     private let size = CGSize(width: 100, height: 100)
     
     var body: some View {
         ZStack {
             if isPositioning {
-                // The actual rectangle when in positioning mode
-                Rectangle()
+                // The location image when in positioning mode
+                Image(imageName)
+                    .resizable()
                     .frame(width: size.width, height: size.height)
-                    .foregroundStyle(.black)
                     .contentShape(Rectangle())
                     .gesture(
                         DragGesture(minimumDistance: 0, coordinateSpace: .global)
@@ -201,10 +278,10 @@ struct LocationRectangleView: View {
                             .frame(width: size.width + 4, height: size.height + 4)
                     )
             } else {
-                // Main rectangle with conditional border based on context menu state
-                Rectangle()
+                // Main image when not in positioning mode
+                Image(imageName)
+                    .resizable()
                     .frame(width: size.width, height: size.height)
-                    .foregroundStyle(.black)
                     .overlay(
                         isContextMenuPresented ? 
                             RoundedRectangle(cornerRadius: 2)
@@ -223,8 +300,8 @@ struct LocationRectangleView: View {
                     .gesture(
                         TapGesture()
                             .onEnded {
-                                print("The rectangle is tapped")
-                                print("Location: \(location.name ?? "Unnamed")")
+                                print("The location is tapped")
+                                print("Location: \(location.imageName ?? "Unnamed")")
                             }
                     )
                     // Separate context menu for long press
@@ -244,27 +321,13 @@ struct LocationRectangleView: View {
                             Label("Delete location", systemImage: "trash")
                         }
                     } preview: {
-                        // Custom preview showing the actual rectangle
-                        VStack {
-                            Rectangle()
-                                .frame(width: size.width, height: size.height)
-                                .foregroundStyle(.black)
-                                .cornerRadius(2)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 2)
-//                                        .stroke(.color3, lineWidth: 4)
-                                )
-                                .onAppear { isContextMenuPresented = true }
-                                .onDisappear { isContextMenuPresented = false }
-                            
-                            if let name = location.name, !name.isEmpty {
-                                Text(name)
-                                    .font(.caption)
-                            }
-                        }
-                        .padding(5)
-                        .background(Color.gray.opacity(0.1))
-                        .cornerRadius(8)
+                        // Use the location image directly as the preview
+                        Image(imageName)
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 100, height: 100)
+                            .onAppear { isContextMenuPresented = true }
+                            .onDisappear { isContextMenuPresented = false }
                     }
                     // Use simultaneousGesture with DragGesture with high minimum distance
                     // to detect when user scrolls and cancel the tap
@@ -289,7 +352,7 @@ struct LocationRectangleView: View {
                             }
                         }
                     } message: {
-                        Text("Are you sure you want to delete '\(location.name ?? "this location")'? This action cannot be undone.")
+                        Text("Are you sure you want to delete this \(imageName)? This action cannot be undone.")
                     }
             }
         }
