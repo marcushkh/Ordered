@@ -71,8 +71,12 @@ struct DraggableLocationButton: View {
                     isDragging = false
                 }
                 
-                return NSItemProvider(object: imageName as NSString)
+                // Create an item provider with the image name
+                let provider = NSItemProvider(object: imageName as NSString)
+                provider.suggestedName = imageName // This helps identify it later
+                return provider
             } preview: {
+                // A more distinctive preview that clearly shows what's being dragged
                 DragPreview(imageName: imageName)
             }
     }
@@ -83,10 +87,18 @@ struct DragPreview: View {
     let imageName: String
     
     var body: some View {
-        Image(imageName)
-            .resizable()
-            .aspectRatio(contentMode: .fit)
-            .frame(width: 100, height: 100)
+        ZStack {
+            // The main image
+            Image(imageName)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 100, height: 100)
+                
+            // Subtle overlay to indicate it's being dragged
+            RoundedRectangle(cornerRadius: 8)
+                .stroke(Color.blue, lineWidth: 2)
+                .frame(width: 100, height: 100)
+        }
     }
 }
 

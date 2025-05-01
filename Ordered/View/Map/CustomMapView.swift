@@ -44,6 +44,10 @@ struct CustomMapView: View {
     @State private var scrollViewSize: CGSize = .zero
     @State private var contentSize: CGSize = .zero
     
+    // Add state to track drag operations
+    @State private var isDraggingOver: Bool = false
+    @State private var draggedItemName: String? = nil
+    
     // Add Environment for CoreData context
     @Environment(\.managedObjectContext) private var viewContext
     
@@ -87,7 +91,8 @@ struct CustomMapView: View {
                             }
                         }
                         
-                        // Second layer: transparent tap detector and drop receiver
+                        // Main drop area covering the entire map
+                        // This needs to be below the location images but receive all drag events
                         Color.clear
                             .frame(width: width, height: height)
                             .contentShape(Rectangle())
@@ -101,74 +106,10 @@ struct CustomMapView: View {
                                     }
                                 }
                             }
-                            .dropDestination(for: String.self) { items, location in
-                                // Only proceed if we have an item and it's one of our location images
-                                guard let imageName = items.first, 
-                                      Location.availableImages.contains(imageName) else {
-                                    return false
-                                }
-                                
-                                // Get the drop point
-                                let dropPoint = CGPoint(x: location.x, y: location.y)
-                                
-                                // Check if the drop point is inside any of our allowed position squares
-                                var isInsideAllowedSquare = false
-                                var targetPosition: CGPoint? = nil
-                                
-                                for position in Location.allowedPositions {
-                                    // Calculate the square boundaries
-                                    let squareSize: CGFloat = 120 // Match the size of our visual rectangles
-                                    let halfSize = squareSize / 2
-                                    let minX = position.x - halfSize
-                                    let maxX = position.x + halfSize
-                                    let minY = position.y - halfSize
-                                    let maxY = position.y + halfSize
-                                    
-                                    // Check if the drop point is inside this square
-                                    if dropPoint.x >= minX && dropPoint.x <= maxX && 
-                                       dropPoint.y >= minY && dropPoint.y <= maxY {
-                                        isInsideAllowedSquare = true
-                                        targetPosition = position
-                                        break
-                                    }
-                                }
-                                
-                                // Only proceed if the drop was inside an allowed square
-                                if isInsideAllowedSquare, let position = targetPosition {
-                                    // Check if this position is already occupied
-                                    let isOccupied = Location.isPositionOccupied(at: position, context: viewContext)
-                                    
-                                    if isOccupied {
-                                        // Find and remove the existing location at this position
-                                        if let existingLocation = findLocationAt(position: position) {
-                                            // Delete the existing location
-                                            existingLocation.delete(from: viewContext)
-                                        }
-                                    }
-                                    
-                                    // Create new location at the exact position
-                                    let newLocation = Location(context: viewContext)
-                                    newLocation.imageName = imageName
-                                    newLocation.positionX = Int16(position.x)
-                                    newLocation.positionY = Int16(position.y)
-                                    
-                                    // Save to database
-                                    do {
-                                        try viewContext.save()
-                                        print("New location created with image: \(imageName) at position (\(position.x), \(position.y))")
-                                        viewModel.refresh.toggle()
-                                        return true
-                                    } catch {
-                                        print("Error saving new location: \(error.localizedDescription)")
-                                        return false
-                                    }
-                                } else {
-                                    // Drop was not in a valid position
-                                    print("Cannot place location: drop point not in an allowed square")
-                                    return false
-                                }
+                            .onDrop(of: [.text], isTargeted: $isDraggingOver) { providers, location in
+                                handleDrop(providers: providers, at: location)
                             }
-                            .zIndex(2)
+                            .zIndex(1)
                         
                         // Third layer: draggable rectangles from Location entities
                         ForEach(locations) { location in
@@ -179,6 +120,7 @@ struct CustomMapView: View {
                                 viewModel: viewModel
                             )
                             .zIndex(3)
+                            .allowsHitTesting(!isDraggingOver) // Disable hit testing when dragging from toolbar
                         }
                         .onChange(of: viewModel.refresh) { oldValue, newValue in
                             // Refresh handling
@@ -246,6 +188,80 @@ struct CustomMapView: View {
         .ignoresSafeArea()
     }
 
+    // Handle drop from top bar
+    private func handleDrop(providers: [NSItemProvider], at dropPoint: CGPoint) -> Bool {
+        // Get the dragged item name
+        guard let provider = providers.first else {
+            return false
+        }
+        
+        // Load the text from the provider
+        provider.loadObject(ofClass: NSString.self) { string, error in
+            if let error = error {
+                print("Error loading drop item: \(error)")
+                return
+            }
+            
+            guard let imageName = string as? String,
+                  Location.availableImages.contains(imageName) else {
+                return
+            }
+            
+            // Check if the drop point is inside any of our allowed position squares
+            var targetPosition: CGPoint? = nil
+            
+            for position in Location.allowedPositions {
+                // Calculate the square boundaries
+                let squareSize: CGFloat = 120 // Match the size of our visual rectangles
+                let halfSize = squareSize / 2
+                let minX = position.x - halfSize
+                let maxX = position.x + halfSize
+                let minY = position.y - halfSize
+                let maxY = position.y + halfSize
+                
+                // Check if the drop point is inside this square
+                if dropPoint.x >= minX && dropPoint.x <= maxX && 
+                   dropPoint.y >= minY && dropPoint.y <= maxY {
+                    targetPosition = position
+                    break
+                }
+            }
+            
+            // Only proceed if the drop was inside an allowed square
+            if let position = targetPosition {
+                DispatchQueue.main.async {
+                    // Check if this position is already occupied
+                    let isOccupied = Location.isPositionOccupied(at: position, context: viewContext)
+                    
+                    if isOccupied {
+                        // Find and remove the existing location at this position
+                        if let existingLocation = findLocationAt(position: position) {
+                            // Delete the existing location
+                            existingLocation.delete(from: viewContext)
+                        }
+                    }
+                    
+                    // Create new location at the exact position
+                    let newLocation = Location(context: viewContext)
+                    newLocation.imageName = imageName
+                    newLocation.positionX = Int16(position.x)
+                    newLocation.positionY = Int16(position.y)
+                    
+                    // Save to database
+                    do {
+                        try viewContext.save()
+                        print("New location created with image: \(imageName) at position (\(position.x), \(position.y))")
+                        viewModel.refresh.toggle()
+                    } catch {
+                        print("Error saving new location: \(error.localizedDescription)")
+                    }
+                }
+            }
+        }
+        
+        return true
+    }
+    
     // Helper method to find a location at a specific position
     private func findLocationAt(position: CGPoint) -> Location? {
         let request: NSFetchRequest<Location> = Location.fetchRequest()
@@ -320,8 +336,13 @@ struct LocationRectangleView: View {
                                     y: position.y + value.translation.height
                                 )
                                 
-                                // Check if the new position is inside any of our allowed position squares
-                                var isInsideAllowedSquare = false
+                                // Reset dragging state
+                                withAnimation(.spring()) {
+                                    isDragging = false
+                                    selectedLocationObjectID = nil
+                                }
+                                
+                                // Find if we're over an allowed position
                                 var targetPosition: CGPoint? = nil
                                 
                                 for position in Location.allowedPositions {
@@ -336,82 +357,24 @@ struct LocationRectangleView: View {
                                     // Check if the new position is inside this square
                                     if newPosition.x >= minX && newPosition.x <= maxX && 
                                        newPosition.y >= minY && newPosition.y <= maxY {
-                                        isInsideAllowedSquare = true
                                         targetPosition = position
                                         break
                                     }
                                 }
                                 
                                 // Only proceed if the drop was inside an allowed square
-                                if isInsideAllowedSquare, let targetPos = targetPosition {
-                                    // Check if this position is already occupied by another location
-                                    let isOccupied = Location.isPositionOccupied(at: targetPos, context: viewContext, excludingObjectID: location.objectID)
-                                    
-                                    if isOccupied {
-                                        // Find the location at the target position for swapping
-                                        if let otherLocation = findLocationAt(position: targetPos, in: viewContext) {
-                                            print("Swapping positions with another location")
-                                            
-                                            // Save original positions
-                                            let originalPos = CGPoint(x: CGFloat(location.positionX), y: CGFloat(location.positionY))
-                                            
-                                            // Update this location to the target position
-                                            location.positionX = Int16(targetPos.x)
-                                            location.positionY = Int16(targetPos.y)
-                                            
-                                            // Update the other location to this location's position
-                                            otherLocation.positionX = Int16(originalPos.x)
-                                            otherLocation.positionY = Int16(originalPos.y)
-                                            
-                                            // Save to database
-                                            do {
-                                                try viewContext.save()
-                                                print("Swapped locations successfully")
-                                                viewModel.refresh.toggle()
-                                            } catch {
-                                                print("Error swapping locations: \(error.localizedDescription)")
-                                                // Reset view on error
-                                                withAnimation(.spring()) {
-                                                    viewModel.refresh.toggle()
-                                                }
-                                            }
-                                        } else {
-                                            print("Could not find other location to swap with")
-                                            withAnimation(.spring()) {
-                                                viewModel.refresh.toggle()
-                                            }
-                                        }
+                                if let targetPos = targetPosition {
+                                    // Check if target position is already occupied by a different location
+                                    if let otherLocation = findExistingLocationAt(position: targetPos) {
+                                        // Swap positions with the other location
+                                        swapPositions(with: otherLocation)
                                     } else {
-                                        // Position is not occupied, just update normally
-                                        // Update location to the exact position
-                                        location.positionX = Int16(targetPos.x)
-                                        location.positionY = Int16(targetPos.y)
-                                        
-                                        // Save to database
-                                        do {
-                                            try viewContext.save()
-                                            print("Updated location position to (\(targetPos.x), \(targetPos.y))")
-                                            viewModel.refresh.toggle()
-                                        } catch {
-                                            print("Error updating location position: \(error.localizedDescription)")
-                                            // Reset view on error
-                                            withAnimation(.spring()) {
-                                                viewModel.refresh.toggle()
-                                            }
-                                        }
+                                        // Position is free, just update this location
+                                        updatePosition(to: targetPos)
                                     }
                                 } else {
-                                    // Reset to original position if not dropped in a valid square
-                                    withAnimation(.spring()) {
-                                        viewModel.refresh.toggle()
-                                    }
-                                    print("Cannot update location: drag ended outside an allowed square")
-                                }
-                                
-                                // Reset dragging state
-                                withAnimation(.spring()) {
-                                    isDragging = false
-                                    selectedLocationObjectID = nil
+                                    // Not dropped on a valid position, reset view
+                                    viewModel.refresh.toggle()
                                 }
                             }
                     )
@@ -507,30 +470,74 @@ struct LocationRectangleView: View {
         )
         .animation(.interactiveSpring(), value: isPositioning)
     }
-
-    // Add this helper function to the LocationRectangleView struct
-    // Helper method to find a location at a specific position
-    private func findLocationAt(position: CGPoint, in context: NSManagedObjectContext) -> Location? {
+    
+    // Find an existing location at a position, excluding this location
+    private func findExistingLocationAt(position: CGPoint) -> Location? {
         let request: NSFetchRequest<Location> = Location.fetchRequest()
         
         do {
-            let allLocations = try context.fetch(request)
-            for possibleLocation in allLocations {
-                // Skip if this is the current location
-                if possibleLocation.objectID == location.objectID {
+            let allLocations = try viewContext.fetch(request)
+            
+            for existingLocation in allLocations {
+                // Skip this location
+                if existingLocation.objectID == location.objectID {
                     continue
                 }
                 
-                let locationPoint = CGPoint(x: CGFloat(possibleLocation.positionX), y: CGFloat(possibleLocation.positionY))
+                // Check if position matches
+                let locationPoint = CGPoint(
+                    x: CGFloat(existingLocation.positionX),
+                    y: CGFloat(existingLocation.positionY)
+                )
+                
                 if locationPoint == position {
-                    return possibleLocation
+                    return existingLocation
                 }
             }
         } catch {
-            print("Error fetching locations: \(error)")
+            print("Error finding location: \(error)")
         }
         
         return nil
+    }
+    
+    // Update position of this location
+    private func updatePosition(to newPosition: CGPoint) {
+        location.positionX = Int16(newPosition.x)
+        location.positionY = Int16(newPosition.y)
+        
+        do {
+            try viewContext.save()
+            print("Updated location position to \(newPosition)")
+            viewModel.refresh.toggle()
+        } catch {
+            print("Error updating location: \(error)")
+            viewModel.refresh.toggle()
+        }
+    }
+    
+    // Swap positions with another location
+    private func swapPositions(with otherLocation: Location) {
+        // Store original positions
+        let thisPosition = CGPoint(x: CGFloat(location.positionX), y: CGFloat(location.positionY))
+        let otherPosition = CGPoint(x: CGFloat(otherLocation.positionX), y: CGFloat(otherLocation.positionY))
+        
+        // Update positions
+        location.positionX = Int16(otherPosition.x)
+        location.positionY = Int16(otherPosition.y)
+        
+        otherLocation.positionX = Int16(thisPosition.x)
+        otherLocation.positionY = Int16(thisPosition.y)
+        
+        // Save changes
+        do {
+            try viewContext.save()
+            print("Swapped location positions successfully")
+            viewModel.refresh.toggle()
+        } catch {
+            print("Error swapping locations: \(error)")
+            viewModel.refresh.toggle()
+        }
     }
 }
 
