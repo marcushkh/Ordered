@@ -69,7 +69,7 @@ struct CustomMapView: View {
             
             // Native ScrollView with ScrollViewReader for programmatic scrolling
             ScrollViewReader { scrollProxy in
-                ScrollView([.vertical], showsIndicators: false) {
+                ScrollView(.vertical, showsIndicators: false) {
                     ZStack {
                         // First layer: background style
                         BackgroundView(style: currentMapStyle)
@@ -103,12 +103,79 @@ struct CustomMapView: View {
                             
                             // Show blue rectangles for unoccupied positions
                             if !isOccupied {
-                                RoundedRectangle(cornerRadius: 8)
-                                    .stroke(Color.blue, lineWidth: 2)
-                                    .frame(width: 120, height: 120)
-                                    .position(position)
-                                    .zIndex(1)
-                                    .allowsHitTesting(false)
+                                ZStack {
+                                    // Visual part - blue outline
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .stroke(Color.blue, lineWidth: 2)
+                                        .frame(width: 120, height: 120)
+                                        .allowsHitTesting(false)
+                                    
+                                    // Invisible interactive part for drop handling
+                                    Color.clear
+                                        .frame(width: 120, height: 120)
+                                        .contentShape(Rectangle())
+                                        .onDrop(of: [.text], isTargeted: $isDraggingOver) { providers, _ in
+                                            // Find which allowed position this is
+                                            let currentPos = position
+                                            
+                                            // Helper function to handle drop at this position
+                                            func handleDrop() -> Bool {
+                                                // Set dragging state to block context menus during drop
+                                                isDraggingOver = true
+                                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                                                    isDraggingOver = false
+                                                }
+                                                
+                                                guard let provider = providers.first else { return false }
+                                                
+                                                // Get image name synchronously if possible
+                                                if let imageName = provider.suggestedName,
+                                                   Location.availableImages.contains(imageName) {
+                                                    // Create a new location at this position
+                                                    let newLocation = Location(context: viewContext)
+                                                    newLocation.imageName = imageName
+                                                    newLocation.positionX = Int16(position.x)
+                                                    newLocation.positionY = Int16(position.y)
+                                                    
+                                                    // Save to database
+                                                    do {
+                                                        try viewContext.save()
+                                                        viewModel.refresh.toggle()
+                                                    } catch {
+                                                        print("Error saving new location: \(error)")
+                                                    }
+                                                    return true
+                                                }
+                                                
+                                                // Fallback to async loading
+                                                provider.loadObject(ofClass: NSString.self) { string, _ in
+                                                    guard let imageName = string as? String,
+                                                          Location.availableImages.contains(imageName) else { return }
+                                                    
+                                                    DispatchQueue.main.async {
+                                                        // Create a new location at this position
+                                                        let newLocation = Location(context: self.viewContext)
+                                                        newLocation.imageName = imageName
+                                                        newLocation.positionX = Int16(position.x)
+                                                        newLocation.positionY = Int16(position.y)
+                                                        
+                                                        // Save to database
+                                                        do {
+                                                            try self.viewContext.save()
+                                                            self.viewModel.refresh.toggle()
+                                                        } catch {
+                                                            print("Error saving new location: \(error)")
+                                                        }
+                                                    }
+                                                }
+                                                return true
+                                            }
+                                            
+                                            return handleDrop()
+                                        }
+                                }
+                                .position(position)
+                                .zIndex(10)
                             }
                         }
                         
