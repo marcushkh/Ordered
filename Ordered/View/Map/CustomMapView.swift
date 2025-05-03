@@ -74,7 +74,7 @@ struct CustomMapView: View {
                         // First layer: background style
                         BackgroundView(style: currentMapStyle)
                             .frame(width: width, height: height)
-                            .background(Color.white) // Ensure background has color
+                            .background(Color.cBackground) // Ensure background has color
                             .zIndex(0)
                             .allowsHitTesting(false) // Disable hit testing on background
                         
@@ -106,7 +106,7 @@ struct CustomMapView: View {
                                 ZStack {
                                     // Visual part - blue outline
                                     RoundedRectangle(cornerRadius: 8)
-                                        .stroke(Color.blue, lineWidth: 2)
+                                        .stroke(Color.color3, lineWidth: 2)
                                         .frame(width: 120, height: 120)
                                         .allowsHitTesting(false)
                                     
@@ -236,7 +236,7 @@ struct CustomMapView: View {
                 // Use preference key to report scroll view size
                 .background(
                     GeometryReader { scrollGeo in
-                        Color.white
+                        Color.cBackground
                             .preference(key: SizePreferenceKey.self, value: scrollGeo.size)
                     }
                 )
@@ -356,6 +356,8 @@ struct LocationRectangleView: View {
     @ObservedObject var viewModel: ContentViewModel
     @Binding var isDraggingOver: Bool
     let allowedPositions: [CGPoint]
+    // Add state for swap indicator
+    @State private var isHoveringForSwap: Bool = false
     
     private var isPositioning: Bool {
         isDragging && selectedLocationObjectID == location.objectID
@@ -390,8 +392,52 @@ struct LocationRectangleView: View {
                                     width: value.translation.width,
                                     height: value.translation.height
                                 )
+                                
+                                // Calculate current position during drag
+                                let currentDragPosition = CGPoint(
+                                    x: position.x + value.translation.width,
+                                    y: position.y + value.translation.height
+                                )
+                                
+                                // Check if we're hovering over an allowed position that has another location
+                                var foundHoverTarget = false
+                                for targetPos in allowedPositions {
+                                    // Calculate the square boundaries
+                                    let squareSize: CGFloat = 120
+                                    let halfSize = squareSize / 2
+                                    let minX = targetPos.x - halfSize
+                                    let maxX = targetPos.x + halfSize
+                                    let minY = targetPos.y - halfSize
+                                    let maxY = targetPos.y + halfSize
+                                    
+                                    // Check if we're hovering over this position
+                                    if currentDragPosition.x >= minX && currentDragPosition.x <= maxX &&
+                                       currentDragPosition.y >= minY && currentDragPosition.y <= maxY {
+                                        // Skip if this is our own position
+                                        if targetPos.x == CGFloat(location.positionX) && 
+                                           targetPos.y == CGFloat(location.positionY) {
+                                            continue
+                                        }
+                                        
+                                        // Check if position is occupied
+                                        if let _ = findExistingLocationAt(position: targetPos) {
+                                            // We're hovering over another location for swapping
+                                            isHoveringForSwap = true
+                                            foundHoverTarget = true
+                                            break
+                                        }
+                                    }
+                                }
+                                
+                                // Clear hover state if not hovering over any occupied position
+                                if !foundHoverTarget {
+                                    isHoveringForSwap = false
+                                }
                             }
                             .onEnded { value in
+                                // Reset hovering state
+                                isHoveringForSwap = false
+                                
                                 let newPosition = CGPoint(
                                     x: position.x + value.translation.width,
                                     y: position.y + value.translation.height
@@ -441,8 +487,35 @@ struct LocationRectangleView: View {
                     )
                     .overlay(
                         RoundedRectangle(cornerRadius: 2)
-                            .stroke(Color.blue, lineWidth: 2)
+                            .stroke(Color.color3, lineWidth: 2)
                             .frame(width: size.width + 4, height: size.height + 4)
+                    )
+                    .overlay(
+                        Group {
+                            if isHoveringForSwap {
+                                VStack(spacing: 0) {
+                                    // Position the icon above the image
+                                    Image(systemName: "arrow.trianglehead.2.clockwise")
+                                        .font(.system(size: 15, weight: .bold))
+                                        .foregroundColor(.color3)
+                                        .background(
+                                            Circle()
+                                                .fill(Color.cBackground)
+                                                .frame(width: 24, height: 24)
+                                        )
+                                        .overlay(
+                                            Circle()
+                                                .stroke(Color.color3, lineWidth: 1.5)
+                                                .frame(width: 24, height: 24)
+                                        )
+                                        .offset(y: -15)
+                                        .zIndex(110)
+                                    
+                                    Spacer()
+                                }
+                                .frame(width: size.width, height: size.height)
+                            }
+                        }
                     )
             } else {
                 // Main image when not in positioning mode
@@ -551,6 +624,7 @@ struct LocationRectangleView: View {
             )
         )
         .animation(.interactiveSpring(), value: isPositioning)
+        .zIndex(isPositioning ? 100 : 2) // Set highest z-index when positioning
     }
     
     // Find an existing location at a position, excluding this location
@@ -664,7 +738,7 @@ struct GridBackground: View {
 
                 context.stroke(path, with: .color(color.opacity(0.3)), lineWidth: 1)
             }
-            .background(Color.white)
+            .background(Color.cBackground)
         }
     }
 }
@@ -691,7 +765,7 @@ struct DottedBackground: View {
                     }
                 }
             }
-            .background(Color.white)
+            .background(Color.cBackground)
         }
     }
 }

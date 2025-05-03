@@ -98,7 +98,7 @@ struct DragPreview: View {
                 
             // Subtle overlay to indicate it's being dragged
             RoundedRectangle(cornerRadius: 8)
-                .stroke(Color.blue, lineWidth: 2)
+                .stroke(Color.color3, lineWidth: 2)
                 .frame(width: 100, height: 100)
         }
     }
