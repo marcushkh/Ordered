@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 70;
+	objectVersion = 56;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -41,6 +41,17 @@
 		2C74CB3F2C59DE6F00716233 /* Sample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C74CB3E2C59DE6F00716233 /* Sample.swift */; };
 		2C784E052D325C6400A56D72 /* DurationSelection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C784E042D325C5D00A56D72 /* DurationSelection.swift */; };
 		2C7FD65D2DD367EC005E41F5 /* SelectLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7FD65C2DD367E9005E41F5 /* SelectLocation.swift */; };
+		2C7FD6672DD38015005E41F5 /* AppIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7FD65E2DD38015005E41F5 /* AppIntent.swift */; };
+		2C7FD6682DD38015005E41F5 /* LiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7FD6612DD38015005E41F5 /* LiveActivity.swift */; };
+		2C7FD6692DD38015005E41F5 /* LiveActivityActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7FD6622DD38015005E41F5 /* LiveActivityActions.swift */; };
+		2C7FD66A2DD38015005E41F5 /* LiveActivityBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7FD6632DD38015005E41F5 /* LiveActivityBundle.swift */; };
+		2C7FD66B2DD38015005E41F5 /* LiveActivityControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7FD6642DD38015005E41F5 /* LiveActivityControl.swift */; };
+		2C7FD66C2DD38015005E41F5 /* LiveActivityLiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7FD6652DD38015005E41F5 /* LiveActivityLiveActivity.swift */; };
+		2C7FD66D2DD38015005E41F5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C7FD65F2DD38015005E41F5 /* Assets.xcassets */; };
+		2C7FD66F2DD38015005E41F5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C7FD65F2DD38015005E41F5 /* Assets.xcassets */; };
+		2C7FD6702DD38015005E41F5 /* LiveActivityActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7FD6622DD38015005E41F5 /* LiveActivityActions.swift */; };
+		2C7FD6712DD38015005E41F5 /* LiveActivityLiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7FD6652DD38015005E41F5 /* LiveActivityLiveActivity.swift */; };
+		2C7FD6722DD38015005E41F5 /* AppIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7FD65E2DD38015005E41F5 /* AppIntent.swift */; };
 		2C96053B2C82D21900A1736D /* WelcomeVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C96053A2C82D21900A1736D /* WelcomeVM.swift */; };
 		2CA35CD32D28E16300011B89 /* Cal+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA35CD22D28E15900011B89 /* Cal+Ext.swift */; };
 		2CA35CD52D28E1F200011B89 /* Event+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA35CD42D28E1EE00011B89 /* Event+Ext.swift */; };
@@ -151,6 +162,14 @@
 		2C74CB3E2C59DE6F00716233 /* Sample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sample.swift; sourceTree = "<group>"; };
 		2C784E042D325C5D00A56D72 /* DurationSelection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DurationSelection.swift; sourceTree = "<group>"; };
 		2C7FD65C2DD367E9005E41F5 /* SelectLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectLocation.swift; sourceTree = "<group>"; };
+		2C7FD65E2DD38015005E41F5 /* AppIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIntent.swift; sourceTree = "<group>"; };
+		2C7FD65F2DD38015005E41F5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		2C7FD6602DD38015005E41F5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2C7FD6612DD38015005E41F5 /* LiveActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveActivity.swift; sourceTree = "<group>"; };
+		2C7FD6622DD38015005E41F5 /* LiveActivityActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveActivityActions.swift; sourceTree = "<group>"; };
+		2C7FD6632DD38015005E41F5 /* LiveActivityBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveActivityBundle.swift; sourceTree = "<group>"; };
+		2C7FD6642DD38015005E41F5 /* LiveActivityControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveActivityControl.swift; sourceTree = "<group>"; };
+		2C7FD6652DD38015005E41F5 /* LiveActivityLiveActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveActivityLiveActivity.swift; sourceTree = "<group>"; };
 		2C96053A2C82D21900A1736D /* WelcomeVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeVM.swift; sourceTree = "<group>"; };
 		2CA35CD22D28E15900011B89 /* Cal+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Cal+Ext.swift"; sourceTree = "<group>"; };
 		2CA35CD42D28E1EE00011B89 /* Event+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Event+Ext.swift"; sourceTree = "<group>"; };
@@ -183,30 +202,6 @@
 		2CFF02D72C60A06400627CDF /* EventBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventBar.swift; sourceTree = "<group>"; };
 		2CFF02D92C60A07000627CDF /* BottomBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomBar.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
-
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		2C220D3A2D425C6300E5AF09 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Info.plist,
-			);
-			target = 2C220D202D425C6100E5AF09 /* LiveActivityExtension */;
-		};
-		2CE4B78B2D6D9E05001AD492 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				AppIntent.swift,
-				Assets.xcassets,
-				LiveActivityActions.swift,
-				LiveActivityLiveActivity.swift,
-			);
-			target = 2C15B7F52C3D0F3600B008DB /* Ordered */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		2C220D262D425C6100E5AF09 /* LiveActivity */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (2CE4B78B2D6D9E05001AD492 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 2C220D3A2D425C6300E5AF09 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = LiveActivity; sourceTree = "<group>"; };
-/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		2C15B7F32C3D0F3600B008DB /* Frameworks */ = {
@@ -252,7 +247,7 @@
 			isa = PBXGroup;
 			children = (
 				2C15B7F82C3D0F3600B008DB /* Ordered */,
-				2C220D262D425C6100E5AF09 /* LiveActivity */,
+				2C7FD6662DD38015005E41F5 /* LiveActivity */,
 				2C6A82D12CC1705A006B533E /* Frameworks */,
 				2C15B7F72C3D0F3600B008DB /* Products */,
 			);
@@ -392,6 +387,21 @@
 			path = EventSectionModifier;
 			sourceTree = "<group>";
 		};
+		2C7FD6662DD38015005E41F5 /* LiveActivity */ = {
+			isa = PBXGroup;
+			children = (
+				2C7FD65E2DD38015005E41F5 /* AppIntent.swift */,
+				2C7FD65F2DD38015005E41F5 /* Assets.xcassets */,
+				2C7FD6602DD38015005E41F5 /* Info.plist */,
+				2C7FD6612DD38015005E41F5 /* LiveActivity.swift */,
+				2C7FD6622DD38015005E41F5 /* LiveActivityActions.swift */,
+				2C7FD6632DD38015005E41F5 /* LiveActivityBundle.swift */,
+				2C7FD6642DD38015005E41F5 /* LiveActivityControl.swift */,
+				2C7FD6652DD38015005E41F5 /* LiveActivityLiveActivity.swift */,
+			);
+			path = LiveActivity;
+			sourceTree = "<group>";
+		};
 		2C9605392C82D15100A1736D /* Common */ = {
 			isa = PBXGroup;
 			children = (
@@ -475,9 +485,6 @@
 			);
 			dependencies = (
 			);
-			fileSystemSynchronizedGroups = (
-				2C220D262D425C6100E5AF09 /* LiveActivity */,
-			);
 			name = LiveActivityExtension;
 			packageProductDependencies = (
 			);
@@ -535,6 +542,7 @@
 				2C220D5B2D434FD900E5AF09 /* full_emoji.json in Resources */,
 				2C4D4AF32D9AC2B1004335CD /* emoji_embeddings.json in Resources */,
 				2C15B7FE2C3D0F3800B008DB /* Assets.xcassets in Resources */,
+				2C7FD66F2DD38015005E41F5 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -542,6 +550,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2C7FD66D2DD38015005E41F5 /* Assets.xcassets in Resources */,
 				2CE4B7812D6D7A29001AD492 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -579,6 +588,9 @@
 				2CFF02DA2C60A07000627CDF /* BottomBar.swift in Sources */,
 				2C5C1C9E2C5781B30079482A /* TabBar.swift in Sources */,
 				2C14A3162C6DD07A00807FFB /* MainList.swift in Sources */,
+				2C7FD6702DD38015005E41F5 /* LiveActivityActions.swift in Sources */,
+				2C7FD6712DD38015005E41F5 /* LiveActivityLiveActivity.swift in Sources */,
+				2C7FD6722DD38015005E41F5 /* AppIntent.swift in Sources */,
 				2C14A3142C6DCFB100807FFB /* SwipeableStack.swift in Sources */,
 				2CC8BC332D70B45B0049E579 /* String+Ext.swift in Sources */,
 				2CA35CD72D290ECC00011B89 /* Section+Ext.swift in Sources */,
@@ -628,6 +640,12 @@
 				2CE4B77B2D6D79E5001AD492 /* View+Ext.swift in Sources */,
 				2CE4B7912D6E1C19001AD492 /* CustomEvent.swift in Sources */,
 				2CA36DFD2DBA55FD0001B538 /* Location+Ext.swift in Sources */,
+				2C7FD6672DD38015005E41F5 /* AppIntent.swift in Sources */,
+				2C7FD6682DD38015005E41F5 /* LiveActivity.swift in Sources */,
+				2C7FD6692DD38015005E41F5 /* LiveActivityActions.swift in Sources */,
+				2C7FD66A2DD38015005E41F5 /* LiveActivityBundle.swift in Sources */,
+				2C7FD66B2DD38015005E41F5 /* LiveActivityControl.swift in Sources */,
+				2C7FD66C2DD38015005E41F5 /* LiveActivityLiveActivity.swift in Sources */,
 				2CE4B77C2D6D79E5001AD492 /* Date+Ext.swift in Sources */,
 				2CE4B77D2D6D79E5001AD492 /* K.swift in Sources */,
 				2CC8BC302D6F78A50049E579 /* Line.swift in Sources */,

@@ -468,12 +468,20 @@ struct LocationRectangleView: View {
                         .frame(width: size.width, height: size.height)
                         .contentShape(Rectangle())
                         .contextMenu {
+                            Button("Edit Location"){
+                                withAnimation {
+                                    //change color and name
+                                    
+                                }
+                            }
+                            
                             Button("Change position") {
                                 withAnimation(.spring()) {
                                     isDragging = true
                                     selectedLocationObjectID = location.objectID
                                 }
                             }
+                            
                             
                             Divider()
                             
