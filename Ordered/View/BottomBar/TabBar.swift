@@ -13,15 +13,23 @@ struct TabBar: View {
     var body: some View {
         
         LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 5), content: {
-            ForEach(TabBarItem.allCases) { item in
+            ForEach([TabBarItem.home, TabBarItem.sugg, TabBarItem.map, TabBarItem.statistic, TabBarItem.setting]) { item in
                 
                 VStack {
-                    Image(systemName: viewModel.currentTab != item ? item.icon : item.icon + ".fill")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: K.small_size, height: K.small_size)
-                        .symbolEffect(.bounce, value: viewModel.currentTab == item)
-                    
+                    if viewModel.currentTab == .sugg{
+                        Image(systemName: item.icon)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: K.small_size, height: K.small_size)
+                            .symbolEffect(.bounce, value: viewModel.currentTab == item)
+                    }
+                    else{
+                        Image(systemName: viewModel.currentTab != item ? item.icon : item.icon + ".fill")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: K.small_size, height: K.small_size)
+                            .symbolEffect(.bounce, value: viewModel.currentTab == item)
+                    }
                 }
                 .foregroundStyle(viewModel.currentTab != item ? .primary : Color(.color3))
                 .onTapGesture {
@@ -43,6 +51,7 @@ struct TabBar: View {
 
 enum TabBarItem: String, CaseIterable, Identifiable {
     case home
+    case sugg
     case plan
     case map
     case statistic
@@ -52,8 +61,11 @@ enum TabBarItem: String, CaseIterable, Identifiable {
     
     var icon: String {
         switch self {
+        
         case .home:
             return "house"
+        case .sugg:
+            return "apple.intelligence"
         case .plan:
             return "list.bullet.indent"
         case .map:
@@ -69,6 +81,8 @@ enum TabBarItem: String, CaseIterable, Identifiable {
         switch self {
         case .home:
             return "Home"
+        case .sugg:
+            return "AI Suggestion"
         case .plan:
             return "Plan"
         case .map:

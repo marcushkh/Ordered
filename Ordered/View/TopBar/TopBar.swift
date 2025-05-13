@@ -84,16 +84,15 @@ struct TopBar: View {
                 
                 Spacer()
 
-                Image(systemName: "paintbrush")
+                Image(systemName: "list.bullet.indent")
                     .bold()
-                    .rotationEffect(Angle(degrees: 180))
                     .frame(height: K.small_size)
                     .foregroundStyle(.color3)
                     .onTapGesture {
-                        showClear = true
+                        withAnimation {
+                            viewModel.currentTab = .plan
+                        }
                     }
-                
-                
             }
             .padding(.vertical)
             .alert(isPresented: $showClear) {

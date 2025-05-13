@@ -57,7 +57,7 @@ struct CreateEvent: View {
             VStack{
                 if !isNewEvent && event == nil{ //Give suggestion to use previous events
                     eventAndEmoji
-                    EventList(viewModel: viewModel, eventName: $eventName, selectedEvent: $event, isChangeSelectedEvent: false)
+                    EventList(viewModel: viewModel, eventName: $eventName, selectedEvent: $event, toggleHeartSelectEvent: false)
                     
                     Spacer()
                     

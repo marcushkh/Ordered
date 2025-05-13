@@ -24,18 +24,24 @@ struct SettingView: View{
                         Button {
                             defaultPage = TabBarItem.home
                         } label: {
-                            Text(TabBarItem.home.rawValue.capitalizedFirst)
+                            Text(TabBarItem.home.label)
+                        }
+                        
+                        Button {
+                            defaultPage = TabBarItem.sugg
+                        } label: {
+                            Text(TabBarItem.sugg.label)
                         }
                         
                         Button {
                             defaultPage = TabBarItem.map
                         } label: {
-                            Text(TabBarItem.map.rawValue.capitalizedFirst)
+                            Text(TabBarItem.map.label)
                         }
                         
                     } label: {
                         HStack{
-                            Text(defaultPage.rawValue.capitalizedFirst)
+                            Text(defaultPage.label)
                             Image(systemName: "chevron.down")
                                 .font(.footnote)
                         }

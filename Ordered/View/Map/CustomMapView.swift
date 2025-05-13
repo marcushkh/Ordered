@@ -9,27 +9,6 @@ import SwiftUI
 import MapKit
 import CoreData
 
-// Add the MapStyle enum
-enum MapStyle: String, CaseIterable {
-    case grid = "grid"
-    case dots = "dots"
-}
-
-// Add these preference key structures for size reporting
-struct SizePreferenceKey: PreferenceKey {
-    static var defaultValue: CGSize = .zero
-    static func reduce(value: inout CGSize, nextValue: () -> CGSize) {
-        value = nextValue()
-    }
-}
-
-struct ContentSizePreferenceKey: PreferenceKey {
-    static var defaultValue: CGSize = .zero
-    static func reduce(value: inout CGSize, nextValue: () -> CGSize) {
-        value = nextValue()
-    }
-}
-
 struct CustomMapView: View {
     @ObservedObject var viewModel: ContentViewModel
     @AppStorage("mapStyle") private var mapStyle: String = MapStyle.grid.rawValue
@@ -115,8 +94,6 @@ struct CustomMapView: View {
                                         .frame(width: 120, height: 120)
                                         .contentShape(Rectangle())
                                         .onDrop(of: [.text], isTargeted: $isDraggingOver) { providers, _ in
-                                            // Find which allowed position this is
-                                            let currentPos = position
                                             
                                             // Helper function to handle drop at this position
                                             func handleDrop() -> Bool {
@@ -131,19 +108,12 @@ struct CustomMapView: View {
                                                 // Get image name synchronously if possible
                                                 if let imageName = provider.suggestedName,
                                                    Location.availableImages.contains(imageName) {
-                                                    // Create a new location at this position
-                                                    let newLocation = Location(context: viewContext)
-                                                    newLocation.imageName = imageName
-                                                    newLocation.positionX = Int16(position.x)
-                                                    newLocation.positionY = Int16(position.y)
-                                                    
-                                                    // Save to database
-                                                    do {
-                                                        try viewContext.save()
-                                                        viewModel.refresh.toggle()
-                                                    } catch {
-                                                        print("Error saving new location: \(error)")
-                                                    }
+                                                    // Create a new location at this position with the correct order
+                                                    let order = Location.orderFromPosition(position)
+                                                    let _ = Location.createNew(in: self.viewContext, 
+                                                                              imageName: imageName,
+                                                                              posOrder: order)
+                                                    self.viewModel.refresh.toggle()
                                                     return true
                                                 }
                                                 
@@ -153,19 +123,12 @@ struct CustomMapView: View {
                                                           Location.availableImages.contains(imageName) else { return }
                                                     
                                                     DispatchQueue.main.async {
-                                                        // Create a new location at this position
-                                                        let newLocation = Location(context: self.viewContext)
-                                                        newLocation.imageName = imageName
-                                                        newLocation.positionX = Int16(position.x)
-                                                        newLocation.positionY = Int16(position.y)
-                                                        
-                                                        // Save to database
-                                                        do {
-                                                            try self.viewContext.save()
-                                                            self.viewModel.refresh.toggle()
-                                                        } catch {
-                                                            print("Error saving new location: \(error)")
-                                                        }
+                                                        // Create a new location at this position with the correct order
+                                                        let order = Location.orderFromPosition(position)
+                                                        let _ = Location.createNew(in: self.viewContext, 
+                                                                                  imageName: imageName,
+                                                                                  posOrder: order)
+                                                        self.viewModel.refresh.toggle()
                                                     }
                                                 }
                                                 return true
@@ -259,16 +222,15 @@ struct CustomMapView: View {
 
     // Helper method to find a location at a specific position
     private func findLocationAt(position: CGPoint) -> Location? {
+        // Convert position to order
+        let order = Location.orderFromPosition(position)
+        
         let request: NSFetchRequest<Location> = Location.fetchRequest()
+        request.predicate = NSPredicate(format: "positionOrder == %d", order)
         
         do {
-            let allLocations = try viewContext.fetch(request)
-            for location in allLocations {
-                let locationPoint = CGPoint(x: CGFloat(location.positionX), y: CGFloat(location.positionY))
-                if locationPoint == position {
-                    return location
-                }
-            }
+            let locations = try viewContext.fetch(request)
+            return locations.first
         } catch {
             print("Error fetching locations: \(error)")
         }
@@ -294,44 +256,17 @@ struct CustomMapView: View {
                 // We found an empty square, create a new location
                 guard let provider = providers.first else { return false }
                 
-                provider.loadObject(ofClass: NSString.self) { string, error in
-                    if let error = error {
-                        print("Error loading drop item: \(error)")
-                        return
-                    }
-                    
+                provider.loadObject(ofClass: NSString.self) { string, _ in
                     guard let imageName = string as? String,
-                          Location.availableImages.contains(imageName) else {
-                        return
-                    }
+                          Location.availableImages.contains(imageName) else { return }
                     
-                    // Process on main thread
                     DispatchQueue.main.async {
-                        // Check if this position is already occupied
-                        let isOccupied = Location.isPositionOccupied(at: position, context: self.viewContext)
-                        
-                        if isOccupied {
-                            // Find and remove the existing location at this position
-                            if let existingLocation = self.findLocationAt(position: position) {
-                                // Delete the existing location
-                                existingLocation.delete(from: self.viewContext)
-                            }
-                        }
-                        
-                        // Create new location at the exact position
-                        let newLocation = Location(context: self.viewContext)
-                        newLocation.imageName = imageName
-                        newLocation.positionX = Int16(position.x)
-                        newLocation.positionY = Int16(position.y)
-                        
-                        // Save to database
-                        do {
-                            try self.viewContext.save()
-                            print("New location created with image: \(imageName) at position (\(position.x), \(position.y))")
-                            self.viewModel.refresh.toggle()
-                        } catch {
-                            print("Error saving new location: \(error.localizedDescription)")
-                        }
+                        // Create a new location at this position with the correct order
+                        let order = Location.orderFromPosition(position)
+                        let _ = Location.createNew(in: self.viewContext, 
+                                                 imageName: imageName,
+                                                 posOrder: order)
+                        self.viewModel.refresh.toggle()
                     }
                 }
                 
@@ -364,10 +299,8 @@ struct LocationRectangleView: View {
     }
     
     private var position: CGPoint {
-        CGPoint(
-            x: CGFloat(location.positionX),
-            y: CGFloat(location.positionY)
-        )
+        // Use the new position property that converts from order to coordinates
+        return location.position
     }
     
     // Get the image name from location, with fallback to "home"
@@ -414,8 +347,7 @@ struct LocationRectangleView: View {
                                     if currentDragPosition.x >= minX && currentDragPosition.x <= maxX &&
                                        currentDragPosition.y >= minY && currentDragPosition.y <= maxY {
                                         // Skip if this is our own position
-                                        if targetPos.x == CGFloat(location.positionX) && 
-                                           targetPos.y == CGFloat(location.positionY) {
+                                        if targetPos == location.position {
                                             continue
                                         }
                                         
@@ -559,7 +491,9 @@ struct LocationRectangleView: View {
                                 .onDisappear { isContextMenuPresented = false }
                         }
                         .onTapGesture {
-                            print("The location is tapped")
+                            //is tapped
+                            viewModel.showLocationEventList = true
+                            viewModel.location = location
                             print("Location: \(location.imageName ?? "Unnamed")")
                         }
                 }
@@ -567,8 +501,6 @@ struct LocationRectangleView: View {
         }
         .frame(width: size.width, height: size.height)
         .onDrop(of: [.text], isTargeted: $isDraggingOver) { providers, _ in
-            // Find which allowed position this location is at
-            let currentPos = position
             
             // Helper function to handle drop at this location's position
             func handleDrop() -> Bool {
@@ -629,7 +561,11 @@ struct LocationRectangleView: View {
     
     // Find an existing location at a position, excluding this location
     private func findExistingLocationAt(position: CGPoint) -> Location? {
+        // Convert position to order
+        let order = Location.orderFromPosition(position)
+        
         let request: NSFetchRequest<Location> = Location.fetchRequest()
+        request.predicate = NSPredicate(format: "positionOrder == %d", order)
         
         do {
             let allLocations = try viewContext.fetch(request)
@@ -640,15 +576,7 @@ struct LocationRectangleView: View {
                     continue
                 }
                 
-                // Check if position matches
-                let locationPoint = CGPoint(
-                    x: CGFloat(existingLocation.positionX),
-                    y: CGFloat(existingLocation.positionY)
-                )
-                
-                if locationPoint == position {
-                    return existingLocation
-                }
+                return existingLocation
             }
         } catch {
             print("Error finding location: \(error)")
@@ -659,8 +587,8 @@ struct LocationRectangleView: View {
     
     // Update position of this location
     private func updatePosition(to newPosition: CGPoint) {
-        location.positionX = Int16(newPosition.x)
-        location.positionY = Int16(newPosition.y)
+        // Convert the position to order and set it
+        location.setPosition(newPosition)
         
         do {
             try viewContext.save()
@@ -674,16 +602,13 @@ struct LocationRectangleView: View {
     
     // Swap positions with another location
     private func swapPositions(with otherLocation: Location) {
-        // Store original positions
-        let thisPosition = CGPoint(x: CGFloat(location.positionX), y: CGFloat(location.positionY))
-        let otherPosition = CGPoint(x: CGFloat(otherLocation.positionX), y: CGFloat(otherLocation.positionY))
+        // Store original order values
+        let thisOrder = location.positionOrder
+        let otherOrder = otherLocation.positionOrder
         
-        // Update positions
-        location.positionX = Int16(otherPosition.x)
-        location.positionY = Int16(otherPosition.y)
-        
-        otherLocation.positionX = Int16(thisPosition.x)
-        otherLocation.positionY = Int16(thisPosition.y)
+        // Update position orders
+        location.positionOrder = otherOrder
+        otherLocation.positionOrder = thisOrder
         
         // Save changes
         do {
@@ -711,6 +636,27 @@ struct BackgroundView: View {
                 DottedBackground(dotSpacing: gridSize, color: color)
             }
         }
+    }
+}
+
+// Add the MapStyle enum
+enum MapStyle: String, CaseIterable {
+    case grid = "grid"
+    case dots = "dots"
+}
+
+// Add these preference key structures for size reporting
+struct SizePreferenceKey: PreferenceKey {
+    static var defaultValue: CGSize = .zero
+    static func reduce(value: inout CGSize, nextValue: () -> CGSize) {
+        value = nextValue()
+    }
+}
+
+struct ContentSizePreferenceKey: PreferenceKey {
+    static var defaultValue: CGSize = .zero
+    static func reduce(value: inout CGSize, nextValue: () -> CGSize) {
+        value = nextValue()
     }
 }
 

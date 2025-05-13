@@ -16,7 +16,10 @@ struct EventList: View {
     @Binding var selectedEvent: Event?
     
     @State var draggingItem: Event? = nil
-    var isChangeSelectedEvent: Bool
+    var toggleHeartSelectEvent: Bool
+    var showHeart: Bool = true
+    var showEdit: Bool = true
+    var showLocation: Bool = false
     
     @State var refresh: Bool = false
     
@@ -34,30 +37,46 @@ struct EventList: View {
                             
                             Spacer()
                             
-                            Image(systemName: "pencil.line")
-                                .onTapGesture {
-                                    viewModel.showChangeEvent = true
-                                    viewModel.changeEvent = e
-                                }
-                            
-                            Image(systemName: e.isFavourite ? "heart.fill" : "heart")
-                                .bold()
-                                .foregroundStyle(.heart)
-                                .onTapGesture {
-                                    withAnimation {
-                                        e.toggleIsFavorite()
-                                        
-                                        if isChangeSelectedEvent{
-                                            selectedEvent = e
-                                        }
-                                        fetchEvents()
-                                        saveOrder()
-                                        refresh.toggle()
+                            if showEdit{
+                                Image(systemName: "pencil.line")
+                                    .onTapGesture {
+                                        viewModel.showChangeEvent = true
+                                        viewModel.changeEvent = e
                                     }
+                            }
+                            
+                            if showHeart{
+                                Image(systemName: e.isFavourite ? "heart.fill" : "heart")
+                                    .bold()
+                                    .foregroundStyle(.heart)
+                                    .onTapGesture {
+                                        withAnimation {
+                                            e.toggleIsFavorite()
+                                            
+                                            if toggleHeartSelectEvent{
+                                                selectedEvent = e
+                                            }
+                                            fetchEvents()
+                                            saveOrder()
+                                            refresh.toggle()
+                                        }
+                                    }
+                                    .onChange(of: refresh) { _, _ in
+                                        
+                                    }
+                            }
+                            
+                            if showLocation{
+                                let locationSet = e.locations
+                                let sortedLocations = (locationSet?.allObjects as? [Location] ?? [])
+                                    .sorted { $0.positionOrder < $1.positionOrder }
+                                ForEach(sortedLocations, id: \.self) { location in
+                                    Image(location.imageName ?? "")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: K.medium_size)
                                 }
-                                .onChange(of: refresh) { _, _ in
-                                    
-                                }
+                            }
                         }
                         .padding(.horizontal)
                         
@@ -125,7 +144,7 @@ struct EventList: View {
             NSSortDescriptor(keyPath: \Event.order, ascending: true)
         ]
         if !eventName.isEmpty {
-            request.predicate = NSPredicate(format: "name BEGINSWITH[c] %@", eventName)
+            request.predicate = NSPredicate(format: "name CONTAINS[c] %@", eventName)
         }
 
         do {

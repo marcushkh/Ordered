@@ -50,9 +50,27 @@ struct OneDay: View {
                             //Section Header
                             HStack(alignment: .center){
                                 
-                                Text(sc.name ?? "")
-                                    .font(.title3)
-                                    .bold()
+                                //TODO: Select Location
+                                if let location = sc.location{
+                                    //if have location:
+                                    Image(location.imageName ?? "")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: K.small_size)
+                                    
+                                    Image(location.name ?? "")
+                                        .font(.title3)
+                                        .bold()
+                                }
+                                else{
+                                    // if no location then:
+                                    Image(systemName: "mappin.and.ellipse.circle")
+                                        .font(.title3)
+                                    
+                                    Text("Select")
+                                        .font(.title3)
+                                        .bold()
+                                }
                                 
                                 Spacer()
                                 
@@ -408,6 +426,7 @@ struct OneDay: View {
         viewModel.changeSection = nil
         viewModel.insertToCal = toDoForDate.first
     }
+    
     func createSection(above: Section_Cal? = nil, below: Section_Cal? = nil){
         if let sc = above{
             viewModel.insertIndex = toDoForDate.first?.section_cals?.index(of: sc)

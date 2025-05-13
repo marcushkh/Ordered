@@ -19,14 +19,59 @@ extension Location {
     
     // Define specific allowed placement positions (just 3 positions)
     static let allowedPositions: [CGPoint] = [
-        CGPoint(x: 100, y: 100),  // Top-left position
-        CGPoint(x: 300, y: 300),  // Middle position
-        CGPoint(x: 500, y: 100)   // Bottom-right position
+        CGPoint(x: 100, y: 100),  // Top-left position (order 0)
+        CGPoint(x: 300, y: 200),  // Middle position (order 1)
+        CGPoint(x: 100, y: 300)   // Bottom-right position (order 2)
     ]
+    
+    // Get position coordinates from order
+    static func positionFromOrder(_ order: Int16) -> CGPoint {
+        let safeOrder = max(0, min(Int(order), allowedPositions.count - 1))
+        return allowedPositions[safeOrder]
+    }
+    
+    // Get order from position coordinates
+    static func orderFromPosition(_ position: CGPoint) -> Int16 {
+        for (index, allowedPosition) in allowedPositions.enumerated() {
+            if position == allowedPosition {
+                return Int16(index)
+            }
+        }
+        
+        // If not an exact match, find the closest position
+        var closestIndex = 0
+        var closestDistance = distance(position, allowedPositions[0])
+        
+        for i in 1..<allowedPositions.count {
+            let currentDistance = distance(position, allowedPositions[i])
+            if currentDistance < closestDistance {
+                closestDistance = currentDistance
+                closestIndex = i
+            }
+        }
+        
+        return Int16(closestIndex)
+    }
+    
+    // Get the position for this location
+    var position: CGPoint {
+        // If reading position, convert from order to coordinates
+        return Location.positionFromOrder(self.positionOrder)
+    }
+    
+    // Set the position for this location
+    func setPosition(_ newPosition: CGPoint) {
+        // When setting position, convert to order
+        self.positionOrder = Location.orderFromPosition(newPosition)
+    }
     
     // Check if a position is already occupied
     static func isPositionOccupied(at point: CGPoint, context: NSManagedObjectContext, excludingObjectID: NSManagedObjectID? = nil) -> Bool {
+        // Convert point to order
+        let order = orderFromPosition(point)
+        
         let request: NSFetchRequest<Location> = Location.fetchRequest()
+        request.predicate = NSPredicate(format: "positionOrder == %d", order)
         
         do {
             let locations = try context.fetch(request)
@@ -35,10 +80,7 @@ extension Location {
                 if let excludingID = excludingObjectID, location.objectID == excludingID {
                     return false
                 }
-                
-                // Check if the position matches
-                let locationPoint = CGPoint(x: CGFloat(location.positionX), y: CGFloat(location.positionY))
-                return locationPoint == point
+                return true
             }
         } catch {
             print("Error checking position occupation: \(error)")
@@ -48,20 +90,40 @@ extension Location {
     
     // Find nearest available allowed position
     static func nearestAvailableAllowedPosition(to point: CGPoint, context: NSManagedObjectContext, excludingObjectID: NSManagedObjectID? = nil) -> CGPoint? {
-        // Sort positions by distance from the input point
-        let sortedPositions = allowedPositions.sorted { posA, posB in
-            distance(point, posA) < distance(point, posB)
+        // Sort orders by distance from the input point
+        let orderedPositions = allowedPositions.enumerated().sorted { 
+            distance(point, $0.element) < distance(point, $1.element) 
         }
         
         // Return the first unoccupied position
-        for position in sortedPositions {
-            if !isPositionOccupied(at: position, context: context, excludingObjectID: excludingObjectID) {
+        for (order, position) in orderedPositions {
+            if !isPositionOrderOccupied(order: Int16(order), context: context, excludingObjectID: excludingObjectID) {
                 return position
             }
         }
         
         // If all positions are occupied, return nil
         return nil
+    }
+    
+    // Check if a position order is already occupied
+    static func isPositionOrderOccupied(order: Int16, context: NSManagedObjectContext, excludingObjectID: NSManagedObjectID? = nil) -> Bool {
+        let request: NSFetchRequest<Location> = Location.fetchRequest()
+        request.predicate = NSPredicate(format: "positionOrder == %d", order)
+        
+        do {
+            let locations = try context.fetch(request)
+            return locations.contains { location in
+                // Skip if this is the location we're currently editing
+                if let excludingID = excludingObjectID, location.objectID == excludingID {
+                    return false
+                }
+                return true
+            }
+        } catch {
+            print("Error checking position order occupation: \(error)")
+            return false
+        }
     }
     
     // Find nearest allowed position
@@ -90,30 +152,94 @@ extension Location {
         return sqrt(xDist * xDist + yDist * yDist)
     }
     
+    // Toggle an event in this location's events collection
+    // Returns true if the event was added, false if it was removed
+    func toggleEvent(_ event: Event?) -> Bool {
+        guard let event = event else { return false }
+        
+        // Get the current events as NSOrderedSet
+        let currentEvents = self.events as? NSOrderedSet ?? NSOrderedSet()
+        
+        // Check if the event is already in the set
+        if currentEvents.contains(event) {
+            // Event exists, so remove it
+            let mutableEvents = currentEvents.mutableCopy() as? NSMutableOrderedSet ?? NSMutableOrderedSet()
+            let index = mutableEvents.index(of: event)
+            if index != NSNotFound {
+                mutableEvents.removeObject(at: index)
+                self.events = mutableEvents
+                
+                // Update inverse relationship
+                if let locations = event.locations as? NSSet {
+                    let mutableLocations = locations.mutableCopy() as? NSMutableSet ?? NSMutableSet()
+                    mutableLocations.remove(self)
+                    event.locations = mutableLocations
+                }
+                
+                // Save changes
+                do {
+                    try Model.viewContext.save()
+                    print("Successfully removed event from location")
+                } catch {
+                    print("Error removing event from location: \(error.localizedDescription)")
+                }
+            }
+            
+            return false // Indicates event was removed
+        } else {
+            // Event doesn't exist, so add it
+            let mutableEvents = currentEvents.mutableCopy() as? NSMutableOrderedSet ?? NSMutableOrderedSet()
+            mutableEvents.add(event)
+            self.events = mutableEvents
+            
+            // Update inverse relationship
+            let locations = event.locations as? NSSet ?? NSSet()
+            let mutableLocations = locations.mutableCopy() as? NSMutableSet ?? NSMutableSet()
+            mutableLocations.add(self)
+            event.locations = mutableLocations
+            
+            // Save changes
+            do {
+                try Model.viewContext.save()
+                print("Successfully added event to location")
+            } catch {
+                print("Error adding event to location: \(error.localizedDescription)")
+            }
+            
+            return true // Indicates event was added
+        }
+    }
+    
     // Create a new Location entity with default values
     static func createNew(in context: NSManagedObjectContext, 
                          imageName: String = "home",
-                         posX: Int16 = 500,  // Default position in the center area
-                         posY: Int16 = 500) -> Location? {
+                         posOrder: Int16 = 0) -> Location? {
         
-        // Try to find an available allowed position
-        guard let availablePosition = nearestAvailableAllowedPosition(
-            to: CGPoint(x: CGFloat(posX), y: CGFloat(posY)),
-            context: context
-        ) else {
+        // Try to find an available position order
+        var availableOrder: Int16 = 0
+        
+        for order in 0..<Int16(allowedPositions.count) {
+            if !isPositionOrderOccupied(order: order, context: context) {
+                availableOrder = order
+                break
+            }
+        }
+        
+        // If we couldn't find an available order, all positions are occupied
+        if availableOrder >= Int16(allowedPositions.count) {
             print("Cannot create location: all allowed positions are occupied")
             return nil
         }
         
         let newLocation = Location(context: context)
         newLocation.imageName = imageName
-        newLocation.positionX = Int16(availablePosition.x)
-        newLocation.positionY = Int16(availablePosition.y)
+        newLocation.positionOrder = availableOrder
         
         // Save the context
         do {
             try context.save()
-            print("New location created with image: \(imageName) at position (\(availablePosition.x), \(availablePosition.y))")
+            let position = positionFromOrder(availableOrder)
+            print("New location created with image: \(imageName) at position (\(position.x), \(position.y)) with order \(availableOrder)")
             return newLocation
         } catch {
             print("Error saving new location: \(error.localizedDescription)")
@@ -123,23 +249,27 @@ extension Location {
     }
     
     // Update the position of a location
-    func updatePosition(posX: Int16, posY: Int16, context: NSManagedObjectContext) -> Bool {
-        // Try to find an available allowed position
-        guard let availablePosition = Location.nearestAvailableAllowedPosition(
-            to: CGPoint(x: CGFloat(posX), y: CGFloat(posY)),
-            context: context,
-            excludingObjectID: self.objectID
-        ) else {
-            print("Cannot update location: all other allowed positions are occupied")
+    func updatePositionOrder(_ newOrder: Int16, context: NSManagedObjectContext) -> Bool {
+        // Check if the order is valid
+        if newOrder < 0 || newOrder >= Int16(Location.allowedPositions.count) {
+            print("Invalid position order: \(newOrder)")
             return false
         }
         
-        self.positionX = Int16(availablePosition.x)
-        self.positionY = Int16(availablePosition.y)
+        // Check if the position is already occupied
+        if Location.isPositionOrderOccupied(order: newOrder, context: context, excludingObjectID: self.objectID) {
+            print("Position order \(newOrder) is already occupied")
+            return false
+        }
         
+        // Update the position order
+        self.positionOrder = newOrder
+        
+        // Save changes
         do {
             try context.save()
-            print("Updated location position to allowed position (\(availablePosition.x), \(availablePosition.y))")
+            let position = Location.positionFromOrder(newOrder)
+            print("Updated location position to order \(newOrder) at coordinates (\(position.x), \(position.y))")
             return true
         } catch {
             print("Error updating location position: \(error.localizedDescription)")

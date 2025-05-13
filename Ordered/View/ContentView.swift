@@ -47,7 +47,7 @@ struct ContentView: View {
                         .padding(.vertical)
                         .padding(.horizontal, w * 0.075)
                         
-                        EventList(viewModel: viewModel, eventName: $viewModel.searchEventName, selectedEvent: $viewModel.selectedEvent, isChangeSelectedEvent: true)
+                        EventList(viewModel: viewModel, eventName: $viewModel.searchEventName, selectedEvent: $viewModel.selectedEvent, toggleHeartSelectEvent: true)
                             .padding(.horizontal, w * 0.075)
                             .padding(.bottom, searchTyping ? 0 : 70)
                             .onAppear{
@@ -77,6 +77,7 @@ struct ContentView: View {
                 .overlay(alignment: .bottom){// TabBar
                     if !searchTyping{
                         BottomBar(viewModel: viewModel)
+                            .padding(.bottom, 10)
                     }
                 }
                 .popup(isPresented: $viewModel.showEventDetail){
@@ -88,6 +89,17 @@ struct ContentView: View {
                         .closeOnTapOutside(true)
                         .backgroundColor(.cPrimary.opacity(0.2))
                 }
+                .popup(isPresented: $viewModel.showLocationEventList){
+                    LocationPopup(viewModel: viewModel, dayPlannerVM: dayPlannerVM)
+                } customize: {
+                    $0
+                        .type(.floater())
+                        .closeOnTap(false)
+                        .closeOnTapOutside(true)
+                        .dragToDismiss(false)
+                        .backgroundColor(.cPrimary.opacity(0.2))
+                }
+                
                 .sheet(isPresented: $viewModel.showChangeEvent){
                     ChangeEvent(viewModel: viewModel)
                 }
@@ -96,15 +108,13 @@ struct ContentView: View {
                         ChangeSectionName(viewModel: viewModel)
                     }
                 }
-                .sheet(isPresented: $viewModel.showCreateEvent) {
+                .sheet(isPresented: $viewModel.showCreateEvent, onDismiss: {
+                    viewModel.createEvent_Section_Cal = nil
+                    viewModel.createEvent_Section = nil
+                    viewModel.refresh.toggle()
+                }) {
                     CreateEvent(viewModel: viewModel, editEvent_Cal: viewModel.editEvent_Cal, date: dayPlannerVM.currentDate, display: $viewModel.showCreateEvent)
                         .presentationCornerRadius(K.presentationCornerRadius)
-                        .onDisappear {
-                            viewModel.createEvent_Section_Cal = nil
-                            viewModel.createEvent_Section = nil
-                            viewModel.refresh.toggle()
-                        }
-                    
                 }
                 .onChange(of: viewModel.currentTab) { oldValue, newValue in
                     if viewModel.currentTab != .plan{

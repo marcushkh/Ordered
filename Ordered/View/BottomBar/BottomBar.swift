@@ -11,8 +11,6 @@ struct BottomBar: View {
     @ObservedObject var viewModel: ContentViewModel
     
     var body: some View {
-        if [TabBarItem.home, TabBarItem.map, TabBarItem.statistic, TabBarItem.setting].contains(viewModel.currentTab){
-            TabBar(viewModel: viewModel)
-        }
+        TabBar(viewModel: viewModel)
     }
 }

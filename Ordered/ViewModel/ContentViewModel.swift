@@ -35,6 +35,11 @@ class ContentViewModel: ObservableObject{
     @Published var insertToCal: Cal? = nil
     @Published var insertIndex: Int? = nil
     
+    //For Map Page
+    @Published var showLocationEventList = false
+    @Published var location: Location? = nil
+    @Published var searchEventNameMap: String = ""
+    
     //For Planning page
     @Published var highlightedEC: Event_Cal? = nil
     

@@ -43,7 +43,7 @@ struct EventBar: View {
                     Spacer()
                     Capsule()
                         .fill(Color.color3.opacity(0.5))
-                        .frame(width: 40, height: 5)
+                        .frame(width: 90, height: 5)
                     Spacer()
                 }
                 
