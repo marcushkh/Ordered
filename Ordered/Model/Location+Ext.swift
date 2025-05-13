@@ -21,7 +21,9 @@ extension Location {
     static let allowedPositions: [CGPoint] = [
         CGPoint(x: 100, y: 100),  // Top-left position (order 0)
         CGPoint(x: 300, y: 200),  // Middle position (order 1)
-        CGPoint(x: 100, y: 300)   // Bottom-right position (order 2)
+        CGPoint(x: 100, y: 300),   // Bottom-right position (order 2)
+        CGPoint(x: 300, y: 400),   // Bottom-right position (order 2)
+        CGPoint(x: 100, y: 500)   // Bottom-right position (order 2)
     ]
     
     // Get position coordinates from order

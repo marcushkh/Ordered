@@ -29,7 +29,7 @@ class ContentViewModel: ObservableObject{
     
     
     //Change Section
-    @Published var showChangeSection = false
+    @Published var showSelectLocation = false
     @Published var changeSection_Cal: Section_Cal? = nil
     @Published var changeSection: Section? = nil
     @Published var insertToCal: Cal? = nil

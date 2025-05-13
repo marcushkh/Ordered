@@ -84,9 +84,10 @@ struct TopBar: View {
                 
                 Spacer()
 
-                Image(systemName: "list.bullet.indent")
-                    .bold()
-                    .frame(height: K.small_size)
+                Image(systemName: "list.triangle")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(height: K.xxsmall_size)
                     .foregroundStyle(.color3)
                     .onTapGesture {
                         withAnimation {

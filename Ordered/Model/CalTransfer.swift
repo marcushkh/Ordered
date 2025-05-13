@@ -10,9 +10,6 @@ import Foundation
 struct CalTransfer{
     private static let viewContext = PersistenceController.shared.container.viewContext
     
-    
-
-    
     static func sectionToSC(_ section: Section) -> Section_Cal{
         var arr: [Event_Cal] = []
         
@@ -21,8 +18,6 @@ struct CalTransfer{
         }
         
         let sc = Section_Cal(context: viewContext)
-        sc.color = section.color
-        sc.name = section.name
         
         sc.parent = section
         sc.event_cals = NSOrderedSet(array: arr)

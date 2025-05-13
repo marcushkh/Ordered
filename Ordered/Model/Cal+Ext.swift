@@ -220,7 +220,7 @@ extension Cal {
         var customEventList: [CustomEvent] = []
         for sc in self.section_cals?.array as? [Section_Cal] ?? [] {
             for ec in sc.event_cals?.array as? [Event_Cal] ?? [] {
-                let customEvent = CustomEvent(color: sc.color ?? "", name: ec.parent?.name ?? "", icon: (ec.parent?.icon ?? ""), objectId: ec.objectID.uriRepresentation().absoluteString, duration: Int(ec.duration), startTime: ec.startTime, endTime: ec.endTime, aStartTime: ec.aStartTime, durationFinished: Int(ec.durationFinished))
+                let customEvent = CustomEvent(color: sc.location?.color ?? "", name: sc.location?.imageName?.capitalizedFirst ?? "", icon: (ec.parent?.icon ?? ""), objectId: ec.objectID.uriRepresentation().absoluteString, duration: Int(ec.duration), startTime: ec.startTime, endTime: ec.endTime, aStartTime: ec.aStartTime, durationFinished: Int(ec.durationFinished))
                 customEventList.append(customEvent)
             }
         }

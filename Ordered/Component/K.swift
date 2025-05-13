@@ -19,6 +19,7 @@ enum K{
     static let medium_size = 28.0
     static let large_size = 32.0
     static let xlarge_size = 36.0
+    static let xxl_size = 40.0
     
     static let defaultSectionColor = [
         "DCEDFA",

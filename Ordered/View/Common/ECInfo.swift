@@ -21,7 +21,7 @@ struct ECInfo: View {
         HStack{
             ZStack{
                 Circle()
-                    .fill(Color(hex: ec.section_cal?.color))
+                    .fill(Color(hex: ec.section_cal?.location?.color))
                     .frame(height: K.xlarge_size)
                 
                 Text(ec.parent?.icon ?? "")

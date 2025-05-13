@@ -99,14 +99,20 @@ struct ContentView: View {
                         .dragToDismiss(false)
                         .backgroundColor(.cPrimary.opacity(0.2))
                 }
+                .popup(isPresented: $viewModel.showSelectLocation) {
+                    //select Location
+                    SelectLocation(viewModel: viewModel)
+                } customize: {
+                    $0
+                        .type(.floater())
+                        .closeOnTap(false)
+                        .closeOnTapOutside(true)
+                        .dragToDismiss(false)
+                        .backgroundColor(.cPrimary.opacity(0.2))
+                }
                 
                 .sheet(isPresented: $viewModel.showChangeEvent){
                     ChangeEvent(viewModel: viewModel)
-                }
-                .overlay{
-                    if viewModel.showChangeSection{
-                        ChangeSectionName(viewModel: viewModel)
-                    }
                 }
                 .sheet(isPresented: $viewModel.showCreateEvent, onDismiss: {
                     viewModel.createEvent_Section_Cal = nil

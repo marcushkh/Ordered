@@ -56,15 +56,15 @@ struct OneDay: View {
                                     Image(location.imageName ?? "")
                                         .resizable()
                                         .scaledToFit()
-                                        .frame(width: K.small_size)
+                                        .frame(width: K.large_size)
                                     
-                                    Image(location.name ?? "")
+                                    Text(location.imageName?.capitalizedFirst ?? "")
                                         .font(.title3)
                                         .bold()
                                 }
                                 else{
                                     // if no location then:
-                                    Image(systemName: "mappin.and.ellipse.circle")
+                                    Image(systemName: "mappin.and.ellipse")
                                         .font(.title3)
                                     
                                     Text("Select")
@@ -159,7 +159,7 @@ struct OneDay: View {
                                 .draggable(ec.description){
                                     ZStack{
                                         Circle()
-                                            .fill(Color(hex: ec.section_cal?.color))
+                                            .fill(Color(hex: ec.section_cal?.location?.color))
                                             .frame(height: K.xlarge_size)
                                         
                                         Text(ec.parent?.icon ?? "")
@@ -208,7 +208,7 @@ struct OneDay: View {
                             HStack{
                                 ZStack{
                                     Circle()
-                                        .fill(Color(hex: sc.color))
+                                        .fill(Color(hex: sc.location?.color))
                                         .frame(height: K.xlarge_size)
                                         .bold()
                                     Image(systemName: "plus")
@@ -421,7 +421,7 @@ struct OneDay: View {
     }
     
     func edit(sc: Section_Cal){
-        viewModel.showChangeSection = true
+        viewModel.showSelectLocation = true
         viewModel.changeSection_Cal = sc
         viewModel.changeSection = nil
         viewModel.insertToCal = toDoForDate.first
@@ -435,7 +435,7 @@ struct OneDay: View {
             viewModel.insertIndex = (toDoForDate.first?.section_cals?.index(of: sc) ?? 0) + 1
         }
         //Put it at the very end
-        viewModel.showChangeSection = true
+        viewModel.showSelectLocation = true
         viewModel.changeSection_Cal = nil
         viewModel.changeSection = nil
         viewModel.insertToCal = toDoForDate.first

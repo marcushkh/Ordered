@@ -548,7 +548,7 @@ struct CreateEvent: View {
             let event_Cal = event.getEC()
             event_Cal.detail = description
             
-            let new_section_Cal: Section_Cal = viewModel.createEvent_Section_Cal ?? Section_Cal.new(colorScheme: colorScheme)
+            let new_section_Cal: Section_Cal = viewModel.createEvent_Section_Cal ?? Section_Cal.new()
             new_section_Cal.add(event: event_Cal)
             
             //if no Cal -> create Cal

@@ -37,10 +37,10 @@
 		2C601C5E2C5B6FE600FBC8E2 /* K.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C601C5D2C5B6FE600FBC8E2 /* K.swift */; };
 		2C68C9962C607E7000D38FBC /* CalTransfer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C68C9952C607E7000D38FBC /* CalTransfer.swift */; };
 		2C6A82D92CC17364006B533E /* CreateEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6A82D82CC17364006B533E /* CreateEvent.swift */; };
-		2C71A3912D3E3D8C00534C9A /* ChangeSectionName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C71A3902D3E3D8500534C9A /* ChangeSectionName.swift */; };
 		2C74CB3D2C59DD9D00716233 /* ContentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C74CB3C2C59DD9D00716233 /* ContentViewModel.swift */; };
 		2C74CB3F2C59DE6F00716233 /* Sample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C74CB3E2C59DE6F00716233 /* Sample.swift */; };
 		2C784E052D325C6400A56D72 /* DurationSelection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C784E042D325C5D00A56D72 /* DurationSelection.swift */; };
+		2C7FD65D2DD367EC005E41F5 /* SelectLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7FD65C2DD367E9005E41F5 /* SelectLocation.swift */; };
 		2C96053B2C82D21900A1736D /* WelcomeVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C96053A2C82D21900A1736D /* WelcomeVM.swift */; };
 		2CA35CD32D28E16300011B89 /* Cal+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA35CD22D28E15900011B89 /* Cal+Ext.swift */; };
 		2CA35CD52D28E1F200011B89 /* Event+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA35CD42D28E1EE00011B89 /* Event+Ext.swift */; };
@@ -147,10 +147,10 @@
 		2C601C5D2C5B6FE600FBC8E2 /* K.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = K.swift; sourceTree = "<group>"; };
 		2C68C9952C607E7000D38FBC /* CalTransfer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalTransfer.swift; sourceTree = "<group>"; };
 		2C6A82D82CC17364006B533E /* CreateEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateEvent.swift; sourceTree = "<group>"; };
-		2C71A3902D3E3D8500534C9A /* ChangeSectionName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeSectionName.swift; sourceTree = "<group>"; };
 		2C74CB3C2C59DD9D00716233 /* ContentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentViewModel.swift; sourceTree = "<group>"; };
 		2C74CB3E2C59DE6F00716233 /* Sample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sample.swift; sourceTree = "<group>"; };
 		2C784E042D325C5D00A56D72 /* DurationSelection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DurationSelection.swift; sourceTree = "<group>"; };
+		2C7FD65C2DD367E9005E41F5 /* SelectLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectLocation.swift; sourceTree = "<group>"; };
 		2C96053A2C82D21900A1736D /* WelcomeVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeVM.swift; sourceTree = "<group>"; };
 		2CA35CD22D28E15900011B89 /* Cal+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Cal+Ext.swift"; sourceTree = "<group>"; };
 		2CA35CD42D28E1EE00011B89 /* Event+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Event+Ext.swift"; sourceTree = "<group>"; };
@@ -387,7 +387,7 @@
 				2C220D562D434FB800E5AF09 /* Emoji.swift */,
 				2C6A82D82CC17364006B533E /* CreateEvent.swift */,
 				2CCBD7A02D81250C00070967 /* ChangeEvent.swift */,
-				2C71A3902D3E3D8500534C9A /* ChangeSectionName.swift */,
+				2C7FD65C2DD367E9005E41F5 /* SelectLocation.swift */,
 			);
 			path = EventSectionModifier;
 			sourceTree = "<group>";
@@ -576,7 +576,6 @@
 				2CC2E7272DD0CB8B005D977B /* LocationPopup.swift in Sources */,
 				2CA36DFE2DBA55FD0001B538 /* Location+Ext.swift in Sources */,
 				2CEB6B622DB9DF1A00700265 /* CustomMapView.swift in Sources */,
-				2C71A3912D3E3D8C00534C9A /* ChangeSectionName.swift in Sources */,
 				2CFF02DA2C60A07000627CDF /* BottomBar.swift in Sources */,
 				2C5C1C9E2C5781B30079482A /* TabBar.swift in Sources */,
 				2C14A3162C6DD07A00807FFB /* MainList.swift in Sources */,
@@ -591,6 +590,7 @@
 				2CFC59B82D45038400529099 /* ActionButtonView.swift in Sources */,
 				2CFF02D82C60A06400627CDF /* EventBar.swift in Sources */,
 				2C601C5E2C5B6FE600FBC8E2 /* K.swift in Sources */,
+				2C7FD65D2DD367EC005E41F5 /* SelectLocation.swift in Sources */,
 				2CC2E71B2DD08E16005D977B /* MorningRoutine.swift in Sources */,
 				2C220D572D434FB800E5AF09 /* Emoji.swift in Sources */,
 				2C601C5C2C5B411A00FBC8E2 /* Color+Ext.swift in Sources */,

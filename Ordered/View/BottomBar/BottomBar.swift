@@ -11,6 +11,8 @@ struct BottomBar: View {
     @ObservedObject var viewModel: ContentViewModel
     
     var body: some View {
-        TabBar(viewModel: viewModel)
+        if viewModel.currentTab != .plan{
+            TabBar(viewModel: viewModel)
+        }
     }
 }

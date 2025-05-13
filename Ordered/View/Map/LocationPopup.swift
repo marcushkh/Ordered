@@ -111,7 +111,7 @@ struct LocationPopup: View{
                                     sc.insert(newEC, after: viewModel.highlightedEC!)
                                 }
                                 else{
-                                    let new_section_Cal = Section_Cal.new(colorScheme: colorScheme)
+                                    let new_section_Cal = Section_Cal.new()
                                     
                                     new_section_Cal.add(event: newEC)
                                     cal.add(new_section_Cal)
