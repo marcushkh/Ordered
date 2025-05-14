@@ -52,6 +52,7 @@
 		2C7FD6702DD38015005E41F5 /* LiveActivityActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7FD6622DD38015005E41F5 /* LiveActivityActions.swift */; };
 		2C7FD6712DD38015005E41F5 /* LiveActivityLiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7FD6652DD38015005E41F5 /* LiveActivityLiveActivity.swift */; };
 		2C7FD6722DD38015005E41F5 /* AppIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7FD65E2DD38015005E41F5 /* AppIntent.swift */; };
+		2C7FD6742DD3B251005E41F5 /* FinishedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7FD6732DD3B24A005E41F5 /* FinishedView.swift */; };
 		2C96053B2C82D21900A1736D /* WelcomeVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C96053A2C82D21900A1736D /* WelcomeVM.swift */; };
 		2CA35CD32D28E16300011B89 /* Cal+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA35CD22D28E15900011B89 /* Cal+Ext.swift */; };
 		2CA35CD52D28E1F200011B89 /* Event+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA35CD42D28E1EE00011B89 /* Event+Ext.swift */; };
@@ -170,6 +171,7 @@
 		2C7FD6632DD38015005E41F5 /* LiveActivityBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveActivityBundle.swift; sourceTree = "<group>"; };
 		2C7FD6642DD38015005E41F5 /* LiveActivityControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveActivityControl.swift; sourceTree = "<group>"; };
 		2C7FD6652DD38015005E41F5 /* LiveActivityLiveActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveActivityLiveActivity.swift; sourceTree = "<group>"; };
+		2C7FD6732DD3B24A005E41F5 /* FinishedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinishedView.swift; sourceTree = "<group>"; };
 		2C96053A2C82D21900A1736D /* WelcomeVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeVM.swift; sourceTree = "<group>"; };
 		2CA35CD22D28E15900011B89 /* Cal+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Cal+Ext.swift"; sourceTree = "<group>"; };
 		2CA35CD42D28E1EE00011B89 /* Event+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Event+Ext.swift"; sourceTree = "<group>"; };
@@ -355,6 +357,7 @@
 		2C5DC1192C5B37870021E54A /* DailyPlanner */ = {
 			isa = PBXGroup;
 			children = (
+				2C7FD6732DD3B24A005E41F5 /* FinishedView.swift */,
 				2C5DC11A2C5B37BE0021E54A /* OneDay.swift */,
 				2CFCE0402C777E33001B915B /* EventDetailPopup.swift */,
 				2C14A3152C6DD07A00807FFB /* MainList.swift */,
@@ -573,6 +576,7 @@
 				2CC2E7192DD08E06005D977B /* EventPicker.swift in Sources */,
 				2C5C1C9B2C576E9B0079482A /* TopBar.swift in Sources */,
 				2CC16CED2C63B2A2002DCF79 /* MyCalendar.swift in Sources */,
+				2C7FD6742DD3B251005E41F5 /* FinishedView.swift in Sources */,
 				2CCBD7A12D81251100070967 /* ChangeEvent.swift in Sources */,
 				2C68C9962C607E7000D38FBC /* CalTransfer.swift in Sources */,
 				2C024C3B2D5E338B009A3F1F /* StatTopBar.swift in Sources */,

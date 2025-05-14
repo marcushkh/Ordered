@@ -35,6 +35,9 @@ struct ContentView: View {
                         MainList(viewModel: viewModel, dayPlannerVM: dayPlannerVM)
                             .ignoresSafeArea()
                     }
+                    else if viewModel.currentTab == .sugg{
+                        
+                    }
                     else if viewModel.currentTab == .statistic{
                         HStack {
                             Image(systemName: "magnifyingglass")

@@ -25,6 +25,7 @@ struct OrderedApp: App {
 //
 //            }
 //            else{
+            
                 ContentView()
                     .environment(\.managedObjectContext, persistenceController.container.viewContext)
                     .task{
