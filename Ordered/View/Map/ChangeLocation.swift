@@ -10,6 +10,7 @@ struct ChangeLocation: View{
     @FocusState var typingLocationName: Bool
     @State var name: String = ""
     @State var color: String = ""
+    @State var selectedColor: Color = .blue
     @State var showAlert: Bool = false
     
     @Environment(\.colorScheme) var colorScheme
@@ -31,19 +32,18 @@ struct ChangeLocation: View{
             VStack{
                 Spacer()
                 HStack{
-                    ColorPicker("", selection: Binding(get: {
-                        Color(hex: color)
-                    }, set: { c in
-                        color = c.toHex() ?? "F3B757"
-                    }), supportsOpacity: false)
+                    ColorPicker("", selection: $selectedColor, supportsOpacity: false)
                     .labelsHidden()
                     .overlay{
                         Circle()
-                            .fill(Color(hex: color))
+                            .fill(selectedColor)
                             .frame(width: K.medium_size, height: K.medium_size)
                     }
-                    .onChange(of: color) { oldValue, newValue in
-                        print(color)
+                    .onChange(of: selectedColor) { oldValue, newValue in
+                        if let hexString = newValue.toHex() {
+                            color = hexString
+                            print("Color changed to: \(color)")
+                        }
                     }
                     
                     TextField("Location Name", text: $name)
@@ -103,12 +103,26 @@ struct ChangeLocation: View{
                     print(viewModel.changeLocation)
                     name = viewModel.changeLocation?.name ?? ""
                     color = viewModel.changeLocation?.color ?? "F3B757"
+                    selectedColor = Color(hex: color) ?? .blue
                     typingLocationName = true
                 }
                 .padding(.vertical)
                 .padding(.horizontal, K.horizontal_padding)
                 .background()
             }
+        }
+        .alert("Delete Location?", isPresented: $showAlert) {
+            Button("Cancel", role: .cancel) { }
+            
+            Button("Delete", role: .destructive) {
+                if let location = viewModel.changeLocation {
+                    if location.delete(from: Model.viewContext) {
+                        dismiss()
+                    }
+                }
+            }
+        } message: {
+            Text("Are you sure you want to delete this location? This action cannot be undone.")
         }
     }
     

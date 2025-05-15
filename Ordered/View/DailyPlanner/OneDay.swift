@@ -40,10 +40,10 @@ struct OneDay: View {
     
     var body: some View {
         VStack{
-            ScrollView{
-                FinishedView(viewModel: viewModel, cal: toDoForDate.first)
-                    .padding(.horizontal, K.horizontal_padding)
-            }
+//            ScrollView{
+//                FinishedView(viewModel: viewModel, cal: toDoForDate.first)
+//                    .padding(.horizontal, K.horizontal_padding)
+//            }
             
             ScrollViewReader{ proxy in
                 ScrollView{
@@ -132,7 +132,7 @@ struct OneDay: View {
                                     .padding(.top, -8)
                                 
                                 //Events
-                                ForEach(sc.get_event_cals_without_started_events(), id: \.self){ ec in
+                                ForEach(sc.event_cals?.array as! [Event_Cal], id: \.self){ ec in
                                     HStack{
                                         ECInfo(ec: ec, refresh: viewModel.refresh, highlightedEC: $viewModel.highlightedEC)
                                         
