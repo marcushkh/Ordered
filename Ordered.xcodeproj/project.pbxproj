@@ -60,6 +60,7 @@
 		2CA36DFB2DBA548F0001B538 /* MapTopBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA36DFA2DBA548F0001B538 /* MapTopBar.swift */; };
 		2CA36DFD2DBA55FD0001B538 /* Location+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA36DFC2DBA55FD0001B538 /* Location+Ext.swift */; };
 		2CA36DFE2DBA55FD0001B538 /* Location+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA36DFC2DBA55FD0001B538 /* Location+Ext.swift */; };
+		2CB946742DD6385500E4CD6E /* LocationInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB946732DD6385500E4CD6E /* LocationInfo.swift */; };
 		2CC16CED2C63B2A2002DCF79 /* MyCalendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC16CEC2C63B2A2002DCF79 /* MyCalendar.swift */; };
 		2CC16CEF2C63B2D0002DCF79 /* DayPlannerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC16CEE2C63B2D0002DCF79 /* DayPlannerViewModel.swift */; };
 		2CC2E7192DD08E06005D977B /* EventPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC2E7182DD08DFE005D977B /* EventPicker.swift */; };
@@ -179,6 +180,7 @@
 		2CA35CD62D290EC300011B89 /* Section+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Section+Ext.swift"; sourceTree = "<group>"; };
 		2CA36DFA2DBA548F0001B538 /* MapTopBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapTopBar.swift; sourceTree = "<group>"; };
 		2CA36DFC2DBA55FD0001B538 /* Location+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Location+Ext.swift"; sourceTree = "<group>"; };
+		2CB946732DD6385500E4CD6E /* LocationInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationInfo.swift; sourceTree = "<group>"; };
 		2CC16CEC2C63B2A2002DCF79 /* MyCalendar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyCalendar.swift; sourceTree = "<group>"; };
 		2CC16CEE2C63B2D0002DCF79 /* DayPlannerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayPlannerViewModel.swift; sourceTree = "<group>"; };
 		2CC2E7182DD08DFE005D977B /* EventPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventPicker.swift; sourceTree = "<group>"; };
@@ -410,6 +412,7 @@
 		2C9605392C82D15100A1736D /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				2CB946732DD6385500E4CD6E /* LocationInfo.swift */,
 				2C14A3132C6DCFB100807FFB /* SwipeableStack.swift */,
 				2C01D5132C81670300D33BDA /* ECInfo.swift */,
 				2C4BCF9E2C84D04E0001AD4C /* EventInfo.swift */,
@@ -571,6 +574,7 @@
 				2C784E052D325C6400A56D72 /* DurationSelection.swift in Sources */,
 				2CFC59AD2D44CD4A00529099 /* EventActionHandler.swift in Sources */,
 				2C01D5142C81670300D33BDA /* ECInfo.swift in Sources */,
+				2CB946742DD6385500E4CD6E /* LocationInfo.swift in Sources */,
 				2CC2E7252DD0C101005D977B /* ProgressStepBar.swift in Sources */,
 				2C96053B2C82D21900A1736D /* WelcomeVM.swift in Sources */,
 				2C0272FC2D6434C20033FC5B /* EventList.swift in Sources */,

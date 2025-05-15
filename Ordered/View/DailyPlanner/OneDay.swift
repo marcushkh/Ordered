@@ -127,7 +127,7 @@ struct OneDay: View {
                                 .id(sc.id)
                                 
                                 Divider()
-                                    .background(Color(.blue))
+                                    .background(Color(.color3))
                                     .frame(height: 2)
                                     .padding(.top, -8)
                                 

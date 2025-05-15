@@ -10,7 +10,7 @@ struct ChangeLocation: View{
     @FocusState var typingLocationName: Bool
     @State var name: String = ""
     @State var color: String = ""
-    @State var selectedColor: Color = .blue
+    @State var selectedColor: Color = .color3
     @State var showAlert: Bool = false
     
     @Environment(\.colorScheme) var colorScheme
@@ -100,10 +100,9 @@ struct ChangeLocation: View{
                     
                 }
                 .onAppear{
-                    print(viewModel.changeLocation)
                     name = viewModel.changeLocation?.name ?? ""
                     color = viewModel.changeLocation?.color ?? "F3B757"
-                    selectedColor = Color(hex: color) ?? .blue
+                    selectedColor = Color(hex: color)
                     typingLocationName = true
                 }
                 .padding(.vertical)
