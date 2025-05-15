@@ -27,7 +27,6 @@ class ContentViewModel: ObservableObject{
     @Published var showChangeEvent = false
     @Published var changeEvent: Event? = nil
     
-    
     //Change Section
     @Published var showSelectLocation = false
     @Published var changeSection_Cal: Section_Cal? = nil
@@ -46,6 +45,7 @@ class ContentViewModel: ObservableObject{
     
     //For Planning page
     @Published var highlightedEC: Event_Cal? = nil
+    @Published var highlightedSC: Section_Cal? = nil
     
     //For Stat page
     @Published var selectedEvent: Event? = nil

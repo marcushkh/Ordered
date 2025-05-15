@@ -122,7 +122,13 @@ struct OneDay: View {
                                     
                                 }
                                 .onTapGesture {
-                                    edit(sc: sc)
+                                    if viewModel.currentTab == .plan{
+                                        viewModel.highlightedEC = nil
+                                        viewModel.highlightedSC = sc
+                                    }
+                                    else{
+                                        edit(sc: sc)
+                                    }
                                 }
                                 .id(sc.id)
                                 
@@ -151,6 +157,7 @@ struct OneDay: View {
                                         withAnimation {
                                             if viewModel.currentTab == .plan{
                                                 viewModel.highlightedEC = ec
+                                                viewModel.highlightedSC = nil
                                             }
                                             else{
                                                 viewModel.showEventDetail = true
@@ -404,6 +411,7 @@ struct OneDay: View {
                     if viewModel.currentTab == .plan && pos == .centerView{
                         withAnimation {
                             viewModel.highlightedEC = toDoForDate.first?.getLastFinishedEvent()
+                            viewModel.highlightedSC = nil
                         }
                     }
                 }
@@ -412,6 +420,7 @@ struct OneDay: View {
                     if viewModel.currentTab == .plan && pos == .centerView{
                         withAnimation {
                             viewModel.highlightedEC = toDoForDate.first?.getLastFinishedEvent()
+                            viewModel.highlightedSC = nil
                         }
                     }
                 }
@@ -419,6 +428,13 @@ struct OneDay: View {
                     withAnimation {
                         if pos == .centerView{
                             proxy.scrollTo(viewModel.highlightedEC?.id, anchor: .top)
+                        }
+                    }
+                }
+                .onChange(of: viewModel.highlightedSC) { _, _ in
+                    withAnimation {
+                        if pos == .centerView{
+                            proxy.scrollTo(viewModel.highlightedSC?.id, anchor: .top)
                         }
                     }
                 }

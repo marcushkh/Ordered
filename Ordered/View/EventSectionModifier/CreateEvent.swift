@@ -612,6 +612,7 @@ struct CreateEvent: View {
             }
             if viewModel.currentTab == .plan {
                 viewModel.highlightedEC = ec
+                viewModel.highlightedSC = nil
             }
             display = false
         }

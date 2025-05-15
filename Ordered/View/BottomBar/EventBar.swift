@@ -75,6 +75,7 @@ struct EventBar: View {
                                     viewModel.currentTab = .home
                                 }
                                 viewModel.highlightedEC = nil
+                                viewModel.highlightedSC = nil
                             }
                         }
                         
@@ -105,7 +106,10 @@ struct EventBar: View {
             ScrollView{
                 
                 if selection == "Event"{
-                    LazyVGrid(columns: [GridItem(), GridItem()],spacing: K.horizontal_padding, content: {
+                    LazyVGrid(
+                        columns: [GridItem(), GridItem()],
+                        spacing: K.horizontal_padding,
+                        content: {
                         ForEach(events) { e in
                             EventInfo(e: e)
                                 .padding(.horizontal)
@@ -129,6 +133,7 @@ struct EventBar: View {
                                             }
                                             cal.sort()
                                             viewModel.highlightedEC = newEC
+                                            viewModel.highlightedSC = nil
                                         }
                                         
                                         viewModel.refresh.toggle()

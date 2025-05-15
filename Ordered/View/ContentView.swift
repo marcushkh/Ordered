@@ -70,6 +70,7 @@ struct ContentView: View {
                         EventBar(viewModel: viewModel, dayPlannerVM: dayPlannerVM)
                             .onDisappear{
                                 viewModel.highlightedEC = nil
+                                viewModel.highlightedSC = nil
                             }
                             .onTapGesture {
                                 
@@ -134,6 +135,7 @@ struct ContentView: View {
                     if viewModel.currentTab != .plan{
                         withAnimation {
                             viewModel.highlightedEC = nil
+                            viewModel.highlightedSC = nil
                         }
                     }
                     
@@ -155,6 +157,7 @@ struct ContentView: View {
                         if viewModel.currentTab == .plan{
                             viewModel.currentTab = .home
                         }
+                        viewModel.highlightedEC = nil
                         viewModel.highlightedEC = nil
                     }
                 }
