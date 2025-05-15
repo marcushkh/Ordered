@@ -27,8 +27,9 @@ struct CustomMapView: View {
     @State private var isDraggingOver: Bool = false
     @State private var draggedItemName: String? = nil
     
-    // Add Environment for CoreData context
+    // Add Environment for CoreData context and color scheme
     @Environment(\.managedObjectContext) private var viewContext
+    @Environment(\.colorScheme) private var colorScheme
     
     // FetchRequest for Location entities
     @FetchRequest(
@@ -120,7 +121,8 @@ struct CustomMapView: View {
                                                     let order = Location.orderFromPosition(position)
                                                     let newLocation = Location.createNew(in: self.viewContext, 
                                                                               imageName: imageName,
-                                                                              posOrder: order)
+                                                                              posOrder: order,
+                                                                              colorScheme: colorScheme)
                                                     self.viewModel.refresh.toggle()
                                                     return true
                                                 }
@@ -140,7 +142,8 @@ struct CustomMapView: View {
                                                     let order = Location.orderFromPosition(position)
                                                     let newLocation = Location.createNew(in: self.viewContext, 
                                                                               imageName: imageName,
-                                                                              posOrder: order)
+                                                                              posOrder: order,
+                                                                              colorScheme: self.colorScheme)
                                                     self.viewModel.refresh.toggle()
                                                 }
                                                 return true
@@ -277,7 +280,8 @@ struct CustomMapView: View {
                     let order = Location.orderFromPosition(position)
                     let _ = Location.createNew(in: self.viewContext, 
                                             imageName: imageName,
-                                            posOrder: order)
+                                            posOrder: order,
+                                            colorScheme: self.colorScheme)
                     self.viewModel.refresh.toggle()
                 }
                 
@@ -310,6 +314,7 @@ struct LocationRectangleView: View {
     @Binding var selectedLocationObjectID: NSManagedObjectID?
     @GestureState private var dragOffset: CGSize = .zero
     @Environment(\.managedObjectContext) private var viewContext
+    @Environment(\.colorScheme) private var colorScheme
     @State private var isContextMenuPresented = false
     // State for delete confirmation
     @State private var showDeleteAlert = false
@@ -598,6 +603,12 @@ struct LocationRectangleView: View {
                         // Replace existing location
                         location.imageName = newImageName
                         location.name = newImageName.capitalizedFirst
+                        
+                        // Set default color based on location type and color scheme
+                        if let locationType = LocationType(rawValue: newImageName) {
+                            location.color = locationType.colorFor(colorScheme: colorScheme)
+                        }
+                        
                         try? viewContext.save()
                         viewModel.refresh.toggle()
                     }

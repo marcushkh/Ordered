@@ -84,7 +84,15 @@ struct FinishedView: View {
                         .padding(.leading, leftPadding - 5)
                         .offset(y: startPosition)
                         .onTapGesture {
-                            print(height)
+                            withAnimation {
+                                if viewModel.currentTab == .plan{
+                                    
+                                }
+                                else{
+                                    viewModel.showEventDetail = true
+                                    viewModel.eventDetail = event
+                                }
+                            }
                         }
                     }
                 }

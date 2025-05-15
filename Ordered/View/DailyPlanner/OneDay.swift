@@ -132,7 +132,7 @@ struct OneDay: View {
                                     .padding(.top, -8)
                                 
                                 //Events
-                                ForEach(sc.event_cals?.array as! [Event_Cal], id: \.self){ ec in
+                                ForEach(sc.get_event_cals_without_started_events(), id: \.self){ ec in
                                     HStack{
                                         ECInfo(ec: ec, refresh: viewModel.refresh, highlightedEC: $viewModel.highlightedEC)
                                         

@@ -9,13 +9,58 @@ import Foundation
 import CoreData
 import SwiftUI
 
+// Location type enum with associated default colors
+enum LocationType: String, CaseIterable {
+    case home = "home"
+    case school = "school"
+    case company = "company"
+    case cafe = "cafe"
+    case restaurant = "restaurant"
+    case park = "park"
+    case gym = "gym"
+    case library = "library"
+    case store = "store"
+    
+    var defaultColor: Int {
+        switch self {
+        case .home:
+            return 2
+        case .school:
+            return 1
+        case .company:
+            return 0
+        case .cafe:
+            return 3
+        case .restaurant:
+            return 3
+        case .park:
+            return 5
+        case .gym:
+            return 1
+        case .library:
+            return 4
+        case .store:
+            return 5
+        }
+    }
+    
+    // Get the appropriate color based on the color scheme
+    func colorFor(colorScheme: ColorScheme) -> String {
+        return colorScheme == .dark ? K.defaultSectionColorDark[defaultColor] : K.defaultSectionColor[defaultColor]
+    }
+}
+
 extension Location {
     
     // Available image names for locations
-    static let availableImages = [
-        "home", "school", "company", "cafe", "restaurant", "park", 
-        "gym", "library", "store"
-    ]
+    static var availableImages: [String] {
+        return LocationType.allCases.map { $0.rawValue }
+    }
+    
+    // Get location type from image name
+    static func locationType(from imageName: String) -> LocationType? {
+        return LocationType(rawValue: imageName)
+    }
     
     static let allowedPositions: [CGPoint] = [
         CGPoint(x: 100, y: 100),  // Top-left position (order 0)
@@ -225,10 +270,16 @@ extension Location {
         }
     }
     
+    // Get appropriate color for the current environment
+    static func defaultColorFor(locationType: LocationType, in colorScheme: ColorScheme) -> String {
+        return locationType.colorFor(colorScheme: colorScheme)
+    }
+    
     // Create a new Location entity with default values
     static func createNew(in context: NSManagedObjectContext, 
                          imageName: String = "home",
-                         posOrder: Int16 = 0) -> Location? {
+                         posOrder: Int16 = 0,
+                         colorScheme: ColorScheme = .light) -> Location? {
         
         // Try to find an available position order
         var availableOrder: Int16 = 0
@@ -250,6 +301,11 @@ extension Location {
         newLocation.imageName = imageName
         newLocation.name = imageName.capitalizedFirst
         newLocation.positionOrder = availableOrder
+        
+        // Set default color based on location type and color scheme
+        if let locationType = LocationType(rawValue: imageName) {
+            newLocation.color = locationType.colorFor(colorScheme: colorScheme)
+        }
         
         // Save the context
         do {
