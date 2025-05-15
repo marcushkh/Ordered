@@ -113,6 +113,11 @@ struct ContentView: View {
                         .dragToDismiss(false)
                         .backgroundColor(.cPrimary.opacity(0.2))
                 }
+                .overlay{
+                    if(viewModel.showChangeLocation){
+                        ChangeLocation(viewModel: viewModel)
+                    }
+                }
                 
                 .sheet(isPresented: $viewModel.showChangeEvent){
                     ChangeEvent(viewModel: viewModel)

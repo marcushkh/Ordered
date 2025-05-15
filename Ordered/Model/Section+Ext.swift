@@ -91,6 +91,17 @@ extension Section {
 }
 
 extension Section_Cal {
+    func get_event_cals_without_started_events() -> [Event_Cal]{
+        var ecs = self.event_cals?.array as! [Event_Cal]
+        ecs = ecs.filter { $0.aStartTime == nil } //with aStartTime == nil, it is removed
+        return ecs
+    }
+    
+    func get_started_event_cals() -> [Event_Cal]{
+        var ecs = self.event_cals?.array as! [Event_Cal]
+        ecs = ecs.filter { $0.aStartTime != nil } //with aStartTime != nil, it is removed
+        return ecs
+    }
     
     static func new(count: Int = 0) -> Section_Cal{
         let section = Section_Cal(context: Model.viewContext)

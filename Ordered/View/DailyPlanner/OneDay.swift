@@ -31,7 +31,6 @@ struct OneDay: View {
         self.pos = pos
         _viewModel = ObservedObject(wrappedValue: viewModel)
         _dayPlannerVM = ObservedObject(wrappedValue: dayPlannerVM)
-        
     }
     
     var toDoForDate: FetchedResults<Cal> {
@@ -42,7 +41,8 @@ struct OneDay: View {
     var body: some View {
         VStack{
             ScrollView{
-                FinishedView()
+                FinishedView(viewModel: viewModel, cal: toDoForDate.first)
+                    .padding(.horizontal, K.horizontal_padding)
             }
             
             ScrollViewReader{ proxy in
@@ -63,7 +63,7 @@ struct OneDay: View {
                                             .scaledToFit()
                                             .frame(width: K.large_size)
                                         
-                                        Text(location.imageName?.capitalizedFirst ?? "")
+                                        Text(location.name ?? location.imageName?.capitalizedFirst ?? "")
                                             .font(.title3)
                                             .bold()
                                     }

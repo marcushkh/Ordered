@@ -94,11 +94,12 @@ struct CustomMapView: View {
                                         .frame(width: 120, height: 120)
                                         .contentShape(Rectangle())
                                         .onDrop(of: [.text], isTargeted: $isDraggingOver) { providers, _ in
-                                            
+                                            print("ondrop1")
                                             // Helper function to handle drop at this position
                                             func handleDrop() -> Bool {
                                                 // Set dragging state to block context menus during drop
                                                 isDraggingOver = true
+                                                // Still need this delay for UI state
                                                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                                                     isDraggingOver = false
                                                 }
@@ -108,9 +109,16 @@ struct CustomMapView: View {
                                                 // Get image name synchronously if possible
                                                 if let imageName = provider.suggestedName,
                                                    Location.availableImages.contains(imageName) {
+                                                    
+                                                    // Check if location with this image type already exists
+                                                    if locationExists(withImageName: imageName) {
+                                                        print("Location of type \(imageName) already exists, ignoring drop")
+                                                        return false
+                                                    }
+                                                    
                                                     // Create a new location at this position with the correct order
                                                     let order = Location.orderFromPosition(position)
-                                                    let _ = Location.createNew(in: self.viewContext, 
+                                                    let newLocation = Location.createNew(in: self.viewContext, 
                                                                               imageName: imageName,
                                                                               posOrder: order)
                                                     self.viewModel.refresh.toggle()
@@ -122,14 +130,18 @@ struct CustomMapView: View {
                                                     guard let imageName = string as? String,
                                                           Location.availableImages.contains(imageName) else { return }
                                                     
-                                                    DispatchQueue.main.async {
-                                                        // Create a new location at this position with the correct order
-                                                        let order = Location.orderFromPosition(position)
-                                                        let _ = Location.createNew(in: self.viewContext, 
-                                                                                  imageName: imageName,
-                                                                                  posOrder: order)
-                                                        self.viewModel.refresh.toggle()
+                                                    // Check if location with this image type already exists
+                                                    if self.locationExists(withImageName: imageName) {
+                                                        print("Location of type \(imageName) already exists, ignoring drop")
+                                                        return
                                                     }
+                                                    
+                                                    // Create a new location at this position with the correct order
+                                                    let order = Location.orderFromPosition(position)
+                                                    let newLocation = Location.createNew(in: self.viewContext, 
+                                                                              imageName: imageName,
+                                                                              posOrder: order)
+                                                    self.viewModel.refresh.toggle()
                                                 }
                                                 return true
                                             }
@@ -191,6 +203,7 @@ struct CustomMapView: View {
                         }
                         .onEnded { _ in
                             // Small delay to prevent tap detection immediately after scrolling
+                            // Still need this delay for gesture handling
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                                 isScrolling = false
                             }
@@ -260,14 +273,12 @@ struct CustomMapView: View {
                     guard let imageName = string as? String,
                           Location.availableImages.contains(imageName) else { return }
                     
-                    DispatchQueue.main.async {
-                        // Create a new location at this position with the correct order
-                        let order = Location.orderFromPosition(position)
-                        let _ = Location.createNew(in: self.viewContext, 
-                                                 imageName: imageName,
-                                                 posOrder: order)
-                        self.viewModel.refresh.toggle()
-                    }
+                    // Create a new location at this position with the correct order
+                    let order = Location.orderFromPosition(position)
+                    let _ = Location.createNew(in: self.viewContext, 
+                                            imageName: imageName,
+                                            posOrder: order)
+                    self.viewModel.refresh.toggle()
                 }
                 
                 return true
@@ -276,6 +287,20 @@ struct CustomMapView: View {
         
         // No matching position found
         return false
+    }
+
+    // Helper method to check if a location with a specific image name already exists
+    private func locationExists(withImageName imageName: String) -> Bool {
+        let request: NSFetchRequest<Location> = Location.fetchRequest()
+        request.predicate = NSPredicate(format: "imageName == %@", imageName)
+        
+        do {
+            let matchingLocations = try viewContext.fetch(request)
+            return !matchingLocations.isEmpty
+        } catch {
+            print("Error checking for existing locations: \(error)")
+            return false
+        }
     }
 }
 
@@ -293,6 +318,10 @@ struct LocationRectangleView: View {
     let allowedPositions: [CGPoint]
     // Add state for swap indicator
     @State private var isHoveringForSwap: Bool = false
+    
+    // Add states for location replacement confirmation
+    @State private var showReplaceAlert = false
+    @State private var pendingNewImageName: String? = nil
     
     private var isPositioning: Bool {
         isDragging && selectedLocationObjectID == location.objectID
@@ -469,10 +498,9 @@ struct LocationRectangleView: View {
                         .contentShape(Rectangle())
                         .contextMenu {
                             Button("Edit Location"){
-                                withAnimation {
-                                    //change color and name
-                                    
-                                }
+                                //change color and name
+                                viewModel.changeLocation = location
+                                viewModel.showChangeLocation = true
                             }
                             
                             Button("Change position") {
@@ -509,11 +537,12 @@ struct LocationRectangleView: View {
         }
         .frame(width: size.width, height: size.height)
         .onDrop(of: [.text], isTargeted: $isDraggingOver) { providers, _ in
-            
+            print("ondrop 2")
             // Helper function to handle drop at this location's position
             func handleDrop() -> Bool {
                 // Set dragging state to block context menus during drop
                 isDraggingOver = true
+                // Still need this delay for UI state
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                     isDraggingOver = false
                 }
@@ -523,10 +552,9 @@ struct LocationRectangleView: View {
                 // Get image name synchronously if possible
                 if let imageName = provider.suggestedName, 
                    Location.availableImages.contains(imageName) {
-                    // Replace existing location
-                    location.imageName = imageName
-                    try? viewContext.save()
-                    viewModel.refresh.toggle()
+                    // Store the pending image name and show confirmation alert
+                    pendingNewImageName = imageName
+                    showReplaceAlert = true
                     return true
                 }
                 
@@ -535,11 +563,9 @@ struct LocationRectangleView: View {
                     guard let imageName = string as? String,
                           Location.availableImages.contains(imageName) else { return }
                     
-                    DispatchQueue.main.async {
-                        location.imageName = imageName
-                        try? viewContext.save()
-                        viewModel.refresh.toggle()
-                    }
+                    // Store the pending image name and show confirmation alert
+                    pendingNewImageName = imageName
+                    showReplaceAlert = true
                 }
                 return true
             }
@@ -556,6 +582,37 @@ struct LocationRectangleView: View {
             }
         } message: {
             Text("Are you sure you want to delete this \(imageName)? This action cannot be undone.")
+        }
+        // Add alert for location replacement
+        .alert("Replace Location?", isPresented: $showReplaceAlert) {
+            Button("Cancel", role: .cancel) {
+                pendingNewImageName = nil
+            }
+            
+            Button("Replace", role: .destructive) {
+                if let newImageName = pendingNewImageName {
+                    // Check if a different location with this image already exists
+                    if locationExistsExcluding(imageName: newImageName, excludingLocation: location) {
+                        print("Cannot update: Another location with type \(newImageName) already exists")
+                    } else {
+                        // Replace existing location
+                        location.imageName = newImageName
+                        location.name = newImageName.capitalizedFirst
+                        try? viewContext.save()
+                        viewModel.refresh.toggle()
+                    }
+                    pendingNewImageName = nil
+                }
+            }
+        } message: {
+            if let newImageName = pendingNewImageName {
+                Text("""
+                     Are you sure you want to replace \(location.name ?? imageName.capitalizedFirst) with \(newImageName.capitalizedFirst)? 
+                    All Settings in \(location.name ?? imageName.capitalizedFirst) will be deleted
+                    """)
+            } else {
+                Text("Are you sure you want to replace this location?")
+            }
         }
         .position(
             CGPoint(
@@ -626,6 +683,20 @@ struct LocationRectangleView: View {
         } catch {
             print("Error swapping locations: \(error)")
             viewModel.refresh.toggle()
+        }
+    }
+
+    // Helper method to check if a location with a specific image name already exists, excluding the current location
+    private func locationExistsExcluding(imageName: String, excludingLocation: Location) -> Bool {
+        let request: NSFetchRequest<Location> = Location.fetchRequest()
+        request.predicate = NSPredicate(format: "imageName == %@ AND self != %@", imageName, excludingLocation)
+        
+        do {
+            let matchingLocations = try viewContext.fetch(request)
+            return !matchingLocations.isEmpty
+        } catch {
+            print("Error checking for existing locations: \(error)")
+            return false
         }
     }
 }

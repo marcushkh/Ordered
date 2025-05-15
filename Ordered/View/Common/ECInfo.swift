@@ -7,6 +7,11 @@
 
 import SwiftUI
 
+enum size{
+    case medium
+    case large
+}
+
 struct ECInfo: View {
     @ObservedObject var ec: Event_Cal
     @ObservedObject var actionHandler = EventActionHandler.shared
@@ -17,16 +22,19 @@ struct ECInfo: View {
     @State private var timer: Timer? = nil
     @Binding var highlightedEC: Event_Cal?
     
+    var size: size = .large
+    var showStartEndTime = true
+    
     var body: some View {
         HStack{
             ZStack{
                 Circle()
                     .fill(Color(hex: ec.section_cal?.location?.color))
-                    .frame(height: K.xlarge_size)
+                    .frame(height: size == .large ? K.xlarge_size : K.small_size)
                 
                 Text(ec.parent?.icon ?? "")
-                    .font(.custom("", size: K.large_size))
-                    .shadow(radius: K.medium_size)
+                    .font(.custom("", size: size == .large ? K.large_size : K.xsmall_size))
+                    .shadow(radius: size == .large ? K.medium_size: K.xsmall_size)
             }
             .padding(.trailing)
             
@@ -34,7 +42,7 @@ struct ECInfo: View {
                 if highlightedEC == ec{
                     HStack{
                         Text((ec.parent?.name ?? "") + ((ec.detail != nil && ec.detail != "") ? ": " + ec.detail! : ""))
-                            .font(.title3)
+                            .font(size == .large ? .title3 : .subheadline)
                             .bold()
                         
                         Image(systemName: "star.circle")
@@ -44,15 +52,19 @@ struct ECInfo: View {
                 }
                 else{
                     Text((ec.parent?.name ?? "") + ((ec.detail != nil && ec.detail != "") ? ": " + ec.detail! : ""))
-                        .font(.title3)
+                        .font(size == .large ? .title3 : .subheadline)
                 }
-                
                 
                 
                 // Schedule Event
                 if let aStartTime = ec.aStartTime{
                     var timeBlock: String{
-                        var ans = String(aStartTime.HHmmssPresentation())
+                        var ans = ""
+                        
+                        if showStartEndTime{
+                            ans = ans + String(aStartTime.HHmmssPresentation())
+                        }
+                        
                         
                         if actionHandler.isCurrentEC(ec: ec){
                             ans = ans + " (" + currentTimePassed + ")"
@@ -60,8 +72,10 @@ struct ECInfo: View {
                         else if let aEndTime = ec.aEndTime{
                             if ec.durationFinished != 0{
                                 // if start and end time is the same, no need to show
-                                ans = ans + "-" + String(aEndTime.HHmmssPresentation())
-                                ans = ans + " (" + Model.duration_to_string(min: ec.durationFinished) + ")"
+                                if showStartEndTime{
+                                    ans = ans + "-" + String(aEndTime.HHmmssPresentation()) + " "
+                                }
+                                ans = ans + "(" + Model.duration_to_string(min: ec.durationFinished) + ")"
                             }
                         }
                         
@@ -69,7 +83,7 @@ struct ECInfo: View {
                     }
                     
                     Text(timeBlock)
-                        .font(.subheadline)
+                        .font(size == .large ? .subheadline : .caption)
                         .foregroundStyle(Color(hex: "5a5a5f"))
                         .onAppear {
                             if actionHandler.isCurrentEC(ec: ec){
@@ -99,13 +113,13 @@ struct ECInfo: View {
                 // Schedule Event that have not started
                 else if ec.startTime != "-1" && ec.startTime != nil{
                     Text(String(ec.startTime?.HHmmssPresentation() ?? "") + "-" + String(ec.endTime?.HHmmssPresentation() ?? ""))
-                        .font(.subheadline)
+                        .font(size == .large ? .subheadline : .caption)
                         .foregroundStyle(.secondary)
                 }
                 // Duration Event
                 else if ec.duration != -1{
                     Text(Model.duration_to_string(min: ec.duration))
-                        .font(.subheadline)
+                        .font(size == .large ? .subheadline : .caption)
                         .foregroundStyle(.secondary)
                 }
                 

@@ -15,12 +15,15 @@ struct MapTopBar: View {
     // Available location types with their images
     private let locationImages = Location.availableImages
     
+    // State to track which location types are already on the map
+    @State private var availableLocationTypes: [String] = []
+    
     var body: some View {
         VStack {
             // Image selector - horizontal scrollview
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 15) {
-                    ForEach(locationImages, id: \.self) { imageName in
+                    ForEach(availableLocationTypes, id: \.self) { imageName in
                         DraggableLocationButton(
                             imageName: imageName,
                             viewModel: viewModel,
@@ -34,6 +37,32 @@ struct MapTopBar: View {
             .frame(height: 100)
         }
         .padding(.vertical, -10)
+        .onAppear {
+            updateAvailableLocationTypes()
+        }
+        // Listen for changes in the viewModel.refresh to update available location types
+        .onChange(of: viewModel.refresh) { _, _ in
+            updateAvailableLocationTypes()
+        }
+    }
+    
+    // Function to get location types that aren't already on the map
+    private func updateAvailableLocationTypes() {
+        // Get all locations currently on the map
+        let request: NSFetchRequest<Location> = Location.fetchRequest()
+        
+        do {
+            let existingLocations = try viewContext.fetch(request)
+            let existingTypes = existingLocations.compactMap { $0.imageName }
+            
+            // Filter out location types that are already on the map
+            availableLocationTypes = locationImages.filter { imageName in
+                !existingTypes.contains(imageName)
+            }
+        } catch {
+            print("Error fetching locations: \(error)")
+            availableLocationTypes = locationImages // Fallback to showing all
+        }
     }
 }
 

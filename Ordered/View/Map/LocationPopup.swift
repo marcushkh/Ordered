@@ -28,7 +28,7 @@ struct LocationPopup: View{
                     .resizable()
                     .frame(width: K.xlarge_size, height: K.xlarge_size)
                 
-                Text(viewModel.location?.imageName?.capitalizedFirst ?? "")
+                Text(viewModel.location?.name ?? viewModel.location?.imageName?.capitalizedFirst ?? "")
                     .font(.title3)
                     .bold()
                 

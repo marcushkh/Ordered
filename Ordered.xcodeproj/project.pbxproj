@@ -77,6 +77,7 @@
 		2CC8BC332D70B45B0049E579 /* String+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC8BC312D70B4560049E579 /* String+Ext.swift */; };
 		2CCBD79F2D809CDD00070967 /* SettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CCBD79E2D809CD900070967 /* SettingView.swift */; };
 		2CCBD7A12D81251100070967 /* ChangeEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CCBD7A02D81250C00070967 /* ChangeEvent.swift */; };
+		2CE00DFB2DD4D1480067D793 /* ChangeLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE00DFA2DD4D1430067D793 /* ChangeLocation.swift */; };
 		2CE4B76C2D6D7940001AD492 /* Ordered.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2CFC59B42D44D1CA00529099 /* Ordered.xcdatamodeld */; };
 		2CE4B7732D6D79AB001AD492 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C14A3172C75A95B00807FFB /* Model.swift */; };
 		2CE4B7742D6D79AB001AD492 /* MyCalendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC16CEC2C63B2A2002DCF79 /* MyCalendar.swift */; };
@@ -195,6 +196,7 @@
 		2CCBD7A02D81250C00070967 /* ChangeEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeEvent.swift; sourceTree = "<group>"; };
 		2CD164042D425AB900991530 /* Ordered.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Ordered.entitlements; sourceTree = "<group>"; };
 		2CDE9BE62DB87DAC0063EEBC /* WithWeeklyDefault.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = WithWeeklyDefault.xcdatamodel; sourceTree = "<group>"; };
+		2CE00DFA2DD4D1430067D793 /* ChangeLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeLocation.swift; sourceTree = "<group>"; };
 		2CE4B7902D6E1C19001AD492 /* CustomEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomEvent.swift; sourceTree = "<group>"; };
 		2CEB6B4C2DB9DEE400700265 /* CustomMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomMapView.swift; sourceTree = "<group>"; };
 		2CFC59AC2D44CD3000529099 /* EventActionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventActionHandler.swift; sourceTree = "<group>"; };
@@ -446,6 +448,7 @@
 				2CA36DFA2DBA548F0001B538 /* MapTopBar.swift */,
 				2CEB6B4C2DB9DEE400700265 /* CustomMapView.swift */,
 				2CC2E7262DD0CB81005D977B /* LocationPopup.swift */,
+				2CE00DFA2DD4D1430067D793 /* ChangeLocation.swift */,
 			);
 			path = Map;
 			sourceTree = "<group>";
@@ -579,6 +582,7 @@
 				2C7FD6742DD3B251005E41F5 /* FinishedView.swift in Sources */,
 				2CCBD7A12D81251100070967 /* ChangeEvent.swift in Sources */,
 				2C68C9962C607E7000D38FBC /* CalTransfer.swift in Sources */,
+				2CE00DFB2DD4D1480067D793 /* ChangeLocation.swift in Sources */,
 				2C024C3B2D5E338B009A3F1F /* StatTopBar.swift in Sources */,
 				2CFCE0412C777E33001B915B /* EventDetailPopup.swift in Sources */,
 				2CC7ECA82D66F29900B3BF56 /* EditDeleteButtonView.swift in Sources */,

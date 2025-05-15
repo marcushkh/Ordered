@@ -17,7 +17,6 @@ extension Location {
         "gym", "library", "store"
     ]
     
-    // Define specific allowed placement positions (just 3 positions)
     static let allowedPositions: [CGPoint] = [
         CGPoint(x: 100, y: 100),  // Top-left position (order 0)
         CGPoint(x: 300, y: 200),  // Middle position (order 1)
@@ -25,6 +24,22 @@ extension Location {
         CGPoint(x: 300, y: 400),   // Bottom-right position (order 2)
         CGPoint(x: 100, y: 500)   // Bottom-right position (order 2)
     ]
+    
+    static func save(name: String?, color: String?, location: Location?){
+        if let l = location{
+            if let n = name{
+                l.name = n
+            }
+            if let c = color{
+                l.color = c
+            }
+        }
+        do {
+            try Model.viewContext.save()
+        } catch {
+            print("Error removing event from location: \(error.localizedDescription)")
+        }
+    }
     
     // Get position coordinates from order
     static func positionFromOrder(_ order: Int16) -> CGPoint {
@@ -154,8 +169,6 @@ extension Location {
         return sqrt(xDist * xDist + yDist * yDist)
     }
     
-    // Toggle an event in this location's events collection
-    // Returns true if the event was added, false if it was removed
     func toggleEvent(_ event: Event?) -> Bool {
         guard let event = event else { return false }
         
@@ -235,6 +248,7 @@ extension Location {
         
         let newLocation = Location(context: context)
         newLocation.imageName = imageName
+        newLocation.name = imageName.capitalizedFirst
         newLocation.positionOrder = availableOrder
         
         // Save the context

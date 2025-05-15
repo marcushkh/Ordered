@@ -35,6 +35,10 @@ class ContentViewModel: ObservableObject{
     @Published var insertToCal: Cal? = nil
     @Published var insertIndex: Int? = nil
     
+    //Change Location
+    @Published var showChangeLocation = false
+    @Published var changeLocation: Location? = nil
+    
     //For Map Page
     @Published var showLocationEventList = false
     @Published var location: Location? = nil

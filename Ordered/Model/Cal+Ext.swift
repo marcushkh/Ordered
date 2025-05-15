@@ -157,6 +157,7 @@ extension Cal {
         return e
     }
     
+    //TODO: dont sort the events that are started
     func sort(){ // The sorting algorithm we use is to put the incorrectly ordered items on top of the earliest start time which is sorted (insertion sort)
         let sections: [Section_Cal] = self.section_cals?.array as? [Section_Cal] ?? []
         var allEvents: [Event_Cal] = []
@@ -164,7 +165,7 @@ extension Cal {
         //Extract all events from cal
         for i in sections{
             for j in i.event_cals?.array as? [Event_Cal] ?? [] {
-                if j.startTime != nil || j.aStartTime != nil{ //Remove all events without startTime
+                if j.startTime != nil && j.aStartTime == nil{ //Remove all events without startTime and with aStartTime
                     allEvents.append(j)
                 }
             }

@@ -121,7 +121,7 @@ struct LocationItem: View {
                 .padding(4)
             
             // Location name
-            Text(location.imageName?.capitalized ?? "Unknown")
+            Text(location.name ?? location.imageName?.capitalizedFirst ?? "")
                 .font(.caption2)
                 .fontWeight(.medium)
                 .foregroundStyle(colorScheme == .dark ? .white : .black)
