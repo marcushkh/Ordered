@@ -56,26 +56,34 @@ struct OneDay: View {
                                 HStack(alignment: .center){
                                     
                                     //TODO: Select Location
-                                    if let location = sc.location{
-                                        //if have location:
-                                        Image(location.imageName ?? "")
-                                            .resizable()
-                                            .scaledToFit()
-                                            .frame(width: K.large_size)
-                                        
-                                        Text(location.name ?? location.imageName?.capitalizedFirst ?? "")
-                                            .font(.title3)
-                                            .bold()
+                                    HStack(alignment: .center){
+                                        if let location = sc.location{
+                                            //if have location:
+                                            Image(location.imageName ?? "")
+                                                .resizable()
+                                                .scaledToFit()
+                                                .frame(width: K.large_size)
+                                            
+                                            Text(location.name ?? location.imageName?.capitalizedFirst ?? "")
+                                                .font(.title3)
+                                                .bold()
+                                        }
+                                        else{
+                                            // if no location then:
+                                            Image(systemName: "mappin.and.ellipse")
+                                                .font(.title3)
+                                            
+                                            Text("Select")
+                                                .font(.title3)
+                                                .bold()
+                                        }
+                                        if sc == viewModel.highlightedSC{
+                                            Image(systemName: "star.circle")
+                                                .bold()
+                                            
+                                        }
                                     }
-                                    else{
-                                        // if no location then:
-                                        Image(systemName: "mappin.and.ellipse")
-                                            .font(.title3)
-                                        
-                                        Text("Select")
-                                            .font(.title3)
-                                            .bold()
-                                    }
+                                    .foregroundStyle(sc == viewModel.highlightedSC ? .color3 : .cPrimary)
                                     
                                     Spacer()
                                     
@@ -280,7 +288,50 @@ struct OneDay: View {
                                     title: Text("Delete Section"),
                                     message: Text("Are you sure you want to delete this Section?"),
                                     primaryButton: .destructive(Text("Delete")) {
-                                        sc.delete()
+                                        withAnimation {
+                                            if viewModel.highlightedSC == sc {
+                                                let cal = toDoForDate.first
+                                                let sections = cal?.section_cals?.array as? [Section_Cal] ?? []
+                                                if let index = sections.firstIndex(of: sc) {
+                                                    // Try to find a section above
+                                                    if index > 0 {
+                                                        let sectionAbove = sections[index - 1]
+                                                        let eventsInSectionAbove = sectionAbove.event_cals?.array as? [Event_Cal] ?? []
+                                                        
+                                                        if !eventsInSectionAbove.isEmpty {
+                                                            // Make the last event of the section above the highlightedEC
+                                                            viewModel.highlightedEC = eventsInSectionAbove.last
+                                                            viewModel.highlightedSC = nil
+                                                        } else {
+                                                            // Make the section above the highlightedSC
+                                                            viewModel.highlightedSC = sectionAbove
+                                                            viewModel.highlightedEC = nil
+                                                        }
+                                                    }
+                                                    // If no section above, try to find a section below
+                                                    else if index + 1 < sections.count {
+                                                        let sectionBelow = sections[index + 1]
+                                                        let eventsInSectionBelow = sectionBelow.event_cals?.array as? [Event_Cal] ?? []
+                                                        
+                                                        if !eventsInSectionBelow.isEmpty {
+                                                            // Make the first event of the section below the highlightedEC
+                                                            viewModel.highlightedEC = eventsInSectionBelow.first
+                                                            viewModel.highlightedSC = nil
+                                                        } else {
+                                                            // Make the section below the highlightedSC
+                                                            viewModel.highlightedSC = sectionBelow
+                                                            viewModel.highlightedEC = nil
+                                                        }
+                                                    } else {
+                                                        // No sections above or below
+                                                        viewModel.highlightedEC = nil
+                                                        viewModel.highlightedSC = nil
+                                                    }
+                                                }
+                                            }
+                                            
+                                            sc.delete()
+                                        }
                                     },
                                     secondaryButton: .cancel()
                                 )
@@ -298,29 +349,23 @@ struct OneDay: View {
                                                     return ec_del.section_cal?.event_cals?.count
                                                 }
                                                 
-                                                
+                                                let currentSC = ec_del.section_cal
                                                 
                                                 if let i = i, let size = size{
                                                     if i > 0 {// if there is item on top
-                                                        // if deleted highlightedEC -> select the higher one
+                                                        // Make the event above the new highlightedEC
                                                         viewModel.highlightedEC = ec_del.section_cal?.event_cals![i-1] as? Event_Cal ?? ec_del
+                                                        viewModel.highlightedSC = nil
                                                     }
-                                                    else if size > 1{//if there is item on bottom
+                                                    else if i + 1 < size {// if there is item below
+                                                        // Make the event below the new highlightedEC
                                                         viewModel.highlightedEC = ec_del.section_cal?.event_cals![i+1] as? Event_Cal ?? ec_del
+                                                        viewModel.highlightedSC = nil
                                                     }
-                                                    else{ //no item on top nor on bottom
-                                                        var index_of_section : Int?
-                                                        if ec_del.section_cal != nil{
-                                                            index_of_section = toDoForDate.first?.section_cals?.index(of: ec_del.section_cal!)
-                                                            if index_of_section ?? 0 > 0{
-                                                                let sc = toDoForDate.first?.section_cals?[index_of_section! - 1] as? Section_Cal
-                                                                viewModel.highlightedEC = sc?.event_cals?.lastObject as? Event_Cal
-                                                            }
-                                                            else if toDoForDate.first?.section_cals?.count ?? 0 > 0{
-                                                                let sc = toDoForDate.first?.section_cals?[index_of_section! + 1] as? Section_Cal
-                                                                viewModel.highlightedEC = sc?.event_cals?.firstObject as? Event_Cal
-                                                            }
-                                                        }
+                                                    else { 
+                                                        // No other events in the section, make the section the highlightedSC
+                                                        viewModel.highlightedEC = nil
+                                                        viewModel.highlightedSC = currentSC
                                                     }
                                                 }
                                             }
@@ -328,7 +373,6 @@ struct OneDay: View {
                                             ec_del.delete()
                                             viewModel.showEventDetail = false
                                         }
-                                        
                                     },
                                     secondaryButton: .cancel()
                                 )
@@ -410,8 +454,24 @@ struct OneDay: View {
                 .onChange(of: viewModel.currentTab) { _, _ in
                     if viewModel.currentTab == .plan && pos == .centerView{
                         withAnimation {
-                            viewModel.highlightedEC = toDoForDate.first?.getLastFinishedEvent()
-                            viewModel.highlightedSC = nil
+                            // Get the last section
+                            if let sections = toDoForDate.first?.section_cals?.array as? [Section_Cal],
+                               let lastSection = sections.last {
+                                // Check if the last section has events
+                                if let events = lastSection.event_cals?.array as? [Event_Cal], !events.isEmpty {
+                                    // Last section has events, highlight the last event
+                                    viewModel.highlightedEC = events.last
+                                    viewModel.highlightedSC = nil
+                                } else {
+                                    // Last section is empty, highlight the section
+                                    viewModel.highlightedSC = lastSection
+                                    viewModel.highlightedEC = nil
+                                }
+                            } else {
+                                // No sections found
+                                viewModel.highlightedEC = nil
+                                viewModel.highlightedSC = nil
+                            }
                         }
                     }
                 }
@@ -419,8 +479,24 @@ struct OneDay: View {
                     //Change highlightedEC
                     if viewModel.currentTab == .plan && pos == .centerView{
                         withAnimation {
-                            viewModel.highlightedEC = toDoForDate.first?.getLastFinishedEvent()
-                            viewModel.highlightedSC = nil
+                            // Get the last section
+                            if let sections = toDoForDate.first?.section_cals?.array as? [Section_Cal],
+                               let lastSection = sections.last {
+                                // Check if the last section has events
+                                if let events = lastSection.event_cals?.array as? [Event_Cal], !events.isEmpty {
+                                    // Last section has events, highlight the last event
+                                    viewModel.highlightedEC = events.last
+                                    viewModel.highlightedSC = nil
+                                } else {
+                                    // Last section is empty, highlight the section
+                                    viewModel.highlightedSC = lastSection
+                                    viewModel.highlightedEC = nil
+                                }
+                            } else {
+                                // No sections found
+                                viewModel.highlightedEC = nil
+                                viewModel.highlightedSC = nil
+                            }
                         }
                     }
                 }

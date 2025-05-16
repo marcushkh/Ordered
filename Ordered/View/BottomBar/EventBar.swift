@@ -118,22 +118,33 @@ struct EventBar: View {
                                         // Add event below the highlighted Event
                                         let newEC = e.getEC()
                                         
-                                        if viewModel.currentTab == .plan /*&& viewModel.highlightedEC != nil*/{ //in planning page
+                                        if viewModel.currentTab == .plan { //in planning page
                                             //if no Cal -> create Cal
                                             let cal = Cal.get(date: dayPlannerVM.currentDate.getYYMMDD()) ?? Cal.new(date: dayPlannerVM.currentDate.getYYMMDD())
                                             
-                                            if let sc = viewModel.highlightedEC?.section_cal{
-                                                sc.insert(newEC, after: viewModel.highlightedEC!)
+                                            // If highlightedEC is not nil, create new event_cal and put it below highlightedEC
+                                            if let highlightedEC = viewModel.highlightedEC, 
+                                               let sc = highlightedEC.section_cal {
+                                                sc.insert(newEC, after: highlightedEC)
+                                                viewModel.highlightedEC = newEC
+                                                viewModel.highlightedSC = nil
                                             }
-                                            else{
+                                            // If highlightedSC is not nil, put the new event_cal under the highlighed SC
+                                            else if let highlightedSC = viewModel.highlightedSC {
+                                                highlightedSC.add(event: newEC)
+                                                viewModel.highlightedEC = newEC
+                                                viewModel.highlightedSC = nil
+                                            }
+                                            // If both highlighted EC and SC are nil, create a new section
+                                            else {
                                                 let new_section_Cal = Section_Cal.new()
-                                                
                                                 new_section_Cal.add(event: newEC)
                                                 cal.add(new_section_Cal)
+                                                viewModel.highlightedEC = newEC
+                                                viewModel.highlightedSC = nil
                                             }
+                                            
                                             cal.sort()
-                                            viewModel.highlightedEC = newEC
-                                            viewModel.highlightedSC = nil
                                         }
                                         
                                         viewModel.refresh.toggle()
@@ -159,7 +170,7 @@ struct EventBar: View {
                                             let newSection = Section_Cal.new()
                                             newSection.location = location
                                             
-                                            // If a section is highlighted, insert new section after it
+                                            // If a highlighted EC exists, insert the section after its parent section
                                             if let highlightedEC = viewModel.highlightedEC,
                                                let highlightedSection = highlightedEC.section_cal,
                                                let sections = cal.section_cals?.mutableCopy() as? NSMutableOrderedSet,
@@ -168,9 +179,25 @@ struct EventBar: View {
                                                 let index = sections.index(of: highlightedSection)
                                                 sections.insert(newSection, at: index + 1)
                                                 cal.section_cals = sections
-                                            } else {
-                                                // No section highlighted, just add to cal
+                                                viewModel.highlightedSC = newSection
+                                                viewModel.highlightedEC = nil
+                                            } 
+                                            // If a highlighted SC exists, insert the new section after it
+                                            else if let highlightedSC = viewModel.highlightedSC,
+                                                    let sections = cal.section_cals?.mutableCopy() as? NSMutableOrderedSet,
+                                                    sections.contains(highlightedSC) {
+                                                
+                                                let index = sections.index(of: highlightedSC)
+                                                sections.insert(newSection, at: index + 1)
+                                                cal.section_cals = sections
+                                                viewModel.highlightedSC = newSection
+                                                viewModel.highlightedEC = nil
+                                            }
+                                            // If neither is highlighted, add the section to the end
+                                            else {
                                                 cal.add(newSection)
+                                                viewModel.highlightedSC = newSection
+                                                viewModel.highlightedEC = nil
                                             }
                                             
                                             cal.sort()
