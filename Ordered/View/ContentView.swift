@@ -21,6 +21,7 @@ struct ContentView: View {
         GeometryReader{ geo in
             let w = geo.size.width
             let h = geo.size.height
+            
             Background(color: .cBackground, allFocusStates: [$searchTyping]){
                 VStack(spacing: 0){
                     //Top Bar
@@ -58,7 +59,8 @@ struct ContentView: View {
                             }
                     }
                     else if viewModel.currentTab == .map{
-                        CustomMapView(viewModel: viewModel)
+//                        CustomMapView(viewModel: viewModel)
+                        GeofencingView()
                     }
                     else if viewModel.currentTab == .setting{
                         SettingView()

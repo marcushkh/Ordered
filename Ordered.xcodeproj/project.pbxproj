@@ -61,6 +61,7 @@
 		2CA36DFD2DBA55FD0001B538 /* Location+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA36DFC2DBA55FD0001B538 /* Location+Ext.swift */; };
 		2CA36DFE2DBA55FD0001B538 /* Location+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA36DFC2DBA55FD0001B538 /* Location+Ext.swift */; };
 		2CB946742DD6385500E4CD6E /* LocationInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB946732DD6385500E4CD6E /* LocationInfo.swift */; };
+		2CB9467C2DD830BA00E4CD6E /* GeofencingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB9467B2DD830BA00E4CD6E /* GeofencingView.swift */; };
 		2CC16CED2C63B2A2002DCF79 /* MyCalendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC16CEC2C63B2A2002DCF79 /* MyCalendar.swift */; };
 		2CC16CEF2C63B2D0002DCF79 /* DayPlannerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC16CEE2C63B2D0002DCF79 /* DayPlannerViewModel.swift */; };
 		2CC2E7192DD08E06005D977B /* EventPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC2E7182DD08DFE005D977B /* EventPicker.swift */; };
@@ -181,6 +182,7 @@
 		2CA36DFA2DBA548F0001B538 /* MapTopBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapTopBar.swift; sourceTree = "<group>"; };
 		2CA36DFC2DBA55FD0001B538 /* Location+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Location+Ext.swift"; sourceTree = "<group>"; };
 		2CB946732DD6385500E4CD6E /* LocationInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationInfo.swift; sourceTree = "<group>"; };
+		2CB9467B2DD830BA00E4CD6E /* GeofencingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeofencingView.swift; sourceTree = "<group>"; };
 		2CC16CEC2C63B2A2002DCF79 /* MyCalendar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyCalendar.swift; sourceTree = "<group>"; };
 		2CC16CEE2C63B2D0002DCF79 /* DayPlannerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayPlannerViewModel.swift; sourceTree = "<group>"; };
 		2CC2E7182DD08DFE005D977B /* EventPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventPicker.swift; sourceTree = "<group>"; };
@@ -448,6 +450,7 @@
 		2CEB6B612DB9DF0100700265 /* Map */ = {
 			isa = PBXGroup;
 			children = (
+				2CB9467B2DD830BA00E4CD6E /* GeofencingView.swift */,
 				2CA36DFA2DBA548F0001B538 /* MapTopBar.swift */,
 				2CEB6B4C2DB9DEE400700265 /* CustomMapView.swift */,
 				2CC2E7262DD0CB81005D977B /* LocationPopup.swift */,
@@ -580,6 +583,7 @@
 				2C0272FC2D6434C20033FC5B /* EventList.swift in Sources */,
 				2C6A82D92CC17364006B533E /* CreateEvent.swift in Sources */,
 				2CA35CD52D28E1F200011B89 /* Event+Ext.swift in Sources */,
+				2CB9467C2DD830BA00E4CD6E /* GeofencingView.swift in Sources */,
 				2CC2E7192DD08E06005D977B /* EventPicker.swift in Sources */,
 				2C5C1C9B2C576E9B0079482A /* TopBar.swift in Sources */,
 				2CC16CED2C63B2A2002DCF79 /* MyCalendar.swift in Sources */,
@@ -809,6 +813,8 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = Ordered;
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "We need access to your location at all times to detect region entry and exit.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We use your location to monitor when you enter or leave specific areas.";
 				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -844,6 +850,8 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = Ordered;
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "We need access to your location at all times to detect region entry and exit.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We use your location to monitor when you enter or leave specific areas.";
 				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
