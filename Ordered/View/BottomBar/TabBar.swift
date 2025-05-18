@@ -13,7 +13,7 @@ struct TabBar: View {
     var body: some View {
         
         LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 5), content: {
-            ForEach([TabBarItem.home, TabBarItem.sugg, TabBarItem.map, TabBarItem.statistic, TabBarItem.setting]) { item in
+            ForEach([TabBarItem.home, TabBarItem.plan, TabBarItem.map, TabBarItem.statistic, TabBarItem.setting]) { item in
                 
                 VStack {
                     if viewModel.currentTab == .sugg{

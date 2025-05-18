@@ -84,16 +84,24 @@ struct TopBar: View {
                 
                 Spacer()
 
-                Image(systemName: "list.triangle")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(height: K.xxsmall_size)
+                Image(systemName: "paintbrush")
+                    .bold()
+                    .rotationEffect(Angle(degrees: 180))
+                    .frame(height: K.small_size)
                     .foregroundStyle(.color3)
                     .onTapGesture {
-                        withAnimation {
-                            viewModel.currentTab = .plan
-                        }
+                        showClear = true
                     }
+//                Image(systemName: "list.triangle")
+//                    .resizable()
+//                    .scaledToFit()
+//                    .frame(height: K.xxsmall_size)
+//                    .foregroundStyle(.color3)
+//                    .onTapGesture {
+//                        withAnimation {
+//                            viewModel.currentTab = .plan
+//                        }
+//                    }
             }
             .padding(.vertical)
             .alert(isPresented: $showClear) {
