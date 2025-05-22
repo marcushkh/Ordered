@@ -39,6 +39,7 @@ struct SelectLocation: View {
                 }
                 .padding(6)
             }
+            .scrollIndicators(.hidden)
             .frame(height: 200)
             
             // Save/Cancel buttons
@@ -121,7 +122,7 @@ struct LocationItem: View {
                 .padding(4)
             
             // Location name
-            Text(location.name ?? location.imageName?.capitalizedFirst ?? "")
+            Text(location.name ?? location.imageName ?? "")
                 .font(.caption2)
                 .fontWeight(.medium)
                 .foregroundStyle(colorScheme == .dark ? .white : .black)

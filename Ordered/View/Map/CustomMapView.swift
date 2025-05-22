@@ -182,6 +182,7 @@ struct CustomMapView: View {
                         }
                     )
                 }
+                .scrollIndicators(.hidden)
                 // Track scrolling state using a gesture
                 .gesture(
                     DragGesture(minimumDistance: 10)
@@ -602,7 +603,7 @@ struct LocationRectangleView: View {
                     } else {
                         // Replace existing location
                         location.imageName = newImageName
-                        location.name = newImageName.capitalizedFirst
+                        location.name = newImageName
                         
                         // Set default color based on location type and color scheme
                         if let locationType = LocationType(rawValue: newImageName) {
@@ -618,8 +619,8 @@ struct LocationRectangleView: View {
         } message: {
             if let newImageName = pendingNewImageName {
                 Text("""
-                     Are you sure you want to replace \(location.name ?? imageName.capitalizedFirst) with \(newImageName.capitalizedFirst)? 
-                    All Settings in \(location.name ?? imageName.capitalizedFirst) will be deleted
+                     Are you sure you want to replace \(location.name ?? imageName) with \(newImageName)? 
+                    All Settings in \(location.name ?? imageName) will be deleted
                     """)
             } else {
                 Text("Are you sure you want to replace this location?")

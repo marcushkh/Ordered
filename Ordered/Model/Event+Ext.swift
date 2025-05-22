@@ -9,7 +9,7 @@ import CoreData
 
 extension Event {
         
-    static func save(icon: String? = nil, name: String? = nil, startTime: String? = nil, endTime: String? = nil, duration: Int = -1, event: Event? = nil) -> Event {
+    static func save(icon: String? = nil, name: String? = nil, startTime: String? = nil, endTime: String? = nil, duration: Int = -1, order_insert_first: Bool = true, event: Event? = nil) -> Event {
         let eventToSave = event ?? Event(context: Model.viewContext)
         
         if let icon = icon{
@@ -29,11 +29,20 @@ extension Event {
             print(allEvent)
             
             var order: Int16 = 0
-            if allEvent.count != 0{
-                order = allEvent[0].order
+            
+            if order_insert_first{
+                if allEvent.count != 0{
+                    order = allEvent[0].order
+                }
+                for i in allEvent{
+                    i.order = i.order + 1
+                }
+                
             }
-            for i in allEvent{
-                i.order = i.order + 1
+            else{
+                if allEvent.count != 0{
+                    order = allEvent.last?.order ?? 0
+                }
             }
             eventToSave.order = order
         }
@@ -53,8 +62,9 @@ extension Event {
             NSSortDescriptor(keyPath: \Event.isFavourite, ascending: false),
             NSSortDescriptor(keyPath: \Event.order, ascending: true)
         ]
+        request.predicate = NSPredicate(format: "isActive == true")
         if let isFavourite = isFavourite {
-            request.predicate = NSPredicate(format: "isFavourite == %@", NSNumber(value: isFavourite))
+            request.predicate = NSPredicate(format: "isActive == true AND isFavourite == %@", NSNumber(value: isFavourite))
         }
 
         do {
@@ -67,6 +77,16 @@ extension Event {
     
     func toggleIsFavorite() {
         self.isFavourite.toggle()
+        
+        do {
+            try Model.viewContext.save()
+        } catch {
+            print("Failed to save event: \(error.localizedDescription)")
+        }
+    }
+    
+    func delete(){
+        self.isActive = false
         
         do {
             try Model.viewContext.save()

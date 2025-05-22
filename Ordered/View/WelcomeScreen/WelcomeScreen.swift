@@ -11,9 +11,14 @@ import PopupView
 struct WelcomeScreen: View {
     @State var currentItem = 0
     @StateObject var welcomeVM = WelcomeVM()
+    @ObservedObject var viewModel: ContentViewModel
+    
+    @AppStorage("welcomeScreen") var welcomeScreen: Bool = true
+    
     let listOfSteps = K.defaultSection
     
     var body: some View {
+        
         VStack{
             ProgressStepBar(listOfTitle: listOfSteps, currentItem: $currentItem)
             
@@ -21,7 +26,7 @@ struct WelcomeScreen: View {
             
             SwipeableStack(listOfSteps, jumpTo: listOfSteps[currentItem]) { d, pos in
                 
-                CaseSeparation(currentPage: d, listOfSteps: listOfSteps, welcomeVM: welcomeVM)
+                CaseSeparation(currentPage: d, listOfSteps: listOfSteps, welcomeVM: welcomeVM, viewModel: viewModel)
                     .onChange(of: d){
                         if pos == .centerView{
                             withAnimation {
@@ -31,27 +36,44 @@ struct WelcomeScreen: View {
                     }
             }
             
-            Text(currentItem < listOfSteps.count - 1 ? "Next" : "Start!")
-                .font(.title2)
-                .foregroundStyle(Color(.white))
-                .bold()
-                .padding([.top, .bottom], 10)
-                .padding([.leading, .trailing], UIScreen.main.bounds.width * 0.35)
-                .background(Color(hex: "484B6A"))
-                .clipShape(.rect(cornerRadius: 10))
-                .onTapGesture {
-                    withAnimation(.easeInOut) {
-                        if currentItem < listOfSteps.count - 1{
-                            currentItem += 1
-                        }
-                        else{
-                            //init database
-                        }
+            Button{
+                if currentItem < listOfSteps.count - 1{
+                    withAnimation {
+                        currentItem += 1
+                    }
+                    
+                }
+                else{
+                    //init database
+                    withAnimation {
+                        welcomeScreen = false
                     }
                 }
+            } label: {
+                Text(currentItem < listOfSteps.count - 1 ? "Next" : "Start!")
+                    .font(.title2)
+                    .foregroundStyle(Color(.white))
+                    .bold()
+                    .padding([.top, .bottom], 10)
+                    .padding([.leading, .trailing], UIScreen.main.bounds.width * 0.35)
+                    .background(Color(hex: "484B6A"))
+                    .clipShape(.rect(cornerRadius: 20))
+            }
         }
         .padding(.horizontal, K.horizontal_padding)
-        .padding(.top)
+        .padding(.vertical)
+        .popup(isPresented: $welcomeVM.showPopup) {
+            EventsForLocation(viewModel: viewModel, welcomeVM: welcomeVM)
+        } customize: {
+            $0
+                .type(.floater())
+                .closeOnTap(false)
+                .closeOnTapOutside(true)
+                .dragToDismiss(false)
+                .backgroundColor(.cPrimary.opacity(0.1))
+        }
+        
+        
         .popup(isPresented: $welcomeVM.showSelectTime){
             TimeSelection(isPresented: $welcomeVM.showSelectTime, event: $welcomeVM.selectedEvent, eventList: $welcomeVM.scheduleEvents)
         } customize: {
@@ -62,35 +84,31 @@ struct WelcomeScreen: View {
                 .backgroundColor(.black.opacity(0.3))
                 .dragToDismiss(false)
         }
+        
     }
+    
 }
 
 struct CaseSeparation: View{
     var currentPage: String
     var listOfSteps: [String]
     @ObservedObject var welcomeVM: WelcomeVM
+    @ObservedObject var viewModel: ContentViewModel
     
     var body: some View{
         switch(currentPage){
         case listOfSteps[0]:
-            MorningRoutine(welcomeVM: welcomeVM)
+            Personal(welcomeVM: welcomeVM, viewModel: viewModel)
             
         case listOfSteps[1]:
-            Schedule(welcomeVM: welcomeVM)
+            LocationSelection(welcomeVM: welcomeVM)
             
         case listOfSteps[2]:
-            Personal(welcomeVM: welcomeVM)
-            
+            Text("HI")
         case listOfSteps[3]:
-            NightRoutine(welcomeVM: welcomeVM)
-            
+            Text("HI")
         default:
             Text("Default")
         }
     }
-}
-
-#Preview {
-    WelcomeScreen()
-        .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
 }

@@ -64,7 +64,7 @@ struct OneDay: View {
                                                 .scaledToFit()
                                                 .frame(width: K.large_size)
                                             
-                                            Text(location.name ?? location.imageName?.capitalizedFirst ?? "")
+                                            Text(location.name ?? location.imageName ?? "")
                                                 .font(.title3)
                                                 .bold()
                                         }
@@ -438,6 +438,7 @@ struct OneDay: View {
                         }
                     }
                 }
+                .scrollIndicators(.hidden)
                 .onChange(of: date) {
                     if pos == .centerView{
                         dayPlannerVM.setCurrentDate(to: date)

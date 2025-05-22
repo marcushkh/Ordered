@@ -34,6 +34,7 @@ struct MapTopBar: View {
                 .padding(.horizontal)
                 .padding(.vertical)
             }
+            .scrollIndicators(.hidden)
             .frame(height: 100)
         }
         .padding(.vertical, -10)

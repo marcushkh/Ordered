@@ -28,7 +28,7 @@ struct LocationPopup: View{
                     .resizable()
                     .frame(width: K.xlarge_size, height: K.xlarge_size)
                 
-                Text(viewModel.location?.name ?? viewModel.location?.imageName?.capitalizedFirst ?? "")
+                Text(viewModel.location?.name ?? viewModel.location?.imageName ?? "")
                     .font(.title3)
                     .bold()
                 
@@ -175,6 +175,7 @@ struct LocationPopup: View{
                 }
                 .padding(.top, 8)
             }
+            .scrollIndicators(.hidden)
             .padding(.top, -9)
             .onAppear {
                 withAnimation {
@@ -201,7 +202,7 @@ struct LocationPopup: View{
         ]
         
         if let location = viewModel.location {
-            request.predicate = NSPredicate(format: "ANY locations == %@", location)
+            request.predicate = NSPredicate(format: "isActive == true AND ANY locations == %@", location)
         }
 
         do {

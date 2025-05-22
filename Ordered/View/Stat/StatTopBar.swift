@@ -22,7 +22,8 @@ struct StatTopBar: View {
         sortDescriptors: [
             NSSortDescriptor(keyPath: \Event.isFavourite, ascending: false),
             NSSortDescriptor(keyPath: \Event.order, ascending: true)
-        ]
+        ],
+        predicate: NSPredicate(format: "isActive == true")  
     ) private var allEvents: FetchedResults<Event>
     
     var body: some View {
@@ -147,6 +148,7 @@ struct StatTopBar: View {
                         }
                         .padding(.horizontal, w * 0.075)
                     }
+                    .scrollIndicators(.hidden)
                     .scrollTargetLayout()
                     .scrollTargetBehavior(.viewAligned)
                     .scrollPosition(id: $selectedEventID, anchor: .leading)

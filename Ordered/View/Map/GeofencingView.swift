@@ -219,6 +219,7 @@ struct GeofencingView: View {
                             }
                             .padding(.horizontal)
                         }
+                        .scrollIndicators(.hidden)
                     }
                     .background(Color(UIColor.systemBackground))
                     .cornerRadius(10)

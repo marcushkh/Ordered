@@ -13,19 +13,15 @@ struct CreateEvent: View {
     @ObservedObject var viewModel: ContentViewModel
     
     @Namespace private var underlineNamespace
-    
     @State var editEvent_Cal: Event_Cal? = nil
-    
     @State var date: Date = Date()
     
-    @State var showEmojiPicker: Bool = false
     @State var selectedEmoji: String = "💡"
-    @State var emojiPickerPicked: String = "💡"
     @State var suggestedEmoji: String = ""
-    @State var giveSuggestion: Bool = true
     
     @State var eventName: String = ""
     @FocusState var eventNameTyping
+    
     @State var description: String = ""
     @FocusState var descriptionTyping
     @State var event: Event? = nil
@@ -45,18 +41,41 @@ struct CreateEvent: View {
     @State var useCustomDuration: Bool = false
     @State private var customDuration: Int = 90
     
-    let data = DataLoader()
-    @State private var debounceTask: Task<Void, Never>? = nil
     @Binding var display: Bool
     @Environment(\.colorScheme) var colorScheme
     
     @State private var isInitializing = true
     
+    let data = DataLoader()
+    
     var body: some View {
         Background(color: .cBackground, allFocusStates: [$eventNameTyping, $descriptionTyping]){
             VStack{
                 if !isNewEvent && event == nil{ //Give suggestion to use previous events
-                    eventAndEmoji
+                    EventAndEmoji(eventName: $eventName, selectedEmoji: $selectedEmoji, eventNameTyping: $eventNameTyping){
+                        ZStack{
+                            RoundedRectangle(cornerRadius: 20)
+                                .fill(Color(.color1))
+                                .frame(width: 60, height: 60)
+                            
+                            Text(selectedEmoji)
+                                .font(.custom("", size: 50))
+                                .shadow(radius: K.medium_size)
+                                
+                        }
+                    } eventNameView: {
+                        ZStack{
+                            TextField("Event", text: $eventName)
+                                .multilineTextAlignment(.leading)
+                                .focused($eventNameTyping)
+                                .underlineTextField(underline: .color3, focus: eventNameTyping, focusColor: Color(.color2))
+                                .font(.system(size: 24))
+                                .frame(width: 228, height: 80)
+                        }
+                    }
+                    .padding(.bottom)
+                    
+                    
                     EventList(viewModel: viewModel, eventName: $eventName, selectedEvent: $event, toggleHeartSelectEvent: false)
                     
                     Spacer()
@@ -222,56 +241,7 @@ struct CreateEvent: View {
         .padding(.vertical)
     }
     
-    var eventAndEmoji: some View{
-        HStack{
-            ZStack{
-                RoundedRectangle(cornerRadius: 20)
-                    .fill(Color(.color1))
-                    .frame(width: 60, height: 60)
-                
-                Text(selectedEmoji)
-                    .font(.custom("", size: 50))
-                    .shadow(radius: K.medium_size)
-                    .onTapGesture {
-                        showEmojiPicker.toggle()
-                    }
-                    .emojiPicker(
-                        isPresented: $showEmojiPicker,
-                        selectedEmoji: $emojiPickerPicked
-                    )
-                    .onChange(of: emojiPickerPicked, { oldValue, newValue in
-                        selectedEmoji = emojiPickerPicked
-                        giveSuggestion = false
-                    })
-                    .onChange(of: eventName, { oldValue, newValue in
-                        debounceTask?.cancel()
-                    })
-                    .onChange(of: eventName) { oldValue, newValue in
-                        debounceTask = Task {
-                            suggestedEmoji = await data.getSuggestion(newValue, top_n: 1)
-                            
-                            if editEvent_Cal == nil && giveSuggestion {
-                                await MainActor.run {
-                                    selectedEmoji = suggestedEmoji
-                                }
-                            }
-                            
-                        }
-                    }
-            }
-            Spacer()
-            
-            ZStack{
-                TextField("Event", text: $eventName)
-                    .multilineTextAlignment(.leading)
-                    .focused($eventNameTyping)
-                    .underlineTextField(underline: .color3, focus: eventNameTyping, focusColor: Color(.color2))
-                    .font(.system(size: 24))
-                    .frame(width: 228, height: 80)
-            }
-        }
-        .padding(.bottom)
-    }
+    
     
     var typeSelection: some View{
         VStack{

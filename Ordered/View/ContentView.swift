@@ -10,6 +10,8 @@ import CoreData
 import PopupView
 
 struct ContentView: View {
+    @AppStorage("welcomeScreen") var welcomeScreen: Bool = true
+    
     @Environment(\.managedObjectContext) private var viewContext
     @StateObject var viewModel = ContentViewModel()
     @StateObject var dayPlannerVM = DayPlannerViewModel()
@@ -59,8 +61,8 @@ struct ContentView: View {
                             }
                     }
                     else if viewModel.currentTab == .map{
-//                        CustomMapView(viewModel: viewModel)
-                        GeofencingView()
+                        CustomMapView(viewModel: viewModel)
+//                        GeofencingView()
                     }
                     else if viewModel.currentTab == .setting{
                         SettingView()
@@ -115,6 +117,12 @@ struct ContentView: View {
                         .closeOnTapOutside(true)
                         .dragToDismiss(false)
                         .backgroundColor(.cPrimary.opacity(0.2))
+                }
+                .overlay{
+                    if welcomeScreen {
+                        WelcomeScreen(viewModel: viewModel)
+                            .background()
+                    }
                 }
                 .overlay{
                     if(viewModel.showChangeLocation){

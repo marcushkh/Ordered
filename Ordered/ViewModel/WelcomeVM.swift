@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 class WelcomeVM: ObservableObject{
     @Published var showSelectTime = false
@@ -15,4 +16,9 @@ class WelcomeVM: ObservableObject{
     @Published var scheduleEvents: [Event] = []
     @Published var personalEvents: [Event] = []
     @Published var nightEvents: [Event] = []
+    
+    //For Location
+    @Published var location: Location?
+    @Published var showPopup = false
+    
 }

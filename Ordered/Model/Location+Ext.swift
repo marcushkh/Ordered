@@ -11,15 +11,20 @@ import SwiftUI
 
 // Location type enum with associated default colors
 enum LocationType: String, CaseIterable {
-    case home = "home"
-    case school = "school"
-    case company = "company"
-    case cafe = "cafe"
-    case restaurant = "restaurant"
-    case park = "park"
-    case gym = "gym"
-    case library = "library"
-    case store = "store"
+    case home = "Home"
+    case school = "School"
+    case company = "Company"
+    case cafe = "Cafe"
+    case restaurant = "Restaurant"
+    case park = "Park"
+    case gym = "Gym"
+    case library = "Library"
+    case store = "Store"
+    
+    // Get LocationType from image name
+    static func from(_ imageName: String) -> LocationType? {
+        return LocationType(rawValue: imageName)
+    }
     
     var defaultColor: Int {
         switch self {
@@ -41,6 +46,71 @@ enum LocationType: String, CaseIterable {
             return 4
         case .store:
             return 5
+        }
+    }
+    
+    var defaultEvents: [TempEvent]{
+        switch self {
+        case .home:
+            return [
+                TempEvent(name: "Brush", icon: "🪥"),
+                TempEvent(name: "Make Coffee", icon: "☕️", duration: 10),
+                TempEvent(name: "Meditation", icon: "🧘‍♀️", duration: 5),
+                TempEvent(name: "Exercise", icon: "🏃‍♂️", duration: 15),
+                TempEvent(name: "Shower", icon: "🚿", duration: 15),
+                TempEvent(name: "Skin Care", icon: "💆‍♀️", duration: 10),
+                TempEvent(name: "Reading", icon: "📖", duration: 30)
+            ]
+        case .school:
+            return [
+                TempEvent(name: "School Work", icon: "👩‍🏫", duration: 30),
+                TempEvent(name: "Assignments", icon: "📚", duration: 30)
+            ]
+        case .company:
+            return [
+                TempEvent(name: "Work Hours", icon: "💼", duration: 180),
+                TempEvent(name: "Over Time", icon: "💼", duration: 60)
+            ]
+        case .cafe:
+            return [
+                TempEvent(name: "Start-Up", icon: "🚀", duration: 45),
+                TempEvent(name: "Freelance Work", icon: "💼", duration: 45),
+                TempEvent(name: "Breakfast", icon: "🍽️", duration: 30),
+                TempEvent(name: "Lunch", icon: "🍽️", duration: 30),
+                TempEvent(name: "Tea", icon: "🍽️", duration: 30),
+                TempEvent(name: "Dinner", icon: "🍽️", duration: 30)
+            ]
+        case .restaurant:
+            return [
+                TempEvent(name: "Breakfast", icon: "🍽️", duration: 30),
+                TempEvent(name: "Lunch", icon: "🍽️", duration: 30),
+                TempEvent(name: "Tea", icon: "🍽️", duration: 30),
+                TempEvent(name: "Dinner", icon: "🍽️", duration: 30)
+            ]
+        case .park:
+            return [
+                TempEvent(name: "Have a walk", icon: "🚶‍♂️", duration: 30),
+                TempEvent(name: "Walk the dog", icon: "🐕", duration: 30),
+                TempEvent(name: "Jogging", icon: "🏃‍♂️", duration: 30),
+                TempEvent(name: "Empty Your mind", icon: "😌", duration: 30)
+            ]
+        case .gym:
+            return [
+                TempEvent(name: "Gym", icon: "🏋", duration: 45)
+            ]
+        case .library:
+            return [
+                TempEvent(name: "Revision", icon: "📓", duration: 60),
+                TempEvent(name: "Assignments", icon: "📚", duration: 30),
+                TempEvent(name: "Start-Up", icon: "🚀", duration: 45),
+                TempEvent(name: "Freelance Work", icon: "💼", duration: 45)
+            ]
+        case .store:
+            return [
+                TempEvent(name: "Window Shopping", icon: "👀", duration: 30),
+                TempEvent(name: "Buying Grocery", icon: "🛒", duration: 30),
+                TempEvent(name: "Buying Clothes", icon: "🧥", duration: 30)
+            ]
         }
     }
     
@@ -218,7 +288,7 @@ extension Location {
         guard let event = event else { return false }
         
         // Get the current events as NSOrderedSet
-        let currentEvents = self.events as? NSOrderedSet ?? NSOrderedSet()
+        let currentEvents = self.events ?? NSOrderedSet()
         
         // Check if the event is already in the set
         if currentEvents.contains(event) {
@@ -230,7 +300,7 @@ extension Location {
                 self.events = mutableEvents
                 
                 // Update inverse relationship
-                if let locations = event.locations as? NSSet {
+                if let locations = event.locations {
                     let mutableLocations = locations.mutableCopy() as? NSMutableSet ?? NSMutableSet()
                     mutableLocations.remove(self)
                     event.locations = mutableLocations
@@ -253,7 +323,7 @@ extension Location {
             self.events = mutableEvents
             
             // Update inverse relationship
-            let locations = event.locations as? NSSet ?? NSSet()
+            let locations = event.locations ?? NSSet()
             let mutableLocations = locations.mutableCopy() as? NSMutableSet ?? NSMutableSet()
             mutableLocations.add(self)
             event.locations = mutableLocations
@@ -299,7 +369,7 @@ extension Location {
         
         let newLocation = Location(context: context)
         newLocation.imageName = imageName
-        newLocation.name = imageName.capitalizedFirst
+        newLocation.name = imageName
         newLocation.positionOrder = availableOrder
         
         // Set default color based on location type and color scheme

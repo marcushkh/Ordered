@@ -14,14 +14,7 @@ struct EventBar: View {
     @ObservedObject var viewModel: ContentViewModel
     @ObservedObject var dayPlannerVM: DayPlannerViewModel
     
-    @FetchRequest(
-        sortDescriptors: [
-            SortDescriptor(\.isFavourite, order: .reverse),
-            SortDescriptor(\.order, order: .forward)
-        ],
-        predicate: NSPredicate(format: "isActive == true")
-    )
-    private var events: FetchedResults<Event>
+    @FetchRequest private var events: FetchedResults<Event>
     
     @FetchRequest(
         sortDescriptors: [
@@ -40,6 +33,28 @@ struct EventBar: View {
     
     @State private var selection = "Event"
     let options = ["Location", "Event"]
+    
+    init(viewModel: ContentViewModel, dayPlannerVM: DayPlannerViewModel) {
+        self.viewModel = viewModel
+        self.dayPlannerVM = dayPlannerVM
+        
+        let predicate: NSPredicate
+        if let location = viewModel.highlightedEC?.section_cal?.location {
+            predicate = NSPredicate(format: "isActive == true AND ANY locations == %@", location)
+        } else if let location = viewModel.highlightedSC?.location {
+            predicate = NSPredicate(format: "isActive == true AND ANY locations == %@", location)
+        } else {
+            predicate = NSPredicate(format: "isActive == true")
+        }
+        
+        _events = FetchRequest(
+            sortDescriptors: [
+                SortDescriptor(\.isFavourite, order: .reverse),
+                SortDescriptor(\.order, order: .forward)
+            ],
+            predicate: predicate
+        )
+    }
     
     var body: some View {
         VStack(spacing: 0){
@@ -210,12 +225,32 @@ struct EventBar: View {
                     .padding(.bottom, 0)
                 }
             }
+            .scrollIndicators(.hidden)
             .onAppear{
                 overlayHeight = UIScreen.main.bounds.height * 0.2
             }
             .frame(height: max(overlayHeight, 0))
             .background(.color2)
         }
+        .onChange(of: viewModel.highlightedEC) { _, _ in
+            updatePredicate()
+        }
+        .onChange(of: viewModel.highlightedSC) { _, _ in
+            updatePredicate()
+        }
+    }
+    
+    // Add method to update the predicate
+    private func updatePredicate() {
+        let predicate: NSPredicate
+        if let location = viewModel.highlightedEC?.section_cal?.location {
+            predicate = NSPredicate(format: "isActive == true AND ANY locations == %@", location)
+        } else if let location = viewModel.highlightedSC?.location {
+            predicate = NSPredicate(format: "isActive == true AND ANY locations == %@", location)
+        } else {
+            predicate = NSPredicate(format: "isActive == true")
+        }
         
+        events.nsPredicate = predicate
     }
 }

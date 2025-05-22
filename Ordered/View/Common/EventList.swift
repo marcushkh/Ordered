@@ -8,7 +8,7 @@
 import SwiftUI
 import CoreData
 
-struct EventList: View {
+struct EventList<Content: View>: View {
     @ObservedObject var viewModel: ContentViewModel
     
     @State var allEvents: [Event] = []
@@ -16,12 +16,36 @@ struct EventList: View {
     @Binding var selectedEvent: Event?
     
     @State var draggingItem: Event? = nil
-    var toggleHeartSelectEvent: Bool
-    var showHeart: Bool = true
-    var showEdit: Bool = true
-    var showLocation: Bool = false
     
-    @State var refresh: Bool = false
+    var toggleHeartSelectEvent: Bool
+    var showHeart: Bool
+    var showEdit: Bool
+    var showLocation: Bool
+    var showDelete: Bool
+    
+    var content: Content
+    
+    init(
+        viewModel: ContentViewModel,
+        eventName: Binding<String>,
+        selectedEvent: Binding<Event?>,
+        toggleHeartSelectEvent: Bool = false,
+        showHeart: Bool = true,
+        showEdit: Bool = true,
+        showLocation: Bool = false,
+        showDelete: Bool = false,
+        @ViewBuilder content: () -> Content = { EmptyView() }
+    ) {
+        self.viewModel = viewModel
+        self._eventName = eventName
+        self._selectedEvent = selectedEvent
+        self.toggleHeartSelectEvent = toggleHeartSelectEvent
+        self.showHeart = showHeart
+        self.showEdit = showEdit
+        self.showLocation = showLocation
+        self.showDelete = showDelete
+        self.content = content()
+    }
     
     var body: some View{
         ScrollView{
@@ -38,32 +62,32 @@ struct EventList: View {
                             Spacer()
                             
                             if showEdit{
-                                Image(systemName: "pencil.line")
-                                    .onTapGesture {
-                                        viewModel.showChangeEvent = true
-                                        viewModel.changeEvent = e
-                                    }
+                                Button{
+                                    viewModel.showChangeEvent = true
+                                    viewModel.changeEvent = e
+                                } label:{
+                                    Image(systemName: "pencil.line")
+                                        .foregroundStyle(.cPrimary)
+                                }
                             }
                             
                             if showHeart{
-                                Image(systemName: e.isFavourite ? "heart.fill" : "heart")
-                                    .bold()
-                                    .foregroundStyle(.heart)
-                                    .onTapGesture {
-                                        withAnimation {
-                                            e.toggleIsFavorite()
-                                            
-                                            if toggleHeartSelectEvent{
-                                                selectedEvent = e
-                                            }
-                                            fetchEvents()
-                                            saveOrder()
-                                            refresh.toggle()
-                                        }
-                                    }
-                                    .onChange(of: refresh) { _, _ in
+                                Button{
+                                    withAnimation {
+                                        e.toggleIsFavorite()
                                         
+                                        if toggleHeartSelectEvent{
+                                            selectedEvent = e
+                                        }
+                                        fetchEvents()
+                                        saveOrder()
+                                        viewModel.refresh.toggle()
                                     }
+                                } label:{
+                                    Image(systemName: e.isFavourite ? "heart.fill" : "heart")
+                                        .bold()
+                                        .foregroundStyle(.heart)
+                                }
                             }
                             
                             if showLocation{
@@ -75,6 +99,23 @@ struct EventList: View {
                                         .resizable()
                                         .scaledToFit()
                                         .frame(width: K.medium_size)
+                                }
+                            }
+                            
+                            if showDelete{
+                                Button{
+                                    withAnimation {
+                                        print("delete")
+                                        e.delete()
+                                        fetchEvents()
+                                        saveOrder()
+                                        viewModel.refresh.toggle()
+                                    }
+                                    
+                                } label: {
+                                    Image(systemName: "xmark.circle.fill")
+                                        .bold()
+                                        .foregroundStyle(Color.cPrimary, Color.error)
                                 }
                             }
                         }
@@ -103,7 +144,7 @@ struct EventList: View {
                     }
                     .dropDestination(for: String.self) { items, location in
                         draggingItem = nil
-                        refresh.toggle()
+                        viewModel.refresh.toggle()
                         return false
                     } isTargeted: { status in
                         
@@ -118,11 +159,20 @@ struct EventList: View {
                                 allEvents = allEvents.sorted { $0.isFavourite && !$1.isFavourite  }
                                 
                                 saveOrder()
-                                refresh.toggle()
+                                viewModel.refresh.toggle()
                             }
                         }
                     }
                 }
+                
+                content
+            }
+        }
+        .scrollIndicators(.hidden)
+        .onChange(of: viewModel.refresh) { _, _ in
+            withAnimation {
+                fetchEvents()
+                saveOrder()
             }
         }
         .onChange(of: eventName) { _, _ in
@@ -136,6 +186,8 @@ struct EventList: View {
                 saveOrder()
             }
         }
+        
+        
     }
     private func fetchEvents() {
         let request: NSFetchRequest<Event> = Event.fetchRequest()
@@ -143,10 +195,13 @@ struct EventList: View {
             NSSortDescriptor(keyPath: \Event.isFavourite, ascending: false),
             NSSortDescriptor(keyPath: \Event.order, ascending: true)
         ]
+        
+        
+        request.predicate = NSPredicate(format: "isActive == true")
         if !eventName.isEmpty {
-            request.predicate = NSPredicate(format: "name CONTAINS[c] %@", eventName)
+            request.predicate = NSPredicate(format: "isActive == true AND name CONTAINS[c] %@", eventName)
         }
-
+        
         do {
             allEvents = try Model.viewContext.fetch(request)
         } catch {
