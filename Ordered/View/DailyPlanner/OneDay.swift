@@ -40,10 +40,6 @@ struct OneDay: View {
     
     var body: some View {
         VStack{
-//            ScrollView{
-//                FinishedView(viewModel: viewModel, cal: toDoForDate.first)
-//                    .padding(.horizontal, K.horizontal_padding)
-//            }
             
             ScrollViewReader{ proxy in
                 ScrollView{
@@ -198,10 +194,8 @@ struct OneDay: View {
                                     } isTargeted: { status in
                                         
                                         withAnimation {
-                                            //Reordering
                                             if let draggingItem, status, draggingItem.objectID != ec.objectID{
                                                 
-                                                //Logic needed to add: start time need to be ordered
                                                 if let events = sc.event_cals?.mutableCopy() as? NSMutableOrderedSet {
                                                     let e_index = events.index(of: ec)
                                                     

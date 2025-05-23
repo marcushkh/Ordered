@@ -157,57 +157,52 @@ extension Cal {
         return e
     }
     
-    func sort(){ // The sorting algorithm we use is to put the incorrectly ordered items on top of the earliest start time which is sorted (insertion sort)
+    func sort(){ // Sort events within each section individually
+        print("SORT")
         let sections: [Section_Cal] = self.section_cals?.array as? [Section_Cal] ?? []
-        var allEvents: [Event_Cal] = []
         
-        //Extract all events from cal
-        for i in sections{
-            for j in i.event_cals?.array as? [Event_Cal] ?? [] {
-                if j.startTime != nil || j.aStartTime != nil{ //Remove all events without startTime
-                    allEvents.append(j)
-                }
-            }
-        }
-        
-        var swapList: [[Event_Cal]] = [] //[[Event 1, Event 2]] => Event 1 to put in front of Event 2
-        //Insertion Sort (get all insertion pairs)
-        if allEvents.count < 2 {return}
-        for i in 1..<allEvents.count{
-            let temp = allEvents[i]
-            var j = i-1
+        // Sort events within each section separately
+        for section in sections {
+            var sectionEvents: [Event_Cal] = []
             
-            // allEvents must have startTime or aStartTime
-            while j >= 0 && Date.greaterHHMM(allEvents[j].aStartTime ?? allEvents[j].startTime!, temp.aStartTime ?? temp.startTime!) {
-                //If in here => need to swap
-                allEvents[j+1] = allEvents[j]
-                j -= 1
-            }
-            if j != i-1{
-                swapList.append([temp,allEvents[j+1]])
-            }
-            allEvents[j+1] = temp
-        }
-        
-        // Do the insertion
-        for i in swapList{
-            let event1 = i[0]
-            let event2 = i[1]
-            //remove event1 from cal
-            for j in sections{
-                if let events = j.event_cals?.mutableCopy() as? NSMutableOrderedSet, events.contains(event1) {
-                    events.remove(event1)
-                    j.event_cals = events.copy() as? NSOrderedSet
+            // Extract events from this section only
+            for event in section.event_cals?.array as? [Event_Cal] ?? [] {
+                if event.startTime != nil || event.aStartTime != nil {
+                    sectionEvents.append(event)
                 }
             }
-            for j in sections{
-                if let events = j.event_cals?.mutableCopy() as? NSMutableOrderedSet, events.contains(event2) {
+            
+            if sectionEvents.count < 2 { continue }
+            
+            var swapList: [[Event_Cal]] = []
+            for i in 1..<sectionEvents.count {
+                let temp = sectionEvents[i]
+                var j = i-1
+                
+                while j >= 0 && Date.greaterHHMM(sectionEvents[j].aStartTime ?? sectionEvents[j].startTime!, temp.aStartTime ?? temp.startTime!) {
+                    sectionEvents[j+1] = sectionEvents[j]
+                    j -= 1
+                }
+                if j != i-1 {
+                    swapList.append([temp, sectionEvents[j+1]])
+                }
+                sectionEvents[j+1] = temp
+            }
+            
+            for swapPair in swapList {
+                let event1 = swapPair[0]
+                let event2 = swapPair[1]
+                
+                if let events = section.event_cals?.mutableCopy() as? NSMutableOrderedSet, 
+                   events.contains(event1) && events.contains(event2) {
+                    events.remove(event1)
                     events.insert(event1, at: events.index(of: event2))
-                    j.event_cals = events.copy() as? NSOrderedSet
+                    section.event_cals = events.copy() as? NSOrderedSet
                 }
             }
         }
         self.section_cals = NSOrderedSet(array: sections)
+
         
         do {
             try Model.viewContext.save()

@@ -206,6 +206,41 @@ struct CreateEvent: View {
         }
     }
     
+    func initEvent(newValue: Event_Cal?){
+        
+        withAnimation {
+            //TODO: Set the init for next page
+            print("INIT is used")
+            selectedEmoji = newValue?.parent?.icon ?? "💡"
+            eventName = newValue?.parent?.name ?? ""
+            
+            if newValue?.startTime != nil && newValue?.endTime != nil{
+                isSchedule = true
+                startTime = Date.getDateFromHHMM(newValue?.startTime! ?? "00:00:00")
+                endTime = Date.getDateFromHHMM(newValue?.endTime! ?? "00:00:00")
+            }
+            else if newValue?.duration != -1 && newValue?.duration != nil{
+                isDuration = true
+                
+                switch newValue?.duration{
+                case 5: selectedIndex = 0
+                case 10: selectedIndex = 1
+                case 30: selectedIndex = 2
+                case 60: selectedIndex = 3
+                default:
+                    useCustomDuration = true
+                    customDuration = Int(newValue?.duration ?? 90)
+                }
+            }
+            if isFinished{
+                startTime = Date.getDateFromHHMM(editEvent_Cal?.aStartTime ?? "00:00:00")
+                if editEvent_Cal?.aEndTime != nil{
+                    endTime = Date.getDateFromHHMM(editEvent_Cal?.aEndTime ?? "00:00:00")
+                }
+            }
+        }
+    }
+    
     var descriptionTextField: some View{
         HStack{
             ZStack{
@@ -390,7 +425,7 @@ struct CreateEvent: View {
                         endTime = Date.getDateFromHHMM(editEvent_Cal?.aEndTime ?? endTime.getHHMM())
                     }
                     else{
-                        initEvent(newValue: event)
+                        initEvent(newValue: editEvent_Cal)
                     }
                 }
             
