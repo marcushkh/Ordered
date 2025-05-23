@@ -244,4 +244,11 @@ extension Cal {
             return 0
         }
     }
+    
+    func getNextSectionCal(after sectionCal: Section_Cal) -> Section_Cal? {
+        let sections = self.section_cals?.array as? [Section_Cal] ?? []
+        guard let currentIndex = sections.firstIndex(of: sectionCal) else { return nil }
+        let nextIndex = currentIndex + 1
+        return nextIndex < sections.count ? sections[nextIndex] : nil
+    }
 }

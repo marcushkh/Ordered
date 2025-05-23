@@ -188,7 +188,7 @@ struct GeofencingView: View {
             VStack {
                 // Basic map view with user location
                 Map(coordinateRegion: $geoViewModel.mapRegion, showsUserLocation: true)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                 
                 // Show the regions as a list under the map
                 if !geoViewModel.monitoredRegions.isEmpty {

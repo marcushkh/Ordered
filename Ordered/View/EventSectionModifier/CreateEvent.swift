@@ -174,7 +174,6 @@ struct CreateEvent: View {
     func initEvent(newValue: Event?){
         
         withAnimation {
-            //TODO: Set the init for next page
             print("INIT is used")
             selectedEmoji = newValue?.icon ?? "💡"
             eventName = newValue?.name ?? ""
@@ -209,7 +208,6 @@ struct CreateEvent: View {
     func initEvent(newValue: Event_Cal?){
         
         withAnimation {
-            //TODO: Set the init for next page
             print("INIT is used")
             selectedEmoji = newValue?.parent?.icon ?? "💡"
             eventName = newValue?.parent?.name ?? ""

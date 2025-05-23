@@ -72,16 +72,13 @@ struct CustomMapView: View {
                                     }
                                 }
                             }
-                            .zIndex(0) // Lowest zIndex
+                            .zIndex(0)
                         
-                        // Visual indicators for allowed position squares
                         ForEach(0..<Location.allowedPositions.count, id: \.self) { index in
                             let position = Location.allowedPositions[index]
                             
-                            // Individual state for each drop target to improve responsiveness
                             let isOccupied = Location.isPositionOccupied(at: position, context: viewContext)
                             
-                            // Show blue rectangles for unoccupied positions
                             if !isOccupied {
                                 ZStack {
                                     // Visual part - blue outline
@@ -167,7 +164,6 @@ struct CustomMapView: View {
                         }
                     }
                     .frame(width: width, height: height)
-                    // Use preference key to report content size
                     .background(
                         GeometryReader { contentGeo in
                             Color.clear
@@ -502,13 +498,12 @@ struct LocationRectangleView: View {
                                 viewModel.showChangeLocation = true
                             }
                             
-                            Button("Change position") {
+                            Button("Change Order") {
                                 withAnimation(.spring()) {
                                     isDragging = true
                                     selectedLocationObjectID = location.objectID
                                 }
                             }
-                            
                             
                             Divider()
                             

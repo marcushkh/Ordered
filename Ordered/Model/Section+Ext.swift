@@ -103,9 +103,22 @@ extension Section_Cal {
         return ecs
     }
     
-    static func new(count: Int = 0) -> Section_Cal{
+    static func new() -> Section_Cal{
         let section = Section_Cal(context: Model.viewContext)
         section.event_cals = NSMutableOrderedSet()
+        
+        do {
+            try Model.viewContext.save()
+        } catch {
+            print("Failed to save event: \(error.localizedDescription)")
+        }
+        return section
+    }
+    
+    static func new(location: Location? = nil) -> Section_Cal{
+        let section = Section_Cal(context: Model.viewContext)
+        section.event_cals = NSMutableOrderedSet()
+        section.location = location
         
         do {
             try Model.viewContext.save()
@@ -206,6 +219,18 @@ extension Section_Cal {
     func insert(_ event1: Event_Cal, after event2: Event_Cal){
         if let events = self.event_cals?.mutableCopy() as? NSMutableOrderedSet{
             events.insert(event1, at: events.index(of: event2) + 1)
+            self.event_cals = events.copy() as? NSOrderedSet
+        }
+        do {
+            try Model.viewContext.save()
+        } catch {
+            print("Failed to save event: \(error.localizedDescription)")
+        }
+    }
+    
+    func insertAtTop(_ event: Event_Cal){
+        if let events = self.event_cals?.mutableCopy() as? NSMutableOrderedSet{
+            events.insert(event, at: 0)
             self.event_cals = events.copy() as? NSOrderedSet
         }
         do {

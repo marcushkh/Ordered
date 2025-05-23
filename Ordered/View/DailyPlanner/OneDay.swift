@@ -346,18 +346,15 @@ struct OneDay: View {
                                                 let currentSC = ec_del.section_cal
                                                 
                                                 if let i = i, let size = size{
-                                                    if i > 0 {// if there is item on top
-                                                        // Make the event above the new highlightedEC
+                                                    if i > 0 {
                                                         viewModel.highlightedEC = ec_del.section_cal?.event_cals![i-1] as? Event_Cal ?? ec_del
                                                         viewModel.highlightedSC = nil
                                                     }
-                                                    else if i + 1 < size {// if there is item below
-                                                        // Make the event below the new highlightedEC
+                                                    else if i + 1 < size {
                                                         viewModel.highlightedEC = ec_del.section_cal?.event_cals![i+1] as? Event_Cal ?? ec_del
                                                         viewModel.highlightedSC = nil
                                                     }
-                                                    else { 
-                                                        // No other events in the section, make the section the highlightedSC
+                                                    else {
                                                         viewModel.highlightedEC = nil
                                                         viewModel.highlightedSC = currentSC
                                                     }

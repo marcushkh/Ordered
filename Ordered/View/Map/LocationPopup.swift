@@ -106,16 +106,28 @@ struct LocationPopup: View{
                                 //if no Cal -> create Cal
                                 let cal = Cal.get(date: dayPlannerVM.currentDate.getYYMMDD()) ?? Cal.new(date: dayPlannerVM.currentDate.getYYMMDD())
                                 
-                                //TODO: this need to be fixed. No need SC now?
-                                if let sc = viewModel.highlightedEC?.section_cal{
-                                    sc.insert(newEC, after: viewModel.highlightedEC!)
+                                let lastEvent = cal.getLastFinishedEvent()
+                                
+                                if let lastEvent = lastEvent, 
+                                   let lastEventSectionCal = lastEvent.section_cal,
+                                   lastEventSectionCal.location == viewModel.location {
+                                    // Case 1: Insert after lastEvent in the same location
+                                    lastEventSectionCal.insert(newEC, after: lastEvent)
                                 }
-                                else{
-                                    let new_section_Cal = Section_Cal.new()
-                                    
+                                else if let lastEvent = lastEvent,
+                                        let lastEventSectionCal = lastEvent.section_cal,
+                                        let nextSectionCal = cal.getNextSectionCal(after: lastEventSectionCal),
+                                        nextSectionCal.location == viewModel.location {
+                                    // Case 2: Insert at top of next section_cal with same location
+                                    nextSectionCal.insertAtTop(newEC)
+                                }
+                                else {
+                                    // Case 3: Create new section_cal with current location
+                                    let new_section_Cal = Section_Cal.new(location: viewModel.location)
                                     new_section_Cal.add(event: newEC)
                                     cal.add(new_section_Cal)
                                 }
+                                
                                 cal.sort()
                                 
                                 if newEC.duration == -1 && newEC.startTime == nil {

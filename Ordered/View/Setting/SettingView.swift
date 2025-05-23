@@ -27,11 +27,11 @@ struct SettingView: View{
                             Text(TabBarItem.home.label)
                         }
                         
-                        Button {
-                            defaultPage = TabBarItem.sugg
-                        } label: {
-                            Text(TabBarItem.sugg.label)
-                        }
+//                        Button {
+//                            defaultPage = TabBarItem.sugg
+//                        } label: {
+//                            Text(TabBarItem.sugg.label)
+//                        }
                         
                         Button {
                             defaultPage = TabBarItem.map
