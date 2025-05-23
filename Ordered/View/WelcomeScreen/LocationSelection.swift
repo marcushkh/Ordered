@@ -6,10 +6,18 @@
 //
 import SwiftUI
 import PopupView
+import CoreData
 
 struct LocationSelection: View{
     @ObservedObject var welcomeVM: WelcomeVM
     @Environment(\.colorScheme) private var colorScheme
+    
+     @FetchRequest(
+        sortDescriptors: [
+            SortDescriptor(\.positionOrder, order: .forward)
+        ]
+    )
+    private var locations: FetchedResults<Location>
     
     var body: some View{
         VStack(alignment: .leading){
@@ -39,7 +47,50 @@ struct LocationSelection: View{
             
             ScrollView{
                 VStack{
-                    ForEach(LocationType.allCases, id: \.self){ location in
+                    ForEach(locations){ location in
+                        ZStack{
+                            RoundedRectangle(cornerRadius: 20.0)
+                                .fill(.color1)
+                            
+                            HStack{
+                                Image(location.imageName ?? "")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(height: 40)
+                                
+                                Text(location.name ?? "")
+                                    
+                                Spacer()
+                                
+                                Button{
+                                    withAnimation {
+                                        if location.delete(from: Model.viewContext) {
+                                            
+                                        }
+                                    }
+                                    
+                                } label: {
+                                    Image(systemName: "xmark.circle.fill")
+                                        .bold()
+                                        .foregroundStyle(Color.cPrimary, Color.error)
+                                }
+                            }
+                            .frame(height: 60)
+                            .padding(.horizontal)
+                        }
+                        .onTapGesture {
+                            welcomeVM.location = location
+                            welcomeVM.showPopup = true
+                        }
+                    }
+                    
+                    // Get existing location image names to filter against
+                    let existingImageNames = locations.compactMap { $0.imageName }
+                    
+                    // Filter LocationType cases that aren't already created
+                    ForEach(LocationType.allCases.filter { locationType in
+                        !existingImageNames.contains(locationType.rawValue)
+                    }, id: \.self){ location in
                         ZStack{
                             RoundedRectangle(cornerRadius: 20.0)
                                 .fill(.color1)

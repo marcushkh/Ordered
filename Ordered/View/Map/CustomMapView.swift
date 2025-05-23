@@ -98,20 +98,16 @@ struct CustomMapView: View {
                                             print("ondrop1")
                                             // Helper function to handle drop at this position
                                             func handleDrop() -> Bool {
-                                                // Set dragging state to block context menus during drop
                                                 isDraggingOver = true
-                                                // Still need this delay for UI state
                                                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                                                     isDraggingOver = false
                                                 }
                                                 
                                                 guard let provider = providers.first else { return false }
                                                 
-                                                // Get image name synchronously if possible
                                                 if let imageName = provider.suggestedName,
                                                    Location.availableImages.contains(imageName) {
                                                     
-                                                    // Check if location with this image type already exists
                                                     if locationExists(withImageName: imageName) {
                                                         print("Location of type \(imageName) already exists, ignoring drop")
                                                         return false
@@ -127,18 +123,15 @@ struct CustomMapView: View {
                                                     return true
                                                 }
                                                 
-                                                // Fallback to async loading
                                                 provider.loadObject(ofClass: NSString.self) { string, _ in
                                                     guard let imageName = string as? String,
                                                           Location.availableImages.contains(imageName) else { return }
                                                     
-                                                    // Check if location with this image type already exists
                                                     if self.locationExists(withImageName: imageName) {
                                                         print("Location of type \(imageName) already exists, ignoring drop")
                                                         return
                                                     }
                                                     
-                                                    // Create a new location at this position with the correct order
                                                     let order = Location.orderFromPosition(position)
                                                     let newLocation = Location.createNew(in: self.viewContext, 
                                                                               imageName: imageName,

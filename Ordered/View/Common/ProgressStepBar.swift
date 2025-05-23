@@ -36,8 +36,10 @@ struct ProgressStepBar: View{
                             .transition(.slide)
                         
                         Rectangle()
+                            .fill(i <= (currentItem - 1) ? .color3 : .color1)
                             .frame(height: 3)
                             .frame(maxWidth: i <= (currentItem - 1) ? .infinity : 0, alignment: .leading)
+                            
                     }
                 }
                 
