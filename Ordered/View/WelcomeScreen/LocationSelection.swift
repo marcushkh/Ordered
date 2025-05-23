@@ -58,13 +58,23 @@ struct LocationSelection: View{
                             .padding(.horizontal)
                         }
                         .onTapGesture {
-                            let newLocation = Location.createNew(in: Model.viewContext, 
-                                                               imageName: location.rawValue,
-                                                               colorScheme: colorScheme)
+                            // First, check if a location with this image name already exists
+                            let existingLocation = Location.findByImageName(location.rawValue, in: Model.viewContext)
                             
-                            if let newLocation = newLocation {
-                                welcomeVM.location = newLocation
+                            // If location exists, use it; otherwise create a new one
+                            if let existingLoc = existingLocation {
+                                welcomeVM.location = existingLoc
                                 welcomeVM.showPopup = true
+                            } else {
+                                // Create new location only if one doesn't exist
+                                let newLocation = Location.createNew(in: Model.viewContext, 
+                                                                   imageName: location.rawValue,
+                                                                   colorScheme: colorScheme)
+                                
+                                if let newLocation = newLocation {
+                                    welcomeVM.location = newLocation
+                                    welcomeVM.showPopup = true
+                                }
                             }
                         }
                     }

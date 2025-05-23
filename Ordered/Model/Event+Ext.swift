@@ -9,7 +9,7 @@ import CoreData
 
 extension Event {
         
-    static func save(icon: String? = nil, name: String? = nil, startTime: String? = nil, endTime: String? = nil, duration: Int = -1, order_insert_first: Bool = true, event: Event? = nil) -> Event {
+    static func save(icon: String? = nil, name: String? = nil, startTime: String? = nil, endTime: String? = nil, duration: Int = -1, isFavourite: Bool = false, order_insert_first: Bool = true, event: Event? = nil) -> Event {
         let eventToSave = event ?? Event(context: Model.viewContext)
         
         if let icon = icon{
@@ -21,6 +21,7 @@ extension Event {
         eventToSave.duration = Int32(duration)
         eventToSave.startTime = startTime
         eventToSave.endTime = endTime
+        eventToSave.isFavourite = isFavourite
         
         if event == nil {
             eventToSave.isActive = true
@@ -73,6 +74,31 @@ extension Event {
             print("Fetch failed: \(error)")
             return []
         }
+    }
+    
+    static func findByName(_ name: String) -> Event? {
+        let request: NSFetchRequest<Event> = Event.fetchRequest()
+        request.predicate = NSPredicate(format: "name == %@ AND isActive == true", name)
+        request.fetchLimit = 1
+        
+        do {
+            let results = try Model.viewContext.fetch(request)
+            return results.first
+        } catch {
+            print("Fetch failed: \(error)")
+            return nil
+        }
+    }
+    
+    static func findOrCreate(icon: String, name: String, duration: Int = -1, order_insert_first: Bool = false) -> Event {
+        // First, try to find an existing event with the same name
+        if let existingEvent = findByName(name) {
+            print("Found existing event with name: \(name)")
+            return existingEvent
+        }
+        
+        // If no existing event is found, create a new one
+        return save(icon: icon, name: name, duration: duration, order_insert_first: order_insert_first)
     }
     
     func toggleIsFavorite() {

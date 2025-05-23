@@ -18,6 +18,8 @@ struct EventList<Content: View>: View {
     @State var draggingItem: Event? = nil
     
     var toggleHeartSelectEvent: Bool
+    
+    var customPredicate: NSPredicate?
     var showHeart: Bool
     var showEdit: Bool
     var showLocation: Bool
@@ -30,6 +32,7 @@ struct EventList<Content: View>: View {
         eventName: Binding<String>,
         selectedEvent: Binding<Event?>,
         toggleHeartSelectEvent: Bool = false,
+        customPredicate: NSPredicate? = nil,
         showHeart: Bool = true,
         showEdit: Bool = true,
         showLocation: Bool = false,
@@ -40,6 +43,7 @@ struct EventList<Content: View>: View {
         self._eventName = eventName
         self._selectedEvent = selectedEvent
         self.toggleHeartSelectEvent = toggleHeartSelectEvent
+        self.customPredicate = customPredicate
         self.showHeart = showHeart
         self.showEdit = showEdit
         self.showLocation = showLocation
@@ -196,11 +200,17 @@ struct EventList<Content: View>: View {
             NSSortDescriptor(keyPath: \Event.order, ascending: true)
         ]
         
+        var predicates = NSPredicate(format: "isActive == true")
         
-        request.predicate = NSPredicate(format: "isActive == true")
         if !eventName.isEmpty {
-            request.predicate = NSPredicate(format: "isActive == true AND name CONTAINS[c] %@", eventName)
+            predicates = NSCompoundPredicate(type: .and, subpredicates: [predicates, NSPredicate(format: "name CONTAINS[c] %@", eventName)])
         }
+        
+        if let p = customPredicate{
+            predicates = NSCompoundPredicate(type: .and, subpredicates: [predicates, p])
+        }
+        
+        request.predicate = predicates
         
         do {
             allEvents = try Model.viewContext.fetch(request)

@@ -67,6 +67,8 @@
 		2CB9912A2DDEC79700713789 /* EventsForLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB991292DDEC78D00713789 /* EventsForLocation.swift */; };
 		2CB9912C2DDECED800713789 /* TempEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB9912B2DDECED600713789 /* TempEvent.swift */; };
 		2CB9912D2DDECED800713789 /* TempEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB9912B2DDECED600713789 /* TempEvent.swift */; };
+		2CB9912F2DDF1FF800713789 /* Privacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB9912E2DDF1FF500713789 /* Privacy.swift */; };
+		2CB991312DE00DB700713789 /* Intro.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB991302DE00DB100713789 /* Intro.swift */; };
 		2CC16CED2C63B2A2002DCF79 /* MyCalendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC16CEC2C63B2A2002DCF79 /* MyCalendar.swift */; };
 		2CC16CEF2C63B2D0002DCF79 /* DayPlannerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC16CEE2C63B2D0002DCF79 /* DayPlannerViewModel.swift */; };
 		2CC2E7212DD08E5E005D977B /* Personal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC2E71E2DD08E5E005D977B /* Personal.swift */; };
@@ -188,6 +190,8 @@
 		2CB991272DDD65B500713789 /* EventAndEmoji.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventAndEmoji.swift; sourceTree = "<group>"; };
 		2CB991292DDEC78D00713789 /* EventsForLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsForLocation.swift; sourceTree = "<group>"; };
 		2CB9912B2DDECED600713789 /* TempEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TempEvent.swift; sourceTree = "<group>"; };
+		2CB9912E2DDF1FF500713789 /* Privacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Privacy.swift; sourceTree = "<group>"; };
+		2CB991302DE00DB100713789 /* Intro.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Intro.swift; sourceTree = "<group>"; };
 		2CC16CEC2C63B2A2002DCF79 /* MyCalendar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyCalendar.swift; sourceTree = "<group>"; };
 		2CC16CEE2C63B2D0002DCF79 /* DayPlannerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayPlannerViewModel.swift; sourceTree = "<group>"; };
 		2CC2E71E2DD08E5E005D977B /* Personal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Personal.swift; sourceTree = "<group>"; };
@@ -432,10 +436,12 @@
 		2CC2E7172DD08DCA005D977B /* WelcomeScreen */ = {
 			isa = PBXGroup;
 			children = (
+				2CC2E7202DD08E5E005D977B /* WelcomeScreen.swift */,
+				2CB991302DE00DB100713789 /* Intro.swift */,
 				2CC2E71E2DD08E5E005D977B /* Personal.swift */,
 				2CB991252DDB878F00713789 /* LocationSelection.swift */,
 				2CB991292DDEC78D00713789 /* EventsForLocation.swift */,
-				2CC2E7202DD08E5E005D977B /* WelcomeScreen.swift */,
+				2CB9912E2DDF1FF500713789 /* Privacy.swift */,
 			);
 			path = WelcomeScreen;
 			sourceTree = "<group>";
@@ -580,6 +586,7 @@
 				2C01D5142C81670300D33BDA /* ECInfo.swift in Sources */,
 				2CB946742DD6385500E4CD6E /* LocationInfo.swift in Sources */,
 				2CC2E7252DD0C101005D977B /* ProgressStepBar.swift in Sources */,
+				2CB9912F2DDF1FF800713789 /* Privacy.swift in Sources */,
 				2C96053B2C82D21900A1736D /* WelcomeVM.swift in Sources */,
 				2C0272FC2D6434C20033FC5B /* EventList.swift in Sources */,
 				2C6A82D92CC17364006B533E /* CreateEvent.swift in Sources */,
@@ -624,6 +631,7 @@
 				2C601C5E2C5B6FE600FBC8E2 /* K.swift in Sources */,
 				2C7FD65D2DD367EC005E41F5 /* SelectLocation.swift in Sources */,
 				2C220D572D434FB800E5AF09 /* Emoji.swift in Sources */,
+				2CB991312DE00DB700713789 /* Intro.swift in Sources */,
 				2C601C5C2C5B411A00FBC8E2 /* Color+Ext.swift in Sources */,
 				2C74CB3F2C59DE6F00716233 /* Sample.swift in Sources */,
 				2C4BCF9F2C84D0560001AD4C /* EventInfo.swift in Sources */,

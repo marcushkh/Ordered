@@ -44,7 +44,8 @@ struct EventsForLocation: View {
             
             ScrollView{
                 VStack{
-                    ForEach(welcomeVM.location?.events as? [Event] ?? [], id: \.self){ e in
+                    // Safely cast and handle existing events
+                    ForEach(welcomeVM.location?.events?.array as? [Event] ?? [], id: \.self){ e in
                         ZStack{
                             RoundedRectangle(cornerRadius: 20.0)
                                 .fill(.color1)
@@ -56,6 +57,10 @@ struct EventsForLocation: View {
                                 
                                 Button{
                                     withAnimation {
+                                        welcomeVM.location?.toggleEvent(e)
+                                        if (e.locations == nil || e.locations?.count == 0) && e.isFavourite == false {
+                                            e.delete()
+                                        }
                                         viewModel.refresh.toggle()
                                     }
                                     
@@ -71,7 +76,15 @@ struct EventsForLocation: View {
                         .frame(height: 60)
                     }
                     
-                    ForEach(LocationType.from(welcomeVM.location?.imageName ?? "")?.defaultEvents ?? [], id: \.self){ event in
+                    let existingEventNames = (welcomeVM.location?.events?.array as? [Event] ?? [])
+                        .compactMap { $0.name }
+                    
+                    ForEach((LocationType.from(welcomeVM.location?.imageName ?? "")?.defaultEvents ?? [])
+                        .filter { defaultEvent in 
+                            !existingEventNames.contains(defaultEvent.name)
+                        }, 
+                        id: \.self) { event in
+                        
                         ZStack{
                             RoundedRectangle(cornerRadius: 20.0)
                                 .fill(.color1)
@@ -86,9 +99,22 @@ struct EventsForLocation: View {
                                 Spacer()
                                 
                                 Button{
-                                    let newEvent = Event.save(icon: event.icon, name: event.name, duration: event.duration ?? -1, order_insert_first: false)
-                                    
-                                    viewModel.refresh.toggle()
+                                    withAnimation{
+                                        // Find existing event or create a new one
+                                        let event = Event.findOrCreate(
+                                            icon: event.icon,
+                                            name: event.name,
+                                            duration: event.duration ?? -1,
+                                            order_insert_first: false
+                                        )
+                                        
+                                        // Associate the event with the location
+                                        if let location = welcomeVM.location {
+                                            _ = location.toggleEvent(event)
+                                        }
+                                        
+                                        viewModel.refresh.toggle()
+                                    }
                                     
                                 } label:{
                                     Image(systemName: "plus.circle.fill")
@@ -103,6 +129,7 @@ struct EventsForLocation: View {
                 }
                 .padding(.top)
             }
+            .scrollIndicators(.hidden)
             .padding(.top, -8)
             .frame(height: 470)
             .onChange(of: viewModel.refresh) { _, _ in
@@ -110,7 +137,10 @@ struct EventsForLocation: View {
             }
             
             Button{
-                
+                withAnimation {
+                    welcomeVM.showPopup = false
+                    welcomeVM.location = nil
+                }
             } label:{
                 Text("Done")
                     .font(.title3)

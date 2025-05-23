@@ -59,6 +59,7 @@ enum LocationType: String, CaseIterable {
                 TempEvent(name: "Exercise", icon: "🏃‍♂️", duration: 15),
                 TempEvent(name: "Shower", icon: "🚿", duration: 15),
                 TempEvent(name: "Skin Care", icon: "💆‍♀️", duration: 10),
+                TempEvent(name: "Clean Room", icon: "🧹"),
                 TempEvent(name: "Reading", icon: "📖", duration: 30)
             ]
         case .school:
@@ -69,7 +70,7 @@ enum LocationType: String, CaseIterable {
         case .company:
             return [
                 TempEvent(name: "Work Hours", icon: "💼", duration: 180),
-                TempEvent(name: "Over Time", icon: "💼", duration: 60)
+                TempEvent(name: "Overtime", icon: "⏰", duration: 60)
             ]
         case .cafe:
             return [
@@ -287,26 +288,21 @@ extension Location {
     func toggleEvent(_ event: Event?) -> Bool {
         guard let event = event else { return false }
         
-        // Get the current events as NSOrderedSet
         let currentEvents = self.events ?? NSOrderedSet()
         
-        // Check if the event is already in the set
         if currentEvents.contains(event) {
-            // Event exists, so remove it
             let mutableEvents = currentEvents.mutableCopy() as? NSMutableOrderedSet ?? NSMutableOrderedSet()
             let index = mutableEvents.index(of: event)
             if index != NSNotFound {
                 mutableEvents.removeObject(at: index)
                 self.events = mutableEvents
                 
-                // Update inverse relationship
                 if let locations = event.locations {
                     let mutableLocations = locations.mutableCopy() as? NSMutableSet ?? NSMutableSet()
                     mutableLocations.remove(self)
                     event.locations = mutableLocations
                 }
                 
-                // Save changes
                 do {
                     try Model.viewContext.save()
                     print("Successfully removed event from location")
@@ -315,20 +311,17 @@ extension Location {
                 }
             }
             
-            return false // Indicates event was removed
+            return false
         } else {
-            // Event doesn't exist, so add it
             let mutableEvents = currentEvents.mutableCopy() as? NSMutableOrderedSet ?? NSMutableOrderedSet()
             mutableEvents.add(event)
             self.events = mutableEvents
             
-            // Update inverse relationship
             let locations = event.locations ?? NSSet()
             let mutableLocations = locations.mutableCopy() as? NSMutableSet ?? NSMutableSet()
             mutableLocations.add(self)
             event.locations = mutableLocations
             
-            // Save changes
             do {
                 try Model.viewContext.save()
                 print("Successfully added event to location")
@@ -336,13 +329,26 @@ extension Location {
                 print("Error adding event to location: \(error.localizedDescription)")
             }
             
-            return true // Indicates event was added
+            return true
         }
     }
     
-    // Get appropriate color for the current environment
     static func defaultColorFor(locationType: LocationType, in colorScheme: ColorScheme) -> String {
         return locationType.colorFor(colorScheme: colorScheme)
+    }
+    
+    static func findByImageName(_ imageName: String, in context: NSManagedObjectContext) -> Location? {
+        let fetchRequest: NSFetchRequest<Location> = Location.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "imageName == %@", imageName)
+        fetchRequest.fetchLimit = 1
+        
+        do {
+            let results = try context.fetch(fetchRequest)
+            return results.first
+        } catch {
+            print("Error fetching location by image name: \(error.localizedDescription)")
+            return nil
+        }
     }
     
     // Create a new Location entity with default values

@@ -15,7 +15,7 @@ struct Personal: View {
     
     @FetchRequest(
         entity: Event.entity(), sortDescriptors: [],
-        predicate: NSPredicate(format: "isActive == true")
+        predicate: NSPredicate(format: "isActive == true AND isFavourite == true")
     ) private var events: FetchedResults<Event>
     
     @State var isExpanded = true
@@ -79,7 +79,14 @@ struct Personal: View {
                     .foregroundStyle(.color3)
                 
                 
-                EventList(viewModel: viewModel, eventName: .constant(""), selectedEvent: .constant(nil), toggleHeartSelectEvent: false, showHeart: false, showEdit: true, showDelete: true) {
+                EventList(viewModel: viewModel,
+                          eventName: .constant(""),
+                          selectedEvent: .constant(nil),
+                          toggleHeartSelectEvent: false,
+                          customPredicate: NSPredicate(format: "isFavourite == true"),
+                          showHeart: false,
+                          showEdit: true,
+                          showDelete: true) {
                     
                     if (events.count < 2) {
                         ZStack{
@@ -103,7 +110,7 @@ struct Personal: View {
                                         eventTyping = true
                                     }
                                     else{
-                                        Event.save(icon: icon, name: eventName, duration: 30, order_insert_first: false)
+                                        Event.save(icon: icon, name: eventName, duration: 30, isFavourite: true, order_insert_first: false)
                                         icon = "💡"
                                         eventName = ""
                                         
@@ -136,7 +143,7 @@ struct Personal: View {
             })
             .onDisappear{
                 if !eventName.isEmpty{
-                    Event.save(icon: icon, name: eventName, duration: 30, order_insert_first: false)
+                    Event.save(icon: icon, name: eventName, duration: 30, isFavourite: true, order_insert_first: false)
                     icon = "💡"
                     eventName = ""
                     

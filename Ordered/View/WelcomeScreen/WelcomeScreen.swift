@@ -98,15 +98,17 @@ struct CaseSeparation: View{
     var body: some View{
         switch(currentPage){
         case listOfSteps[0]:
-            Personal(welcomeVM: welcomeVM, viewModel: viewModel)
+            Intro()
             
         case listOfSteps[1]:
-            LocationSelection(welcomeVM: welcomeVM)
+            Personal(welcomeVM: welcomeVM, viewModel: viewModel)
             
         case listOfSteps[2]:
-            Text("HI")
+            LocationSelection(welcomeVM: welcomeVM)
+            
         case listOfSteps[3]:
-            Text("HI")
+            Privacy()
+            
         default:
             Text("Default")
         }
