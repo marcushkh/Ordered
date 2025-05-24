@@ -72,21 +72,7 @@ struct WelcomeScreen: View {
                 .dragToDismiss(false)
                 .backgroundColor(.cPrimary.opacity(0.1))
         }
-        
-        
-        .popup(isPresented: $welcomeVM.showSelectTime){
-            TimeSelection(isPresented: $welcomeVM.showSelectTime, event: $welcomeVM.selectedEvent, eventList: $welcomeVM.scheduleEvents)
-        } customize: {
-            $0
-                .type(.floater())
-                .closeOnTap(false)
-                .closeOnTapOutside(true)
-                .backgroundColor(.black.opacity(0.3))
-                .dragToDismiss(false)
-        }
-        
     }
-    
 }
 
 struct CaseSeparation: View{

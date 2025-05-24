@@ -11,10 +11,12 @@ struct EventsForLocation: View {
     @ObservedObject var viewModel: ContentViewModel
     @ObservedObject var welcomeVM: WelcomeVM
     
+    @State var allEvents: [Event] = []
+    @State var draggingItem: Event?
+    
     init(viewModel: ContentViewModel, welcomeVM: WelcomeVM) {
         self.welcomeVM = welcomeVM
         self.viewModel = viewModel
-
     }
     
     var body: some View {
@@ -44,8 +46,7 @@ struct EventsForLocation: View {
             
             ScrollView{
                 VStack{
-                    // Safely cast and handle existing events
-                    ForEach(welcomeVM.location?.events?.array as? [Event] ?? [], id: \.self){ e in
+                    ForEach(allEvents){ e in
                         ZStack{
                             RoundedRectangle(cornerRadius: 20.0)
                                 .fill(.color1)
@@ -71,19 +72,54 @@ struct EventsForLocation: View {
                                 }
                             }
                             .padding(.horizontal)
-                            
                         }
                         .frame(height: 60)
+                        .draggable(e.description){
+                            ZStack{
+                                Circle()
+                                    .frame(height: K.xlarge_size)
+                                
+                                Text(e.icon ?? "")
+                                    .font(.custom("", size: K.large_size))
+                                    .shadow(radius: K.medium_size)
+                                
+                            }
+                            .onAppear {
+                                draggingItem = e
+                            }
+                        }
+                        .dropDestination(for: String.self) { items, location in
+                            draggingItem = nil
+                            return false
+                        } isTargeted: { status in
+                            
+                            withAnimation {
+                                //Reordering
+                                if let draggingItem, status, draggingItem.objectID != e.objectID{
+                                    let e_index = allEvents.firstIndex(of: e) ?? 0
+                                    
+                                    allEvents.remove(at: allEvents.firstIndex(of: draggingItem) ?? 0)
+                                    allEvents.insert(draggingItem, at: e_index)
+                                    
+                                    allEvents = allEvents.sorted { $0.isFavourite && !$1.isFavourite  }
+                                    
+                                    // Reorder in location.events rather than changing event.order
+                                    if let currentLocation = viewModel.location {
+                                        reorderEventsInLocation(currentLocation)
+                                    }
+                                }
+                            }
+                        }
                     }
                     
                     let existingEventNames = (welcomeVM.location?.events?.array as? [Event] ?? [])
                         .compactMap { $0.name }
                     
                     ForEach((LocationType.from(welcomeVM.location?.imageName ?? "")?.defaultEvents ?? [])
-                        .filter { defaultEvent in 
+                        .filter { defaultEvent in
                             !existingEventNames.contains(defaultEvent.name)
-                        }, 
-                        id: \.self) { event in
+                        },
+                            id: \.self) { event in
                         
                         ZStack{
                             RoundedRectangle(cornerRadius: 20.0)
@@ -132,7 +168,16 @@ struct EventsForLocation: View {
             .scrollIndicators(.hidden)
             .padding(.top, -8)
             .frame(height: 470)
+            .onAppear{
+                withAnimation {
+                    fetchEvents()
+                }
+                
+            }
             .onChange(of: viewModel.refresh) { _, _ in
+                withAnimation {
+                    fetchEvents()
+                }
                 
             }
             
@@ -158,5 +203,30 @@ struct EventsForLocation: View {
         .padding(.bottom, 8)
         .background(Color.cBackground.cornerRadius(30))
         .padding(.horizontal, K.horizontal_padding)
+    }
+    
+    private func fetchEvents() {
+        allEvents = welcomeVM.location?.events?.array as? [Event] ?? []
+    }
+    
+    // New function to reorder events in the location's ordered events collection
+    private func reorderEventsInLocation(_ location: Location) {
+        guard let currentEvents = location.events else { return }
+        let mutableEvents = currentEvents.mutableCopy() as! NSMutableOrderedSet
+        
+        mutableEvents.removeAllObjects()
+        
+        for event in allEvents {
+            mutableEvents.add(event)
+        }
+        
+        location.events = mutableEvents
+        
+        do {
+            try Model.viewContext.save()
+            print("Successfully reordered events in location")
+        } catch {
+            print("Error reordering events in location: \(error)")
+        }
     }
 }

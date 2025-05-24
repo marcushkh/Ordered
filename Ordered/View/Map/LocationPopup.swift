@@ -207,42 +207,22 @@ struct LocationPopup: View{
         
     }
     private func fetchEvents() {
-        let request: NSFetchRequest<Event> = Event.fetchRequest()
-        request.sortDescriptors = [
-            NSSortDescriptor(keyPath: \Event.isFavourite, ascending: false),
-            NSSortDescriptor(keyPath: \Event.order, ascending: true)
-        ]
-        
-        if let location = viewModel.location {
-            request.predicate = NSPredicate(format: "isActive == true AND ANY locations == %@", location)
-        }
-
-        do {
-            allEvents = try Model.viewContext.fetch(request)
-        } catch {
-            print("Fetch failed: \(error)")
-        }
+        allEvents = viewModel.location?.events?.array as? [Event] ?? []
     }
     
     // New function to reorder events in the location's ordered events collection
     private func reorderEventsInLocation(_ location: Location) {
-        // Get current ordered events as mutable ordered set
         guard let currentEvents = location.events else { return }
         let mutableEvents = currentEvents.mutableCopy() as! NSMutableOrderedSet
         
-        // Clear the ordered set
         mutableEvents.removeAllObjects()
         
-        // Add events back in the new order from our allEvents array
-        // This preserves the favorite status order
         for event in allEvents {
             mutableEvents.add(event)
         }
         
-        // Set the reordered events back to the location
         location.events = mutableEvents
         
-        // Save the context
         do {
             try Model.viewContext.save()
             print("Successfully reordered events in location")

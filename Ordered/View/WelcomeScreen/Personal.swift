@@ -13,6 +13,8 @@ struct Personal: View {
     @ObservedObject var welcomeVM: WelcomeVM
     @ObservedObject var viewModel: ContentViewModel
     
+    @State var giveEmojiSuggestion = true
+    
     @FetchRequest(
         entity: Event.entity(), sortDescriptors: [],
         predicate: NSPredicate(format: "isActive == true AND isFavourite == true")
@@ -22,9 +24,6 @@ struct Personal: View {
     @State var icon = "💡"
     @State var eventName = ""
     @FocusState var eventTyping: Bool
-    
-    
-    
     
     var body: some View {
         Background(color: .cBackground, allFocusStates: [$eventTyping]){
@@ -94,7 +93,7 @@ struct Personal: View {
                                 .fill(.color1)
                             
                             HStack{
-                                EventAndEmoji(eventName: $eventName, selectedEmoji: $icon, eventNameTyping: $eventTyping) {
+                                EventAndEmoji(eventName: $eventName, selectedEmoji: $icon, eventNameTyping: $eventTyping, giveSuggestion: $giveEmojiSuggestion) {
                                     Text(icon)
                                         .font(.title)
                                 } eventNameView: {
@@ -113,6 +112,7 @@ struct Personal: View {
                                         Event.save(icon: icon, name: eventName, duration: 30, isFavourite: true, order_insert_first: false)
                                         icon = "💡"
                                         eventName = ""
+                                        giveEmojiSuggestion = true
                                         
                                         viewModel.refresh.toggle()
                                     }
@@ -122,7 +122,6 @@ struct Personal: View {
                                         .bold()
                                         .foregroundStyle(.cPrimary, .success)
                                 }
-                                
                             }
                             .frame(height: 60)
                             .padding(.horizontal)
@@ -146,6 +145,7 @@ struct Personal: View {
                     Event.save(icon: icon, name: eventName, duration: 30, isFavourite: true, order_insert_first: false)
                     icon = "💡"
                     eventName = ""
+                    giveEmojiSuggestion = true
                     
                     viewModel.refresh.toggle()
                 }

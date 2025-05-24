@@ -16,6 +16,7 @@ struct CreateEvent: View {
     @State var editEvent_Cal: Event_Cal? = nil
     @State var date: Date = Date()
     
+    @State var giveSuggestion: Bool = true
     @State var selectedEmoji: String = "💡"
     @State var suggestedEmoji: String = ""
     
@@ -52,7 +53,7 @@ struct CreateEvent: View {
         Background(color: .cBackground, allFocusStates: [$eventNameTyping, $descriptionTyping]){
             VStack{
                 if !isNewEvent && event == nil{ //Give suggestion to use previous events
-                    EventAndEmoji(eventName: $eventName, selectedEmoji: $selectedEmoji, eventNameTyping: $eventNameTyping){
+                    EventAndEmoji(eventName: $eventName, selectedEmoji: $selectedEmoji, eventNameTyping: $eventNameTyping, giveSuggestion: $giveSuggestion){
                         ZStack{
                             RoundedRectangle(cornerRadius: 20)
                                 .fill(Color(.color1))

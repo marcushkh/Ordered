@@ -121,6 +121,9 @@ struct LocationSelection: View{
                                 let newLocation = Location.createNew(in: Model.viewContext, 
                                                                    imageName: location.rawValue,
                                                                    colorScheme: colorScheme)
+                                for event in Event.getAllFavorite(){
+                                    newLocation?.addEvent(event)
+                                }
                                 
                                 if let newLocation = newLocation {
                                     welcomeVM.location = newLocation

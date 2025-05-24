@@ -333,6 +333,35 @@ extension Location {
         }
     }
     
+    func addEvent(_ event: Event?) {
+        guard let event = event else { return }
+        
+        // Check if the event already exists in this location's events
+        let currentEvents = self.events ?? NSOrderedSet()
+        if currentEvents.contains(event) {
+            print("Event already exists in this location")
+            return
+        }
+        
+        // If event doesn't exist, add it
+        let mutableEvents = currentEvents.mutableCopy() as? NSMutableOrderedSet ?? NSMutableOrderedSet()
+        mutableEvents.add(event)
+        self.events = mutableEvents
+        
+        // Update the event's locations to include this location
+        let locations = event.locations ?? NSSet()
+        let mutableLocations = locations.mutableCopy() as? NSMutableSet ?? NSMutableSet()
+        mutableLocations.add(self)
+        event.locations = mutableLocations
+        
+        do {
+            try Model.viewContext.save()
+            print("Successfully added event to location")
+        } catch {
+            print("Error adding event to location: \(error.localizedDescription)")
+        }
+    }
+    
     static func defaultColorFor(locationType: LocationType, in colorScheme: ColorScheme) -> String {
         return locationType.colorFor(colorScheme: colorScheme)
     }

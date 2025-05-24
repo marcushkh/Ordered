@@ -14,9 +14,9 @@ struct EventAndEmoji<Emoji: View, EventName: View>: View{
     
     @FocusState.Binding var eventNameTyping: Bool
     
+    @Binding var giveSuggestion: Bool
     @State var showEmojiPicker: Bool = false
     @State var emojiPickerPicked: String = "💡"
-    @State var giveSuggestion: Bool = true
     @State var suggestedEmoji: String = ""
     
     @State private var debounceTask: Task<Void, Never>? = nil

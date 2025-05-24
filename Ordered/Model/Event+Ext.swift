@@ -111,6 +111,19 @@ extension Event {
         }
     }
     
+    static func getAllFavorite() -> [Event] {
+        let request: NSFetchRequest<Event> = Event.fetchRequest()
+        request.predicate = NSPredicate(format: "isActive == true AND isFavourite == true")
+        request.sortDescriptors = [NSSortDescriptor(keyPath: \Event.order, ascending: true)]
+        
+        do {
+            return try Model.viewContext.fetch(request)
+        } catch {
+            print("Failed to fetch favorite events: \(error)")
+            return []
+        }
+    }
+    
     func delete(){
         self.isActive = false
         
