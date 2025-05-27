@@ -404,6 +404,7 @@ struct OneDay: View {
                         .padding(.horizontal, K.horizontal_padding)
                     }
                     else{
+                        let image =
                         //No event, show the image for event creation
                         ZStack{
                             Rectangle()
@@ -425,8 +426,16 @@ struct OneDay: View {
                                 
                                 Spacer()
                             }
-                            
                         }
+                        
+                        if pos == .centerView{
+                            image
+                                .showCase(order: 0, title: "Tap here to create a new Event", cornerRadius: 20)
+                        }
+                        else{
+                            image
+                        }
+                        
                     }
                 }
                 .scrollIndicators(.hidden)

@@ -134,11 +134,15 @@ extension Location {
     }
     
     static let allowedPositions: [CGPoint] = [
-        CGPoint(x: 100, y: 100),  // Top-left position (order 0)
-        CGPoint(x: 300, y: 200),  // Middle position (order 1)
-        CGPoint(x: 100, y: 300),   // Bottom-right position (order 2)
-        CGPoint(x: 300, y: 400),   // Bottom-right position (order 2)
-        CGPoint(x: 100, y: 500)   // Bottom-right position (order 2)
+        CGPoint(x: 100, y: 100),
+        CGPoint(x: 300, y: 200),
+        CGPoint(x: 100, y: 300),
+        CGPoint(x: 300, y: 400),
+        CGPoint(x: 100, y: 500),
+        
+        CGPoint(x: 300, y: 600),
+        CGPoint(x: 100, y: 700),
+        CGPoint(x: 300, y: 800)
     ]
     
     static func save(name: String?, color: String?, location: Location?){
@@ -469,4 +473,16 @@ extension Location {
             return false
         }
     }
-} 
+    
+    static func count() -> Int {
+        let request: NSFetchRequest<Location> = Location.fetchRequest()
+        request.sortDescriptors = []
+        
+        do {
+            return try Model.viewContext.fetch(request).count
+        } catch {
+            print("Failed to fetch favorite events: \(error)")
+            return 0
+        }
+    }
+}

@@ -9,9 +9,8 @@ import SwiftUI
 import MCEmojiPicker
 
 struct Personal: View {
-    
-    @ObservedObject var welcomeVM: WelcomeVM
     @ObservedObject var viewModel: ContentViewModel
+    @ObservedObject var welcomeVM: WelcomeVM
     
     @State var giveEmojiSuggestion = true
     

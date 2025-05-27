@@ -31,6 +31,9 @@ struct TopBar: View {
                 MapTopBar(viewModel: viewModel)
                     .padding(.horizontal, K.horizontal_padding)
             }
+            else if viewModel.currentTab == .setting{
+                SettingTopBar(viewModel: viewModel)
+            }
         }
         .frame(width: UIScreen.main.bounds.width)
         .background(.color1, ignoresSafeAreaEdges: .top)

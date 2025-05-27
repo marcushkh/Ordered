@@ -10,6 +10,7 @@ import CoreData
 extension Event {
         
     static func save(icon: String? = nil, name: String? = nil, startTime: String? = nil, endTime: String? = nil, duration: Int = -1, isFavourite: Bool = false, order_insert_first: Bool = true, event: Event? = nil) -> Event {
+        
         let eventToSave = event ?? Event(context: Model.viewContext)
         
         if let icon = icon{
@@ -121,6 +122,19 @@ extension Event {
         } catch {
             print("Failed to fetch favorite events: \(error)")
             return []
+        }
+    }
+    
+    static func count() -> Int {
+        let request: NSFetchRequest<Event> = Event.fetchRequest()
+        request.predicate = NSPredicate(format: "isActive == true")
+        request.sortDescriptors = []
+        
+        do {
+            return try Model.viewContext.fetch(request).count
+        } catch {
+            print("Failed to fetch favorite events: \(error)")
+            return 0
         }
     }
     

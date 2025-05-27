@@ -14,22 +14,32 @@ struct TabBar: View {
         
         LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 5), content: {
             ForEach([TabBarItem.home, TabBarItem.plan, TabBarItem.map, TabBarItem.statistic, TabBarItem.setting]) { item in
+                let tabBarIcon = Image(systemName: viewModel.currentTab != item ? item.icon : item.icon + ".fill")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: K.small_size, height: K.small_size)
+                            .symbolEffect(.bounce, value: viewModel.currentTab == item)
                 
                 VStack {
-                    if viewModel.currentTab == .sugg{
-                        Image(systemName: item.icon)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: K.small_size, height: K.small_size)
-                            .symbolEffect(.bounce, value: viewModel.currentTab == item)
+                    if item == .plan{
+                        tabBarIcon
+                            .showCase(order: 1,
+                                      title: "This helps you plan and record \n your day with a few clicks",
+                                      cornerRadius: 10,
+                                      scale: 1.5)
+                    }
+                    else if item == .map{
+                        tabBarIcon
+                            .showCase(order: 2,
+                                      title: "Modify the active places\nYou can also start event easily here",
+                                      cornerRadius: 10,
+                                      scale: 1.5)
                     }
                     else{
-                        Image(systemName: viewModel.currentTab != item ? item.icon : item.icon + ".fill")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: K.small_size, height: K.small_size)
-                            .symbolEffect(.bounce, value: viewModel.currentTab == item)
+                        tabBarIcon
                     }
+                    
+                    
                 }
                 .foregroundStyle(viewModel.currentTab != item ? .primary : Color(.color3))
                 .onTapGesture {

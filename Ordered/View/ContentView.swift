@@ -8,6 +8,8 @@
 import SwiftUI
 import CoreData
 import PopupView
+import RevenueCat
+import RevenueCatUI
 
 struct ContentView: View {
     @AppStorage("welcomeScreen") var welcomeScreen: Bool = true
@@ -18,6 +20,10 @@ struct ContentView: View {
     
     @FocusState var searchTyping: Bool
     @Environment(\.scenePhase) private var scenePhase
+    
+    init(){
+        Purchases.configure(withAPIKey: "appl_xnYsiELHTsABRcVdfAShQCpYvQK")
+    }
     
     var body: some View {
         GeometryReader{ geo in
@@ -37,6 +43,7 @@ struct ContentView: View {
                         //Records
                         MainList(viewModel: viewModel, dayPlannerVM: dayPlannerVM)
                             .ignoresSafeArea()
+                            
                     }
                     else if viewModel.currentTab == .sugg{
                         
@@ -88,6 +95,7 @@ struct ContentView: View {
                             .padding(.bottom, 10)
                     }
                 }
+                
                 .popup(isPresented: $viewModel.showEventDetail){
                     EventDetailPopup(viewModel: viewModel)
                 } customize: {
@@ -172,7 +180,24 @@ struct ContentView: View {
                     }
                 }
             }
+            .modifier(ShowCaseRoot(showHighlights: viewModel.showCase, onFinished: {
+                if !viewModel.isSubscriptionActive{
+                    viewModel.isShowPaywall = true
+                }
+            }))
+            .sheet(isPresented: $viewModel.isShowPaywall) {
+                PaywallView()
+                    .onPurchaseCompleted { customerInfo in
+                        viewModel.isSubscriptionActive = customerInfo.entitlements.all["Premium"]?.isActive == true
+                        viewModel.isShowPaywall = false
+                    }
+                    .onRestoreCompleted { customerInfo in
+                        viewModel.isSubscriptionActive = customerInfo.entitlements.all["Premium"]?.isActive == true
+                        viewModel.isShowPaywall = false
+                    }
+            }
         }
+        
     }
 }
 

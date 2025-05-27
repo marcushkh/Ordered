@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import RevenueCat
 
 class ContentViewModel: ObservableObject{
     
@@ -51,7 +52,17 @@ class ContentViewModel: ObservableObject{
     @Published var selectedEvent: Event? = nil
     @Published var searchEventName: String = ""
     
+    //for welcome and showcase
+    @Published var showCase = false
+    @Published var isShowPaywall = false
+    
+    @Published var isSubscriptionActive = false
+    
     init(){
         currentTab = defaultPage
+        
+        Purchases.shared.getCustomerInfo { customerInfo, error in
+            self.isSubscriptionActive = customerInfo?.entitlements.all["Premium"]?.isActive == true
+        }
     }
 }

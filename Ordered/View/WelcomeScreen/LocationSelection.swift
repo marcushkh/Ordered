@@ -9,7 +9,9 @@ import PopupView
 import CoreData
 
 struct LocationSelection: View{
+    @ObservedObject var viewModel: ContentViewModel
     @ObservedObject var welcomeVM: WelcomeVM
+    
     @Environment(\.colorScheme) private var colorScheme
     
      @FetchRequest(
@@ -19,13 +21,15 @@ struct LocationSelection: View{
     )
     private var locations: FetchedResults<Location>
     
+    @State var showAlert = false
+    
     var body: some View{
         VStack(alignment: .leading){
             HStack{
                 Spacer()
                 VStack{
                     if !welcomeVM.showPopup{
-                        Text("Configure the places you are active in (Max: 5)")
+                        Text("Configure the places you are active in")
                             .font(.title2)
                             .bold()
                             .multilineTextAlignment(.center)
@@ -109,26 +113,41 @@ struct LocationSelection: View{
                             .padding(.horizontal)
                         }
                         .onTapGesture {
-                            // First, check if a location with this image name already exists
-                            let existingLocation = Location.findByImageName(location.rawValue, in: Model.viewContext)
-                            
-                            // If location exists, use it; otherwise create a new one
-                            if let existingLoc = existingLocation {
-                                welcomeVM.location = existingLoc
-                                welcomeVM.showPopup = true
-                            } else {
-                                // Create new location only if one doesn't exist
-                                let newLocation = Location.createNew(in: Model.viewContext, 
-                                                                   imageName: location.rawValue,
-                                                                   colorScheme: colorScheme)
-                                for event in Event.getAllFavorite(){
-                                    newLocation?.addEvent(event)
-                                }
+                            if Location.count() >= 8 {
+                                showAlert = true
+                            }
+                            else if (Location.count() >= 5 && !viewModel.isSubscriptionActive){
+                                viewModel.isShowPaywall = true
+                            }
+                            else{
+                                // First, check if a location with this image name already exists
+                                let existingLocation = Location.findByImageName(location.rawValue, in: Model.viewContext)
                                 
-                                if let newLocation = newLocation {
-                                    welcomeVM.location = newLocation
+                                // If location exists, use it; otherwise create a new one
+                                if let existingLoc = existingLocation {
+                                    welcomeVM.location = existingLoc
                                     welcomeVM.showPopup = true
+                                } else {
+                                    // Create new location only if one doesn't exist
+                                    let newLocation = Location.createNew(in: Model.viewContext,
+                                                                         imageName: location.rawValue,
+                                                                         colorScheme: colorScheme)
+                                    for event in Event.getAllFavorite(){
+                                        newLocation?.addEvent(event)
+                                    }
+                                    
+                                    if let newLocation = newLocation {
+                                        welcomeVM.location = newLocation
+                                        welcomeVM.showPopup = true
+                                    }
                                 }
+                            }
+                        }
+                        .alert("Only 8 Locations can be created", isPresented: $showAlert) {
+                            Button{
+                                showAlert = false
+                            } label: {
+                                Text("ok")
                             }
                         }
                     }

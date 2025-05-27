@@ -485,9 +485,15 @@ struct CreateEvent: View {
                 eventNameTyping = true
             }
             else{
-                withAnimation {
-                    isNewEvent = true
-                    descriptionTyping = true
+                if Event.count() >= 10 && !viewModel.isSubscriptionActive{
+                    viewModel.showCreateEvent = false
+                    viewModel.isShowPaywall = true
+                }
+                else{
+                    withAnimation {
+                        isNewEvent = true
+                        descriptionTyping = true
+                    }
                 }
             }
         } label: {

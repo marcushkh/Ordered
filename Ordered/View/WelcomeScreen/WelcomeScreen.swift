@@ -9,9 +9,10 @@ import SwiftUI
 import PopupView
 
 struct WelcomeScreen: View {
-    @State var currentItem = 0
-    @StateObject var welcomeVM = WelcomeVM()
     @ObservedObject var viewModel: ContentViewModel
+    @StateObject var welcomeVM = WelcomeVM()
+    
+    @State var currentItem = 0
     
     @AppStorage("welcomeScreen") var welcomeScreen: Bool = true
     
@@ -47,6 +48,7 @@ struct WelcomeScreen: View {
                     //init database
                     withAnimation {
                         welcomeScreen = false
+                        viewModel.showCase = true
                     }
                 }
             } label: {
@@ -87,10 +89,10 @@ struct CaseSeparation: View{
             Intro()
             
         case listOfSteps[1]:
-            Personal(welcomeVM: welcomeVM, viewModel: viewModel)
+            Personal(viewModel: viewModel, welcomeVM: welcomeVM)
             
         case listOfSteps[2]:
-            LocationSelection(welcomeVM: welcomeVM)
+            LocationSelection(viewModel: viewModel, welcomeVM: welcomeVM)
             
         case listOfSteps[3]:
             Privacy()

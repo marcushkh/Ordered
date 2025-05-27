@@ -73,8 +73,8 @@ struct CustomMapView: View {
                                 }
                             }
                             .zIndex(0)
-                        
-                        ForEach(0..<Location.allowedPositions.count, id: \.self) { index in
+                            
+                        ForEach(0..<(viewModel.isSubscriptionActive ? 8 : 5), id: \.self) { index in
                             let position = Location.allowedPositions[index]
                             
                             let isOccupied = Location.isPositionOccupied(at: position, context: viewContext)

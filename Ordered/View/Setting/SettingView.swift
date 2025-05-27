@@ -16,6 +16,7 @@ struct SettingView: View{
         
         List {
             VStack(alignment: .leading){
+                
                 HStack{
                     Text("Default Page")
                     Spacer()
