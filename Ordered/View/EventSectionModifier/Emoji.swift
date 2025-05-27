@@ -26,6 +26,7 @@ public class DataLoader{
     
     init(){
         load()
+//        toEmbed()
     }
     
     func load() {

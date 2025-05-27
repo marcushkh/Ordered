@@ -179,6 +179,10 @@ struct CreateEvent: View {
             selectedEmoji = newValue?.icon ?? "💡"
             eventName = newValue?.name ?? ""
             
+            if newValue != nil{
+                giveSuggestion = false
+            }
+            
             if newValue?.startTime != nil && newValue?.endTime != nil{
                 isSchedule = true
                 startTime = Date.getDateFromHHMM(newValue?.startTime! ?? "00:00:00")

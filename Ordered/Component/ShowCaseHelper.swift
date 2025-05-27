@@ -60,7 +60,7 @@ struct ShowCaseRoot: ViewModifier{
             let safeArea = geo.safeAreaInsets
             
             Rectangle()
-                .fill(.black.opacity(0.5))
+                .fill(.cPrimary.opacity(0.5))
                 .reverseMask(content: {
                     Rectangle()
                         .frame(width: highlightRect.width + 5, height: highlightRect.height + 5)
