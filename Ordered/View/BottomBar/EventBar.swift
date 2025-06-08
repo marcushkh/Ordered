@@ -125,46 +125,17 @@ struct EventBar: View {
                         columns: [GridItem(), GridItem()],
                         spacing: K.horizontal_padding,
                         content: {
-                        ForEach(events) { e in
+                        ForEach(Array(events.enumerated()), id: \.element.id) { index, e in
                             EventInfo(e: e)
                                 .padding(.horizontal)
-                                .onTapGesture {
-                                    withAnimation {
-                                        // Add event below the highlighted Event
-                                        let newEC = e.getEC()
-                                        
-                                        if viewModel.currentTab == .plan { //in planning page
-                                            //if no Cal -> create Cal
-                                            let cal = Cal.get(date: dayPlannerVM.currentDate.getYYMMDD()) ?? Cal.new(date: dayPlannerVM.currentDate.getYYMMDD())
-                                            
-                                            // If highlightedEC is not nil, create new event_cal and put it below highlightedEC
-                                            if let highlightedEC = viewModel.highlightedEC, 
-                                               let sc = highlightedEC.section_cal {
-                                                sc.insert(newEC, after: highlightedEC)
-                                                viewModel.highlightedEC = newEC
-                                                viewModel.highlightedSC = nil
-                                            }
-                                            // If highlightedSC is not nil, put the new event_cal under the highlighed SC
-                                            else if let highlightedSC = viewModel.highlightedSC {
-                                                highlightedSC.add(event: newEC)
-                                                viewModel.highlightedEC = newEC
-                                                viewModel.highlightedSC = nil
-                                            }
-                                            // If both highlighted EC and SC are nil, create a new section
-                                            else {
-                                                let new_section_Cal = Section_Cal.new()
-                                                new_section_Cal.add(event: newEC)
-                                                cal.add(new_section_Cal)
-                                                viewModel.highlightedEC = newEC
-                                                viewModel.highlightedSC = nil
-                                            }
-                                            
-                                            cal.sort()
-                                        }
-                                        
-                                        viewModel.refresh.toggle()
-                                    }
-                                }
+                                .modifier(
+                                    EventTapModifier(
+                                        event: e,
+                                        index: index,
+                                        viewModel: viewModel,
+                                        dayPlannerVM: dayPlannerVM
+                                    )
+                                )
                         }
                     })
                     .padding(.bottom, 0)
@@ -252,5 +223,99 @@ struct EventBar: View {
         }
         
         events.nsPredicate = predicate
+    }
+}
+
+struct EventTapModifier: ViewModifier {
+    let event: Event
+    let index: Int
+    @ObservedObject var viewModel: ContentViewModel
+    @ObservedObject var dayPlannerVM: DayPlannerViewModel
+    
+    func body(content: Content) -> some View {
+        content
+            .onTapGesture {
+                handleEventTap()
+            }
+            .modifier(ShowcaseModifier(viewModel: viewModel, index: index){
+                handleEventTap()
+            })
+    }
+    
+    private func handleEventTap() {
+        withAnimation {
+            // Add event below the highlighted Event
+            let newEC = event.getEC()
+            
+            if viewModel.currentTab == .plan { //in planning page
+                //if no Cal -> create Cal
+                let cal = Cal.get(date: dayPlannerVM.currentDate.getYYMMDD()) ?? Cal.new(date: dayPlannerVM.currentDate.getYYMMDD())
+                
+                // If highlightedEC is not nil, create new event_cal and put it below highlightedEC
+                if let highlightedEC = viewModel.highlightedEC, 
+                   let sc = highlightedEC.section_cal {
+                    sc.insert(newEC, after: highlightedEC)
+                    viewModel.highlightedEC = newEC
+                    viewModel.highlightedSC = nil
+                }
+                // If highlightedSC is not nil, put the new event_cal under the highlighed SC
+                else if let highlightedSC = viewModel.highlightedSC {
+                    highlightedSC.add(event: newEC)
+                    viewModel.highlightedEC = newEC
+                    viewModel.highlightedSC = nil
+                }
+                // If both highlighted EC and SC are nil, create a new section
+                else {
+                    let new_section_Cal = Section_Cal.new()
+                    new_section_Cal.add(event: newEC)
+                    cal.add(new_section_Cal)
+                    viewModel.highlightedEC = newEC
+                    viewModel.highlightedSC = nil
+                }
+                
+                cal.sort()
+            }
+            
+            viewModel.refresh.toggle()
+        }
+    }
+}
+
+struct ShowcaseModifier: ViewModifier {
+    @ObservedObject var viewModel: ContentViewModel
+    
+    let index: Int
+    let onCompletion: (() -> Void)?
+    
+    func body(content: Content) -> some View {
+        Group {
+            if index == 0 {
+                content
+                    .showCase(order: 3, title: "One Tap = Create One Task", cornerRadius: 10) {
+                        if let C = onCompletion{
+                            withAnimation {
+                                C()
+                                if Event.count() == 1 {
+                                    viewModel.currentTab = .home
+                                }
+                            }
+                        }
+                    }
+            }
+            else if index == 1 {
+                content
+                    .showCase(order: 4, title: "Continue Creating Tasks!!", cornerRadius: 10) {
+                        if let C = onCompletion{
+                            withAnimation {
+                                C()
+                                viewModel.currentTab = .home
+                            }
+                        }
+                    }
+            }
+            else {
+                content
+            }
+        }
     }
 }

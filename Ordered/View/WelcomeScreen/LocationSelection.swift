@@ -21,8 +21,6 @@ struct LocationSelection: View{
     )
     private var locations: FetchedResults<Location>
     
-    @State var showAlert = false
-    
     var body: some View{
         VStack(alignment: .leading){
             HStack{
@@ -114,10 +112,12 @@ struct LocationSelection: View{
                         }
                         .onTapGesture {
                             if Location.count() >= 8 {
-                                showAlert = true
+                                welcomeVM.alertMessage = "Only 8 Locations can be created"
+                                welcomeVM.showAlert = true
                             }
                             else if (Location.count() >= 5 && !viewModel.isSubscriptionActive){
-                                viewModel.isShowPaywall = true
+                                welcomeVM.alertMessage = "Only 5 Locations can be created"
+                                welcomeVM.showAlert = true
                             }
                             else{
                                 // First, check if a location with this image name already exists
@@ -143,13 +143,7 @@ struct LocationSelection: View{
                                 }
                             }
                         }
-                        .alert("Only 8 Locations can be created", isPresented: $showAlert) {
-                            Button{
-                                showAlert = false
-                            } label: {
-                                Text("ok")
-                            }
-                        }
+                        
                     }
                 }
             }

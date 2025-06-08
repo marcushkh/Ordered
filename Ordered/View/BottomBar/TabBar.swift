@@ -23,17 +23,27 @@ struct TabBar: View {
                 VStack {
                     if item == .plan{
                         tabBarIcon
-                            .showCase(order: 1,
-                                      title: "This helps you plan and record \n your day with a few clicks",
-                                      cornerRadius: 10,
-                                      scale: 1.5)
+                            .showCase(order: 2, title: "This helps you plan and record \n your day with a few clicks", cornerRadius: 10, scale: 1.5) {
+                                withAnimation {
+                                    viewModel.currentTab = .plan
+                                }
+                            }
                     }
                     else if item == .map{
                         tabBarIcon
-                            .showCase(order: 2,
-                                      title: "Modify the active places\nYou can also start event easily here",
-                                      cornerRadius: 10,
-                                      scale: 1.5)
+                            .showCase(order: 6, title: "Modify the active places\nYou can also start tasks easily here", cornerRadius: 10, scale: 1.5) {
+                                withAnimation {
+                                    viewModel.currentTab = .map
+                                }
+                            }
+                    }
+                    else if item == .statistic{
+                        tabBarIcon
+                            .showCase(order: 10, title: "You can view Your Daily Progress Here!!", cornerRadius: 10, scale: 1.5) {
+                                withAnimation {
+                                    viewModel.currentTab = .home
+                                }
+                            }
                     }
                     else{
                         tabBarIcon

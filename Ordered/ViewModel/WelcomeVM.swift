@@ -13,4 +13,6 @@ class WelcomeVM: ObservableObject{
     @Published var location: Location?
     @Published var showPopup = false
     
+    @Published var showAlert = false
+    @Published var alertMessage = ""
 }

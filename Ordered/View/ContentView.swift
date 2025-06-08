@@ -12,16 +12,22 @@ import RevenueCat
 import RevenueCatUI
 
 struct ContentView: View {
-    @AppStorage("welcomeScreen") var welcomeScreen: Bool = true
+
     
     @Environment(\.managedObjectContext) private var viewContext
     @StateObject var viewModel = ContentViewModel()
     @StateObject var dayPlannerVM = DayPlannerViewModel()
     
+    @AppStorage("welcomeScreen") var welcomeScreen: Bool = true
+    
     @FocusState var searchTyping: Bool
     @Environment(\.scenePhase) private var scenePhase
     
     init(){
+        #if DEBUG
+        welcomeScreen = true
+        #endif
+        
         Purchases.configure(withAPIKey: "appl_xnYsiELHTsABRcVdfAShQCpYvQK")
     }
     

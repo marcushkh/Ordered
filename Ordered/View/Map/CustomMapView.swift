@@ -522,9 +522,17 @@ struct LocationRectangleView: View {
                         }
                         .onTapGesture {
                             //is tapped
-                            viewModel.showLocationEventList = true
-                            viewModel.location = location
-                            print("Location: \(location.imageName ?? "Unnamed")")
+                            withAnimation {
+                                viewModel.showLocationEventList = true
+                                viewModel.location = location
+                                print("Location: \(location.imageName ?? "Unnamed")")
+                            }
+                        }
+                        .showCase(order: 7, title: "You can view and edit Locations here\n try and tap it!", cornerRadius: 10){
+                            withAnimation {
+                                viewModel.showLocationEventList = true
+                                viewModel.location = location
+                            }
                         }
                 }
             }

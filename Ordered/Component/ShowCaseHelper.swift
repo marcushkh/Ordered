@@ -8,10 +8,10 @@ import SwiftUI
 
 extension View{
     @ViewBuilder
-    func showCase(order: Int, title: String, cornerRadius: CGFloat, style: RoundedCornerStyle = .continuous, scale: CGFloat = 1) -> some View{
+    func showCase(order: Int, title: String, cornerRadius: CGFloat, style: RoundedCornerStyle = .continuous, scale: CGFloat = 1, onComplete: (() -> Void)? = nil) -> some View{
         self
             .anchorPreference(key: HighlightAnchorKey.self, value: .bounds) { anchor in
-                let highlight = Highlight(anchor: anchor, title: title, cornerRadius: cornerRadius, style: style, scale: scale)
+                let highlight = Highlight(anchor: anchor, title: title, cornerRadius: cornerRadius, style: style, scale: scale, onComplete: onComplete)
                 return [order: highlight]
             }
     }
@@ -42,19 +42,27 @@ struct ShowCaseRoot: ViewModifier{
     func body(content: Content) -> some View {
         content
             .onPreferenceChange(HighlightAnchorKey.self){ value in
-                highlightOrder = Array(value.keys).sorted()
+//                highlightOrder = Array(value.keys).sorted()
+                let newKeys = Array(value.keys)
+                let existingKeys = Set(highlightOrder)
+                let allKeys = Set(newKeys).union(existingKeys)
+                highlightOrder = Array(allKeys).sorted()
             }
             .overlayPreferenceValue(HighlightAnchorKey.self) { preferences in
                 if highlightOrder.indices.contains(currentHighlight), showHighlights, showView{
-                    if let highlight = preferences[highlightOrder[currentHighlight]]{
-                        HighlightView(highlight)
+                    if let highlight = preferences[highlightOrder[currentHighlight]] {
+                        HighlightView(highlight, preferences: preferences, highlightOrder: highlightOrder)
                     }
                 }
+            }
+            .onChange(of: currentHighlight) { oldValue, newValue in
+                print("CURRENT HIGHLIGHT IS " + String(currentHighlight))
+                print(highlightOrder)
             }
     }
     
     @ViewBuilder
-    func HighlightView(_ highlight: Highlight) -> some View{
+    func HighlightView(_ highlight: Highlight, preferences: [Int: Highlight], highlightOrder: [Int]) -> some View{
         GeometryReader{ geo in
             let highlightRect = geo[highlight.anchor]
             let safeArea = geo.safeAreaInsets
@@ -73,6 +81,9 @@ struct ShowCaseRoot: ViewModifier{
                     showTitle = true
                 }
                 .onTapGesture {
+                    // Execute the completion handler for the current highlight
+                    highlight.onComplete?()
+                    
                     if currentHighlight >= highlightOrder.count - 1{
                         withAnimation {
                             showView = false
@@ -92,6 +103,9 @@ struct ShowCaseRoot: ViewModifier{
                 }
                 .onChange(of: showTitle) { oldValue, newValue in
                     guard !newValue else{return}
+                    
+                    // Execute the completion handler for the current highlight
+                    highlight.onComplete?()
                     
                     if currentHighlight >= highlightOrder.count - 1{
                         withAnimation {
@@ -143,4 +157,9 @@ struct Highlight: Identifiable, Equatable{
     var cornerRadius: CGFloat
     var style: RoundedCornerStyle = .continuous
     var scale: CGFloat = 1
+    var onComplete: (() -> Void)?
+    
+    static func == (lhs: Highlight, rhs: Highlight) -> Bool {
+        return lhs.id == rhs.id
+    }
 }

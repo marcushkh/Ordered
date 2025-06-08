@@ -430,7 +430,7 @@ struct OneDay: View {
                         
                         if pos == .centerView{
                             image
-                                .showCase(order: 0, title: "Tap here to create a new Event", cornerRadius: 20)
+                                .showCase(order: 1, title: "Tap here to create a new Event", cornerRadius: 20)
                         }
                         else{
                             image

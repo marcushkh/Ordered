@@ -95,6 +95,13 @@ struct TopBar: View {
                     .onTapGesture {
                         showClear = true
                     }
+                    .showCase(order: 5, title: "Clear All Tasks", cornerRadius: 10, scale: 1.5) {
+                        withAnimation {
+                            Cal.clear(date: dayPlannerVM.currentDate)
+                            viewModel.refresh.toggle()
+                        }
+                    }
+                
 //                Image(systemName: "list.triangle")
 //                    .resizable()
 //                    .scaledToFit()

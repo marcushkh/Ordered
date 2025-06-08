@@ -8,18 +8,25 @@
 import Foundation
 import SwiftUI
 
+
 enum K{
-    static let horizontal_padding = 20.0
-    static let vertical_padding = 16.0
+    private static let baseScreenWidth: CGFloat = 375.0 // iPhone 11/12/13/14/15
     
-    static let xxxsmall_size = 8.0
-    static let xxsmall_size = 16.0
-    static let xsmall_size = 20.0
-    static let small_size = 24.0
-    static let medium_size = 28.0
-    static let large_size = 32.0
-    static let xlarge_size = 36.0
-    static let xxl_size = 40.0
+    private static var scaleFactor: CGFloat {
+        UIScreen.main.bounds.width / baseScreenWidth
+    }
+    
+    static var horizontal_padding: CGFloat { 20.0 * scaleFactor }
+    static var vertical_padding: CGFloat { 16.0 * scaleFactor }
+    
+    static var xxxsmall_size: CGFloat { 8.0 * scaleFactor }
+    static var xxsmall_size: CGFloat { 16.0 * scaleFactor }
+    static var xsmall_size: CGFloat  { 20.0 * scaleFactor }
+    static var small_size: CGFloat   { 24.0 * scaleFactor }
+    static var medium_size: CGFloat  { 28.0 * scaleFactor }
+    static var large_size: CGFloat   { 32.0 * scaleFactor }
+    static var xlarge_size: CGFloat  { 36.0 * scaleFactor }
+    static var xxl_size: CGFloat     { 40.0 * scaleFactor }
     
     static let defaultSectionColor = [
         "DCEDFA",

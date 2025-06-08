@@ -20,7 +20,7 @@
     "_applicationInternalID" : "6605927545",
     "_developerTeamID" : "TQVQFY6LKW",
     "_failTransactionsEnabled" : false,
-    "_lastSynchronizedDate" : 769834617.63859999,
+    "_lastSynchronizedDate" : 771039694.73089802,
     "_locale" : "en_US",
     "_storefront" : "USA",
     "_storeKitErrors" : [
@@ -121,8 +121,8 @@
           "introductoryOffer" : null,
           "localizations" : [
             {
-              "description" : "Unlock Premium Features",
-              "displayName" : "Year Subscription: Premium",
+              "description" : "Unlock Premium Features ",
+              "displayName" : "Annual Subscription: Premium",
               "locale" : "en_US"
             }
           ],
