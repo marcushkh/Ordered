@@ -155,9 +155,10 @@ struct CustomMapView: View {
                                 selectedLocationObjectID: $selectedLocationObjectID,
                                 viewModel: viewModel,
                                 isDraggingOver: $isDraggingOver,
-                                allowedPositions: Location.allowedPositions
+                                allowedPositions: Location.allowedPositions,
+                                isFirst: location == locations.first
                             )
-                            .zIndex(2) 
+                            .zIndex(2)
                         }
                         .onChange(of: viewModel.refresh) { oldValue, newValue in
                             // Refresh handling
@@ -317,6 +318,8 @@ struct LocationRectangleView: View {
     // Add states for location replacement confirmation
     @State private var showReplaceAlert = false
     @State private var pendingNewImageName: String? = nil
+    
+    var isFirst: Bool
     
     private var isPositioning: Bool {
         isDragging && selectedLocationObjectID == location.objectID
@@ -528,7 +531,12 @@ struct LocationRectangleView: View {
                                 print("Location: \(location.imageName ?? "Unnamed")")
                             }
                         }
-                        .showCase(order: 7, title: "You can view and edit Locations here\n try and tap it!", cornerRadius: 10){
+                        .conditionalShowCase(
+                            isShow: isFirst,
+                            order: 7,
+                            title: "You can view and edit Locations here\n try and tap it!",
+                            cornerRadius: 10
+                        ) {
                             withAnimation {
                                 viewModel.showLocationEventList = true
                                 viewModel.location = location

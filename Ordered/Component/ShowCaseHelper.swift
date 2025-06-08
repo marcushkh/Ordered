@@ -17,6 +17,15 @@ extension View{
     }
     
     @ViewBuilder
+    func conditionalShowCase(isShow: Bool, order: Int, title: String, cornerRadius: CGFloat, style: RoundedCornerStyle = .continuous, scale: CGFloat = 1, onComplete: (() -> Void)? = nil) -> some View {
+        if isShow {
+            self.showCase(order: order, title: title, cornerRadius: cornerRadius, style: style, scale: scale, onComplete: onComplete)
+        } else {
+            self
+        }
+    }
+    
+    @ViewBuilder
     func reverseMask<Content: View>(alignment: Alignment = .topLeading, @ViewBuilder content: @escaping () -> Content) -> some View{
         self
             .mask{
