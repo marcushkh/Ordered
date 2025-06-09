@@ -31,7 +31,7 @@ struct TabBar: View {
                     }
                     else if item == .map{
                         tabBarIcon
-                            .showCase(order: 6, title: "Modify the active places\nYou can also start tasks easily here", cornerRadius: 10, scale: 1.5) {
+                            .showCase(order: 6, title: "Modify the active places\nYou can also start events easily here", cornerRadius: 10, scale: 1.5) {
                                 withAnimation {
                                     viewModel.currentTab = .map
                                 }

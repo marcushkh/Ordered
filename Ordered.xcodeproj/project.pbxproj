@@ -59,6 +59,7 @@
 		2C7FD6722DD38015005E41F5 /* AppIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7FD65E2DD38015005E41F5 /* AppIntent.swift */; };
 		2C7FD6742DD3B251005E41F5 /* FinishedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7FD6732DD3B24A005E41F5 /* FinishedView.swift */; };
 		2C96053B2C82D21900A1736D /* WelcomeVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C96053A2C82D21900A1736D /* WelcomeVM.swift */; };
+		2CA17A032DF674210064FCE7 /* MovementDetection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA17A022DF6741C0064FCE7 /* MovementDetection.swift */; };
 		2CA35CD32D28E16300011B89 /* Cal+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA35CD22D28E15900011B89 /* Cal+Ext.swift */; };
 		2CA35CD52D28E1F200011B89 /* Event+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA35CD42D28E1EE00011B89 /* Event+Ext.swift */; };
 		2CA35CD72D290ECC00011B89 /* Section+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA35CD62D290EC300011B89 /* Section+Ext.swift */; };
@@ -188,6 +189,7 @@
 		2C7FD6652DD38015005E41F5 /* LiveActivityLiveActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveActivityLiveActivity.swift; sourceTree = "<group>"; };
 		2C7FD6732DD3B24A005E41F5 /* FinishedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinishedView.swift; sourceTree = "<group>"; };
 		2C96053A2C82D21900A1736D /* WelcomeVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeVM.swift; sourceTree = "<group>"; };
+		2CA17A022DF6741C0064FCE7 /* MovementDetection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovementDetection.swift; sourceTree = "<group>"; };
 		2CA35CD22D28E15900011B89 /* Cal+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Cal+Ext.swift"; sourceTree = "<group>"; };
 		2CA35CD42D28E1EE00011B89 /* Event+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Event+Ext.swift"; sourceTree = "<group>"; };
 		2CA35CD62D290EC300011B89 /* Section+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Section+Ext.swift"; sourceTree = "<group>"; };
@@ -475,6 +477,7 @@
 		2CEB6B612DB9DF0100700265 /* Map */ = {
 			isa = PBXGroup;
 			children = (
+				2CA17A022DF6741C0064FCE7 /* MovementDetection.swift */,
 				2CB9467B2DD830BA00E4CD6E /* GeofencingView.swift */,
 				2CA36DFA2DBA548F0001B538 /* MapTopBar.swift */,
 				2CEB6B4C2DB9DEE400700265 /* CustomMapView.swift */,
@@ -665,6 +668,7 @@
 				2CFC59B62D44D1CA00529099 /* Ordered.xcdatamodeld in Sources */,
 				2C52C6982C8318D300C84996 /* TimeSelection.swift in Sources */,
 				2C3F2CDF2C561BAD008BD72A /* View+Ext.swift in Sources */,
+				2CA17A032DF674210064FCE7 /* MovementDetection.swift in Sources */,
 				2C15B7FC2C3D0F3600B008DB /* ContentView.swift in Sources */,
 				2CC8BC2F2D6F78A50049E579 /* Line.swift in Sources */,
 				2C15B7FA2C3D0F3600B008DB /* OrderedApp.swift in Sources */,

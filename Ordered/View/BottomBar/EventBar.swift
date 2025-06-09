@@ -291,7 +291,7 @@ struct ShowcaseModifier: ViewModifier {
         Group {
             if index == 0 {
                 content
-                    .showCase(order: 3, title: "One Tap = Create One Task", cornerRadius: 10) {
+                    .showCase(order: 3, title: "One Tap = Create One Events", cornerRadius: 10) {
                         if let C = onCompletion{
                             withAnimation {
                                 C()
@@ -304,7 +304,7 @@ struct ShowcaseModifier: ViewModifier {
             }
             else if index == 1 {
                 content
-                    .showCase(order: 4, title: "Continue Creating Tasks!!", cornerRadius: 10) {
+                    .showCase(order: 4, title: "Continue Creating Events!!", cornerRadius: 10) {
                         if let C = onCompletion{
                             withAnimation {
                                 C()
