@@ -13,7 +13,6 @@ import RevenueCatUI
 
 struct ContentView: View {
 
-    
     @Environment(\.managedObjectContext) private var viewContext
     @StateObject var viewModel = ContentViewModel()
     @StateObject var dayPlannerVM = DayPlannerViewModel()
@@ -201,6 +200,11 @@ struct ContentView: View {
                         viewModel.isSubscriptionActive = customerInfo.entitlements.all["Premium"]?.isActive == true
                         viewModel.isShowPaywall = false
                     }
+            }
+            .onAppear {
+                if !welcomeScreen{
+                    MovementDetection.shared.startMonitoring()
+                }
             }
         }
         

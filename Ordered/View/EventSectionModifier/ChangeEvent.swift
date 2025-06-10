@@ -16,6 +16,8 @@ struct ChangeEvent: View{
     
     @State var showEmojiPicker = false
     
+    @State var showAlert = false
+    
     var body : some View{
         ZStack{
             //Background
@@ -53,8 +55,19 @@ struct ChangeEvent: View{
                             .focused($nameTyping)
                             .underlineTextField(underline: .color3, focus: nameTyping, focusColor: Color(.color2))
                             .font(.system(size: 24))
-                            .frame(width: 228, height: 80)
+                            .frame(width: 200, height: 80)
                     }
+                    
+                    Button{
+                        showAlert = true
+                    } label: {
+                        Image(systemName: "x.square.fill")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 20, height: 30)
+                            .foregroundStyle(.error)
+                    }
+                    
                 }
                 Spacer()
                 
@@ -82,8 +95,20 @@ struct ChangeEvent: View{
                 nameTyping = true
             }
             .padding(.vertical)
+            .padding(.horizontal)
             .padding(.horizontal, K.horizontal_padding)
             .background()
+            .alert(isPresented: $showAlert) {
+                Alert(
+                    title: Text("Delete Event"),
+                    message: Text("Are you sure you want to delete this event?"),
+                    primaryButton: .destructive(Text("Delete")) {
+                        viewModel.changeEvent?.delete()
+                        dismiss()
+                    },
+                    secondaryButton: .cancel()
+                )
+            }
         }
     }
     func dismiss(){

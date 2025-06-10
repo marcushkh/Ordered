@@ -234,6 +234,15 @@ extension Event_Cal{
         return nil
     }
     
+    static func getEmpty(aStartTime: String? = nil, aEndTime: String? = nil) -> Event_Cal{
+        let ec = Event_Cal(context: Model.viewContext)
+        
+        ec.aStartTime = aStartTime
+        ec.aEndTime = aEndTime
+        
+        return ec
+    }
+    
     func edit(detail: String?, startTime: String?, endTime: String?, duration: Int, aStartTime: String? = nil, aEndTime: String? = nil, durationFinished: Int = 0, parent: Event? = nil){
         
         self.detail = detail

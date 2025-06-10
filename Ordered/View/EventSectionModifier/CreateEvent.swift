@@ -489,7 +489,7 @@ struct CreateEvent: View {
                 eventNameTyping = true
             }
             else{
-                if Event.count() >= 10 && !viewModel.isSubscriptionActive{
+                if Event.count() >= 20 && !viewModel.isSubscriptionActive{
                     viewModel.showCreateEvent = false
                     viewModel.isShowPaywall = true
                 }

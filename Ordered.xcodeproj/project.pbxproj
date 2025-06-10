@@ -851,6 +851,7 @@
 				DEVELOPMENT_TEAM = TQVQFY6LKW;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Ordered/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Ordered;
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "We need access to your location at all times to detect region entry and exit.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We use your location to monitor when you enter or leave specific areas.";
@@ -888,6 +889,7 @@
 				DEVELOPMENT_TEAM = TQVQFY6LKW;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Ordered/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Ordered;
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "We need access to your location at all times to detect region entry and exit.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We use your location to monitor when you enter or leave specific areas.";

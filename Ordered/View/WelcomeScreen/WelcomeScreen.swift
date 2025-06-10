@@ -59,6 +59,9 @@ struct WelcomeScreen: View {
                         withAnimation {
                             welcomeScreen = false
                             viewModel.showCase = true
+                            UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { _, _ in }
+                            MovementDetection.shared.requestLocationPermission()
+                            MovementDetection.shared.startMonitoring()
                         }
                     }
                 }

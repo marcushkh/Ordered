@@ -26,6 +26,7 @@ struct OrderedApp: App {
                 .task{
                     //Load Data
                 }
+                
             
         }
     }
