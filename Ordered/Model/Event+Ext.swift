@@ -9,7 +9,7 @@ import CoreData
 
 extension Event {
         
-    static func save(icon: String? = nil, name: String? = nil, startTime: String? = nil, endTime: String? = nil, duration: Int = -1, isFavourite: Bool = false, order_insert_first: Bool = true, event: Event? = nil) -> Event {
+    static func save(icon: String? = nil, name: String? = nil, startTime: String? = nil, endTime: String? = nil, duration: Int = -1, isFavourite: Bool = false, isActive: Bool = true, order_insert_first: Bool = true, event: Event? = nil) -> Event {
         
         let eventToSave = event ?? Event(context: Model.viewContext)
         
@@ -23,10 +23,9 @@ extension Event {
         eventToSave.startTime = startTime
         eventToSave.endTime = endTime
         eventToSave.isFavourite = isFavourite
+        eventToSave.isActive = isActive
         
         if event == nil {
-            eventToSave.isActive = true
-            
             let allEvent = fetchEvents(isFavourite: false)
             print(allEvent)
             
@@ -91,6 +90,20 @@ extension Event {
         }
     }
     
+    static func findByNameInactive(_ name: String) -> Event? {
+        let request: NSFetchRequest<Event> = Event.fetchRequest()
+        request.predicate = NSPredicate(format: "name == %@ AND isActive == false", name)
+        request.fetchLimit = 1
+        
+        do {
+            let results = try Model.viewContext.fetch(request)
+            return results.first
+        } catch {
+            print("Fetch failed: \(error)")
+            return nil
+        }
+    }
+    
     static func findOrCreate(icon: String, name: String, duration: Int = -1, order_insert_first: Bool = false) -> Event {
         // First, try to find an existing event with the same name
         if let existingEvent = findByName(name) {
@@ -100,6 +113,17 @@ extension Event {
         
         // If no existing event is found, create a new one
         return save(icon: icon, name: name, duration: duration, order_insert_first: order_insert_first)
+    }
+    
+    static func findOrCreateInactive(icon: String, name: String, duration: Int = -1, order_insert_first: Bool = false) -> Event{
+        // First, try to find an existing event with the same name
+        if let existingEvent = findByNameInactive(name) {
+            print("Found existing event with name: \(name)")
+            return existingEvent
+        }
+        
+        // If no existing event is found, create a new one
+        return save(icon: icon, name: name, duration: duration, isActive: false, order_insert_first: order_insert_first)
     }
     
     func toggleIsFavorite() {

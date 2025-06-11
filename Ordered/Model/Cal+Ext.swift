@@ -75,6 +75,39 @@ extension Cal {
         return cal
     }
     
+    // New function to get or create a Cal with default Wake Up event
+    static func getOrCreateWithDefault(date: Date) -> Cal {
+        // First try to get existing Cal
+        if let existingCal = get(date: date) {
+            // If Cal exists but has no sections, add default Wake Up event
+            if existingCal.section_cals?.count == 0 {
+                existingCal.createDefaultWakeUpEvent()
+            }
+            return existingCal
+        }
+        
+        // Create new Cal with default Wake Up event
+        let cal = new(date: date)
+        cal.createDefaultWakeUpEvent()
+        return cal
+    }
+    
+    // Function to create a default "Wake Up" event
+    func createDefaultWakeUpEvent() {
+        let wakeUpEvent = Event.findOrCreateInactive(icon: "☀️", name: "Wake Up")
+        let wakeUpEventCal = wakeUpEvent.getEC()
+        let wakeUpSection = Section_Cal.new()
+        wakeUpSection.add(event: wakeUpEventCal)
+        
+        self.add(wakeUpSection)
+        
+        do {
+            try Model.viewContext.save()
+        } catch {
+            print("Failed to save default Wake Up event: \(error.localizedDescription)")
+        }
+    }
+    
     static func clear(date: Date) {
         let cal = get(date: date)
         
@@ -85,7 +118,8 @@ extension Cal {
             
             for j in i?.event_cals ?? []{
                 let j = j as? Event_Cal
-                if j?.aStartTime == nil{
+                // Don't delete Wake Up events or events that have already started
+                if j?.aStartTime == nil && j?.parent?.name != "Wake Up"{
                     Model.viewContext.delete(j!)
                     do {
                         try Model.viewContext.save()
@@ -94,9 +128,15 @@ extension Cal {
                     }
                 }
             }
+            // Don't delete sections that still have events (including Wake Up events)
             if i?.event_cals?.count == 0 {
                 Model.viewContext.delete(i!)
             }
+        }
+        
+        // If after clearing, there are no sections left, create a default Wake Up event
+        if cal?.section_cals?.count == 0 {
+            cal?.createDefaultWakeUpEvent()
         }
         
         do {
@@ -104,7 +144,6 @@ extension Cal {
         } catch {
             print("Failed to save event: \(error.localizedDescription)")
         }
-        
     }
     
     func add(_ section: Section_Cal){
