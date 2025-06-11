@@ -139,7 +139,6 @@ class MovementDetection: NSObject, ObservableObject {
                 //create new location and event
                 let event_Cal = Event_Cal.getEmpty(aStartTime: Date.now.getHHMM())
                 event_Cal.aStartTime = Date.now.getHHMM()
-                event_Cal.detail = description
                 
                 let new_section_Cal: Section_Cal = Section_Cal.new()
                 new_section_Cal.add(event: event_Cal)
