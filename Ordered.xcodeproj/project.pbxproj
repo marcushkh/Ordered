@@ -62,6 +62,7 @@
 		2CA17A032DF674210064FCE7 /* MovementDetection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA17A022DF6741C0064FCE7 /* MovementDetection.swift */; };
 		2CA186992DFC988800F57AE4 /* HapticFeedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA186982DFC988100F57AE4 /* HapticFeedback.swift */; };
 		2CA1869A2DFC988800F57AE4 /* HapticFeedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA186982DFC988100F57AE4 /* HapticFeedback.swift */; };
+		2CA1869C2DFD09A900F57AE4 /* EmptyEventSelectionPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA1869B2DFD09A900F57AE4 /* EmptyEventSelectionPopup.swift */; };
 		2CA35CD32D28E16300011B89 /* Cal+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA35CD22D28E15900011B89 /* Cal+Ext.swift */; };
 		2CA35CD52D28E1F200011B89 /* Event+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA35CD42D28E1EE00011B89 /* Event+Ext.swift */; };
 		2CA35CD72D290ECC00011B89 /* Section+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA35CD62D290EC300011B89 /* Section+Ext.swift */; };
@@ -193,6 +194,7 @@
 		2C96053A2C82D21900A1736D /* WelcomeVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeVM.swift; sourceTree = "<group>"; };
 		2CA17A022DF6741C0064FCE7 /* MovementDetection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovementDetection.swift; sourceTree = "<group>"; };
 		2CA186982DFC988100F57AE4 /* HapticFeedback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticFeedback.swift; sourceTree = "<group>"; };
+		2CA1869B2DFD09A900F57AE4 /* EmptyEventSelectionPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyEventSelectionPopup.swift; sourceTree = "<group>"; };
 		2CA35CD22D28E15900011B89 /* Cal+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Cal+Ext.swift"; sourceTree = "<group>"; };
 		2CA35CD42D28E1EE00011B89 /* Event+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Event+Ext.swift"; sourceTree = "<group>"; };
 		2CA35CD62D290EC300011B89 /* Section+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Section+Ext.swift"; sourceTree = "<group>"; };
@@ -391,6 +393,7 @@
 		2C5DC1192C5B37870021E54A /* DailyPlanner */ = {
 			isa = PBXGroup;
 			children = (
+				2CA1869B2DFD09A900F57AE4 /* EmptyEventSelectionPopup.swift */,
 				2C7FD6732DD3B24A005E41F5 /* FinishedView.swift */,
 				2C5DC11A2C5B37BE0021E54A /* OneDay.swift */,
 				2CFCE0402C777E33001B915B /* EventDetailPopup.swift */,
@@ -656,6 +659,7 @@
 				2CC16CEF2C63B2D0002DCF79 /* DayPlannerViewModel.swift in Sources */,
 				2C14A3182C75A95B00807FFB /* Model.swift in Sources */,
 				2CA36DFB2DBA548F0001B538 /* MapTopBar.swift in Sources */,
+				2CA1869C2DFD09A900F57AE4 /* EmptyEventSelectionPopup.swift in Sources */,
 				2CE4B7922D6E1C19001AD492 /* CustomEvent.swift in Sources */,
 				2C14A3102C6A0DEE00807FFB /* Date+Ext.swift in Sources */,
 				2CFC59B82D45038400529099 /* ActionButtonView.swift in Sources */,

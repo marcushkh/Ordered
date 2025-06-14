@@ -48,6 +48,10 @@ class ContentViewModel: ObservableObject{
     @Published var highlightedEC: Event_Cal? = nil
     @Published var highlightedSC: Section_Cal? = nil
     
+    //For Empty Event Selection
+    @Published var showEmptyEventSelection = false
+    @Published var emptyEventCal: Event_Cal? = nil
+    
     //For Stat page
     @Published var selectedEvent: Event? = nil
     @Published var searchEventName: String = ""

@@ -167,8 +167,14 @@ struct OneDay: View {
                                             viewModel.highlightedSC = nil
                                         }
                                         else{
-                                            viewModel.showEventDetail = true
-                                            viewModel.eventDetail = ec
+                                            // Check if event_cal has no parent (empty event from stationary detection)
+                                            if ec.parent == nil {
+                                                viewModel.emptyEventCal = ec
+                                                viewModel.showEmptyEventSelection = true
+                                            } else {
+                                                viewModel.showEventDetail = true
+                                                viewModel.eventDetail = ec
+                                            }
                                         }
                                     }
                                 }

@@ -24,7 +24,7 @@ struct ContentView: View {
     
     init(){
         #if DEBUG
-        welcomeScreen = true
+//        welcomeScreen = true
         #endif
         
         Purchases.configure(withAPIKey: "appl_xnYsiELHTsABRcVdfAShQCpYvQK")
@@ -123,6 +123,17 @@ struct ContentView: View {
                 .popup(isPresented: $viewModel.showSelectLocation) {
                     //select Location
                     SelectLocation(viewModel: viewModel)
+                } customize: {
+                    $0
+                        .type(.floater())
+                        .closeOnTap(false)
+                        .closeOnTapOutside(true)
+                        .dragToDismiss(false)
+                        .backgroundColor(.cPrimary.opacity(0.2))
+                }
+                .popup(isPresented: $viewModel.showEmptyEventSelection) {
+                    //Empty Event Selection
+                    EmptyEventSelectionPopup(viewModel: viewModel)
                 } customize: {
                     $0
                         .type(.floater())

@@ -290,4 +290,50 @@ extension Cal {
         let nextIndex = currentIndex + 1
         return nextIndex < sections.count ? sections[nextIndex] : nil
     }
+    
+    func removeLastEmptyEvent() {
+        let sections = self.section_cals?.array as? [Section_Cal] ?? []
+        
+        // Iterate through sections in reverse order to find the last empty event
+        for section in sections.reversed() {
+            let events = section.event_cals?.array as? [Event_Cal] ?? []
+            
+            // Iterate through events in reverse order within each section
+            for event in events.reversed() {
+                // Check if this is an empty event (no parent)
+                if event.parent == nil {
+                    // Remove the empty event
+                    if let eventCals = section.event_cals?.mutableCopy() as? NSMutableOrderedSet {
+                        eventCals.remove(event)
+                        section.event_cals = eventCals.copy() as? NSOrderedSet
+                    }
+                    
+                    // Delete the event from Core Data
+                    Model.viewContext.delete(event)
+                    
+                    // If section becomes empty after removing the event, remove the section too
+                    if section.event_cals?.count == 0 {
+                        if let sectionCals = self.section_cals?.mutableCopy() as? NSMutableOrderedSet {
+                            sectionCals.remove(section)
+                            self.section_cals = sectionCals.copy() as? NSOrderedSet
+                        }
+                        Model.viewContext.delete(section)
+                    }
+                    
+                    // Save changes
+                    do {
+                        try Model.viewContext.save()
+                        print("Removed last empty event")
+                    } catch {
+                        print("Failed to save after removing empty event: \(error.localizedDescription)")
+                    }
+                    
+                    // Return after removing the first (last) empty event found
+                    return
+                }
+            }
+        }
+        
+        print("No empty events found to remove")
+    }
 }

@@ -41,7 +41,7 @@ struct ECInfo: View {
             VStack(alignment: .leading){
                 if highlightedEC == ec{
                     HStack{
-                        Text((ec.parent?.name ?? "") + ((ec.detail != nil && ec.detail != "") ? ": " + ec.detail! : ""))
+                        Text((ec.parent?.name ?? "Select Event") + ((ec.detail != nil && ec.detail != "") ? ": " + ec.detail! : ""))
                             .font(size == .large ? .title3 : .subheadline)
                             .bold()
                         
@@ -51,8 +51,9 @@ struct ECInfo: View {
                     .foregroundStyle(.highlightText)
                 }
                 else{
-                    Text((ec.parent?.name ?? "") + ((ec.detail != nil && ec.detail != "") ? ": " + ec.detail! : ""))
+                    Text((ec.parent?.name ?? "Select Event") + ((ec.detail != nil && ec.detail != "") ? ": " + ec.detail! : ""))
                         .font(size == .large ? .title3 : .subheadline)
+                        .foregroundStyle(ec.parent == nil ? .secondary : .primary)
                 }
                 
                 

@@ -11,7 +11,7 @@ class EventActionHandler: ObservableObject{
     // Singleton instance for global access
     static let shared = EventActionHandler()
 
-    @Published var timePassed: Double {
+    @Published var timePassed: Double { //in sec
         didSet {
             UserDefaults.standard.set(timePassed, forKey: "timePassed")
         }
@@ -30,14 +30,12 @@ class EventActionHandler: ObservableObject{
     }
 
     private init() {
-        // Load initial values from UserDefaults
         self.timePassed = UserDefaults.standard.double(forKey: "timePassed")
         self.startTime = UserDefaults.standard.object(forKey: "startTime") as? Date
         self.currentECID = UserDefaults.standard.string(forKey: "currentECID")
     }
 
     func tick(ec: Event_Cal){
-        // Light haptic for tick (quick action)
         HapticFeedback.heavy()
         
         if ec.aEndTime == nil{
@@ -59,7 +57,16 @@ class EventActionHandler: ObservableObject{
         startTime = Date.now
         currentECID = ec.objectID.uriRepresentation().absoluteString
         
-        ec.aStartTime = Date.now.getHHMM()
+        if ec.aStartTime == nil{
+            ec.aStartTime = Date.now.getHHMM()
+        }
+        else{
+            let timeInterval = Date.now.timeIntervalSince(Date.getDateFromHHMM(ec.aStartTime!))
+            
+            timePassed = timeInterval
+            print("TIME PASSED = \(timePassed)")
+        }
+        
         LiveActivityActions.startLiveActivity()
         LiveActivityActions.refreshLiveActivities()
         do {
@@ -97,10 +104,8 @@ class EventActionHandler: ObservableObject{
     }
     
     func end(ec: Event_Cal){
-        // Heavy haptic for end (completion action)
         HapticFeedback.heavy()
         
-        //save the timePassed
         if let startTime = startTime{
             let timeinterval = Date.now.timeIntervalSince(startTime)
             timePassed += timeinterval

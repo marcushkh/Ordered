@@ -128,6 +128,10 @@ struct EventList<Content: View>: View {
                         .padding(.horizontal)
                         
                     }
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 20.0)
+                            .stroke(selectedEvent == e ? Color.color3 : Color.clear, lineWidth: 3)
+                    )
                     .frame(height: 60)
                     .onTapGesture {
                         withAnimation {
@@ -174,6 +178,8 @@ struct EventList<Content: View>: View {
                 
                 content
             }
+            .padding(.horizontal, 3)
+            .padding(.top, 3)
         }
         .scrollIndicators(.hidden)
         .onChange(of: viewModel.refresh) { _, _ in

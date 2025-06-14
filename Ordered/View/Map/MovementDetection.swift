@@ -26,7 +26,7 @@ class MovementDetection: NSObject, ObservableObject {
     private let locationManager = CLLocationManager()
     
     #if DEBUG
-    private let stationaryThreshold: TimeInterval = 60 * 15 // 1 minutes
+    private let stationaryThreshold: TimeInterval = 10 // 1 minutes
     #else
     private let stationaryThreshold: TimeInterval = 15*60 // 15 minutes
     #endif
@@ -176,6 +176,9 @@ class MovementDetection: NSObject, ObservableObject {
             }
             
             let cal = Cal.getOrCreateWithDefault(date: Date.now)
+            
+            // Remove the last empty event before creating a new one
+            cal.removeLastEmptyEvent()
             
             let event_Cal = Event_Cal.getEmpty(aStartTime: lastMovementTimestamp?.getHHMM())
             
