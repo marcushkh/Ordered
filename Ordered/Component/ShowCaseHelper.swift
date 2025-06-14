@@ -94,12 +94,14 @@ struct ShowCaseRoot: ViewModifier{
                     highlight.onComplete?()
                     
                     if currentHighlight >= highlightOrder.count - 1{
+                        HapticFeedback.heavy()
                         withAnimation {
                             showView = false
                         }
                         onFinished()
                     }
                     else{
+                        HapticFeedback.light()
                         withAnimation (.interactiveSpring(response: 0.1, dampingFraction: 0.7, blendDuration: 0.2)) {
                             showTitle = false
                             currentHighlight += 1
@@ -117,12 +119,14 @@ struct ShowCaseRoot: ViewModifier{
                     highlight.onComplete?()
                     
                     if currentHighlight >= highlightOrder.count - 1{
+                        HapticFeedback.heavy()
                         withAnimation {
                             showView = false
                         }
                         onFinished()
                     }
                     else{
+                        HapticFeedback.light()
                         withAnimation (.interactiveSpring(response: 0.3, dampingFraction: 0.7, blendDuration: 0.7)) {
                             showTitle = false
                             currentHighlight += 1

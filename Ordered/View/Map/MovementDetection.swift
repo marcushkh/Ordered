@@ -26,7 +26,7 @@ class MovementDetection: NSObject, ObservableObject {
     private let locationManager = CLLocationManager()
     
     #if DEBUG
-    private let stationaryThreshold: TimeInterval = 10 // 1 minutes
+    private let stationaryThreshold: TimeInterval = 15*60 // 1 minutes
     #else
     private let stationaryThreshold: TimeInterval = 15*60 // 15 minutes
     #endif
@@ -172,7 +172,7 @@ class MovementDetection: NSObject, ObservableObject {
             
             // Send local notification if in background
             if UIApplication.shared.applicationState != .active {
-                sendLocalNotification(message: "You have stopped moving since \(lastMovementTimestamp?.getHHMM() ?? ""). Select the event you have been doing!")
+                sendLocalNotification(title: "New Empty Event is created for you!", message: "Since you have stopped moving, an empty event is created for you! Select the event you are currently doing. ")
             }
             
             let cal = Cal.getOrCreateWithDefault(date: Date.now)
@@ -201,7 +201,7 @@ class MovementDetection: NSObject, ObservableObject {
             // Send local notification if in background
             if UIApplication.shared.applicationState != .active {
                 #if DEBUG
-                sendLocalNotification(message: "Movement detected")
+                sendLocalNotification(title: "movement detected", message: "Movement detected")
                 #endif
             }
         }
@@ -210,9 +210,9 @@ class MovementDetection: NSObject, ObservableObject {
         startStationaryTimer()
     }
     
-    private func sendLocalNotification(message: String) {
+    private func sendLocalNotification(title: String, message: String) {
         let content = UNMutableNotificationContent()
-        content.title = "Movement Status"
+        content.title = title
         content.body = message
         content.sound = .default
         
