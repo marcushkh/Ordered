@@ -41,8 +41,8 @@ struct WelcomeScreen: View {
                 if currentItem < listOfSteps.count - 1{
                     withAnimation {
                         currentItem += 1
+                        HapticFeedback.light()
                     }
-                    
                 }
                 else{
                     if Event.count() == 0 {
@@ -62,6 +62,7 @@ struct WelcomeScreen: View {
                             UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { _, _ in }
                             MovementDetection.shared.requestLocationPermission()
                             MovementDetection.shared.startMonitoring()
+                            HapticFeedback.heavy()
                         }
                     }
                 }

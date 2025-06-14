@@ -60,6 +60,8 @@
 		2C7FD6742DD3B251005E41F5 /* FinishedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7FD6732DD3B24A005E41F5 /* FinishedView.swift */; };
 		2C96053B2C82D21900A1736D /* WelcomeVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C96053A2C82D21900A1736D /* WelcomeVM.swift */; };
 		2CA17A032DF674210064FCE7 /* MovementDetection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA17A022DF6741C0064FCE7 /* MovementDetection.swift */; };
+		2CA186992DFC988800F57AE4 /* HapticFeedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA186982DFC988100F57AE4 /* HapticFeedback.swift */; };
+		2CA1869A2DFC988800F57AE4 /* HapticFeedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA186982DFC988100F57AE4 /* HapticFeedback.swift */; };
 		2CA35CD32D28E16300011B89 /* Cal+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA35CD22D28E15900011B89 /* Cal+Ext.swift */; };
 		2CA35CD52D28E1F200011B89 /* Event+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA35CD42D28E1EE00011B89 /* Event+Ext.swift */; };
 		2CA35CD72D290ECC00011B89 /* Section+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA35CD62D290EC300011B89 /* Section+Ext.swift */; };
@@ -190,6 +192,7 @@
 		2C7FD6732DD3B24A005E41F5 /* FinishedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinishedView.swift; sourceTree = "<group>"; };
 		2C96053A2C82D21900A1736D /* WelcomeVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeVM.swift; sourceTree = "<group>"; };
 		2CA17A022DF6741C0064FCE7 /* MovementDetection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovementDetection.swift; sourceTree = "<group>"; };
+		2CA186982DFC988100F57AE4 /* HapticFeedback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticFeedback.swift; sourceTree = "<group>"; };
 		2CA35CD22D28E15900011B89 /* Cal+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Cal+Ext.swift"; sourceTree = "<group>"; };
 		2CA35CD42D28E1EE00011B89 /* Event+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Event+Ext.swift"; sourceTree = "<group>"; };
 		2CA35CD62D290EC300011B89 /* Section+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Section+Ext.swift"; sourceTree = "<group>"; };
@@ -354,6 +357,7 @@
 			isa = PBXGroup;
 			children = (
 				2C74CB3E2C59DE6F00716233 /* Sample.swift */,
+				2CA186982DFC988100F57AE4 /* HapticFeedback.swift */,
 				2C3F2CDE2C561BAD008BD72A /* View+Ext.swift */,
 				2C107AA62DE175C2007A9D17 /* ShowCaseHelper.swift */,
 				2C601C5B2C5B411A00FBC8E2 /* Color+Ext.swift */,
@@ -639,6 +643,7 @@
 				2CC2E7272DD0CB8B005D977B /* LocationPopup.swift in Sources */,
 				2CA36DFE2DBA55FD0001B538 /* Location+Ext.swift in Sources */,
 				2CEB6B622DB9DF1A00700265 /* CustomMapView.swift in Sources */,
+				2CA1869A2DFC988800F57AE4 /* HapticFeedback.swift in Sources */,
 				2CFF02DA2C60A07000627CDF /* BottomBar.swift in Sources */,
 				2C5C1C9E2C5781B30079482A /* TabBar.swift in Sources */,
 				2C14A3162C6DD07A00807FFB /* MainList.swift in Sources */,
@@ -703,6 +708,7 @@
 				2C7FD66C2DD38015005E41F5 /* LiveActivityLiveActivity.swift in Sources */,
 				2CE4B77C2D6D79E5001AD492 /* Date+Ext.swift in Sources */,
 				2CE4B77D2D6D79E5001AD492 /* K.swift in Sources */,
+				2CA186992DFC988800F57AE4 /* HapticFeedback.swift in Sources */,
 				2CC8BC302D6F78A50049E579 /* Line.swift in Sources */,
 				2CE4B77E2D6D79E5001AD492 /* Color+Ext.swift in Sources */,
 				2CE4B77F2D6D79E5001AD492 /* Sample.swift in Sources */,

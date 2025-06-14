@@ -128,6 +128,7 @@ struct OneDay: View {
                                 
                             }
                             .onTapGesture {
+                                HapticFeedback.light()
                                 if viewModel.currentTab == .plan{
                                     viewModel.highlightedEC = nil
                                     viewModel.highlightedSC = sc
@@ -186,6 +187,7 @@ struct OneDay: View {
                                         
                                     }
                                     .onAppear {
+                                        HapticFeedback.light()
                                         draggingItem = ec
                                     }
                                 }
@@ -400,6 +402,7 @@ struct OneDay: View {
                     .background()
                     .onTapGesture {
                         // Create new Section
+                        HapticFeedback.light()
                         createSection()
                     }
                     //Padding at the bottom to allow Users to scroll down, for planning page needs more

@@ -73,6 +73,7 @@ struct Week: View{
                         
                     }
                     .onTapGesture {
+                        HapticFeedback.light()
                         dayPlannerVM.setCurrentDate(to: daysInAWeek[i])
                     }
                 }

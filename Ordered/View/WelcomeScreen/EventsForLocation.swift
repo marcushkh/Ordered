@@ -85,6 +85,7 @@ struct EventsForLocation: View {
                                 
                             }
                             .onAppear {
+                                HapticFeedback.light()
                                 draggingItem = e
                             }
                         }

@@ -526,6 +526,7 @@ struct LocationRectangleView: View {
                         .onTapGesture {
                             //is tapped
                             withAnimation {
+                                HapticFeedback.light()
                                 viewModel.showLocationEventList = true
                                 viewModel.location = location
                                 print("Location: \(location.imageName ?? "Unnamed")")

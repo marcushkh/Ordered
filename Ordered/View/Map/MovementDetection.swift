@@ -9,6 +9,7 @@ import Foundation
 import CoreLocation
 import Combine
 import UIKit
+import UserNotifications
 
 enum MovementState {
     case transit
@@ -23,15 +24,23 @@ class MovementDetection: NSObject, ObservableObject {
     @Published var isBackgroundRefreshAvailable = true
     
     private let locationManager = CLLocationManager()
-    private let stationaryThreshold: TimeInterval = 15*60
+    
+    #if DEBUG
+    private let stationaryThreshold: TimeInterval = 60 * 15 // 1 minutes
+    #else
+    private let stationaryThreshold: TimeInterval = 15*60 // 15 minutes
+    #endif
+    
     private var lastMovementTimestamp: Date?
     private var stationaryTimer: Timer?
     private var backgroundTask: UIBackgroundTaskIdentifier = .invalid
+    private var backgroundCheckTimer: Timer?
     
     private override init() {
         super.init()
         setupLocationManager()
         setupBackgroundMonitoring()
+        requestNotificationPermission()
     }
     
     func setupLocationManager() {
@@ -92,11 +101,13 @@ class MovementDetection: NSObject, ObservableObject {
         // Set initial timestamp
         lastMovementTimestamp = Date()
         startStationaryTimer()
+        startBackgroundCheckTimer()
     }
     
     func stopMonitoring() {
         locationManager.stopMonitoringSignificantLocationChanges()
         stopStationaryTimer()
+        stopBackgroundCheckTimer()
         endBackgroundTask()
         print("Stopped monitoring location changes")
     }
@@ -116,11 +127,38 @@ class MovementDetection: NSObject, ObservableObject {
         stationaryTimer = nil
     }
     
-    // Background-safe stationary detection using timestamps
+    // New: Background check timer that runs periodically
+    private func startBackgroundCheckTimer() {
+        stopBackgroundCheckTimer()
+        
+        // Check every 5 minutes in foreground, every minute in background
+        let interval: TimeInterval = UIApplication.shared.applicationState == .active ? 300 : 60
+        
+        backgroundCheckTimer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { [weak self] _ in
+            DispatchQueue.main.async {
+                self?.checkStationaryStatusUsingTimestamp()
+            }
+        }
+    }
+    
+    private func stopBackgroundCheckTimer() {
+        backgroundCheckTimer?.invalidate()
+        backgroundCheckTimer = nil
+    }
+    
+    // Enhanced timestamp-based stationary detection
     private func checkStationaryStatusUsingTimestamp() {
-        guard let lastMovement = lastMovementTimestamp else { return }
+        guard let lastMovement = lastMovementTimestamp else { 
+            // If no movement recorded, assume stationary
+            if currentState != .stationary {
+                updateStateToStationary()
+            }
+            return 
+        }
         
         let timeSinceLastMovement = Date().timeIntervalSince(lastMovement)
+        
+        print("Time since last movement: \(timeSinceLastMovement/60) minutes, threshold: \(stationaryThreshold/60) minutes")
         
         if timeSinceLastMovement >= stationaryThreshold && currentState != .stationary {
             updateStateToStationary()
@@ -134,20 +172,21 @@ class MovementDetection: NSObject, ObservableObject {
             
             // Send local notification if in background
             if UIApplication.shared.applicationState != .active {
-                sendLocalNotification(message: "You have stopped moving")
-                
-                //create new location and event
-                let event_Cal = Event_Cal.getEmpty(aStartTime: Date.now.getHHMM())
-                event_Cal.aStartTime = Date.now.getHHMM()
-                
-                let new_section_Cal: Section_Cal = Section_Cal.new()
-                new_section_Cal.add(event: event_Cal)
-                
-                let cal = Cal.get(date: Date.now.getYYMMDD()) ?? Cal.new(date: Date.now.getYYMMDD())
-                
-                cal.add(new_section_Cal)
-                cal.sort()
+                sendLocalNotification(message: "You have stopped moving since \(lastMovementTimestamp?.getHHMM() ?? ""). Select the event you have been doing!")
             }
+            
+            let cal = Cal.getOrCreateWithDefault(date: Date.now)
+            
+            let event_Cal = Event_Cal.getEmpty(aStartTime: lastMovementTimestamp?.getHHMM())
+            
+            var new_section_Cal: Section_Cal = cal.section_cals?.lastObject as? Section_Cal ?? Section_Cal.new()
+            if new_section_Cal.location != nil{
+                new_section_Cal = Section_Cal.new()
+            }
+            new_section_Cal.add(event: event_Cal)
+            
+            cal.add(new_section_Cal)
+            cal.sort()
         }
     }
     
@@ -158,10 +197,11 @@ class MovementDetection: NSObject, ObservableObject {
             
             // Send local notification if in background
             if UIApplication.shared.applicationState != .active {
+                #if DEBUG
                 sendLocalNotification(message: "Movement detected")
+                #endif
             }
         }
-        
         // Update timestamp and restart timer
         lastMovementTimestamp = Date()
         startStationaryTimer()
@@ -203,24 +243,33 @@ class MovementDetection: NSObject, ObservableObject {
     }
     
     @objc private func appDidEnterBackground() {
-        print("App entered background - switching to timestamp-based detection")
+        print("App entered background - maintaining timestamp-based detection")
         beginBackgroundTask()
         
-        // Stop timer-based detection and rely on timestamp checking
-        stopStationaryTimer()
+        // Keep the stationary timer running for as long as possible
+        // Don't stop it immediately - let iOS manage background execution
+        
+        // Start more frequent background checks
+        startBackgroundCheckTimer()
+        
+        // Immediately check current status
+        checkStationaryStatusUsingTimestamp()
     }
     
     @objc private func appWillEnterForeground() {
-        print("App entering foreground - resuming timer-based detection")
+        print("App entering foreground - resuming full detection")
         endBackgroundTask()
         
-        // Check status using timestamp first
+        // Check status using timestamp first - this is crucial
         checkStationaryStatusUsingTimestamp()
         
-        // Resume timer-based detection
+        // Resume/restart timers based on current state
         if currentState == .transit {
             startStationaryTimer()
         }
+        
+        // Restart background check timer with foreground interval
+        startBackgroundCheckTimer()
         
         // Update background refresh status
         isBackgroundRefreshAvailable = UIApplication.shared.backgroundRefreshStatus == .available
@@ -229,6 +278,16 @@ class MovementDetection: NSObject, ObservableObject {
     deinit {
         stopMonitoring()
         NotificationCenter.default.removeObserver(self)
+    }
+    
+    private func requestNotificationPermission() {
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
+            if granted {
+                print("Notification permission granted")
+            } else if let error = error {
+                print("Notification permission error: \(error)")
+            }
+        }
     }
 }
 

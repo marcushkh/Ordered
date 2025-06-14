@@ -58,6 +58,7 @@ struct StatTopBar: View {
                         
                         Button {
                             withAnimation {
+                                HapticFeedback.light()
                                 currentDate = Calendar.current.date(byAdding: .day, value: -7, to: currentDate) ?? currentDate
                             }
                         } label: {
@@ -72,6 +73,7 @@ struct StatTopBar: View {
                         
                         Button {
                             withAnimation {
+                                HapticFeedback.light()
                                 var nextWeek = Calendar.current.date(byAdding: .day, value: 7, to: currentDate) ?? currentDate
                                 currentDate = nextWeek > Date.now ? Date.now : nextWeek
                             }
@@ -155,6 +157,7 @@ struct StatTopBar: View {
                 }
                 .onChange(of: viewModel.selectedEvent) { _, _ in
                     withAnimation {
+                        HapticFeedback.light()
                         selectedEventID = viewModel.selectedEvent?.id
                     }
                 }

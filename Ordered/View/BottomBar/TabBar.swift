@@ -54,6 +54,7 @@ struct TabBar: View {
                 .foregroundStyle(viewModel.currentTab != item ? .primary : Color(.color3))
                 .onTapGesture {
                     withAnimation {
+                        HapticFeedback.light()
                         viewModel.currentTab = item
                     }
                 }

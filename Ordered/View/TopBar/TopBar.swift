@@ -70,6 +70,7 @@ struct TopBar: View {
                             .frame(width: K.xsmall_size, height: K.xsmall_size)
                     }
                     .onChange(of: selectedDate) { oldValue, newValue in
+                        HapticFeedback.light()
                         dayPlannerVM.setCurrentDate(to: selectedDate)
                     }
                     .onChange(of: dayPlannerVM.currentDate) { oldValue, newValue in
@@ -82,6 +83,7 @@ struct TopBar: View {
                     .font(.title2)
                     .bold()
                     .onTapGesture {
+                        HapticFeedback.light()
                         dayPlannerVM.setCurrentDate(to: MyCalendar.getToday())
                     }
                 
@@ -93,10 +95,12 @@ struct TopBar: View {
                     .frame(height: K.small_size)
                     .foregroundStyle(.color3)
                     .onTapGesture {
+                        HapticFeedback.heavy()
                         showClear = true
                     }
                     .showCase(order: 5, title: "Clear All Events", cornerRadius: 10, scale: 1.5) {
                         withAnimation {
+                            HapticFeedback.heavy()
                             Cal.clear(date: dayPlannerVM.currentDate)
                             viewModel.refresh.toggle()
                         }
@@ -119,6 +123,7 @@ struct TopBar: View {
                         message: Text("Are you sure to remove all events and section in this day that are not started or finished?"),
                         primaryButton: .destructive(Text("Clear")) {
                     withAnimation {
+                        HapticFeedback.heavy()
                         Cal.clear(date: dayPlannerVM.currentDate)
                         viewModel.refresh.toggle()
                     }

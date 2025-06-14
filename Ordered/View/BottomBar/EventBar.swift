@@ -148,6 +148,7 @@ struct EventBar: View {
                                 .padding(.horizontal)
                                 .onTapGesture {
                                     withAnimation {
+                                        HapticFeedback.light()
                                         if viewModel.currentTab == .plan {
                                             // Add location to the plan
                                             let cal = Cal.get(date: dayPlannerVM.currentDate.getYYMMDD()) ?? Cal.new(date: dayPlannerVM.currentDate.getYYMMDD())
@@ -244,6 +245,7 @@ struct EventTapModifier: ViewModifier {
     
     private func handleEventTap() {
         withAnimation {
+            HapticFeedback.light()
             // Add event below the highlighted Event
             let newEC = event.getEC()
             

@@ -292,6 +292,7 @@ struct CreateEvent: View {
                 }
                 .toggleStyle(SwitchToggleStyle(tint: .color3))
                 .onChange(of: isSchedule) { oldValue, newValue in
+                    HapticFeedback.light()
                     if newValue == true{
                         isDuration = false
                     }
@@ -338,6 +339,7 @@ struct CreateEvent: View {
                 }
                 .toggleStyle(SwitchToggleStyle(tint: .color3))
                 .onChange(of: isDuration) { oldValue, newValue in
+                    HapticFeedback.light()
                     if newValue == true{
                         isSchedule = false
                     }
@@ -495,6 +497,7 @@ struct CreateEvent: View {
                 }
                 else{
                     withAnimation {
+                        HapticFeedback.light()
                         isNewEvent = true
                         descriptionTyping = true
                     }
@@ -517,6 +520,7 @@ struct CreateEvent: View {
     
     var submitButton: some View{
         Button {
+            HapticFeedback.light()
             submit()
         } label: {
             ZStack{

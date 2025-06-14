@@ -155,6 +155,7 @@ struct LocationPopup: View{
                                 
                             }
                             .onAppear {
+                                HapticFeedback.light()
                                 draggingItem = e
                             }
                         }

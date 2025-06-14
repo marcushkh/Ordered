@@ -4,5 +4,6 @@ globs:
 alwaysApply: true
 ---
 You may view all files but
-Do not change any other files other than the contexts
-Dont use excessive comments
+Do not change any other files other than the contexts.
+Dont use excessive comments.
+You dont have to build the project. 

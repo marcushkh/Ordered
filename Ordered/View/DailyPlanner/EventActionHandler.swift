@@ -5,6 +5,7 @@
 //  Created by Kai Hin Hung on 25/1/2025.
 //
 import SwiftUI
+import UIKit
 
 class EventActionHandler: ObservableObject{
     // Singleton instance for global access
@@ -36,6 +37,9 @@ class EventActionHandler: ObservableObject{
     }
 
     func tick(ec: Event_Cal){
+        // Light haptic for tick (quick action)
+        HapticFeedback.heavy()
+        
         if ec.aEndTime == nil{
             ec.aStartTime = Date.now.getHHMM()
             ec.aEndTime = Date.now.getHHMM()
@@ -45,9 +49,8 @@ class EventActionHandler: ObservableObject{
     }
     
     func start(ec: Event_Cal){
-        //set the start time, already
-        
-        //if another event is running now => end the event  
+        HapticFeedback.heavy()
+          
         if let id = currentECID, let url = URL(string: id), let ec = Event_Cal.getEC(url){
             end(ec: ec)
         }
@@ -69,6 +72,8 @@ class EventActionHandler: ObservableObject{
     }
     
     func pause(ec: Event_Cal){
+        HapticFeedback.light()
+        
         if let startTime = startTime{
             let timeinterval = Date.now.timeIntervalSince(startTime)
             timePassed += timeinterval
@@ -79,6 +84,8 @@ class EventActionHandler: ObservableObject{
     }
     
     func resume(ec: Event_Cal){
+        HapticFeedback.light()
+        
         if let id = currentECID, ec.objectID.uriRepresentation().absoluteString == id{
             startTime = Date.now
         }
@@ -90,6 +97,9 @@ class EventActionHandler: ObservableObject{
     }
     
     func end(ec: Event_Cal){
+        // Heavy haptic for end (completion action)
+        HapticFeedback.heavy()
+        
         //save the timePassed
         if let startTime = startTime{
             let timeinterval = Date.now.timeIntervalSince(startTime)
@@ -106,12 +116,10 @@ class EventActionHandler: ObservableObject{
         }
         print("ended with time: " + String(timePassed))
         
-        //set all to 0
         timePassed = 0
         startTime = nil
         currentECID = nil
         LiveActivityActions.refreshLiveActivities()
-        //Put the activity one forward
     }
     
     func isCurrentEC(ec: Event_Cal) -> Bool{

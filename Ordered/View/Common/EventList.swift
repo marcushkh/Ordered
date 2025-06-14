@@ -67,6 +67,7 @@ struct EventList<Content: View>: View {
                             
                             if showEdit{
                                 Button{
+                                    HapticFeedback.light()
                                     viewModel.showChangeEvent = true
                                     viewModel.changeEvent = e
                                 } label:{
@@ -78,6 +79,7 @@ struct EventList<Content: View>: View {
                             if showHeart{
                                 Button{
                                     withAnimation {
+                                        HapticFeedback.light()
                                         e.toggleIsFavorite()
                                         
                                         if toggleHeartSelectEvent{
@@ -143,6 +145,7 @@ struct EventList<Content: View>: View {
                             
                         }
                         .onAppear {
+                            HapticFeedback.light()
                             draggingItem = e
                         }
                     }
