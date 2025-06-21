@@ -26,7 +26,6 @@ struct ContentView: View {
         #if DEBUG
 //        welcomeScreen = true
         #endif
-        
         Purchases.configure(withAPIKey: "appl_xnYsiELHTsABRcVdfAShQCpYvQK")
     }
     

@@ -31,7 +31,7 @@ class MovementDetection: NSObject, ObservableObject {
     private let stationaryThreshold: TimeInterval = 15*60 // 15 minutes
     #endif
     
-    private var lastMovementTimestamp: Date?
+    var lastMovementTimestamp: Date?
     private var stationaryTimer: Timer?
     private var backgroundTask: UIBackgroundTaskIdentifier = .invalid
     private var backgroundCheckTimer: Timer?

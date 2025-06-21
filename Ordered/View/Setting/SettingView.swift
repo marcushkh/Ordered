@@ -15,6 +15,18 @@ struct SettingView: View{
     var body: some View{
         
         List {
+            #if DEBUG
+            // Movement Detection Debug Info
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Movement Detection (Debug)")
+                    .font(.headline)
+                    .foregroundColor(.secondary)
+                
+                MovementDebugView()
+            }
+            .padding(.vertical, 8)
+            #endif
+            
             VStack(alignment: .leading){
                 
                 HStack{
@@ -123,3 +135,71 @@ struct SettingView: View{
         }
     }
 }
+
+#if DEBUG
+struct MovementDebugView: View {
+    @StateObject var movementDetection = MovementDetection.shared
+    @State private var currentTime = Date()
+    @State private var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            HStack {
+                Text("State:")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                
+                Text(movementDetection.currentState == .stationary ? "Stationary" : "Transit")
+                    .font(.caption)
+                    .fontWeight(.medium)
+                    .foregroundColor(movementDetection.currentState == .stationary ? .red : .green)
+            }
+            
+            if let startTime = movementDetection.lastMovementTimestamp {
+                HStack {
+                    Text("Since:")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    
+                    Text(formatTime(startTime))
+                        .font(.caption)
+                        .fontWeight(.medium)
+                }
+                
+                if movementDetection.currentState == .stationary {
+                    HStack {
+                        Text("Duration:")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                        
+                        Text(formatDuration(from: startTime, to: currentTime))
+                            .font(.caption)
+                            .fontWeight(.medium)
+                    }
+                }
+            }
+        }
+        .onReceive(timer) { _ in
+            currentTime = Date()
+        }
+    }
+    
+    private func formatTime(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.timeStyle = .short
+        return formatter.string(from: date)
+    }
+    
+    private func formatDuration(from startTime: Date, to currentTime: Date) -> String {
+        let duration = currentTime.timeIntervalSince(startTime)
+        let hours = Int(duration) / 3600
+        let minutes = Int(duration) % 3600 / 60
+        
+        if hours > 0 {
+            return "\(hours)h \(minutes)m"
+        } else {
+            return "\(minutes)m"
+        }
+    }
+}
+#endif
