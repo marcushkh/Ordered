@@ -201,7 +201,7 @@ class MovementDetection: NSObject, ObservableObject {
             // Send local notification if in background
             if UIApplication.shared.applicationState != .active {
                 #if DEBUG
-                sendLocalNotification(title: "movement detected", message: "Movement detected")
+//                sendLocalNotification(title: "movement detected", message: "Movement detected")
                 #endif
             }
         }

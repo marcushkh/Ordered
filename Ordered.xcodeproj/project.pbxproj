@@ -13,8 +13,6 @@
 		2C107AA72DE175C8007A9D17 /* ShowCaseHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C107AA62DE175C2007A9D17 /* ShowCaseHelper.swift */; };
 		2C107AA82DE175C8007A9D17 /* ShowCaseHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C107AA62DE175C2007A9D17 /* ShowCaseHelper.swift */; };
 		2C107AD12DE1BB64007A9D17 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C107AD02DE1BB64007A9D17 /* StoreKit.framework */; };
-		2C107AD42DE1BD38007A9D17 /* RevenueCat in Frameworks */ = {isa = PBXBuildFile; productRef = 2C107AD32DE1BD38007A9D17 /* RevenueCat */; };
-		2C107AD62DE1BD38007A9D17 /* RevenueCatUI in Frameworks */ = {isa = PBXBuildFile; productRef = 2C107AD52DE1BD38007A9D17 /* RevenueCatUI */; };
 		2C107AD82DE1BF00007A9D17 /* Configuration.storekit in Resources */ = {isa = PBXBuildFile; fileRef = 2C107AD72DE1BF00007A9D17 /* Configuration.storekit */; };
 		2C14A3102C6A0DEE00807FFB /* Date+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C14A30F2C6A0DEE00807FFB /* Date+Ext.swift */; };
 		2C14A3142C6DCFB100807FFB /* SwipeableStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C14A3132C6DCFB100807FFB /* SwipeableStack.swift */; };
@@ -239,10 +237,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2C107AD42DE1BD38007A9D17 /* RevenueCat in Frameworks */,
 				2C107AD12DE1BB64007A9D17 /* StoreKit.framework in Frameworks */,
 				2C40F3EA2C7B0A0D004DF24C /* PopupView in Frameworks */,
-				2C107AD62DE1BD38007A9D17 /* RevenueCatUI in Frameworks */,
 				2CFC59A32D43844800529099 /* MCEmojiPicker in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -515,8 +511,6 @@
 			packageProductDependencies = (
 				2C40F3E92C7B0A0D004DF24C /* PopupView */,
 				2CFC59A22D43844800529099 /* MCEmojiPicker */,
-				2C107AD32DE1BD38007A9D17 /* RevenueCat */,
-				2C107AD52DE1BD38007A9D17 /* RevenueCatUI */,
 			);
 			productName = Ordered;
 			productReference = 2C15B7F62C3D0F3600B008DB /* Ordered.app */;
@@ -571,7 +565,6 @@
 			packageReferences = (
 				2C40F3E82C7B0A0D004DF24C /* XCRemoteSwiftPackageReference "PopupView" */,
 				2CFC59A12D43844800529099 /* XCRemoteSwiftPackageReference "MCEmojiPicker" */,
-				2C107AD22DE1BD38007A9D17 /* XCRemoteSwiftPackageReference "purchases-ios" */,
 			);
 			productRefGroup = 2C15B7F72C3D0F3600B008DB /* Products */;
 			projectDirPath = "";
@@ -1014,14 +1007,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		2C107AD22DE1BD38007A9D17 /* XCRemoteSwiftPackageReference "purchases-ios" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/RevenueCat/purchases-ios";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.25.1;
-			};
-		};
 		2C40F3E82C7B0A0D004DF24C /* XCRemoteSwiftPackageReference "PopupView" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/exyte/PopupView.git";
@@ -1041,16 +1026,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		2C107AD32DE1BD38007A9D17 /* RevenueCat */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 2C107AD22DE1BD38007A9D17 /* XCRemoteSwiftPackageReference "purchases-ios" */;
-			productName = RevenueCat;
-		};
-		2C107AD52DE1BD38007A9D17 /* RevenueCatUI */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 2C107AD22DE1BD38007A9D17 /* XCRemoteSwiftPackageReference "purchases-ios" */;
-			productName = RevenueCatUI;
-		};
 		2C40F3E92C7B0A0D004DF24C /* PopupView */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 2C40F3E82C7B0A0D004DF24C /* XCRemoteSwiftPackageReference "PopupView" */;
