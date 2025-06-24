@@ -26,7 +26,7 @@ class MovementDetection: NSObject, ObservableObject {
     private let locationManager = CLLocationManager()
     
     #if DEBUG
-    private let stationaryThreshold: TimeInterval = 15*60 // 1 minutes
+    private let stationaryThreshold: TimeInterval = 10 // 1 minutes
     #else
     private let stationaryThreshold: TimeInterval = 15*60 // 15 minutes
     #endif

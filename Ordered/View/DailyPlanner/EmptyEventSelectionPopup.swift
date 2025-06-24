@@ -28,49 +28,77 @@ struct EmptyEventSelectionPopup: View {
             )
             .frame(height: 300)
             
-            // Save Button
-            Button(action: {
-                if let event = selectedEvent, let eventCal = viewModel.emptyEventCal {
-                    // Update the event_cal with the selected parent
-                    eventCal.parent = event
-                    eventCal.duration = event.duration
-                    eventCal.startTime = event.startTime
-                    eventCal.endTime = event.endTime
-                    
-                    withAnimation {
-                        if event.duration == -1 && event.startTime == nil {
-                            EventActionHandler.shared.tick(ec: eventCal)
-                        } else {
-                            EventActionHandler.shared.start(ec: eventCal)
+            // Two Button Layout - Delete on left, Save on right
+            HStack(spacing: 12) {
+                // Delete Button
+                Button(action: {
+                    if let eventCal = viewModel.emptyEventCal {
+                        withAnimation {
+                            eventCal.delete()
+                            viewModel.showEmptyEventSelection = false
+                            viewModel.emptyEventCal = nil
+                            viewModel.refresh.toggle()
                         }
                     }
-                    
-                    
-                    do {
-                        try Model.viewContext.save()
-                    } catch {
-                        print("Failed to save event_cal parent: \(error)")
+                }) {
+                    ZStack{
+                        RoundedRectangle(cornerRadius: 20)
+                            .fill(Color.error)
+                            .frame(height: 40)
+                        
+                        Image(systemName: "xmark")
+                            .font(.title3)
+                            .foregroundStyle(Color.white)
+                            .bold()
                     }
-                    
-                    viewModel.showEmptyEventSelection = false
-                    viewModel.emptyEventCal = nil
-                    selectedEvent = nil
-                    viewModel.refresh.toggle()
                 }
-            }) {
-                ZStack{
-                    RoundedRectangle(cornerRadius: 20)
-                        .fill(selectedEvent != nil ? Color.color3 : Color.gray)
-                        .frame(height: 40)
-                    
-                    Text("Save")
+                .frame(width: 60)
+                
+                // Save Button
+                Button(action: {
+                    if let selectedEvent = selectedEvent, let eventCal = viewModel.emptyEventCal {
+                        // Save functionality - Update the event_cal with the selected parent
+                        eventCal.parent = selectedEvent
+                        eventCal.duration = selectedEvent.duration
+                        eventCal.startTime = selectedEvent.startTime
+                        eventCal.endTime = selectedEvent.endTime
+                        
+                        withAnimation {
+                            if selectedEvent.duration == -1 && selectedEvent.startTime == nil {
+                                EventActionHandler.shared.tick(ec: eventCal)
+                            } else {
+                                EventActionHandler.shared.start(ec: eventCal)
+                            }
+                        }
+                        
+                        do {
+                            try Model.viewContext.save()
+                        } catch {
+                            print("Failed to save event_cal parent: \(error)")
+                        }
+                        
+                        viewModel.showEmptyEventSelection = false
+                        viewModel.emptyEventCal = nil
+                        self.selectedEvent = nil
+                        viewModel.refresh.toggle()
+                    }
+                }) {
+                    ZStack{
+                        RoundedRectangle(cornerRadius: 20)
+                            .fill(selectedEvent != nil ? Color.color3 : Color.gray)
+                            .frame(height: 40)
+                        
+                        HStack {
+                            Image(systemName: "checkmark")
+                            Text("Save")
+                        }
                         .font(.title3)
                         .foregroundStyle(Color.white)
                         .bold()
-                        .cornerRadius(10)
+                    }
                 }
+                .disabled(selectedEvent == nil)
             }
-            .disabled(selectedEvent == nil)
         }
         .padding(.horizontal, K.horizontal_padding)
         .padding(.vertical, K.medium_size)
