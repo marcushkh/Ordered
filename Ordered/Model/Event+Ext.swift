@@ -9,7 +9,7 @@ import CoreData
 
 extension Event {
         
-    static func save(icon: String? = nil, name: String? = nil, startTime: String? = nil, endTime: String? = nil, duration: Int = -1, isFavourite: Bool = false, isActive: Bool = true, order_insert_first: Bool = true, event: Event? = nil) -> Event {
+    static func save(icon: String? = nil, name: String? = nil, startTime: String? = nil, endTime: String? = nil, duration: Int = -1, isFavourite: Bool = false, isActive: Bool = true, order_insert_first: Bool = false, event: Event? = nil) -> Event {
         
         let eventToSave = event ?? Event(context: Model.viewContext)
         

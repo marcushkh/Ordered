@@ -31,7 +31,7 @@ struct EventBar: View {
     let minHeight: CGFloat = UIScreen.main.bounds.height * 0.2
     let midHeight: CGFloat = UIScreen.main.bounds.height * 0.5
     
-    @State private var selection = "Event"
+    @State private var selection = "Location"
     let options = ["Location", "Event"]
     
     init(viewModel: ContentViewModel, dayPlannerVM: DayPlannerViewModel) {

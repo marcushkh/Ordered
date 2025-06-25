@@ -211,6 +211,10 @@ class MovementDetection: NSObject, ObservableObject {
     }
     
     private func sendLocalNotification(title: String, message: String) {
+        // Remove all previous notifications before sending the new one
+        UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+        UNUserNotificationCenter.current().removeAllDeliveredNotifications()
+        
         let content = UNMutableNotificationContent()
         content.title = title
         content.body = message

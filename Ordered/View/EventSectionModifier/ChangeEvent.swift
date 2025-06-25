@@ -15,7 +15,6 @@ struct ChangeEvent: View{
     @FocusState var nameTyping: Bool
     
     @State var showEmojiPicker = false
-    
     @State var showAlert = false
     
     var body : some View{
@@ -55,37 +54,50 @@ struct ChangeEvent: View{
                             .focused($nameTyping)
                             .underlineTextField(underline: .color3, focus: nameTyping, focusColor: Color(.color2))
                             .font(.system(size: 24))
-                            .frame(width: 200, height: 80)
+                            .frame(width: 228, height: 80)
                     }
-                    
-                    Button{
-                        showAlert = true
-                    } label: {
-                        Image(systemName: "x.square.fill")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 20, height: 30)
-                            .foregroundStyle(.error)
-                    }
-                    
                 }
+                
                 Spacer()
                 
-                Button {
-                    Event.save(icon: icon, name: name, event: viewModel.changeEvent)
-                    dismiss()
-                } label: {
-                    ZStack{
-                        RoundedRectangle(cornerRadius: 20)
-                            .fill(.color3)
-                            .frame(height: 40)
-                        
-                        Text("Change Event")
-                            .font(.system(size: 20))
-                            .foregroundStyle(Color(.white))
-                            .bold()
-                        
+                // Two Button Layout - Delete on left, Save on right
+                HStack(spacing: 12) {
+                    // Delete Button
+                    Button(action: {
+                        showAlert = true
+                    }) {
+                        ZStack{
+                            RoundedRectangle(cornerRadius: 20)
+                                .fill(Color.error)
+                                .frame(height: 40)
+                            
+                            Image(systemName: "xmark")
+                                .font(.title3)
+                                .foregroundStyle(Color.white)
+                                .bold()
+                        }
                     }
+                    .frame(width: 60)
+                    
+                    // Save Button
+                    Button(action: {
+                        Event.save(icon: icon, name: name, event: viewModel.changeEvent)
+                        dismiss()
+                    }) {
+                        ZStack{
+                            RoundedRectangle(cornerRadius: 20)
+                                .fill(name.isEmpty ? Color.gray : Color.color3)
+                                .frame(height: 40)
+                            
+                            HStack {
+                                Text("Save")
+                            }
+                            .font(.title3)
+                            .foregroundStyle(Color.white)
+                            .bold()
+                        }
+                    }
+                    .disabled(name.isEmpty)
                 }
                 .padding(.bottom)
             }

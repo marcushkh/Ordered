@@ -557,7 +557,7 @@ struct CreateEvent: View {
             }
             
             //TODO: Logic for not creating is not done
-            let event: Event = self.event ?? Event.save(icon: selectedEmoji, name: eventName, startTime: isSchedule ? startTime.getHHMM() : nil, endTime: isSchedule ? endTime.getHHMM() : nil, duration: isDuration ? (useCustomDuration ? customDuration : duration) : -1)
+            let event: Event = self.event ?? Event.save(icon: selectedEmoji, name: eventName, startTime: isSchedule ? startTime.getHHMM() : nil, endTime: isSchedule ? endTime.getHHMM() : nil, duration: isDuration ? (useCustomDuration ? customDuration : duration) : -1, order_insert_first: false)
             
             if isSchedule || isDuration {
                 Event.save(startTime: isSchedule ? startTime.getHHMM() : nil, endTime: isSchedule ? endTime.getHHMM() : nil, duration: isDuration ? (useCustomDuration ? customDuration : duration) : -1, event: event)
