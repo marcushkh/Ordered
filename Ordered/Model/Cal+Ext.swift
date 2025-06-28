@@ -391,23 +391,65 @@ extension Cal {
          }
      }
      
-     func hasUserCreatedEmptyEventAtBottom() -> Bool {
-         let sections = self.section_cals?.array as? [Section_Cal] ?? []
-         
-         // Check if there are any sections
-         guard !sections.isEmpty else { return false }
-         
-         // Get the last section
-         let lastSection = sections.last!
-         let events = lastSection.event_cals?.array as? [Event_Cal] ?? []
-         
-         // Check if there are any events in the last section
-         guard !events.isEmpty else { return false }
-         
-         // Get the last event in the last section
-         let lastEvent = events.last!
-         
-         // Check if it's a user-created empty event (no parent AND has startTime)
-         return lastEvent.parent == nil && lastEvent.startTime != nil
-     }
+         func hasUserCreatedEmptyEventAtBottom() -> Bool {
+        let sections = self.section_cals?.array as? [Section_Cal] ?? []
+        
+        // Check if there are any sections
+        guard !sections.isEmpty else { return false }
+        
+        // Get the last section
+        let lastSection = sections.last!
+        let events = lastSection.event_cals?.array as? [Event_Cal] ?? []
+        
+        // Check if there are any events in the last section
+        guard !events.isEmpty else { return false }
+        
+        // Get the last event in the last section
+        let lastEvent = events.last!
+        
+        // Check if it's a user-created empty event (no parent AND has startTime)
+        return lastEvent.parent == nil && lastEvent.startTime != nil
+    }
+    
+    func isLastEventOfDay(_ event: Event_Cal) -> Bool {
+        // First check if the event has been started (has aStartTime)
+        guard event.aStartTime != nil else { return false }
+        
+        let sections = self.section_cals?.array as? [Section_Cal] ?? []
+        guard !sections.isEmpty else { return false }
+        
+        // Find the section containing this event
+        guard let eventSection = event.section_cal,
+              let sectionIndex = sections.firstIndex(of: eventSection) else { return false }
+        
+        let eventsInSection = eventSection.event_cals?.array as? [Event_Cal] ?? []
+        guard let eventIndex = eventsInSection.firstIndex(of: event) else { return false }
+        
+        // Check all events after this one in the same section
+        for i in (eventIndex + 1)..<eventsInSection.count {
+            let laterEvent = eventsInSection[i]
+            // Skip empty events (events with no parent)
+            if laterEvent.parent == nil { continue }
+            if laterEvent.aStartTime != nil {
+                return false // Found a started event after this one
+            }
+        }
+        
+        // Check all events in all sections after this section
+        for i in (sectionIndex + 1)..<sections.count {
+            let laterSection = sections[i]
+            let laterEvents = laterSection.event_cals?.array as? [Event_Cal] ?? []
+            
+            for laterEvent in laterEvents {
+                // Skip empty events (events with no parent)
+                if laterEvent.parent == nil { continue }
+                if laterEvent.aStartTime != nil {
+                    return false // Found a started event in a later section
+                }
+            }
+        }
+        
+        // No started events found after this one, so this is the last started event
+        return true
+    }
 }

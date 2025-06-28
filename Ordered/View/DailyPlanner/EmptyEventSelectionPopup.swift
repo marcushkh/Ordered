@@ -23,42 +23,46 @@ struct EmptyEventSelectionPopup: View {
     var body: some View {
         VStack(spacing: 16) {
             
-            ZStack{
-                RoundedRectangle(cornerRadius: 20.0)
-                    .fill(.color1)
-                
-                HStack{
-                    Image(systemName: "plus.circle")
-                        .font(.title)
-                    
-                    Text("Create new Event")
-                        .font(.title3)
-                        .bold()
-                    Spacer()
-                }
-                .padding(.horizontal)
-            }
-            .frame(height: 60)
-            .onTapGesture {
-                showCreateNewEvent = true
-                newEventName = ""
-                newEventEmoji = "💡"
-                giveSuggestion = true
-            }
-            .padding(.horizontal, 3)
-            .padding(.bottom, -10)
-            
             // Event List
-            EventList(
-                viewModel: viewModel,
-                eventName: .constant(""),
-                selectedEvent: $selectedEvent,
-                toggleHeartSelectEvent: true,
-                showHeart: false,
-                showEdit: false,
-                showLocation: false,
-                showDelete: false
-            )
+            ScrollView{
+                VStack{
+                    ZStack{
+                        RoundedRectangle(cornerRadius: 20.0)
+                            .fill(.color1)
+                        
+                        HStack{
+                            Image(systemName: "plus.circle")
+                                .font(.title)
+                            
+                            Text("Create new Event")
+                                .font(.title3)
+                                .bold()
+                            Spacer()
+                        }
+                        .padding(.horizontal)
+                    }
+                    .frame(height: 60)
+                    .padding(.horizontal, 3)
+                    .padding(.bottom, -4)
+                    .onTapGesture {
+                        showCreateNewEvent = true
+                        newEventName = ""
+                        newEventEmoji = "💡"
+                        giveSuggestion = true
+                    }
+                    
+                    EventList(
+                        viewModel: viewModel,
+                        eventName: .constant(""),
+                        selectedEvent: $selectedEvent,
+                        toggleHeartSelectEvent: true,
+                        showHeart: false,
+                        showEdit: false,
+                        showLocation: false,
+                        showDelete: false
+                    )
+                }
+            }
             .frame(height: 250)
             
             // Two Button Layout - Delete on left, Save on right
@@ -157,6 +161,11 @@ struct EmptyEventSelectionPopup: View {
                         eventCal.duration = createdEvent.duration
                         eventCal.startTime = createdEvent.startTime
                         eventCal.endTime = createdEvent.endTime
+                        
+                        // Add the newly created event to the location if the empty event is under a location
+                        if let location = eventCal.section_cal?.location {
+                            location.addEvent(createdEvent)
+                        }
                         
                         withAnimation {
                             EventActionHandler.shared.start(ec: eventCal)

@@ -187,15 +187,59 @@ struct EventDetailPopup: View {
                         }
                     }
                 case .Completed:
-                    ZStack{
-                        Rectangle()
-                            .fill(.success)
-                            .frame(height: 40)
-                            .cornerRadius(10)
-                        
-                        HStack{
-                            Image(systemName: "checkmark.circle")
-                            Text("Finished!")
+                    // Check if this is the last event of the day
+                    let isLastEvent = eventDetail.section_cal?.cal?.isLastEventOfDay(eventDetail) ?? false
+                    
+                    if isLastEvent {
+                        // Show both Resume and Finished buttons for the last event
+                        HStack(spacing: 8) {
+                            // Resume button (left side)
+                            ZStack{
+                                Rectangle()
+                                    .fill(.info)
+                                    .frame(height: 40)
+                                    .cornerRadius(10)
+                                
+                                HStack{
+                                    Image(systemName: "play.circle")
+                                    Text("Resume")
+                                }
+                            }
+                                                         .onTapGesture {
+                                 withAnimation {
+                                     // Clear the aEndTime to indicate the event is no longer finished
+                                     eventDetail.aEndTime = nil
+                                     EventActionHandler.shared.resume(ec: eventDetail)
+                                     viewModel.refresh.toggle()
+                                     viewModel.showEventDetail = false
+                                 }
+                             }
+                            
+                            // Finished button (right side)
+                            ZStack{
+                                Rectangle()
+                                    .fill(.success)
+                                    .frame(height: 40)
+                                    .cornerRadius(10)
+                                
+                                HStack{
+                                    Image(systemName: "checkmark.circle")
+                                    Text("Finished")
+                                }
+                            }
+                        }
+                    } else {
+                        // Show only Finished button for non-last events
+                        ZStack{
+                            Rectangle()
+                                .fill(.success)
+                                .frame(height: 40)
+                                .cornerRadius(10)
+                            
+                            HStack{
+                                Image(systemName: "checkmark.circle")
+                                Text("Finished!")
+                            }
                         }
                     }
                 }
