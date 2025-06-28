@@ -61,6 +61,26 @@ struct EmptyEventSelectionPopup: View {
                         showLocation: false,
                         showDelete: false
                     )
+                    
+                    HStack {
+                        Rectangle()
+                            .fill(Color.gray.opacity(0.3))
+                            .frame(height: 1)
+                        
+                        Text("Other Events")
+                            .font(.caption)
+                            .foregroundColor(.gray)
+                            .padding(.horizontal, 8)
+                        
+                        Rectangle()
+                            .fill(Color.gray.opacity(0.3))
+                            .frame(height: 1)
+                    }
+                    .padding(.horizontal, 3)
+                    .padding(.vertical, 8)
+                    
+                    
+                    
                 }
             }
             .frame(height: 250)

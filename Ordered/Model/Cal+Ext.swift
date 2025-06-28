@@ -254,6 +254,9 @@ extension Cal {
         var customEventList: [CustomEvent] = []
         for sc in self.section_cals?.array as? [Section_Cal] ?? [] {
             for ec in sc.event_cals?.array as? [Event_Cal] ?? [] {
+                
+                guard ec.parent != nil else { continue }
+                
                 let customEvent = CustomEvent(color: sc.location?.color ?? "", name: ec.parent?.name ?? "", icon: (ec.parent?.icon ?? ""), objectId: ec.objectID.uriRepresentation().absoluteString, duration: Int(ec.duration), startTime: ec.startTime, endTime: ec.endTime, aStartTime: ec.aStartTime, durationFinished: Int(ec.durationFinished))
                 customEventList.append(customEvent)
             }
@@ -266,6 +269,8 @@ extension Cal {
         var count : Int = 0
         for sc in self.section_cals?.array as? [Section_Cal] ?? [] {
             for ec in sc.event_cals?.array as? [Event_Cal] ?? [] {
+                guard ec.parent != nil else { continue }
+                
                 count += 1
                 if ec.aStartTime != nil{
                     currentLocation = count

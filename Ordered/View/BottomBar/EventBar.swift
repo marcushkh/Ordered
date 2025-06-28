@@ -14,7 +14,7 @@ struct EventBar: View {
     @ObservedObject var viewModel: ContentViewModel
     @ObservedObject var dayPlannerVM: DayPlannerViewModel
     
-    @FetchRequest private var events: FetchedResults<Event>
+    @FetchRequest private var otherEvents: FetchedResults<Event>
     
     @FetchRequest(
         sortDescriptors: [
@@ -22,6 +22,8 @@ struct EventBar: View {
         ]
     )
     private var locations: FetchedResults<Location>
+    
+    @State var location: Location?
     
     @State var overlayHeight: CGFloat = UIScreen.main.bounds.height * 0.2
     @State var lastHeight: CGFloat = UIScreen.main.bounds.height * 0.2
@@ -38,21 +40,27 @@ struct EventBar: View {
         self.viewModel = viewModel
         self.dayPlannerVM = dayPlannerVM
         
-        let predicate: NSPredicate
-        if let location = viewModel.highlightedEC?.section_cal?.location {
-            predicate = NSPredicate(format: "isActive == true AND ANY locations == %@", location)
-        } else if let location = viewModel.highlightedSC?.location {
-            predicate = NSPredicate(format: "isActive == true AND ANY locations == %@", location)
-        } else {
-            predicate = NSPredicate(format: "isActive == true")
-        }
+        let otherPredicate: NSPredicate
         
-        _events = FetchRequest(
+        if let location = viewModel.highlightedEC?.section_cal?.location {
+            self.location = location
+            otherPredicate = NSPredicate(format: "isActive == true AND (locations.@count == 0 OR NONE locations == %@)", location)
+        }
+        else if let location = viewModel.highlightedSC?.location {
+            self.location = location
+            otherPredicate = NSPredicate(format: "isActive == true AND (locations.@count == 0 OR NONE locations == %@)", location)
+        }
+        else {
+            self.location = nil
+            otherPredicate = NSPredicate(format: "isActive == true")
+        }
+    
+        _otherEvents = FetchRequest(
             sortDescriptors: [
                 SortDescriptor(\.isFavourite, order: .reverse),
                 SortDescriptor(\.order, order: .forward)
             ],
-            predicate: predicate
+            predicate: otherPredicate
         )
     }
     
@@ -120,6 +128,7 @@ struct EventBar: View {
             .padding(.horizontal, K.horizontal_padding)
             .background(.color2)
             
+            
             //Events
             ScrollView{
                 
@@ -128,21 +137,59 @@ struct EventBar: View {
                         columns: [GridItem(), GridItem()],
                         spacing: K.horizontal_padding,
                         content: {
-                        ForEach(Array(events.enumerated()), id: \.element.id) { index, e in
-                            EventInfo(e: e)
-                                .padding(.horizontal)
-                                .modifier(
-                                    EventTapModifier(
-                                        event: e,
-                                        index: index,
-                                        viewModel: viewModel,
-                                        dayPlannerVM: dayPlannerVM
+                            ForEach(Array((location?.events?.array as? [Event] ?? []).enumerated()), id: \.element.id) { index, e in
+                                EventInfo(e: e)
+                                    .padding(.horizontal)
+                                    .modifier(
+                                        EventTapModifier(
+                                            event: e,
+                                            index: index,
+                                            viewModel: viewModel,
+                                            dayPlannerVM: dayPlannerVM
+                                        )
                                     )
-                                )
-                        }
-                    })
+                            }
+                        })
                     .padding(.bottom, 0)
+                    
+                    if !otherEvents.isEmpty && !Array((location?.events?.array as? [Event] ?? []).enumerated()).isEmpty {
+                        HStack {
+                            Rectangle()
+                                .fill(Color.gray.opacity(0.3))
+                                .frame(height: 1)
+                            
+                            Text("Other Events")
+                                .font(.caption)
+                                .foregroundColor(.gray)
+                                .padding(.horizontal, 8)
+                            
+                            Rectangle()
+                                .fill(Color.gray.opacity(0.3))
+                                .frame(height: 1)
+                        }
+                        .padding(.horizontal, 3)
+                        .padding(.vertical, 8)
+                    }
+                    
+                    LazyVGrid(
+                        columns: [GridItem(), GridItem()],
+                        spacing: K.horizontal_padding,
+                        content: {
+                            ForEach(Array(otherEvents.enumerated()), id: \.element.id) { index, e in
+                                EventInfo(e: e)
+                                    .padding(.horizontal)
+                                    .modifier(
+                                        EventTapModifier(
+                                            event: e,
+                                            index: index,
+                                            viewModel: viewModel,
+                                            dayPlannerVM: dayPlannerVM
+                                        )
+                                    )
+                            }
+                        })
                 }
+                
                 
                 else if selection == "Location" {
                     LazyVGrid(columns: [GridItem(), GridItem()],spacing: K.horizontal_padding, content: {
@@ -171,7 +218,7 @@ struct EventBar: View {
                                                 cal.section_cals = sections
                                                 viewModel.highlightedSC = newSection
                                                 viewModel.highlightedEC = nil
-                                            } 
+                                            }
                                             // If a highlighted SC exists, insert the new section after it
                                             else if let highlightedSC = viewModel.highlightedSC,
                                                     let sections = cal.section_cals?.mutableCopy() as? NSMutableOrderedSet,
@@ -217,16 +264,22 @@ struct EventBar: View {
     
     // Add method to update the predicate
     private func updatePredicate() {
-        let predicate: NSPredicate
+        let otherPredicate: NSPredicate
+        
         if let location = viewModel.highlightedEC?.section_cal?.location {
-            predicate = NSPredicate(format: "isActive == true AND ANY locations == %@", location)
-        } else if let location = viewModel.highlightedSC?.location {
-            predicate = NSPredicate(format: "isActive == true AND ANY locations == %@", location)
-        } else {
-            predicate = NSPredicate(format: "isActive == true")
+            self.location = location
+            otherPredicate = NSPredicate(format: "isActive == true AND (locations.@count == 0 OR NONE locations == %@)", location)
+        }
+        else if let location = viewModel.highlightedSC?.location {
+            self.location = location
+            otherPredicate = NSPredicate(format: "isActive == true AND (locations.@count == 0 OR NONE locations == %@)", location)
+        }
+        else {
+            self.location = nil
+            otherPredicate = NSPredicate(format: "isActive == true")
         }
         
-        events.nsPredicate = predicate
+        otherEvents.nsPredicate = otherPredicate
     }
 }
 
@@ -257,8 +310,8 @@ struct EventTapModifier: ViewModifier {
                 let cal = Cal.get(date: dayPlannerVM.currentDate.getYYMMDD()) ?? Cal.new(date: dayPlannerVM.currentDate.getYYMMDD())
                 
                 // If highlightedEC is not nil, create new event_cal and put it below highlightedEC
-                if let highlightedEC = viewModel.highlightedEC, 
-                   let sc = highlightedEC.section_cal {
+                if let highlightedEC = viewModel.highlightedEC,
+                    let sc = highlightedEC.section_cal {
                     sc.insert(newEC, after: highlightedEC)
                     viewModel.highlightedEC = newEC
                     viewModel.highlightedSC = nil
