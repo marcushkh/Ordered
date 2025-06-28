@@ -8,8 +8,8 @@
 import SwiftUI
 import CoreData
 import PopupView
-//import RevenueCat
-//import RevenueCatUI
+import RevenueCat
+import RevenueCatUI
 
 struct ContentView: View {
 
@@ -26,7 +26,7 @@ struct ContentView: View {
         #if DEBUG
 //        welcomeScreen = true
         #endif
-//        Purchases.configure(withAPIKey: "appl_xnYsiELHTsABRcVdfAShQCpYvQK")
+        Purchases.configure(withAPIKey: "appl_xnYsiELHTsABRcVdfAShQCpYvQK")
     }
     
     var body: some View {
@@ -201,15 +201,15 @@ struct ContentView: View {
                 }
             }))
             .sheet(isPresented: $viewModel.isShowPaywall) {
-//                PaywallView()
-//                    .onPurchaseCompleted { customerInfo in
-//                        viewModel.isSubscriptionActive = customerInfo.entitlements.all["Premium"]?.isActive == true
-//                        viewModel.isShowPaywall = false
-//                    }
-//                    .onRestoreCompleted { customerInfo in
-//                        viewModel.isSubscriptionActive = customerInfo.entitlements.all["Premium"]?.isActive == true
-//                        viewModel.isShowPaywall = false
-//                    }
+                PaywallView()
+                    .onPurchaseCompleted { customerInfo in
+                        viewModel.isSubscriptionActive = customerInfo.entitlements.all["Premium"]?.isActive == true
+                        viewModel.isShowPaywall = false
+                    }
+                    .onRestoreCompleted { customerInfo in
+                        viewModel.isSubscriptionActive = customerInfo.entitlements.all["Premium"]?.isActive == true
+                        viewModel.isShowPaywall = false
+                    }
             }
             .onAppear {
                 if !welcomeScreen{

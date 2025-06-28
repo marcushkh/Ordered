@@ -309,8 +309,11 @@ struct CreateEvent: View {
                             .padding(.horizontal)
                             .tint(.color4)
                             .onChange(of: startTime) { oldValue, newValue in
+                                // Prevent circular updates by checking if adjustment is needed
                                 if newValue >= endTime {
-                                    endTime = Calendar.current.date(byAdding: .hour, value: 1, to: newValue) ?? newValue
+                                    DispatchQueue.main.async {
+                                        endTime = Calendar.current.date(byAdding: .hour, value: 1, to: newValue) ?? newValue
+                                    }
                                 }
                             }
                         
@@ -318,8 +321,11 @@ struct CreateEvent: View {
                             .padding(.horizontal)
                             .tint(.color4)
                             .onChange(of: endTime) { oldValue, newValue in
+                                // Prevent circular updates by checking if adjustment is needed
                                 if newValue <= startTime {
-                                    startTime = Calendar.current.date(byAdding: .hour, value: -1, to: newValue) ?? newValue
+                                    DispatchQueue.main.async {
+                                        startTime = Calendar.current.date(byAdding: .hour, value: -1, to: newValue) ?? newValue
+                                    }
                                 }
                             }
                         
@@ -449,7 +455,9 @@ struct CreateEvent: View {
                                 .tint(.color4)
                                 .onChange(of: startTime) { oldValue, newValue in
                                     if endTime <= newValue {
-                                        endTime = startTime
+                                        DispatchQueue.main.async {
+                                            endTime = startTime
+                                        }
                                     }
                                 }
                             
@@ -459,7 +467,9 @@ struct CreateEvent: View {
                                     .tint(.color4)
                                     .onChange(of: endTime) { oldValue, newValue in
                                         if newValue <= startTime {
-                                            startTime = endTime
+                                            DispatchQueue.main.async {
+                                                startTime = endTime
+                                            }
                                         }
                                     }
                             }
@@ -475,7 +485,9 @@ struct CreateEvent: View {
                             .padding(.horizontal)
                             .tint(.color4)
                             .onChange(of: startTime) { oldValue, newValue in
-                                endTime = startTime
+                                DispatchQueue.main.async {
+                                    endTime = startTime
+                                }
                             }
                     }
                     

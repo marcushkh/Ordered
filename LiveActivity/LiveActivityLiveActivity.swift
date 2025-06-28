@@ -94,6 +94,7 @@ struct LiveActivityLiveActivity: Widget {
                             .padding(.leading, index == 0 ? 2 : 0)
                     }
                 }
+                
                 Spacer()
                 
                 if nextColorLocation != 0 && nextColorLocation > currentLocation + 2{

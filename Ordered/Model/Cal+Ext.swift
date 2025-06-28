@@ -300,9 +300,10 @@ extension Cal {
             
             // Iterate through events in reverse order within each section
             for event in events.reversed() {
-                // Check if this is an empty event (no parent)
-                if event.parent == nil {
-                    // Remove the empty event
+                // Check if this is an empty event created by movement detection
+                // (no parent AND no startTime - only aStartTime)
+                if event.parent == nil && event.startTime == nil {
+                    // Remove the movement-detection empty event
                     if let eventCals = section.event_cals?.mutableCopy() as? NSMutableOrderedSet {
                         eventCals.remove(event)
                         section.event_cals = eventCals.copy() as? NSOrderedSet
@@ -323,17 +324,90 @@ extension Cal {
                     // Save changes
                     do {
                         try Model.viewContext.save()
-                        print("Removed last empty event")
+                        print("Removed last movement-detection empty event")
                     } catch {
                         print("Failed to save after removing empty event: \(error.localizedDescription)")
                     }
                     
-                    // Return after removing the first (last) empty event found
+                    // Return after removing the first (last) movement-detection empty event found
                     return
                 }
             }
         }
         
-        print("No empty events found to remove")
+        print("No movement-detection empty events found to remove")
     }
+    
+    func removeAllEmptyEvents() {
+        let sections = self.section_cals?.array as? [Section_Cal] ?? []
+        var sectionsToDelete: [Section_Cal] = []
+        
+        // Iterate through all sections
+        for section in sections {
+            let events = section.event_cals?.array as? [Event_Cal] ?? []
+            var eventsToDelete: [Event_Cal] = []
+            
+            // Find all empty events (both user-created and movement-detection)
+            for event in events {
+                if event.parent == nil {
+                    eventsToDelete.append(event)
+                }
+            }
+            
+            // Remove empty events from the section
+            if !eventsToDelete.isEmpty {
+                if let eventCals = section.event_cals?.mutableCopy() as? NSMutableOrderedSet {
+                    for event in eventsToDelete {
+                        eventCals.remove(event)
+                        Model.viewContext.delete(event)
+                    }
+                    section.event_cals = eventCals.copy() as? NSOrderedSet
+                }
+                
+                // If section becomes empty after removing events, mark it for deletion
+                if section.event_cals?.count == 0 {
+                    sectionsToDelete.append(section)
+                }
+            }
+        }
+        
+        // Remove empty sections
+        if !sectionsToDelete.isEmpty {
+            if let sectionCals = self.section_cals?.mutableCopy() as? NSMutableOrderedSet {
+                for section in sectionsToDelete {
+                    sectionCals.remove(section)
+                    Model.viewContext.delete(section)
+                }
+                self.section_cals = sectionCals.copy() as? NSOrderedSet
+            }
+        }
+        
+        // Save changes
+        do {
+            try Model.viewContext.save()
+            print("Removed all empty events (\(sections.flatMap { ($0.event_cals?.array as? [Event_Cal] ?? []).filter { $0.parent == nil } }.count) events)")
+        } catch {
+                         print("Failed to save after removing all empty events: \(error.localizedDescription)")
+         }
+     }
+     
+     func hasUserCreatedEmptyEventAtBottom() -> Bool {
+         let sections = self.section_cals?.array as? [Section_Cal] ?? []
+         
+         // Check if there are any sections
+         guard !sections.isEmpty else { return false }
+         
+         // Get the last section
+         let lastSection = sections.last!
+         let events = lastSection.event_cals?.array as? [Event_Cal] ?? []
+         
+         // Check if there are any events in the last section
+         guard !events.isEmpty else { return false }
+         
+         // Get the last event in the last section
+         let lastEvent = events.last!
+         
+         // Check if it's a user-created empty event (no parent AND has startTime)
+         return lastEvent.parent == nil && lastEvent.startTime != nil
+     }
 }

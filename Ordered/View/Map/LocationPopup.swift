@@ -201,7 +201,7 @@ struct LocationPopup: View{
         .padding(.horizontal, K.horizontal_padding)
         .padding(.vertical, K.medium_size)
         .background(Color.cBackground.cornerRadius(30))
-        .showCase(order: 8, title: "Tap on Any Event and start it now!", cornerRadius: 30){
+        .showCase(order: 9, title: "Tap on Any Event and start it now!", cornerRadius: 30){
             withAnimation {
                 viewModel.showLocationEventList = false
                 viewModel.location = nil

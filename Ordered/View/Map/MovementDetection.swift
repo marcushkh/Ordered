@@ -73,17 +73,19 @@ class MovementDetection: NSObject, ObservableObject {
     func requestLocationPermission() {
         switch locationManager.authorizationStatus {
         case .notDetermined:
-            // Request "Always" permission for background location
-            locationManager.requestAlwaysAuthorization()
-        case .denied, .restricted:
-            print("Location access denied")
+            // First request "When In Use" authorization
+            locationManager.requestWhenInUseAuthorization()
+            
         case .authorizedWhenInUse:
             // Prompt user to upgrade to "Always" for background functionality
-            print("Consider upgrading to 'Always' location permission for background tracking")
             locationManager.requestAlwaysAuthorization()
             startMonitoring()
+            
         case .authorizedAlways:
             startMonitoring()
+            
+            case .denied, .restricted:
+            print("Location access denied")
         @unknown default:
             break
         }
@@ -170,12 +172,18 @@ class MovementDetection: NSObject, ObservableObject {
             currentState = .stationary
             print("User is now stationary")
             
-            // Send local notification if in background
+            let cal = Cal.getOrCreateWithDefault(date: Date.now)
+            
+            // Check if there's already a user-created empty event at the bottom
+            if cal.hasUserCreatedEmptyEventAtBottom() {
+                print("User-created empty event found at bottom, skipping auto-creation and notification")
+                return
+            }
+            
+            // Send local notification if in background (only when actually creating empty event)
             if UIApplication.shared.applicationState != .active {
                 sendLocalNotification(title: "New Empty Event is created for you!", message: "Since you have stopped moving, an empty event is created for you! Select the event you are currently doing. ")
             }
-            
-            let cal = Cal.getOrCreateWithDefault(date: Date.now)
             
             // Remove the last empty event before creating a new one
             cal.removeLastEmptyEvent()
@@ -319,7 +327,9 @@ extension MovementDetection: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         switch status {
         case .authorizedWhenInUse:
-            print("Location permission: When In Use - limited background functionality")
+            print("Location permission: When In Use - now requesting Always authorization")
+            // Immediately request "Always" authorization after getting "When In Use"
+            locationManager.requestAlwaysAuthorization()
             startMonitoring()
         case .authorizedAlways:
             print("Location permission: Always - full background functionality")

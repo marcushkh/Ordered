@@ -534,7 +534,7 @@ struct LocationRectangleView: View {
                         }
                         .conditionalShowCase(
                             isShow: isFirst,
-                            order: 7,
+                            order: 8,
                             title: "You can view and edit Locations here\n try and tap it!",
                             cornerRadius: 10
                         ) {

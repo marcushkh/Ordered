@@ -15,10 +15,10 @@ struct TabBar: View {
         LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 5), content: {
             ForEach([TabBarItem.home, TabBarItem.plan, TabBarItem.map, TabBarItem.statistic, TabBarItem.setting]) { item in
                 let tabBarIcon = Image(systemName: viewModel.currentTab != item ? item.icon : item.icon + ".fill")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: K.small_size, height: K.small_size)
-                            .symbolEffect(.bounce, value: viewModel.currentTab == item)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: K.small_size, height: K.small_size)
+                    .symbolEffect(.bounce, value: viewModel.currentTab == item)
                 
                 VStack {
                     if item == .plan{
@@ -31,7 +31,7 @@ struct TabBar: View {
                     }
                     else if item == .map{
                         tabBarIcon
-                            .showCase(order: 6, title: "Modify the active places\nYou can also start events easily here", cornerRadius: 10, scale: 1.5) {
+                            .showCase(order: 7, title: "Modify the active places\nYou can also start events easily here", cornerRadius: 10, scale: 1.5) {
                                 withAnimation {
                                     viewModel.currentTab = .map
                                 }
@@ -39,7 +39,7 @@ struct TabBar: View {
                     }
                     else if item == .statistic{
                         tabBarIcon
-                            .showCase(order: 10, title: "You can view Your Daily Progress Here!!", cornerRadius: 10, scale: 1.5) {
+                            .showCase(order: 11, title: "You can view Your Daily Progress Here!!", cornerRadius: 10, scale: 1.5) {
                                 withAnimation {
                                     viewModel.currentTab = .home
                                 }
@@ -62,7 +62,16 @@ struct TabBar: View {
         })
         .padding(.horizontal)
         .padding(.vertical)
-        .background(.color1.opacity(0.9))
+        .background(
+            Group {
+                if #available(iOS 26, *) {
+                    Color.color1
+                        .glassEffect()
+                } else {
+                    Color.color1.opacity(0.9)
+                }
+            }
+        )
         .clipShape(Capsule())
         .padding(.horizontal, K.horizontal_padding)
         .ignoresSafeArea()

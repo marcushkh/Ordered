@@ -276,10 +276,34 @@ struct OneDay: View {
                                 }
                             }
                             .onTapGesture {
-                                //Create event
-                                viewModel.createEvent_Section_Cal = sc
-                                viewModel.editEvent_Cal = nil
-                                viewModel.showCreateEvent = true
+                                //Create empty event immediately
+                                HapticFeedback.light()
+                                withAnimation {
+                                    let currentCal = toDoForDate.first ?? Cal.getOrCreateWithDefault(date: date)
+                                    
+                                    // Remove all existing empty events first
+                                    currentCal.removeAllEmptyEvents()
+                                    
+                                    let emptyEvent = Event_Cal.getEmpty(aStartTime: Date.now.getHHMM())
+                                    // Mark as user-created by setting both aStartTime and startTime
+                                    emptyEvent.startTime = Date.now.getHHMM()
+                                    sc.add(event: emptyEvent)
+                                    
+                                    // Set this as highlighted in plan mode
+                                    if viewModel.currentTab == .plan {
+                                        viewModel.highlightedEC = emptyEvent
+                                        viewModel.highlightedSC = nil
+                                    }
+                                    
+                                    // Save to Core Data
+                                    do {
+                                        try PersistenceController.shared.container.viewContext.save()
+                                    } catch {
+                                        print("Failed to save empty event: \(error)")
+                                    }
+                                    
+                                    viewModel.refresh.toggle()
+                                }
                             }
                             
                         }
@@ -407,9 +431,39 @@ struct OneDay: View {
                     .padding(.top, 4)
                     .background()
                     .onTapGesture {
-                        // Create new Section
+                        // Create empty section immediately
                         HapticFeedback.light()
-                        createSection()
+                        withAnimation {
+                            let currentCal = toDoForDate.first ?? Cal.getOrCreateWithDefault(date: date)
+                            
+                            // Remove all existing empty events first
+                            currentCal.removeAllEmptyEvents()
+                            
+                            let newSection = Section_Cal.new()
+                            
+                            // Create an empty event for the new section with current time
+                            let emptyEvent = Event_Cal.getEmpty(aStartTime: Date.now.getHHMM())
+                            // Mark as user-created by setting both aStartTime and startTime
+                            emptyEvent.startTime = Date.now.getHHMM()
+                            newSection.add(event: emptyEvent)
+                            
+                            currentCal.add(newSection)
+                            
+                            // Set this as highlighted in plan mode
+                            if viewModel.currentTab == .plan {
+                                viewModel.highlightedEC = emptyEvent
+                                viewModel.highlightedSC = nil
+                            }
+                            
+                            // Save to Core Data
+                            do {
+                                try PersistenceController.shared.container.viewContext.save()
+                            } catch {
+                                print("Failed to save empty section: \(error)")
+                            }
+                            
+                            viewModel.refresh.toggle()
+                        }
                     }
                     //Padding at the bottom to allow Users to scroll down, for planning page needs more
                     .padding(.bottom, 125)

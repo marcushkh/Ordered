@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-//import RevenueCat
+import RevenueCat
 
 class ContentViewModel: ObservableObject{
     
@@ -65,8 +65,8 @@ class ContentViewModel: ObservableObject{
     init(){
         currentTab = defaultPage
         
-//        Purchases.shared.getCustomerInfo { customerInfo, error in
-//            self.isSubscriptionActive = customerInfo?.entitlements.all["Premium"]?.isActive == true
-//        }
+        Purchases.shared.getCustomerInfo { customerInfo, error in
+            self.isSubscriptionActive = customerInfo?.entitlements.all["Premium"]?.isActive == true
+        }
     }
 }

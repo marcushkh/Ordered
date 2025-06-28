@@ -90,6 +90,8 @@ struct TopBar: View {
                 Spacer()
 
                 Image(systemName: "paintbrush")
+                    .resizable()
+                    .scaledToFit()
                     .bold()
                     .rotationEffect(Angle(degrees: 180))
                     .frame(height: K.small_size)
@@ -98,10 +100,11 @@ struct TopBar: View {
                         HapticFeedback.heavy()
                         showClear = true
                     }
-                    .showCase(order: 5, title: "Clear All Events", cornerRadius: 10, scale: 1.5) {
+                    .showCase(order: 6, title: "Clear All Events", cornerRadius: 10, scale: 1.5) {
                         withAnimation {
                             HapticFeedback.heavy()
                             Cal.clear(date: dayPlannerVM.currentDate)
+                            Cal.get(date: dayPlannerVM.currentDate)?.removeAllEmptyEvents()
                             viewModel.refresh.toggle()
                         }
                     }
@@ -120,11 +123,12 @@ struct TopBar: View {
             .padding(.vertical)
             .alert(isPresented: $showClear) {
                 Alert(  title: Text("CLEAR the Unfinished Events"),
-                        message: Text("Are you sure to remove all events and section in this day that are not started or finished?"),
+                        message: Text("Are you sure to remove all events and sections in this day that are not started or finished?"),
                         primaryButton: .destructive(Text("Clear")) {
                     withAnimation {
                         HapticFeedback.heavy()
                         Cal.clear(date: dayPlannerVM.currentDate)
+                        Cal.get(date: dayPlannerVM.currentDate)?.removeAllEmptyEvents()
                         viewModel.refresh.toggle()
                     }
                 },
