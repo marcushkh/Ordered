@@ -26,7 +26,7 @@ class MovementDetection: NSObject, ObservableObject {
     private let locationManager = CLLocationManager()
     
     #if DEBUG
-    private let stationaryThreshold: TimeInterval = 10 // 1 minutes
+    private let stationaryThreshold: TimeInterval = 15*60 // 1 minutes
     #else
     private let stationaryThreshold: TimeInterval = 15*60 // 15 minutes
     #endif
@@ -35,6 +35,9 @@ class MovementDetection: NSObject, ObservableObject {
     private var stationaryTimer: Timer?
     private var backgroundTask: UIBackgroundTaskIdentifier = .invalid
     private var backgroundCheckTimer: Timer?
+    
+    // Track the current transit event
+    private var currentTransitEventCal: Event_Cal?
     
     private override init() {
         super.init()
@@ -172,6 +175,9 @@ class MovementDetection: NSObject, ObservableObject {
             currentState = .stationary
             print("User is now stationary")
             
+            // End the current transit event if it exists
+            endTransitEvent()
+            
             let cal = Cal.getOrCreateWithDefault(date: Date.now)
             
             // Check if there's already a user-created empty event at the bottom
@@ -209,13 +215,61 @@ class MovementDetection: NSObject, ObservableObject {
             // Send local notification if in background
             if UIApplication.shared.applicationState != .active {
                 #if DEBUG
-//                sendLocalNotification(title: "movement detected", message: "Movement detected")
+                sendLocalNotification(title: "movement detected", message: "Movement detected")
+                createTransitEvent()
                 #endif
             }
         }
         // Update timestamp and restart timer
         lastMovementTimestamp = Date()
         startStationaryTimer()
+    }
+    
+    // Create transit event when user starts moving
+    private func createTransitEvent() {
+        let cal = Cal.getOrCreateWithDefault(date: Date.now)
+        
+        // Create or find the "Transiting" event
+        let transitEvent = Event.findOrCreate(icon: "🚆", name: "Transiting", duration: 30)
+        
+        // Create Event_Cal instance with aStartTime
+        let transitEventCal = transitEvent.getEC()
+        transitEventCal.aStartTime = Date.now.getHHMM()
+        
+        // Add to appropriate section
+        var section: Section_Cal = cal.section_cals?.lastObject as? Section_Cal ?? Section_Cal.new()
+        if section.location != nil {
+            section = Section_Cal.new()
+        }
+        section.add(event: transitEventCal)
+        cal.add(section)
+        cal.sort()
+        
+        // Store reference to end it later
+        currentTransitEventCal = transitEventCal
+        
+        print("Created transit event with start time: \(transitEventCal.aStartTime ?? "nil")")
+    }
+    
+    // End transit event when user becomes stationary
+    private func endTransitEvent() {
+        guard let transitEvent = currentTransitEventCal else { 
+            print("No active transit event to end")
+            return 
+        }
+        
+        // Set end time to when movement stopped (lastMovementTimestamp)
+        transitEvent.aEndTime = lastMovementTimestamp?.getHHMM()
+        
+        do {
+            try Model.viewContext.save()
+            print("Ended transit event with end time: \(transitEvent.aEndTime ?? "nil")")
+        } catch {
+            print("Failed to save transit event end time: \(error)")
+        }
+        
+        // Clear the reference
+        currentTransitEventCal = nil
     }
     
     private func sendLocalNotification(title: String, message: String) {

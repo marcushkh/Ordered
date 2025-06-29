@@ -18,6 +18,11 @@ struct EmptyEventSelectionPopup: View {
     @State private var newEventEmoji = "💡"
     @State private var giveSuggestion = true
     
+    // States for custom event ordering like EventBar
+    @State private var locationEvents: [Event] = []
+    @State private var otherEvents: [Event] = []
+    @State private var currentLocation: Location? = nil
+    
     let data = DataLoader()
     
     var body: some View {
@@ -26,6 +31,7 @@ struct EmptyEventSelectionPopup: View {
             // Event List
             ScrollView{
                 VStack{
+                    // Create new event button
                     ZStack{
                         RoundedRectangle(cornerRadius: 20.0)
                             .fill(.color1)
@@ -51,38 +57,80 @@ struct EmptyEventSelectionPopup: View {
                         giveSuggestion = true
                     }
                     
-                    EventList(
-                        viewModel: viewModel,
-                        eventName: .constant(""),
-                        selectedEvent: $selectedEvent,
-                        toggleHeartSelectEvent: true,
-                        showHeart: false,
-                        showEdit: false,
-                        showLocation: false,
-                        showDelete: false
-                    )
-                    
-                    HStack {
-                        Rectangle()
-                            .fill(Color.gray.opacity(0.3))
-                            .frame(height: 1)
-                        
-                        Text("Other Events")
-                            .font(.caption)
-                            .foregroundColor(.gray)
-                            .padding(.horizontal, 8)
-                        
-                        Rectangle()
-                            .fill(Color.gray.opacity(0.3))
-                            .frame(height: 1)
+                    // Location Events Section (same as EventBar top section)
+                    ForEach(locationEvents, id: \.self) { event in
+                        ZStack{
+                            RoundedRectangle(cornerRadius: 20.0)
+                                .fill(.color1)
+                            
+                            HStack{
+                                EventInfo(e: event)
+                                Spacer()
+                            }
+                            .padding(.horizontal)
+                        }
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 20.0)
+                                .stroke(selectedEvent == event ? Color.color3 : Color.clear, lineWidth: 3)
+                        )
+                        .frame(height: 60)
+                        .padding(.horizontal, 3)
+                        .onTapGesture {
+                            withAnimation {
+                                selectedEvent = event
+                                HapticFeedback.light()
+                            }
+                        }
                     }
-                    .padding(.horizontal, 3)
-                    .padding(.vertical, 8)
                     
+                    // Separator (only show if both sections have content)
+                    if !locationEvents.isEmpty && !otherEvents.isEmpty {
+                        HStack {
+                            Rectangle()
+                                .fill(Color.gray.opacity(0.3))
+                                .frame(height: 1)
+                            
+                            Text("Other Events")
+                                .font(.caption)
+                                .foregroundColor(.gray)
+                                .padding(.horizontal, 8)
+                            
+                            Rectangle()
+                                .fill(Color.gray.opacity(0.3))
+                                .frame(height: 1)
+                        }
+                        .padding(.horizontal, 3)
+                        .padding(.vertical, 8)
+                    }
                     
-                    
+                    // Other Events Section (same as EventBar bottom section)
+                    ForEach(otherEvents, id: \.self) { event in
+                        ZStack{
+                            RoundedRectangle(cornerRadius: 20.0)
+                                .fill(.color1)
+                            
+                            HStack{
+                                EventInfo(e: event)
+                                Spacer()
+                            }
+                            .padding(.horizontal)
+                        }
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 20.0)
+                                .stroke(selectedEvent == event ? Color.color3 : Color.clear, lineWidth: 3)
+                        )
+                        .frame(height: 60)
+                        .padding(.horizontal, 3)
+                        .onTapGesture {
+                            withAnimation {
+                                selectedEvent = event
+                                HapticFeedback.light()
+                            }
+                        }
+                    }
                 }
             }
+            .scrollIndicators(.hidden)
             .frame(height: 250)
             
             // Two Button Layout - Delete on left, Save on right
@@ -162,6 +210,7 @@ struct EmptyEventSelectionPopup: View {
         .padding(.horizontal, K.horizontal_padding)
         .onAppear {
             selectedEvent = nil
+            fetchEvents()
         }
         .onChange(of: selectedEvent) { _, newValue in
             if newValue != nil {
@@ -203,6 +252,49 @@ struct EmptyEventSelectionPopup: View {
                     }
                 }
             )
+        }
+    }
+    
+    // Fetch events with same ordering logic as EventBar
+    private func fetchEvents() {
+        // Get current location from empty event's section
+        currentLocation = viewModel.emptyEventCal?.section_cal?.location
+        
+        if let location = currentLocation {
+            // First section: Events assigned to this location (same as EventBar top section)
+            locationEvents = location.events?.array as? [Event] ?? []
+            
+            // Second section: Other events (same as EventBar bottom section with NSPredicate)
+            let request: NSFetchRequest<Event> = Event.fetchRequest()
+            request.sortDescriptors = [
+                NSSortDescriptor(keyPath: \Event.isFavourite, ascending: false),
+                NSSortDescriptor(keyPath: \Event.order, ascending: true)
+            ]
+            request.predicate = NSPredicate(format: "isActive == true AND (locations.@count == 0 OR NONE locations == %@)", location)
+            
+            do {
+                otherEvents = try Model.viewContext.fetch(request)
+            } catch {
+                print("Failed to fetch other events: \(error)")
+                otherEvents = []
+            }
+        } else {
+            // No location - show all active events with standard ordering
+            locationEvents = []
+            
+            let request: NSFetchRequest<Event> = Event.fetchRequest()
+            request.sortDescriptors = [
+                NSSortDescriptor(keyPath: \Event.isFavourite, ascending: false),
+                NSSortDescriptor(keyPath: \Event.order, ascending: true)
+            ]
+            request.predicate = NSPredicate(format: "isActive == true")
+            
+            do {
+                otherEvents = try Model.viewContext.fetch(request)
+            } catch {
+                print("Failed to fetch events: \(error)")
+                otherEvents = []
+            }
         }
     }
 }

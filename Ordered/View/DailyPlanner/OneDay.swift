@@ -431,39 +431,8 @@ struct OneDay: View {
                     .padding(.top, 4)
                     .background()
                     .onTapGesture {
-                        // Create empty section immediately
-                        HapticFeedback.light()
-                        withAnimation {
-                            let currentCal = toDoForDate.first ?? Cal.getOrCreateWithDefault(date: date)
-                            
-                            // Remove all existing empty events first
-                            currentCal.removeAllEmptyEvents()
-                            
-                            let newSection = Section_Cal.new()
-                            
-                            // Create an empty event for the new section with current time
-                            let emptyEvent = Event_Cal.getEmpty(aStartTime: Date.now.getHHMM())
-                            // Mark as user-created by setting both aStartTime and startTime
-                            emptyEvent.startTime = Date.now.getHHMM()
-                            newSection.add(event: emptyEvent)
-                            
-                            currentCal.add(newSection)
-                            
-                            // Set this as highlighted in plan mode
-                            if viewModel.currentTab == .plan {
-                                viewModel.highlightedEC = emptyEvent
-                                viewModel.highlightedSC = nil
-                            }
-                            
-                            // Save to Core Data
-                            do {
-                                try PersistenceController.shared.container.viewContext.save()
-                            } catch {
-                                print("Failed to save empty section: \(error)")
-                            }
-                            
-                            viewModel.refresh.toggle()
-                        }
+                        // Create empty section at the bottom
+                        createSection()
                     }
                     //Padding at the bottom to allow Users to scroll down, for planning page needs more
                     .padding(.bottom, 125)
@@ -558,19 +527,63 @@ struct OneDay: View {
     }
     
     func createSection(above: Section_Cal? = nil, below: Section_Cal? = nil){
-        let currentCal = toDoForDate.first ?? Cal.getOrCreateWithDefault(date: date)
-        
-        if let sc = above{
-            viewModel.insertIndex = currentCal.section_cals?.index(of: sc)
+        // Create empty section immediately
+        HapticFeedback.light()
+        withAnimation {
+            let currentCal = toDoForDate.first ?? Cal.getOrCreateWithDefault(date: date)
+            
+            // Calculate insertion index BEFORE removing empty events
+            var insertIndex: Int? = nil
+            if let sc = above {
+                insertIndex = currentCal.section_cals?.index(of: sc)
+            } else if let sc = below {
+                if let index = currentCal.section_cals?.index(of: sc) {
+                    insertIndex = index + 1
+                }
+            }
+            
+            // Remove all existing empty events after getting the index
+            currentCal.removeAllEmptyEvents()
+            
+            let newSection = Section_Cal.new()
+            
+            // Create an empty event for the new section with current time
+            let emptyEvent = Event_Cal.getEmpty(aStartTime: Date.now.getHHMM())
+            // Mark as user-created by setting both aStartTime and startTime
+            emptyEvent.startTime = Date.now.getHHMM()
+            newSection.add(event: emptyEvent)
+            
+            // Handle insertion position using the pre-calculated index
+            if let index = insertIndex {
+                if let sections = currentCal.section_cals?.mutableCopy() as? NSMutableOrderedSet {
+                    if index <= sections.count {
+                        sections.insert(newSection, at: index)
+                    } else {
+                        // If index is out of bounds, just append
+                        sections.add(newSection)
+                    }
+                    currentCal.section_cals = sections
+                }
+            } else {
+                // Add at the end if no specific position was requested
+                currentCal.add(newSection)
+            }
+            
+            // Set this as highlighted in plan mode
+            if viewModel.currentTab == .plan {
+                viewModel.highlightedEC = emptyEvent
+                viewModel.highlightedSC = nil
+            }
+            
+            // Save to Core Data
+            do {
+                try PersistenceController.shared.container.viewContext.save()
+            } catch {
+                print("Failed to save empty section: \(error)")
+            }
+            
+            viewModel.refresh.toggle()
         }
-        else if let sc = below{
-            viewModel.insertIndex = (currentCal.section_cals?.index(of: sc) ?? 0) + 1
-        }
-        //Put it at the very end
-        viewModel.showSelectLocation = true
-        viewModel.changeSection_Cal = nil
-        viewModel.changeSection = nil
-        viewModel.insertToCal = currentCal
     }
     
 }

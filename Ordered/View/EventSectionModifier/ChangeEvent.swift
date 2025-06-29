@@ -81,7 +81,16 @@ struct ChangeEvent: View{
                     
                     // Save Button
                     Button(action: {
-                        Event.save(icon: icon, name: name, event: viewModel.changeEvent)
+                        Event.save(
+                            icon: icon,
+                            name: name,
+                            startTime: viewModel.changeEvent?.startTime,
+                            endTime: viewModel.changeEvent?.endTime,
+                            duration: Int(viewModel.changeEvent?.duration ?? -1),
+                            isFavourite: viewModel.changeEvent?.isFavourite ?? false,
+                            isActive: viewModel.changeEvent?.isActive ?? true,
+                            event: viewModel.changeEvent
+                        )
                         dismiss()
                     }) {
                         ZStack{

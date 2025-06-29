@@ -13,10 +13,10 @@ extension Event {
         
         let eventToSave = event ?? Event(context: Model.viewContext)
         
-        if let icon = icon{
+        if let icon{
             eventToSave.icon = icon
         }
-        if let name = name{
+        if let name{
             eventToSave.name = name
         }
         eventToSave.duration = Int32(duration)

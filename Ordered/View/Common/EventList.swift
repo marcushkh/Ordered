@@ -17,6 +17,7 @@ struct EventList<Content: View>: View {
     
     @State var draggingItem: Event? = nil
     
+    
     var toggleHeartSelectEvent: Bool
     
     var customPredicate: NSPredicate?
@@ -126,7 +127,6 @@ struct EventList<Content: View>: View {
                             }
                         }
                         .padding(.horizontal)
-                        
                     }
                     .overlay(
                         RoundedRectangle(cornerRadius: 20.0)
@@ -179,7 +179,7 @@ struct EventList<Content: View>: View {
                 content
             }
             .padding(.horizontal, 3)
-            .padding(.top, 3)
+            .padding(.vertical, 3)
         }
         .scrollIndicators(.hidden)
         .onChange(of: viewModel.refresh) { _, _ in
@@ -199,9 +199,8 @@ struct EventList<Content: View>: View {
                 saveOrder()
             }
         }
-        
-        
     }
+    
     private func fetchEvents() {
         let request: NSFetchRequest<Event> = Event.fetchRequest()
         request.sortDescriptors = [

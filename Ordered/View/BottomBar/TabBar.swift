@@ -63,14 +63,15 @@ struct TabBar: View {
         .padding(.horizontal)
         .padding(.vertical)
         .background(
-            Group {
-                if #available(iOS 26, *) {
-                    Color.color1
-                        .glassEffect()
-                } else {
-                    Color.color1.opacity(0.9)
-                }
-            }
+            Color.color1.opacity(0.9)
+//            Group {
+//                if #available(iOS 26, *) {
+//                    Color.color1
+//                        .glassEffect()
+//                } else {
+//                    
+//                }
+//            }
         )
         .clipShape(Capsule())
         .padding(.horizontal, K.horizontal_padding)
