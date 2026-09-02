@@ -7,7 +7,6 @@
 
 import SwiftUI
 import UIKit
-import CoreLocation
 
 @main
 struct OrderedApp: App {

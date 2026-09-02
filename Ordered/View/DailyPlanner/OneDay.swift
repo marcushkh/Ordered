@@ -8,105 +8,113 @@
 import SwiftUI
 
 struct OneDay: View {
-    
+
     var date: Date
     var pos: ViewPosition
     @ObservedObject var viewModel: ContentViewModel
     @ObservedObject var dayPlannerVM: DayPlannerViewModel
-    
+
     @State var draggingItem: Event_Cal? = nil
     @State var activeAlert: ActiveAlert?
-    
+
     private var calendarFetchRequest: FetchRequest<Cal>
-    
+
     init(date: Date, pos: ViewPosition, viewModel: ContentViewModel, dayPlannerVM: DayPlannerViewModel) {
         self.date = date
-        
+
         self.calendarFetchRequest = FetchRequest(
             entity: Cal.entity(),
             sortDescriptors: [],
             predicate: NSPredicate(format: "date == %@", date.getYYMMDD())
         )
-        
+
         self.pos = pos
         _viewModel = ObservedObject(wrappedValue: viewModel)
         _dayPlannerVM = ObservedObject(wrappedValue: dayPlannerVM)
     }
-    
+
     var toDoForDate: FetchedResults<Cal> {
         calendarFetchRequest.wrappedValue
     }
-    
-    
+
+
     var body: some View {
         VStack{
-            
+
             ScrollViewReader{ proxy in
                 ScrollView{
                     // Check if we have a Cal for this date
                     let currentCal = toDoForDate.first ?? Cal.getOrCreateWithDefault(date: date)
-                    
+
                     // Always show the calendar content since we now ensure there's always at least a Wake Up event
                     ForEach(currentCal.section_cals?.array as! [Section_Cal], id: \.self){ sc in
-                        
+
                         VStack{
                             //Section Header
                             HStack(alignment: .center){
-                                
-                                //TODO: Select Location
+
                                 HStack(alignment: .center){
-                                    if let location = sc.location{
-                                        //if have location:
-                                        Image(location.imageName ?? "")
-                                            .resizable()
-                                            .scaledToFit()
-                                            .frame(width: K.large_size)
-                                        
-                                        Text(location.name ?? location.imageName ?? "")
+                                    if let section = sc.parent {
+                                        Text(section.icon ?? "📁")
+                                            .font(.title2)
+
+                                        Text(section.name ?? "Section")
                                             .font(.title3)
                                             .bold()
                                     }
                                     else{
-                                        // if no location then:
-                                        Image(systemName: "mappin.and.ellipse")
+                                        Image(systemName: "rectangle.stack")
                                             .font(.title3)
-                                        
-                                        Text("Select")
+
+                                        Text("Select Section")
                                             .font(.title3)
                                             .bold()
                                     }
                                     if sc == viewModel.highlightedSC{
                                         Image(systemName: "star.circle")
                                             .bold()
-                                        
+
                                     }
                                 }
                                 .foregroundStyle(sc == viewModel.highlightedSC ? .color3 : .cPrimary)
-                                
+
                                 Spacer()
-                                
+
                                 Menu {
                                     Button {
-                                        createSection(above: sc)
+                                        let newSC = toDoForDate.first?.addSection(above: sc)
+
+                                        // Set this as highlighted in plan mode
+                                        if viewModel.currentTab == .plan {
+                                            viewModel.highlightedEC = nil
+                                            viewModel.highlightedSC = newSC
+                                        }
+                                        viewModel.refresh.toggle()
                                     } label: {
                                         Text("Add Section Above")
                                         Image(systemName: "arrow.up")
                                     }
-                                    
+
                                     Button {
-                                        createSection(below: sc)
+                                        let newSC = toDoForDate.first?.addSection(below: sc)
+                                        // Set this as highlighted in plan mode
+                                        if viewModel.currentTab == .plan {
+                                            viewModel.highlightedEC = nil
+                                            viewModel.highlightedSC = newSC
+                                        }
+                                        viewModel.refresh.toggle()
                                     } label: {
                                         Text("Add Section Below")
                                         Image(systemName: "arrow.down")
                                     }
-                                    
+
                                     Button {
                                         edit(sc: sc)
                                     } label: {
                                         Text("Edit Section")
                                         Image(systemName: "pencil.line")
                                     }
-                                    
+
                                     Button(role: .destructive) {
                                         activeAlert = .deleteSectionCal(sc)
                                     } label: {
@@ -125,7 +133,7 @@ struct OneDay: View {
                                     }
                                     .background()
                                 }
-                                
+
                             }
                             .onTapGesture {
                                 HapticFeedback.light()
@@ -138,20 +146,20 @@ struct OneDay: View {
                                 }
                             }
                             .id(sc.id)
-                            
+
                             Divider()
                                 .background(Color(.color3))
                                 .frame(height: 2)
                                 .padding(.top, -8)
-                            
+
                             //Events
                             ForEach(sc.event_cals?.array as! [Event_Cal], id: \.self){ ec in
                                 HStack{
                                     ECInfo(ec: ec, refresh: viewModel.refresh, highlightedEC: $viewModel.highlightedEC)
-                                    
+
                                     Spacer()
-                                    
-                                    //Schedule events or Duration events
+
+                                    // Tick action
                                     if viewModel.currentTab == .home{
                                         ActionButtonView(viewModel: viewModel, sc: sc, ec: ec)
                                     }
@@ -170,6 +178,7 @@ struct OneDay: View {
                                             // Check if event_cal has no parent (empty event from stationary detection)
                                             if ec.parent == nil {
                                                 viewModel.emptyEventCal = ec
+                                                viewModel.eventSelectionSectionCal = ec.section_cal
                                                 viewModel.showEmptyEventSelection = true
                                             } else {
                                                 viewModel.showEventDetail = true
@@ -179,18 +188,18 @@ struct OneDay: View {
                                     }
                                 }
                                 .id(ec.id)
-                                
+
                                 //For dragging capability
                                 .draggable(ec.description){
                                     ZStack{
                                         Circle()
-                                            .fill(Color(hex: ec.section_cal?.location?.color))
+                                            .fill(Color(hex: ec.section_cal?.parent?.color))
                                             .frame(height: K.xlarge_size)
-                                        
+
                                         Text(ec.parent?.icon ?? "")
                                             .font(.custom("", size: K.large_size))
                                             .shadow(radius: K.medium_size)
-                                        
+
                                     }
                                     .onAppear {
                                         HapticFeedback.light()
@@ -202,20 +211,19 @@ struct OneDay: View {
                                     viewModel.refresh.toggle()
                                     return false
                                 } isTargeted: { status in
-                                    
+
                                     withAnimation {
                                         if let draggingItem, status, draggingItem.objectID != ec.objectID{
-                                            
+
                                             if let events = sc.event_cals?.mutableCopy() as? NSMutableOrderedSet {
                                                 let e_index = events.index(of: ec)
-                                                
+
                                                 events.remove(draggingItem)
                                                 events.insert(draggingItem, at: e_index)
-                                                
+
                                                 sc.event_cals = events.copy() as? NSOrderedSet
-                                                toDoForDate.first?.sort()
                                             }
-                                            
+
                                             do{
                                                 try PersistenceController.shared.container.viewContext.save()
                                             }
@@ -227,21 +235,21 @@ struct OneDay: View {
                                     }
                                 }
                             }
-                            
+
                             //Create new Event
                             HStack{
                                 ZStack{
                                     Circle()
-                                        .fill(Color(hex: sc.location?.color))
+                                        .fill(Color(hex: sc.parent?.color))
                                         .frame(height: K.xlarge_size)
                                         .bold()
                                     Image(systemName: "plus")
                                 }
                                 .padding(.trailing)
-                                
+
                                 Text("Add Event")
                                     .bold()
-                                
+
                                 Spacer()
                             }
                             .conditionalShowCase(isShow: pos == .centerView, order: 1, title: "Create New Events", cornerRadius: 10)
@@ -256,13 +264,12 @@ struct OneDay: View {
                                     if let draggingItem{
                                         if let events = sc.event_cals?.mutableCopy() as? NSMutableOrderedSet {
                                             let e_index = events.index(of: draggingItem)
-                                            
+
                                             if e_index != events.count - 1{
                                                 events.remove(draggingItem)
                                                 events.add(draggingItem)
-                                                
+
                                                 sc.event_cals = events.copy() as? NSOrderedSet
-                                                toDoForDate.first?.sort()
                                             }
                                         }
                                         do{
@@ -276,36 +283,17 @@ struct OneDay: View {
                                 }
                             }
                             .onTapGesture {
-                                //Create empty event immediately
                                 HapticFeedback.light()
                                 withAnimation {
-                                    let currentCal = toDoForDate.first ?? Cal.getOrCreateWithDefault(date: date)
-                                    
-                                    // Remove all existing empty events first
-                                    currentCal.removeAllEmptyEvents()
-                                    
-                                    let emptyEvent = Event_Cal.getEmpty(aStartTime: Date.now.getHHMM())
-                                    // Mark as user-created by setting both aStartTime and startTime
-                                    emptyEvent.startTime = Date.now.getHHMM()
-                                    sc.add(event: emptyEvent)
-                                    
-                                    // Set this as highlighted in plan mode
-                                    if viewModel.currentTab == .plan {
-                                        viewModel.highlightedEC = emptyEvent
-                                        viewModel.highlightedSC = nil
-                                    }
-                                    
-                                    // Save to Core Data
-                                    do {
-                                        try PersistenceController.shared.container.viewContext.save()
-                                    } catch {
-                                        print("Failed to save empty event: \(error)")
-                                    }
-                                    
-                                    viewModel.refresh.toggle()
+                                    // Open the picker directly. The Event_Cal is only
+                                    // inserted after the user chooses an event, so no
+                                    // intermediate "Select Event" row is displayed.
+                                    viewModel.emptyEventCal = nil
+                                    viewModel.eventSelectionSectionCal = sc
+                                    viewModel.showEmptyEventSelection = true
                                 }
                             }
-                            
+
                         }
                         .padding(.top)
                         .padding(.horizontal, K.horizontal_padding)
@@ -326,7 +314,7 @@ struct OneDay: View {
                                                 if index > 0 {
                                                     let sectionAbove = sections[index - 1]
                                                     let eventsInSectionAbove = sectionAbove.event_cals?.array as? [Event_Cal] ?? []
-                                                    
+
                                                     if !eventsInSectionAbove.isEmpty {
                                                         // Make the last event of the section above the highlightedEC
                                                         viewModel.highlightedEC = eventsInSectionAbove.last
@@ -341,7 +329,7 @@ struct OneDay: View {
                                                 else if index + 1 < sections.count {
                                                     let sectionBelow = sections[index + 1]
                                                     let eventsInSectionBelow = sectionBelow.event_cals?.array as? [Event_Cal] ?? []
-                                                    
+
                                                     if !eventsInSectionBelow.isEmpty {
                                                         // Make the first event of the section below the highlightedEC
                                                         viewModel.highlightedEC = eventsInSectionBelow.first
@@ -358,7 +346,7 @@ struct OneDay: View {
                                                 }
                                             }
                                         }
-                                        
+
                                         sc.delete()
                                     }
                                 },
@@ -377,9 +365,9 @@ struct OneDay: View {
                                             var size: Int?{
                                                 return ec_del.section_cal?.event_cals?.count
                                             }
-                                            
+
                                             let currentSC = ec_del.section_cal
-                                            
+
                                             if let i = i, let size = size{
                                                 if i > 0 {
                                                     viewModel.highlightedEC = ec_del.section_cal?.event_cals![i-1] as? Event_Cal ?? ec_del
@@ -395,7 +383,7 @@ struct OneDay: View {
                                                 }
                                             }
                                         }
-                                        
+
                                         ec_del.delete()
                                         viewModel.showEventDetail = false
                                     }
@@ -407,23 +395,23 @@ struct OneDay: View {
                                 title: Text("Error"),
                                 message: Text("Are you sure you want to delete this Section?"),
                                 primaryButton: .destructive(Text("Delete")) {
-                                    
+
                                 },
                                 secondaryButton: .cancel()
                             )
                         }
                     }
-                    
-                    
+
+
                     //Create new Section
                     HStack{
                         Rectangle()
                             .fill(Color(.color1))
                             .frame(height: 1)
-                        
+
                         Image(systemName: "plus.circle")
                             .foregroundStyle(Color(.color1))
-                        
+
                         Rectangle()
                             .fill(Color(.color1))
                             .frame(height: 1)
@@ -432,7 +420,8 @@ struct OneDay: View {
                     .background()
                     .onTapGesture {
                         // Create empty section at the bottom
-                        createSection()
+                        toDoForDate.first?.addSection()
+                        viewModel.refresh.toggle()
                     }
                     //Padding at the bottom to allow Users to scroll down, for planning page needs more
                     .padding(.bottom, 125)
@@ -445,9 +434,13 @@ struct OneDay: View {
                     }
                 }
                 .onChange(of: viewModel.refresh) { _, _ in
-                    //sort everytime something refreshes
                     withAnimation {
-                        toDoForDate.first?.sort()
+                        LiveActivityActions.refreshLiveActivities()
+                    }
+                }
+                .onChange(of: toDoForDate.first) { _, _ in
+                    //sort everytime something changes
+                    withAnimation {
                         LiveActivityActions.refreshLiveActivities()
                     }
                 }
@@ -455,49 +448,14 @@ struct OneDay: View {
                 .onChange(of: viewModel.currentTab) { _, _ in
                     if viewModel.currentTab == .plan && pos == .centerView{
                         withAnimation {
-                            // Get the last section
-                            if let sections = toDoForDate.first?.section_cals?.array as? [Section_Cal],
-                               let lastSection = sections.last {
-                                // Check if the last section has events
-                                if let events = lastSection.event_cals?.array as? [Event_Cal], !events.isEmpty {
-                                    // Last section has events, highlight the last event
-                                    viewModel.highlightedEC = events.last
-                                    viewModel.highlightedSC = nil
-                                } else {
-                                    // Last section is empty, highlight the section
-                                    viewModel.highlightedSC = lastSection
-                                    viewModel.highlightedEC = nil
-                                }
-                            } else {
-                                // No sections found
-                                viewModel.highlightedEC = nil
-                                viewModel.highlightedSC = nil
-                            }
+                            viewModel.highlightedEC = toDoForDate.first?.getLastFinishedEvent()
                         }
                     }
                 }
                 .onChange(of: date) {
-                    //Change highlightedEC
                     if viewModel.currentTab == .plan && pos == .centerView{
                         withAnimation {
-                            // Get the last section
-                            if let sections = toDoForDate.first?.section_cals?.array as? [Section_Cal],
-                               let lastSection = sections.last {
-                                // Check if the last section has events
-                                if let events = lastSection.event_cals?.array as? [Event_Cal], !events.isEmpty {
-                                    // Last section has events, highlight the last event
-                                    viewModel.highlightedEC = events.last
-                                    viewModel.highlightedSC = nil
-                                } else {
-                                    // Last section is empty, highlight the section
-                                    viewModel.highlightedSC = lastSection
-                                    viewModel.highlightedEC = nil
-                                }
-                            } else {
-                                // No sections found
-                                viewModel.highlightedEC = nil
-                                viewModel.highlightedSC = nil
-                            }
+                            viewModel.highlightedEC = toDoForDate.first?.getLastFinishedEvent()
                         }
                     }
                 }
@@ -518,81 +476,21 @@ struct OneDay: View {
             }
         }
     }
-    
+
     func edit(sc: Section_Cal){
-        viewModel.showSelectLocation = true
+        viewModel.showSelectSection = true
         viewModel.changeSection_Cal = sc
         viewModel.changeSection = nil
         viewModel.insertToCal = toDoForDate.first ?? Cal.getOrCreateWithDefault(date: date)
     }
-    
-    func createSection(above: Section_Cal? = nil, below: Section_Cal? = nil){
-        // Create empty section immediately
-        HapticFeedback.light()
-        withAnimation {
-            let currentCal = toDoForDate.first ?? Cal.getOrCreateWithDefault(date: date)
-            
-            // Calculate insertion index BEFORE removing empty events
-            var insertIndex: Int? = nil
-            if let sc = above {
-                insertIndex = currentCal.section_cals?.index(of: sc)
-            } else if let sc = below {
-                if let index = currentCal.section_cals?.index(of: sc) {
-                    insertIndex = index + 1
-                }
-            }
-            
-            // Remove all existing empty events after getting the index
-            currentCal.removeAllEmptyEvents()
-            
-            let newSection = Section_Cal.new()
-            
-            // Create an empty event for the new section with current time
-            let emptyEvent = Event_Cal.getEmpty(aStartTime: Date.now.getHHMM())
-            // Mark as user-created by setting both aStartTime and startTime
-            emptyEvent.startTime = Date.now.getHHMM()
-            newSection.add(event: emptyEvent)
-            
-            // Handle insertion position using the pre-calculated index
-            if let index = insertIndex {
-                if let sections = currentCal.section_cals?.mutableCopy() as? NSMutableOrderedSet {
-                    if index <= sections.count {
-                        sections.insert(newSection, at: index)
-                    } else {
-                        // If index is out of bounds, just append
-                        sections.add(newSection)
-                    }
-                    currentCal.section_cals = sections
-                }
-            } else {
-                // Add at the end if no specific position was requested
-                currentCal.add(newSection)
-            }
-            
-            // Set this as highlighted in plan mode
-            if viewModel.currentTab == .plan {
-                viewModel.highlightedEC = emptyEvent
-                viewModel.highlightedSC = nil
-            }
-            
-            // Save to Core Data
-            do {
-                try PersistenceController.shared.container.viewContext.save()
-            } catch {
-                print("Failed to save empty section: \(error)")
-            }
-            
-            viewModel.refresh.toggle()
-        }
-    }
-    
+
 }
 
 enum ActiveAlert: Identifiable {
     case deleteSectionCal(Section_Cal)
     case deleteSection(Section)
     case deleteEvent(Event_Cal)
-    
+
     var id: String {
         switch self {
         case .deleteSection(let s): return "deleteSection-\(s.objectID)"

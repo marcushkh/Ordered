@@ -12,8 +12,6 @@ struct Personal: View {
     @ObservedObject var viewModel: ContentViewModel
     @ObservedObject var welcomeVM: WelcomeVM
     
-    @State var giveEmojiSuggestion = true
-    
     @FetchRequest(
         entity: Event.entity(), sortDescriptors: [],
         predicate: NSPredicate(format: "isActive == true AND isFavourite == true")
@@ -92,7 +90,7 @@ struct Personal: View {
                                 .fill(.color1)
                             
                             HStack{
-                                EventAndEmoji(eventName: $eventName, selectedEmoji: $icon, eventNameTyping: $eventTyping, giveSuggestion: $giveEmojiSuggestion) {
+                                EventAndEmoji(eventName: $eventName, selectedEmoji: $icon, eventNameTyping: $eventTyping) {
                                     Text(icon)
                                         .font(.title)
                                 } eventNameView: {
@@ -108,10 +106,9 @@ struct Personal: View {
                                         eventTyping = true
                                     }
                                     else{
-                                        Event.save(icon: icon, name: eventName, duration: 30, isFavourite: true, order_insert_first: false)
+                                        Event.save(icon: icon, name: eventName, duration: -1, isFavourite: true, order_insert_first: false)
                                         icon = "💡"
                                         eventName = ""
-                                        giveEmojiSuggestion = true
                                         
                                         viewModel.refresh.toggle()
                                     }
@@ -141,10 +138,9 @@ struct Personal: View {
             })
             .onDisappear{
                 if !eventName.isEmpty{
-                    Event.save(icon: icon, name: eventName, duration: 30, isFavourite: true, order_insert_first: false)
+                    Event.save(icon: icon, name: eventName, duration: -1, isFavourite: true, order_insert_first: false)
                     icon = "💡"
                     eventName = ""
-                    giveEmojiSuggestion = true
                     
                     viewModel.refresh.toggle()
                 }

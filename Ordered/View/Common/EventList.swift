@@ -23,7 +23,6 @@ struct EventList<Content: View>: View {
     var customPredicate: NSPredicate?
     var showHeart: Bool
     var showEdit: Bool
-    var showLocation: Bool
     var showDelete: Bool
     
     var content: Content
@@ -36,7 +35,6 @@ struct EventList<Content: View>: View {
         customPredicate: NSPredicate? = nil,
         showHeart: Bool = true,
         showEdit: Bool = true,
-        showLocation: Bool = false,
         showDelete: Bool = false,
         @ViewBuilder content: () -> Content = { EmptyView() }
     ) {
@@ -47,7 +45,6 @@ struct EventList<Content: View>: View {
         self.customPredicate = customPredicate
         self.showHeart = showHeart
         self.showEdit = showEdit
-        self.showLocation = showLocation
         self.showDelete = showDelete
         self.content = content()
     }
@@ -94,18 +91,6 @@ struct EventList<Content: View>: View {
                                     Image(systemName: e.isFavourite ? "heart.fill" : "heart")
                                         .bold()
                                         .foregroundStyle(.heart)
-                                }
-                            }
-                            
-                            if showLocation{
-                                let locationSet = e.locations
-                                let sortedLocations = (locationSet?.allObjects as? [Location] ?? [])
-                                    .sorted { $0.positionOrder < $1.positionOrder }
-                                ForEach(sortedLocations, id: \.self) { location in
-                                    Image(location.imageName ?? "")
-                                        .resizable()
-                                        .scaledToFit()
-                                        .frame(width: K.medium_size)
                                 }
                             }
                             

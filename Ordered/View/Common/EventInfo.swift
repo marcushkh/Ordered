@@ -16,29 +16,8 @@ struct EventInfo: View {
             Text(e.icon ?? "")
                 .font(.title) 
             
-            VStack(alignment: .leading){
-                Text(e.name ?? "")
-                    .font(.title3)
-                
-                // Schedule Event
-                if let startTime = e.startTime {
-                    HStack(spacing: 0){
-                        Text(startTime.HHmmssPresentation())
-                        if let endTime = e.endTime{
-                            Text(" - ")
-                            Text(endTime.HHmmssPresentation())
-                        }
-                    }
-                    .font(.callout)
-                    .foregroundStyle(.secondary)
-                }
-                // Duration Event
-                else if e.duration != -1{
-                    Text(Model.duration_to_string(min: e.duration))
-                        .font(.callout)
-                        .foregroundStyle(.secondary)
-                }
-            }
+            Text(e.name ?? "")
+                .font(.title3)
             Spacer()
         }
     }

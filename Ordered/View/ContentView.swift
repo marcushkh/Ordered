@@ -37,10 +37,14 @@ struct ContentView: View {
             Background(color: .cBackground, allFocusStates: [$searchTyping]){
                 VStack(spacing: 0){
                     //Top Bar
-                    TopBar(viewModel: viewModel, dayPlannerVM: dayPlannerVM)
-                        .onTapGesture {
-                            searchTyping = false
-                        }
+                    if ![TabBarItem.statistic, TabBarItem.library].contains(viewModel.currentTab) {
+                        TopBar(viewModel: viewModel, dayPlannerVM: dayPlannerVM)
+                            .onTapGesture {
+                                searchTyping = false
+                            }
+                            .transition(.move(edge: .top).combined(with: .opacity))
+                            .zIndex(2)
+                    }
                     
                     //Main page
                     if [TabBarItem.home, TabBarItem.plan].contains(viewModel.currentTab){
@@ -49,31 +53,15 @@ struct ContentView: View {
                             .ignoresSafeArea()
                             
                     }
+                    else if viewModel.currentTab == .library {
+                        LibraryEditorView(viewModel: viewModel)
+                    }
                     else if viewModel.currentTab == .sugg{
                         
                     }
                     else if viewModel.currentTab == .statistic{
-                        HStack {
-                            Image(systemName: "magnifyingglass")
-                                .foregroundColor(.gray)
-                            
-                            TextField("Search Event", text: $viewModel.searchEventName)
-                                .textFieldStyle(PlainTextFieldStyle())
-                                .focused($searchTyping)
-                        }
-                        .padding(.vertical)
-                        .padding(.horizontal, w * 0.075)
-                        
-                        EventList(viewModel: viewModel, eventName: $viewModel.searchEventName, selectedEvent: $viewModel.selectedEvent, toggleHeartSelectEvent: true)
-                            .padding(.horizontal, w * 0.075)
-                            .padding(.bottom, searchTyping ? 0 : 70)
-                            .onAppear{
-                                viewModel.selectedEvent = nil
-                            }
-                    }
-                    else if viewModel.currentTab == .map{
-                        CustomMapView(viewModel: viewModel)
-//                        GeofencingView()
+                        StatTopBar(viewModel: viewModel, dayPlannerVM: dayPlannerVM)
+                            .transition(.move(edge: .top).combined(with: .opacity))
                     }
                     else if viewModel.currentTab == .setting{
                         SettingView()
@@ -90,8 +78,10 @@ struct ContentView: View {
                             .onTapGesture {
                                 
                             }
+                            .frame(width: UIScreen.main.bounds.width)
                     }
                 }
+                .padding(.horizontal, 6)
                 .frame(width: w, height: h)
                 .overlay(alignment: .bottom){// TabBar
                     if !searchTyping{
@@ -109,26 +99,15 @@ struct ContentView: View {
                         .closeOnTapOutside(true)
                         .backgroundColor(.cPrimary.opacity(0.2))
                 }
-                .popup(isPresented: $viewModel.showLocationEventList){
-                    LocationPopup(viewModel: viewModel, dayPlannerVM: dayPlannerVM)
+                .popup(isPresented: $viewModel.showSelectSection) {
+                    SelectSection(viewModel: viewModel)
                 } customize: {
-                    $0
-                        .type(.floater())
-                        .closeOnTap(false)
-                        .closeOnTapOutside(true)
-                        .dragToDismiss(false)
-                        .backgroundColor(.cPrimary.opacity(0.2))
-                }
-                .popup(isPresented: $viewModel.showSelectLocation) {
-                    //select Location
-                    SelectLocation(viewModel: viewModel)
-                } customize: {
-                    $0
-                        .type(.floater())
-                        .closeOnTap(false)
-                        .closeOnTapOutside(true)
-                        .dragToDismiss(false)
-                        .backgroundColor(.cPrimary.opacity(0.2))
+                        $0
+                            .type(.floater())
+                            .closeOnTap(false)
+                            .closeOnTapOutside(true)
+                            .dragToDismiss(false)
+                            .backgroundColor(.cPrimary.opacity(0.2))
                 }
                 .popup(isPresented: $viewModel.showEmptyEventSelection) {
                     //Empty Event Selection
@@ -137,7 +116,7 @@ struct ContentView: View {
                     $0
                         .type(.floater())
                         .closeOnTap(false)
-                        .closeOnTapOutside(true)
+                        .closeOnTapOutside(false)
                         .dragToDismiss(false)
                         .backgroundColor(.cPrimary.opacity(0.2))
                 }
@@ -147,12 +126,6 @@ struct ContentView: View {
                             .background()
                     }
                 }
-                .overlay{
-                    if(viewModel.showChangeLocation){
-                        ChangeLocation(viewModel: viewModel)
-                    }
-                }
-                
                 .sheet(isPresented: $viewModel.showChangeEvent){
                     ChangeEvent(viewModel: viewModel)
                 }
@@ -187,9 +160,7 @@ struct ContentView: View {
             .onTapGesture {
                 withAnimation {
                     if viewModel.currentTab == .plan{
-                        if viewModel.currentTab == .plan{
-                            viewModel.currentTab = .home
-                        }
+                        viewModel.currentTab = .home
                         viewModel.highlightedEC = nil
                         viewModel.highlightedEC = nil
                     }
@@ -211,13 +182,7 @@ struct ContentView: View {
                         viewModel.isShowPaywall = false
                     }
             }
-            .onAppear {
-                if !welcomeScreen{
-                    MovementDetection.shared.startMonitoring()
-                }
-            }
         }
         
     }
 }
-

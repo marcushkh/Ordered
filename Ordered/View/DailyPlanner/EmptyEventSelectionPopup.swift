@@ -16,14 +16,11 @@ struct EmptyEventSelectionPopup: View {
     @State private var showCreateNewEvent = false
     @State private var newEventName = ""
     @State private var newEventEmoji = "💡"
-    @State private var giveSuggestion = true
     
     // States for custom event ordering like EventBar
-    @State private var locationEvents: [Event] = []
+    @State private var sectionEvents: [Event] = []
     @State private var otherEvents: [Event] = []
-    @State private var currentLocation: Location? = nil
-    
-    let data = DataLoader()
+    @State private var currentSection: Section? = nil
     
     var body: some View {
         VStack(spacing: 16) {
@@ -54,11 +51,9 @@ struct EmptyEventSelectionPopup: View {
                         showCreateNewEvent = true
                         newEventName = ""
                         newEventEmoji = "💡"
-                        giveSuggestion = true
                     }
                     
-                    // Location Events Section (same as EventBar top section)
-                    ForEach(locationEvents, id: \.self) { event in
+                    ForEach(sectionEvents, id: \.self) { event in
                         ZStack{
                             RoundedRectangle(cornerRadius: 20.0)
                                 .fill(.color1)
@@ -84,7 +79,7 @@ struct EmptyEventSelectionPopup: View {
                     }
                     
                     // Separator (only show if both sections have content)
-                    if !locationEvents.isEmpty && !otherEvents.isEmpty {
+                    if !sectionEvents.isEmpty && !otherEvents.isEmpty {
                         HStack {
                             Rectangle()
                                 .fill(Color.gray.opacity(0.3))
@@ -140,11 +135,9 @@ struct EmptyEventSelectionPopup: View {
                     if let eventCal = viewModel.emptyEventCal {
                         withAnimation {
                             eventCal.delete()
-                            viewModel.showEmptyEventSelection = false
-                            viewModel.emptyEventCal = nil
-                            viewModel.refresh.toggle()
                         }
                     }
+                    closePicker()
                 }) {
                     ZStack{
                         RoundedRectangle(cornerRadius: 20)
@@ -161,31 +154,8 @@ struct EmptyEventSelectionPopup: View {
                 
                 // Save Button
                 Button(action: {
-                    if let selectedEvent = selectedEvent, let eventCal = viewModel.emptyEventCal {
-                        // Save functionality - Update the event_cal with the selected parent
-                        eventCal.parent = selectedEvent
-                        eventCal.duration = selectedEvent.duration
-                        eventCal.startTime = selectedEvent.startTime
-                        eventCal.endTime = selectedEvent.endTime
-                        
-                        withAnimation {
-                            if selectedEvent.duration == -1 && selectedEvent.startTime == nil {
-                                EventActionHandler.shared.tick(ec: eventCal)
-                            } else {
-                                EventActionHandler.shared.start(ec: eventCal)
-                            }
-                        }
-                        
-                        do {
-                            try Model.viewContext.save()
-                        } catch {
-                            print("Failed to save event_cal parent: \(error)")
-                        }
-                        
-                        viewModel.showEmptyEventSelection = false
-                        viewModel.emptyEventCal = nil
-                        self.selectedEvent = nil
-                        viewModel.refresh.toggle()
+                    if let selectedEvent {
+                        saveSelection(selectedEvent)
                     }
                 }) {
                     ZStack{
@@ -221,48 +191,64 @@ struct EmptyEventSelectionPopup: View {
             CreateNewEventSheet(
                 eventName: $newEventName,
                 selectedEmoji: $newEventEmoji,
-                giveSuggestion: $giveSuggestion,
                 viewModel: viewModel,
                 onCreateEvent: { createdEvent in
-                    // Assign the newly created event to the empty event
-                    if let eventCal = viewModel.emptyEventCal {
-                        eventCal.parent = createdEvent
-                        eventCal.duration = createdEvent.duration
-                        eventCal.startTime = createdEvent.startTime
-                        eventCal.endTime = createdEvent.endTime
-                        
-                        // Add the newly created event to the location if the empty event is under a location
-                        if let location = eventCal.section_cal?.location {
-                            location.addEvent(createdEvent)
-                        }
-                        
-                        withAnimation {
-                            EventActionHandler.shared.start(ec: eventCal)
-                        }
-                        
-                        do {
-                            try Model.viewContext.save()
-                        } catch {
-                            print("Failed to save new event to empty event_cal: \(error)")
-                        }
-                        
-                        viewModel.showEmptyEventSelection = false
-                        viewModel.emptyEventCal = nil
-                        viewModel.refresh.toggle()
-                    }
+                    currentSection?.add(event: createdEvent)
+                    saveSelection(createdEvent)
                 }
             )
         }
     }
+
+    private func saveSelection(_ event: Event) {
+        let eventCal: Event_Cal
+
+        if let emptyEventCal = viewModel.emptyEventCal {
+            eventCal = emptyEventCal
+        } else if let sectionCal = viewModel.eventSelectionSectionCal {
+            eventCal = Event_Cal.getEmpty()
+            sectionCal.add(event: eventCal)
+        } else {
+            return
+        }
+
+        eventCal.parent = event
+        eventCal.duration = -1
+        eventCal.durationFinished = 0
+        eventCal.startTime = nil
+        eventCal.endTime = nil
+        eventCal.aStartTime = nil
+        eventCal.aEndTime = nil
+
+        if viewModel.currentTab == .plan {
+            viewModel.highlightedEC = eventCal
+            viewModel.highlightedSC = nil
+        }
+
+        do {
+            try Model.viewContext.save()
+        } catch {
+            print("Failed to save selected event: \(error)")
+        }
+
+        closePicker()
+    }
+
+    private func closePicker() {
+        viewModel.showEmptyEventSelection = false
+        viewModel.emptyEventCal = nil
+        viewModel.eventSelectionSectionCal = nil
+        selectedEvent = nil
+        viewModel.refresh.toggle()
+    }
     
     // Fetch events with same ordering logic as EventBar
     private func fetchEvents() {
-        // Get current location from empty event's section
-        currentLocation = viewModel.emptyEventCal?.section_cal?.location
+        currentSection = viewModel.eventSelectionSectionCal?.parent
+            ?? viewModel.emptyEventCal?.section_cal?.parent
         
-        if let location = currentLocation {
-            // First section: Events assigned to this location (same as EventBar top section)
-            locationEvents = location.events?.array as? [Event] ?? []
+        if let section = currentSection {
+            sectionEvents = section.events?.array as? [Event] ?? []
             
             // Second section: Other events (same as EventBar bottom section with NSPredicate)
             let request: NSFetchRequest<Event> = Event.fetchRequest()
@@ -270,17 +256,16 @@ struct EmptyEventSelectionPopup: View {
                 NSSortDescriptor(keyPath: \Event.isFavourite, ascending: false),
                 NSSortDescriptor(keyPath: \Event.order, ascending: true)
             ]
-            request.predicate = NSPredicate(format: "isActive == true AND (locations.@count == 0 OR NONE locations == %@)", location)
+            let selectedIDs = Set(sectionEvents.map(\.objectID))
             
             do {
-                otherEvents = try Model.viewContext.fetch(request)
+                otherEvents = try Model.viewContext.fetch(request).filter { !selectedIDs.contains($0.objectID) }
             } catch {
                 print("Failed to fetch other events: \(error)")
                 otherEvents = []
             }
         } else {
-            // No location - show all active events with standard ordering
-            locationEvents = []
+            sectionEvents = []
             
             let request: NSFetchRequest<Event> = Event.fetchRequest()
             request.sortDescriptors = [
@@ -303,7 +288,6 @@ struct EmptyEventSelectionPopup: View {
 struct CreateNewEventSheet: View {
     @Binding var eventName: String
     @Binding var selectedEmoji: String
-    @Binding var giveSuggestion: Bool
     @FocusState var eventNameTyping: Bool
     
     @ObservedObject var viewModel: ContentViewModel
@@ -318,8 +302,7 @@ struct CreateNewEventSheet: View {
             EventAndEmoji(
                 eventName: $eventName,
                 selectedEmoji: $selectedEmoji,
-                eventNameTyping: $eventNameTyping,
-                giveSuggestion: $giveSuggestion
+                eventNameTyping: $eventNameTyping
             ){
                 ZStack{
                     RoundedRectangle(cornerRadius: 20)
@@ -353,7 +336,7 @@ struct CreateNewEventSheet: View {
                     name: eventName,
                     startTime: nil,
                     endTime: nil,
-                    duration: 30, // 30 minutes duration
+                    duration: -1,
                     order_insert_first: false
                 )
                 

@@ -50,18 +50,11 @@ struct WelcomeScreen: View {
                         welcomeVM.alertMessage = "Minimum of one event is required"
                         welcomeVM.showAlert = true
                     }
-                    else if Location.count() == 0 {
-                        currentItem = 2
-                        welcomeVM.alertMessage = "Minimum of one location is required"
-                        welcomeVM.showAlert = true
-                    }
                     else{
                         withAnimation {
                             welcomeScreen = false
                             viewModel.showCase = true
                             UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { _, _ in }
-                            MovementDetection.shared.requestLocationPermission()
-                            MovementDetection.shared.startMonitoring()
                             HapticFeedback.heavy()
                         }
                     }
@@ -79,16 +72,6 @@ struct WelcomeScreen: View {
         }
         .padding(.horizontal, K.horizontal_padding)
         .padding(.vertical)
-        .popup(isPresented: $welcomeVM.showPopup) {
-            EventsForLocation(viewModel: viewModel, welcomeVM: welcomeVM)
-        } customize: {
-            $0
-                .type(.floater())
-                .closeOnTap(false)
-                .closeOnTapOutside(true)
-                .dragToDismiss(false)
-                .backgroundColor(.cPrimary.opacity(0.1))
-        }
         .alert(welcomeVM.alertMessage, isPresented: $welcomeVM.showAlert) {
             Button{
                 welcomeVM.showAlert = false
@@ -114,9 +97,6 @@ struct CaseSeparation: View{
             Personal(viewModel: viewModel, welcomeVM: welcomeVM)
             
         case listOfSteps[2]:
-            LocationSelection(viewModel: viewModel, welcomeVM: welcomeVM)
-            
-        case listOfSteps[3]:
             Privacy()
             
         default:

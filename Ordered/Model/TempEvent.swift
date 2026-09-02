@@ -8,6 +8,4 @@
 struct TempEvent: Codable, Hashable{
     var name: String
     var icon: String
-    
-    var duration: Int?
 }

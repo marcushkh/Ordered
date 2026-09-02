@@ -91,10 +91,3 @@ struct Week: View{
         }
     }
 }
-
-enum ViewPosition{
-    case centerView
-    case previousView
-    case nextView
-}
-

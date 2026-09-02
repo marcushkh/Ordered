@@ -10,63 +10,52 @@ import SwiftUI
 struct EventBar: View {
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.managedObjectContext) private var viewContext
-    
+
     @ObservedObject var viewModel: ContentViewModel
     @ObservedObject var dayPlannerVM: DayPlannerViewModel
-    
+
     @FetchRequest private var otherEvents: FetchedResults<Event>
-    
+
     @FetchRequest(
-        sortDescriptors: [
-            SortDescriptor(\.positionOrder, order: .forward)
-        ]
-    )
-    private var locations: FetchedResults<Location>
-    
-    @State var location: Location?
-    
+        sortDescriptors: [SortDescriptor(\Section.order, order: .forward)],
+        predicate: NSPredicate(format: "isActive == true")
+    ) private var sections: FetchedResults<Section>
+
+    @FetchRequest(
+        sortDescriptors: [SortDescriptor(\Category.order, order: .forward)],
+        predicate: NSPredicate(format: "isActive == true")
+    ) private var categories: FetchedResults<Category>
+
+    @State private var editingSection: Section?
+    @State private var showSectionEditor = false
+
     @State var overlayHeight: CGFloat = UIScreen.main.bounds.height * 0.2
     @State var lastHeight: CGFloat = UIScreen.main.bounds.height * 0.2
     @GestureState private var dragOffset: CGFloat = 0
-    
+
     let dismissHeight: CGFloat = 0
     let minHeight: CGFloat = UIScreen.main.bounds.height * 0.2
     let midHeight: CGFloat = UIScreen.main.bounds.height * 0.5
-    
-    @State private var selection = "Location"
-    let options = ["Location", "Event"]
-    
+
+    @State private var selection = "Section"
+    let options = ["Section", "Event"]
+
     init(viewModel: ContentViewModel, dayPlannerVM: DayPlannerViewModel) {
         self.viewModel = viewModel
         self.dayPlannerVM = dayPlannerVM
-        
-        let otherPredicate: NSPredicate
-        
-        if let location = viewModel.highlightedEC?.section_cal?.location {
-            self.location = location
-            otherPredicate = NSPredicate(format: "isActive == true AND (locations.@count == 0 OR NONE locations == %@)", location)
-        }
-        else if let location = viewModel.highlightedSC?.location {
-            self.location = location
-            otherPredicate = NSPredicate(format: "isActive == true AND (locations.@count == 0 OR NONE locations == %@)", location)
-        }
-        else {
-            self.location = nil
-            otherPredicate = NSPredicate(format: "isActive == true")
-        }
-    
+
         _otherEvents = FetchRequest(
             sortDescriptors: [
                 SortDescriptor(\.isFavourite, order: .reverse),
                 SortDescriptor(\.order, order: .forward)
             ],
-            predicate: otherPredicate
+            predicate: NSPredicate(format: "isActive == true")
         )
     }
-    
+
     var body: some View {
         VStack(spacing: 0){
-            
+
             VStack{
                 // Drag Handle
                 HStack {
@@ -91,7 +80,7 @@ struct EventBar: View {
                     }
                     .onEnded { value in
                         let newHeight = lastHeight - value.translation.height
-                        
+
                         if abs(newHeight - dismissHeight) < abs(newHeight - minHeight) {// Closer to dismiss Height
                             withAnimation {
                                 if viewModel.currentTab == .plan{
@@ -101,18 +90,18 @@ struct EventBar: View {
                                 viewModel.highlightedSC = nil
                             }
                         }
-                        
+
                         // Snap to closest height
                         let closestHeight = [minHeight, midHeight]
                             .min(by: { abs($0 - newHeight) < abs($1 - newHeight) }) ?? minHeight
-                        
+
                         withAnimation{
                             overlayHeight = closestHeight
                             lastHeight = closestHeight
                         }
                     }
             )
-            
+
             HStack{
                 Picker("", selection: $selection) {
                     ForEach(options, id: \.self) { option in
@@ -120,99 +109,49 @@ struct EventBar: View {
                     }
                 }
                 .pickerStyle(.segmented)
-                .showCase(order: 3, title: "Select Location or Event", cornerRadius: 20){
+                .showCase(order: 3, title: "Select Section or Event", cornerRadius: 20){
                     selection = "Event"
                 }
             }
             .padding(.vertical)
             .padding(.horizontal, K.horizontal_padding)
             .background(.color2)
-            
-            
+
+
             //Events
             ScrollView{
-                
+
                 if selection == "Event"{
-                    LazyVGrid(
-                        columns: [GridItem(), GridItem()],
-                        spacing: K.horizontal_padding,
-                        content: {
-                            ForEach(Array((location?.events?.array as? [Event] ?? []).enumerated()), id: \.element.id) { index, e in
-                                EventInfo(e: e)
-                                    .padding(.horizontal)
-                                    .modifier(
-                                        EventTapModifier(
-                                            event: e,
-                                            index: index,
-                                            viewModel: viewModel,
-                                            dayPlannerVM: dayPlannerVM
-                                        )
-                                    )
-                            }
-                        })
-                    .padding(.bottom, 0)
-                    
-                    if !otherEvents.isEmpty && !Array((location?.events?.array as? [Event] ?? []).enumerated()).isEmpty {
-                        HStack {
-                            Rectangle()
-                                .fill(Color.gray.opacity(0.3))
-                                .frame(height: 1)
-                            
-                            Text("Other Events")
-                                .font(.caption)
-                                .foregroundColor(.gray)
-                                .padding(.horizontal, 8)
-                            
-                            Rectangle()
-                                .fill(Color.gray.opacity(0.3))
-                                .frame(height: 1)
-                        }
-                        .padding(.horizontal, 3)
-                        .padding(.vertical, 8)
+                    ForEach(categories) { category in
+                        categoryGroup(category)
                     }
-                    
-                    LazyVGrid(
-                        columns: [GridItem(), GridItem()],
-                        spacing: K.horizontal_padding,
-                        content: {
-                            ForEach(Array(otherEvents.enumerated()), id: \.element.id) { index, e in
-                                EventInfo(e: e)
-                                    .padding(.horizontal)
-                                    .modifier(
-                                        EventTapModifier(
-                                            event: e,
-                                            index: index,
-                                            viewModel: viewModel,
-                                            dayPlannerVM: dayPlannerVM
-                                        )
-                                    )
-                            }
-                        })
+
+                    eventGroup(
+                        title: "Uncategorized",
+                        icon: "tray",
+                        events: uncategorizedEvents
+                    )
                 }
-                
-                
-                else if selection == "Location" {
+
+
+                else if selection == "Section" {
                     LazyVGrid(columns: [GridItem(), GridItem()],spacing: K.horizontal_padding, content: {
-                        ForEach(locations) { location in
-                            LocationInfo(location: location)
+                        ForEach(sections) { section in
+                            SectionInfo(section: section)
                                 .padding(.horizontal)
                                 .onTapGesture {
                                     withAnimation {
                                         HapticFeedback.light()
                                         if viewModel.currentTab == .plan {
-                                            // Add location to the plan
                                             let cal = Cal.get(date: dayPlannerVM.currentDate.getYYMMDD()) ?? Cal.new(date: dayPlannerVM.currentDate.getYYMMDD())
-                                            
-                                            // Create a new section with this location
-                                            let newSection = Section_Cal.new()
-                                            newSection.location = location
-                                            
+                                            let newSection = section.getSC()
+
                                             // If a highlighted EC exists, insert the section after its parent section
                                             if let highlightedEC = viewModel.highlightedEC,
                                                let highlightedSection = highlightedEC.section_cal,
                                                let sections = cal.section_cals?.mutableCopy() as? NSMutableOrderedSet,
                                                sections.contains(highlightedSection) {
-                                                
+
                                                 let index = sections.index(of: highlightedSection)
                                                 sections.insert(newSection, at: index + 1)
                                                 cal.section_cals = sections
@@ -223,7 +162,7 @@ struct EventBar: View {
                                             else if let highlightedSC = viewModel.highlightedSC,
                                                     let sections = cal.section_cals?.mutableCopy() as? NSMutableOrderedSet,
                                                     sections.contains(highlightedSC) {
-                                                
+
                                                 let index = sections.index(of: highlightedSC)
                                                 sections.insert(newSection, at: index + 1)
                                                 cal.section_cals = sections
@@ -232,20 +171,37 @@ struct EventBar: View {
                                             }
                                             // If neither is highlighted, add the section to the end
                                             else {
-                                                cal.add(newSection)
+                                                cal.addSection(newSection)
                                                 viewModel.highlightedSC = newSection
                                                 viewModel.highlightedEC = nil
                                             }
-                                            
-                                            cal.sort()
+
                                             viewModel.refresh.toggle()
                                         }
                                     }
                                 }
+                                .contextMenu {
+                                    Button("Edit", systemImage: "pencil") {
+                                        editingSection = section
+                                        showSectionEditor = true
+                                    }
+                                    Button("Delete", systemImage: "trash", role: .destructive) {
+                                        section.delete()
+                                        viewModel.refresh.toggle()
+                                    }
+                                }
+                        }
+
+                        Button {
+                            editingSection = nil
+                            showSectionEditor = true
+                        } label: {
+                            newItemTile("New Section")
                         }
                     })
                     .padding(.bottom, 0)
                 }
+
             }
             .scrollIndicators(.hidden)
             .onAppear{
@@ -254,32 +210,106 @@ struct EventBar: View {
             .frame(height: max(overlayHeight, 0))
             .background(.color2)
         }
-        .onChange(of: viewModel.highlightedEC) { _, _ in
-            updatePredicate()
-        }
-        .onChange(of: viewModel.highlightedSC) { _, _ in
-            updatePredicate()
+        .sheet(isPresented: $showSectionEditor) {
+            SectionEditor(section: editingSection) { viewModel.refresh.toggle() }
         }
     }
-    
-    // Add method to update the predicate
-    private func updatePredicate() {
-        let otherPredicate: NSPredicate
-        
-        if let location = viewModel.highlightedEC?.section_cal?.location {
-            self.location = location
-            otherPredicate = NSPredicate(format: "isActive == true AND (locations.@count == 0 OR NONE locations == %@)", location)
+
+    private var uncategorizedEvents: [Event] {
+        otherEvents.filter { $0.activeCategories.isEmpty }
+    }
+
+    private func categoryEvents(_ category: Category) -> [Event] {
+        (category.events?.array as? [Event] ?? []).filter(\.isActive)
+    }
+
+    private func eventIndex(_ event: Event) -> Int {
+        otherEvents.firstIndex(where: { $0 == event }) ?? 2
+    }
+
+    private func categoryGroup(_ category: Category) -> some View {
+        VStack(spacing: 8) {
+            HStack {
+                Text(category.icon ?? "🏷️")
+                Text(category.name ?? "Category")
+                    .font(.headline)
+                Spacer()
+            }
+            .padding(.horizontal, K.horizontal_padding)
+
+            Rectangle()
+                .fill(Color.color3)
+                .frame(height: 2)
+                .padding(.horizontal, K.horizontal_padding)
+
+            if categoryEvents(category).isEmpty {
+                Text("No events")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal, K.horizontal_padding)
+            } else {
+                eventGrid(categoryEvents(category))
+            }
         }
-        else if let location = viewModel.highlightedSC?.location {
-            self.location = location
-            otherPredicate = NSPredicate(format: "isActive == true AND (locations.@count == 0 OR NONE locations == %@)", location)
+        .padding(.bottom, 20)
+    }
+
+    private func eventGroup(title: String, icon: String, events: [Event]) -> some View {
+        VStack(spacing: 8) {
+            Label(title, systemImage: icon)
+                .font(.headline)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, K.horizontal_padding)
+
+            Rectangle()
+                .fill(Color.color3)
+                .frame(height: 2)
+                .padding(.horizontal, K.horizontal_padding)
+
+            eventGrid(events, includesNewEvent: true)
         }
-        else {
-            self.location = nil
-            otherPredicate = NSPredicate(format: "isActive == true")
+        .padding(.bottom, 12)
+    }
+
+    private func eventGrid(_ events: [Event], includesNewEvent: Bool = false) -> some View {
+        LazyVGrid(columns: [GridItem(), GridItem()], spacing: K.horizontal_padding) {
+            ForEach(events) { event in
+                EventInfo(e: event)
+                    .padding(.horizontal)
+                    .modifier(
+                        EventTapModifier(
+                            event: event,
+                            index: eventIndex(event),
+                            viewModel: viewModel,
+                            dayPlannerVM: dayPlannerVM
+                        )
+                    )
+            }
+
+            if includesNewEvent {
+                Button {
+                    viewModel.editEvent_Cal = nil
+                    viewModel.createEvent_Section_Cal = nil
+                    viewModel.createEvent_Section = nil
+                    viewModel.showCreateEvent = true
+                } label: {
+                    newItemTile("New Event")
+                }
+            }
         }
-        
-        otherEvents.nsPredicate = otherPredicate
+    }
+
+    private func newItemTile(_ title: String) -> some View {
+        HStack {
+            Image(systemName: "plus.circle.fill")
+                .font(.title)
+            Text(title)
+                .font(.title3)
+            Spacer()
+        }
+        .foregroundStyle(.black)
+        .padding(.horizontal)
     }
 }
 
@@ -288,7 +318,7 @@ struct EventTapModifier: ViewModifier {
     let index: Int
     @ObservedObject var viewModel: ContentViewModel
     @ObservedObject var dayPlannerVM: DayPlannerViewModel
-    
+
     func body(content: Content) -> some View {
         content
             .onTapGesture {
@@ -298,17 +328,17 @@ struct EventTapModifier: ViewModifier {
                 handleEventTap()
             })
     }
-    
+
     private func handleEventTap() {
         withAnimation {
             HapticFeedback.light()
             // Add event below the highlighted Event
             let newEC = event.getEC()
-            
+
             if viewModel.currentTab == .plan { //in planning page
                 //if no Cal -> create Cal
                 let cal = Cal.get(date: dayPlannerVM.currentDate.getYYMMDD()) ?? Cal.new(date: dayPlannerVM.currentDate.getYYMMDD())
-                
+
                 // If highlightedEC is not nil, create new event_cal and put it below highlightedEC
                 if let highlightedEC = viewModel.highlightedEC,
                     let sc = highlightedEC.section_cal {
@@ -326,14 +356,13 @@ struct EventTapModifier: ViewModifier {
                 else {
                     let new_section_Cal = Section_Cal.new()
                     new_section_Cal.add(event: newEC)
-                    cal.add(new_section_Cal)
+                    cal.addSection(new_section_Cal)
                     viewModel.highlightedEC = newEC
                     viewModel.highlightedSC = nil
                 }
-                
-                cal.sort()
+
             }
-            
+
             viewModel.refresh.toggle()
         }
     }
@@ -341,10 +370,10 @@ struct EventTapModifier: ViewModifier {
 
 struct ShowcaseModifier: ViewModifier {
     @ObservedObject var viewModel: ContentViewModel
-    
+
     let index: Int
     let onCompletion: (() -> Void)?
-    
+
     func body(content: Content) -> some View {
         Group {
             if index == 0 {

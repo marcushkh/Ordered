@@ -210,7 +210,7 @@ struct EventBlockView: View {
     
     // Calculate the background color from the hex
     private var blockColor: Color {
-        let hexColor = event.section_cal?.location?.color ?? "#B87333"
+        let hexColor = event.section_cal?.parent?.color ?? "#B87333"
         return Color(hex: hexColor)
     }
     

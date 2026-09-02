@@ -18,38 +18,36 @@ struct TopBar: View {
     @State var showClear: Bool = false
     
     var body: some View {
-        
-        VStack(spacing: 0){
-            if viewModel.currentTab == .home{
-                homeTopBar
-                    .padding(.horizontal, K.horizontal_padding)
+        if viewModel.currentTab != .statistic {
+            ZStack{
+                
+                VStack{
+                    VStack(spacing: 0){
+                        if viewModel.currentTab == .home{
+                            homeTopBar
+                                .padding(.horizontal, K.horizontal_padding)
+                        }
+                        else if viewModel.currentTab == .setting{
+                            SettingTopBar(viewModel: viewModel)
+                        }
+                    }
+                    
+                    //            .background(.color1, ignoresSafeAreaEdges: .top)
+                    
+                    if [TabBarItem.home, TabBarItem.plan].contains(viewModel.currentTab){
+                        WeekBar(viewModel: viewModel, dayPlannerVM: dayPlannerVM)
+                            .padding(.horizontal, K.horizontal_padding)
+                            .padding(.bottom, K.xxxsmall_size)
+                            .background(.color1)
+                            .clipShape(UnevenRoundedRectangle(bottomLeadingRadius: 30, bottomTrailingRadius: 30))
+                    }
+                    else{
+                        UnevenRoundedRectangle(bottomLeadingRadius: 30, bottomTrailingRadius: 30)
+                            .fill(.color1)
+                            .frame(width: UIScreen.main.bounds.size.width, height: K.horizontal_padding)
+                    }
+                }
             }
-            else if viewModel.currentTab == .statistic{
-                StatTopBar(viewModel: viewModel, dayPlannerVM: dayPlannerVM)
-            }
-            else if viewModel.currentTab == .map {  // Add this case
-                MapTopBar(viewModel: viewModel)
-                    .padding(.horizontal, K.horizontal_padding)
-            }
-            else if viewModel.currentTab == .setting{
-                SettingTopBar(viewModel: viewModel)
-            }
-        }
-        .frame(width: UIScreen.main.bounds.width)
-        .background(.color1, ignoresSafeAreaEdges: .top)
-        
-        
-        if [TabBarItem.home, TabBarItem.plan].contains(viewModel.currentTab){
-            WeekBar(viewModel: viewModel, dayPlannerVM: dayPlannerVM)
-                .padding(.horizontal, K.horizontal_padding)
-                .padding(.bottom, K.xxxsmall_size)
-                .background(.color1)
-                .clipShape(UnevenRoundedRectangle(bottomLeadingRadius: 30, bottomTrailingRadius: 30))
-        }
-        else{
-            UnevenRoundedRectangle(bottomLeadingRadius: 30, bottomTrailingRadius: 30)
-                .fill(.color1)
-                .frame(width: UIScreen.main.bounds.size.width, height: K.horizontal_padding)
         }
     }
     
@@ -67,7 +65,7 @@ struct TopBar: View {
                         DatePicker("", selection: $selectedDate, displayedComponents: .date)
                             .blendMode(.destinationOver)
                             .tint(.color4)
-                            .frame(width: K.xsmall_size, height: K.xsmall_size)
+                            .frame(width: K.xxl_size, height: K.xxl_size)
                     }
                     .onChange(of: selectedDate) { oldValue, newValue in
                         HapticFeedback.light()
@@ -120,7 +118,9 @@ struct TopBar: View {
 //                        }
 //                    }
             }
-            .padding(.vertical)
+            // 40pt controls plus 8pt padding on each side preserve the previous
+            // 24pt icon plus 16pt padding on each side overall height.
+            .padding(.vertical, 8)
             .alert(isPresented: $showClear) {
                 Alert(  title: Text("CLEAR the Unfinished Events"),
                         message: Text("Are you sure to remove all events and sections in this day that are not started or finished?"),
@@ -137,4 +137,3 @@ struct TopBar: View {
         }
     }
 }
-

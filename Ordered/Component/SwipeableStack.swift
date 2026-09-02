@@ -5,10 +5,6 @@
 //  Created by Kai Hin Hung on 15/8/2024.
 //
 
-// This Class is adapted from Coding In A Nutshell Youtube Channel
-// Source: https://www.youtube.com/watch?v=PZySRHE783s&t=845s&ab_channel=CodingInANutshell
-// Modifications: I made modification to make the jumpTo looks better when it is changed from the outside
-
 import SwiftUI
 
 struct SwipeableStack<WhateverTypeOfData: Hashable, Content>: View where Content : View{
@@ -111,4 +107,10 @@ struct SwipeableStack<WhateverTypeOfData: Hashable, Content>: View where Content
             )
         }
     }
+}
+
+enum ViewPosition{
+    case centerView
+    case previousView
+    case nextView
 }

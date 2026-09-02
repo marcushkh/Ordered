@@ -46,7 +46,7 @@ enum K{
         "819A59"
     ]
     
-    static let defaultSection = ["Morning Routine", "Schedule", "Personal Time", "Night Routine"]
+    static let defaultSection = ["Welcome", "Events", "Privacy"]
     
     static let presentationCornerRadius: CGFloat = 30
 }

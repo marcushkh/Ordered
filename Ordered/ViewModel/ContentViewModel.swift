@@ -29,20 +29,11 @@ class ContentViewModel: ObservableObject{
     @Published var changeEvent: Event? = nil
     
     //Change Section
-    @Published var showSelectLocation = false
+    @Published var showSelectSection = false
     @Published var changeSection_Cal: Section_Cal? = nil
     @Published var changeSection: Section? = nil
     @Published var insertToCal: Cal? = nil
     @Published var insertIndex: Int? = nil
-    
-    //Change Location
-    @Published var showChangeLocation = false
-    @Published var changeLocation: Location? = nil
-    
-    //For Map Page
-    @Published var showLocationEventList = false
-    @Published var location: Location? = nil
-    @Published var searchEventNameMap: String = ""
     
     //For Planning page
     @Published var highlightedEC: Event_Cal? = nil
@@ -51,6 +42,7 @@ class ContentViewModel: ObservableObject{
     //For Empty Event Selection
     @Published var showEmptyEventSelection = false
     @Published var emptyEventCal: Event_Cal? = nil
+    @Published var eventSelectionSectionCal: Section_Cal? = nil
     
     //For Stat page
     @Published var selectedEvent: Event? = nil

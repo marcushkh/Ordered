@@ -11,9 +11,27 @@ struct TabBar: View {
     @ObservedObject var viewModel: ContentViewModel
     
     var body: some View {
-        
+        Group {
+            if #available(iOS 26.0, *) {
+                tabItems
+                    .glassEffect(
+                        .regular
+                            .tint(Color.color1.opacity(0.35))
+                            .interactive(),
+                        in: Capsule()
+                    )
+            } else {
+                tabItems
+                    .background(Color.color1.opacity(0.9), in: Capsule())
+            }
+        }
+        .padding(.horizontal, K.horizontal_padding)
+        .ignoresSafeArea()
+    }
+
+    private var tabItems: some View {
         LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 5), content: {
-            ForEach([TabBarItem.home, TabBarItem.plan, TabBarItem.map, TabBarItem.statistic, TabBarItem.setting]) { item in
+            ForEach([TabBarItem.home, TabBarItem.library, TabBarItem.plan, TabBarItem.statistic, TabBarItem.setting]) { item in
                 let tabBarIcon = Image(systemName: viewModel.currentTab != item ? item.icon : item.icon + ".fill")
                     .resizable()
                     .scaledToFit()
@@ -26,14 +44,6 @@ struct TabBar: View {
                             .showCase(order: 2, title: "This helps you plan and record \n your day with a few clicks", cornerRadius: 10, scale: 1.5) {
                                 withAnimation {
                                     viewModel.currentTab = .plan
-                                }
-                            }
-                    }
-                    else if item == .map{
-                        tabBarIcon
-                            .showCase(order: 7, title: "Modify the active places\nYou can also start events easily here", cornerRadius: 10, scale: 1.5) {
-                                withAnimation {
-                                    viewModel.currentTab = .map
                                 }
                             }
                     }
@@ -62,29 +72,15 @@ struct TabBar: View {
         })
         .padding(.horizontal)
         .padding(.vertical)
-        .background(
-            Color.color1.opacity(0.9)
-//            Group {
-//                if #available(iOS 26, *) {
-//                    Color.color1
-//                        .glassEffect()
-//                } else {
-//                    
-//                }
-//            }
-        )
-        .clipShape(Capsule())
-        .padding(.horizontal, K.horizontal_padding)
-        .ignoresSafeArea()
     }
 }
 
 
 enum TabBarItem: String, CaseIterable, Identifiable {
     case home
+    case library
     case sugg
     case plan
-    case map
     case statistic
     case setting
     
@@ -95,12 +91,12 @@ enum TabBarItem: String, CaseIterable, Identifiable {
         
         case .home:
             return "house"
+        case .library:
+            return "square.grid.2x2"
         case .sugg:
             return "apple.intelligence"
         case .plan:
             return "list.bullet.indent"
-        case .map:
-            return "map"
         case .statistic:
             return "chart.bar"
         case .setting:
@@ -112,12 +108,12 @@ enum TabBarItem: String, CaseIterable, Identifiable {
         switch self {
         case .home:
             return "Home"
+        case .library:
+            return "Library"
         case .sugg:
             return "AI Suggestion"
         case .plan:
             return "Plan"
-        case .map:
-            return "Map"
         case .statistic:
             return "Statistic"
         case .setting:

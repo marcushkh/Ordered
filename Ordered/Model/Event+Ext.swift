@@ -8,6 +8,18 @@ import SwiftUI
 import CoreData
 
 extension Event {
+    var activeCategories: [Category] {
+        if let category, category.isActive { return [category] }
+        return []
+    }
+
+    func setCategory(_ selectedCategory: Category?) {
+        category = selectedCategory
+        // Clear the migration-only relationship after the single selection is
+        // established so one event can never retain multiple categories.
+        categories = NSSet()
+        try? Model.viewContext.save()
+    }
         
     static func save(icon: String? = nil, name: String? = nil, startTime: String? = nil, endTime: String? = nil, duration: Int = -1, isFavourite: Bool = false, isActive: Bool = true, order_insert_first: Bool = false, event: Event? = nil) -> Event {
         
@@ -19,9 +31,11 @@ extension Event {
         if let name{
             eventToSave.name = name
         }
-        eventToSave.duration = Int32(duration)
-        eventToSave.startTime = startTime
-        eventToSave.endTime = endTime
+        // Tick-only invariant. Keep the legacy Core Data fields so old stores can
+        // migrate safely, but never write schedule or duration values again.
+        eventToSave.duration = -1
+        eventToSave.startTime = nil
+        eventToSave.endTime = nil
         eventToSave.isFavourite = isFavourite
         eventToSave.isActive = isActive
         
@@ -104,7 +118,7 @@ extension Event {
         }
     }
     
-    static func findOrCreate(icon: String, name: String, duration: Int = -1, order_insert_first: Bool = false) -> Event {
+    static func findOrCreate(icon: String, name: String, duration: Int = -1, isActive: Bool = true, order_insert_first: Bool = false) -> Event {
         // First, try to find an existing event with the same name
         if let existingEvent = findByName(name) {
             print("Found existing event with name: \(name)")
@@ -112,7 +126,7 @@ extension Event {
         }
         
         // If no existing event is found, create a new one
-        return save(icon: icon, name: name, duration: duration, order_insert_first: order_insert_first)
+        return save(icon: icon, name: name, duration: duration, isActive: isActive, order_insert_first: order_insert_first)
     }
     
     static func findOrCreateInactive(icon: String, name: String, duration: Int = -1, order_insert_first: Bool = false) -> Event{
@@ -174,9 +188,9 @@ extension Event {
     
     func getEC() -> Event_Cal{
         let ec = Event_Cal(context: Model.viewContext)
-        ec.duration = self.duration
-        ec.startTime = self.startTime
-        ec.endTime = self.endTime
+        ec.duration = -1
+        ec.startTime = nil
+        ec.endTime = nil
         
         ec.parent = self
         return ec
@@ -260,9 +274,11 @@ extension Event_Cal{
     
     static func getEmpty(aStartTime: String? = nil, aEndTime: String? = nil) -> Event_Cal{
         let ec = Event_Cal(context: Model.viewContext)
-        
-        ec.aStartTime = aStartTime
-        ec.aEndTime = aEndTime
+        ec.duration = -1
+        ec.startTime = nil
+        ec.endTime = nil
+        ec.aStartTime = nil
+        ec.aEndTime = nil
         
         return ec
     }
@@ -270,12 +286,13 @@ extension Event_Cal{
     func edit(detail: String?, startTime: String?, endTime: String?, duration: Int, aStartTime: String? = nil, aEndTime: String? = nil, durationFinished: Int = 0, parent: Event? = nil){
         
         self.detail = detail
-        self.startTime = startTime
-        self.endTime = endTime
-        self.duration = Int32(duration)
-        self.aStartTime = aStartTime
-        self.aEndTime = aEndTime
-        self.durationFinished = Int32(durationFinished)
+        self.startTime = nil
+        self.endTime = nil
+        self.duration = -1
+        let tickTime = aStartTime ?? aEndTime
+        self.aStartTime = tickTime
+        self.aEndTime = tickTime
+        self.durationFinished = 0
         if let p = parent{
             self.parent = p
         }
@@ -288,7 +305,7 @@ extension Event_Cal{
     }
     
     func copyFunction() -> Event_Cal?{
-        var newEC = self.parent?.getEC()
+        let newEC = self.parent?.getEC()
         newEC?.detail = self.detail
         
         return newEC
@@ -308,12 +325,15 @@ extension Event_Cal{
         let ec = Event_Cal(context: Model.viewContext)
         ec.parent = self.parent
         ec.detail = self.detail
-        ec.startTime = self.startTime
-        ec.endTime = self.endTime
-        ec.duration = self.duration
-        ec.durationFinished = self.durationFinished
-        ec.aStartTime = self.aStartTime
-        ec.aEndTime = self.aEndTime
+        ec.startTime = nil
+        ec.endTime = nil
+        ec.duration = -1
+        ec.durationFinished = 0
+        if self.aEndTime != nil {
+            let tickTime = self.aStartTime ?? self.aEndTime
+            ec.aStartTime = tickTime
+            ec.aEndTime = tickTime
+        }
         
         return ec
     }
@@ -321,27 +341,12 @@ extension Event_Cal{
 
 enum EventStatus: String{
     case TickEvent
-    case NotStarted
-    case InProgress
-    case Paused
     case Completed
     
     static func get(from ec: Event_Cal) -> EventStatus{
-        let actionHandler = EventActionHandler.shared
         if ec.aEndTime != nil{
             return .Completed
         }
-        if ec.duration == -1 && ec.startTime == nil {
-            return .TickEvent
-        }
-        if actionHandler.isCurrentEC(ec: ec) {
-            if actionHandler.startTime != nil{
-                return .InProgress
-            }
-            else{
-                return .Paused
-            }
-        }
-        return .NotStarted
+        return .TickEvent
     }
 }

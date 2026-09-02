@@ -17,6 +17,17 @@ struct EventDetailPopup: View {
                 ECInfo(ec: viewModel.eventDetail!, highlightedEC: $viewModel.highlightedEC)
                 Spacer()
             }
+
+            if let category = viewModel.eventDetail?.parent?.activeCategories.first {
+                HStack {
+                    Text("\(category.icon ?? "🏷️") \(category.name ?? "Category")")
+                        .font(.subheadline.bold())
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 5)
+                        .background(Color(hex: category.color).opacity(0.25), in: Capsule())
+                    Spacer()
+                }
+            }
             
             Divider()
                 .background(Color.color3)
@@ -50,7 +61,7 @@ struct EventDetailPopup: View {
                         ZStack(alignment: .bottomTrailing){
                             Image(systemName: "document.on.document")
                         }
-                        Text("Copy")
+                        Text("Duplicate")
                     }
                     .frame(height: 50)
                     .frame(maxWidth: .infinity)
@@ -85,162 +96,23 @@ struct EventDetailPopup: View {
                         secondaryButton: .cancel())
             }
             
-            if let eventDetail = viewModel.eventDetail{
-                var currentEventState = EventStatus.get(from: eventDetail)
-                
-                switch currentEventState {
-                case .NotStarted:
-                    ZStack{
-                        Rectangle()
-                            .fill(.color1)
-                            .frame(height: 40)
-                            .cornerRadius(10)
-                        
-                        HStack{
-                            Image(systemName: "play.circle")
-                            Text("Start Now!")
-                        }
+            if let eventDetail = viewModel.eventDetail {
+                ZStack {
+                    Rectangle()
+                        .fill(eventDetail.aEndTime == nil ? .color1 : .success)
+                        .frame(height: 40)
+                        .cornerRadius(10)
+
+                    HStack {
+                        Image(systemName: "checkmark.circle")
+                        Text(eventDetail.aEndTime == nil ? "Tick" : "Done")
                     }
-                    .onTapGesture {
-                        withAnimation {
-                            EventActionHandler.shared.start(ec: eventDetail)
-                            viewModel.refresh.toggle()
-                        }
-                    }
-                case .TickEvent:
-                    ZStack{
-                        Rectangle()
-                            .fill(.color1)
-                            .frame(height: 40)
-                            .cornerRadius(10)
-                        
-                        HStack{
-                            Image(systemName: "checkmark.circle")
-                            Text("Tick!")
-                        }
-                    }
-                    .onTapGesture {
-                        if eventDetail.aEndTime == nil{
-                            withAnimation {
-                                eventDetail.aStartTime = Date.now.getHHMM()
-                                eventDetail.aEndTime = Date.now.getHHMM()
-                                viewModel.refresh.toggle()
-                            }
-                        }
-                    }
-                case .InProgress, .Paused:
-                    HStack (spacing: 8) {
-                        ZStack{
-                            Rectangle()
-                                .fill(.info)
-                                .frame(height: 40)
-                                .cornerRadius(10)
-                            
-                            HStack{
-                                Image(systemName: "checkmark.circle")
-                                Text("End")
-                            }
-                        }
-                        .onTapGesture {
-                            withAnimation {
-                                EventActionHandler.shared.end(ec: eventDetail)
-                                viewModel.refresh.toggle()
-                            }
-                        }
-                        if currentEventState == .InProgress{
-                            ZStack{
-                                Rectangle()
-                                    .fill(.info)
-                                    .frame(height: 40)
-                                    .cornerRadius(10)
-                                
-                                HStack{
-                                    Image(systemName: "pause.circle")
-                                    Text("Pause")
-                                }
-                            }
-                            .onTapGesture {
-                                withAnimation {
-                                    EventActionHandler.shared.pause(ec: eventDetail)
-                                    viewModel.refresh.toggle()
-                                }
-                            }
-                        }
-                        else{
-                            ZStack{
-                                Rectangle()
-                                    .fill(.info)
-                                    .frame(height: 40)
-                                    .cornerRadius(10)
-                                
-                                HStack{
-                                    Image(systemName: "play.circle")
-                                    Text("Continue")
-                                }
-                            }
-                            .onTapGesture {
-                                withAnimation {
-                                    EventActionHandler.shared.resume(ec: eventDetail)
-                                    viewModel.refresh.toggle()
-                                }
-                            }
-                        }
-                    }
-                case .Completed:
-                    // Check if this is the last event of the day
-                    let isLastEvent = eventDetail.section_cal?.cal?.isLastEventOfDay(eventDetail) ?? false
-                    
-                    if isLastEvent {
-                        // Show both Resume and Finished buttons for the last event
-                        HStack(spacing: 8) {
-                            // Resume button (left side)
-                            ZStack{
-                                Rectangle()
-                                    .fill(.info)
-                                    .frame(height: 40)
-                                    .cornerRadius(10)
-                                
-                                HStack{
-                                    Image(systemName: "play.circle")
-                                    Text("Resume")
-                                }
-                            }
-                                                         .onTapGesture {
-                                 withAnimation {
-                                     // Clear the aEndTime to indicate the event is no longer finished
-                                     eventDetail.aEndTime = nil
-                                     EventActionHandler.shared.resume(ec: eventDetail)
-                                     viewModel.refresh.toggle()
-                                     viewModel.showEventDetail = false
-                                 }
-                             }
-                            
-                            // Finished button (right side)
-                            ZStack{
-                                Rectangle()
-                                    .fill(.success)
-                                    .frame(height: 40)
-                                    .cornerRadius(10)
-                                
-                                HStack{
-                                    Image(systemName: "checkmark.circle")
-                                    Text("Finished")
-                                }
-                            }
-                        }
-                    } else {
-                        // Show only Finished button for non-last events
-                        ZStack{
-                            Rectangle()
-                                .fill(.success)
-                                .frame(height: 40)
-                                .cornerRadius(10)
-                            
-                            HStack{
-                                Image(systemName: "checkmark.circle")
-                                Text("Finished!")
-                            }
-                        }
+                }
+                .onTapGesture {
+                    guard eventDetail.aEndTime == nil else { return }
+                    withAnimation {
+                        EventActionHandler.shared.tick(ec: eventDetail)
+                        viewModel.refresh.toggle()
                     }
                 }
             }
