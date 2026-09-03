@@ -14,6 +14,8 @@ class ContentViewModel: ObservableObject{
     
     @AppStorage("DefaultPage") private var defaultPage: TabBarItem = TabBarItem.home
     @Published var currentTab: TabBarItem = TabBarItem.home
+    @Published var showQuickFinishSearch = false
+    @Published var quickFinishSearchText = ""
     
     @Published var showEventDetail = false
     @Published var eventDetail: Event_Cal? = nil
@@ -43,10 +45,6 @@ class ContentViewModel: ObservableObject{
     @Published var showEmptyEventSelection = false
     @Published var emptyEventCal: Event_Cal? = nil
     @Published var eventSelectionSectionCal: Section_Cal? = nil
-    
-    //For Stat page
-    @Published var selectedEvent: Event? = nil
-    @Published var searchEventName: String = ""
     
     //for welcome and showcase
     @Published var showCase = false

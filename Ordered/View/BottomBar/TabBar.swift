@@ -31,7 +31,7 @@ struct TabBar: View {
 
     private var tabItems: some View {
         LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 5), content: {
-            ForEach([TabBarItem.home, TabBarItem.library, TabBarItem.plan, TabBarItem.statistic, TabBarItem.setting]) { item in
+            ForEach([TabBarItem.home, TabBarItem.quick, TabBarItem.plan, TabBarItem.statistic, TabBarItem.setting]) { item in
                 let tabBarIcon = Image(systemName: viewModel.currentTab != item ? item.icon : item.icon + ".fill")
                     .resizable()
                     .scaledToFit()
@@ -78,8 +78,7 @@ struct TabBar: View {
 
 enum TabBarItem: String, CaseIterable, Identifiable {
     case home
-    case library
-    case sugg
+    case quick
     case plan
     case statistic
     case setting
@@ -91,10 +90,8 @@ enum TabBarItem: String, CaseIterable, Identifiable {
         
         case .home:
             return "house"
-        case .library:
-            return "square.grid.2x2"
-        case .sugg:
-            return "apple.intelligence"
+        case .quick:
+            return "checkmark.circle"
         case .plan:
             return "list.bullet.indent"
         case .statistic:
@@ -108,10 +105,8 @@ enum TabBarItem: String, CaseIterable, Identifiable {
         switch self {
         case .home:
             return "Home"
-        case .library:
-            return "Library"
-        case .sugg:
-            return "AI Suggestion"
+        case .quick:
+            return "Quick Finish"
         case .plan:
             return "Plan"
         case .statistic:

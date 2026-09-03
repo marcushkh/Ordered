@@ -8,12 +8,28 @@
 import SwiftUI
 
 struct SettingView: View{
+    @ObservedObject var viewModel: ContentViewModel
+
     @AppStorage("DayStartTime") private var dayStartTime: Int = 4
     @AppStorage("DefaultPage") private var defaultPage: TabBarItem = TabBarItem.home
+    @State private var showLibrary = false
     
     var body: some View{
         
         List {
+            Button {
+                showLibrary = true
+            } label: {
+                HStack {
+                    Label("Library", systemImage: "square.grid.2x2")
+                    Spacer()
+                    Image(systemName: "chevron.right")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                }
+                .foregroundStyle(.cPrimary)
+            }
+
             VStack(alignment: .leading){
                 
                 HStack{
@@ -26,12 +42,6 @@ struct SettingView: View{
                         } label: {
                             Text(TabBarItem.home.label)
                         }
-                        
-//                        Button {
-//                            defaultPage = TabBarItem.sugg
-//                        } label: {
-//                            Text(TabBarItem.sugg.label)
-//                        }
                         
                     } label: {
                         HStack{
@@ -84,6 +94,10 @@ struct SettingView: View{
                     .foregroundStyle(.secondary)
             }
             
+        }
+        .sheet(isPresented: $showLibrary) {
+            LibraryEditorView(viewModel: viewModel)
+                .presentationCornerRadius(K.presentationCornerRadius)
         }
     }
 }

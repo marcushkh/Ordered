@@ -16,6 +16,7 @@ struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @StateObject var viewModel = ContentViewModel()
     @StateObject var dayPlannerVM = DayPlannerViewModel()
+    @StateObject var statViewModel = StatViewModel()
     
     @AppStorage("welcomeScreen") var welcomeScreen: Bool = true
     
@@ -37,34 +38,34 @@ struct ContentView: View {
             Background(color: .cBackground, allFocusStates: [$searchTyping]){
                 VStack(spacing: 0){
                     //Top Bar
-                    if ![TabBarItem.statistic, TabBarItem.library].contains(viewModel.currentTab) {
-                        TopBar(viewModel: viewModel, dayPlannerVM: dayPlannerVM)
-                            .onTapGesture {
-                                searchTyping = false
-                            }
-                            .transition(.move(edge: .top).combined(with: .opacity))
-                            .zIndex(2)
-                    }
+                    TopBar(
+                        viewModel: viewModel,
+                        dayPlannerVM: dayPlannerVM,
+                        statViewModel: statViewModel
+                    )
+                        .onTapGesture {
+                            searchTyping = false
+                        }
+                        .transition(.move(edge: .top).combined(with: .opacity))
+                        .zIndex(2)
                     
                     //Main page
                     if [TabBarItem.home, TabBarItem.plan].contains(viewModel.currentTab){
                         //Records
                         MainList(viewModel: viewModel, dayPlannerVM: dayPlannerVM)
                             .ignoresSafeArea()
-                            
                     }
-                    else if viewModel.currentTab == .library {
-                        LibraryEditorView(viewModel: viewModel)
-                    }
-                    else if viewModel.currentTab == .sugg{
-                        
+                    else if viewModel.currentTab == .quick {
+                        QuickFinishView(
+                            viewModel: viewModel,
+                            dayPlannerVM: dayPlannerVM
+                        )
                     }
                     else if viewModel.currentTab == .statistic{
-                        StatTopBar(viewModel: viewModel, dayPlannerVM: dayPlannerVM)
-                            .transition(.move(edge: .top).combined(with: .opacity))
+                        Stat(viewModel: statViewModel, dayPlannerVM: dayPlannerVM)
                     }
                     else if viewModel.currentTab == .setting{
-                        SettingView()
+                        SettingView(viewModel: viewModel)
                     }
                     
                     
@@ -81,7 +82,6 @@ struct ContentView: View {
                             .frame(width: UIScreen.main.bounds.width)
                     }
                 }
-                .padding(.horizontal, 6)
                 .frame(width: w, height: h)
                 .overlay(alignment: .bottom){// TabBar
                     if !searchTyping{

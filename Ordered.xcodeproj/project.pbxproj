@@ -7,8 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2D0000022F00000200000002 /* QuickFinishView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D0000012F00000100000001 /* QuickFinishView.swift */; };
 		2C01D5142C81670300D33BDA /* ECInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C01D5132C81670300D33BDA /* ECInfo.swift */; };
 		2C024C3B2D5E338B009A3F1F /* StatTopBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C024C3A2D5E3386009A3F1F /* StatTopBar.swift */; };
+		2C024C3D2D5E338B009A3F1F /* Stat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C024C3C2D5E338B009A3F1F /* Stat.swift */; };
+		2C024C3F2D5E338B009A3F1F /* StatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C024C3E2D5E338B009A3F1F /* StatViewModel.swift */; };
 		2C0272FC2D6434C20033FC5B /* EventList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0272FB2D6434A00033FC5B /* EventList.swift */; };
 		2C107AA72DE175C8007A9D17 /* ShowCaseHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C107AA62DE175C2007A9D17 /* ShowCaseHelper.swift */; };
 		2C107AA82DE175C8007A9D17 /* ShowCaseHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C107AA62DE175C2007A9D17 /* ShowCaseHelper.swift */; };
@@ -131,8 +134,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		2D0000012F00000100000001 /* QuickFinishView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickFinishView.swift; sourceTree = "<group>"; };
 		2C01D5132C81670300D33BDA /* ECInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ECInfo.swift; sourceTree = "<group>"; };
 		2C024C3A2D5E3386009A3F1F /* StatTopBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatTopBar.swift; sourceTree = "<group>"; };
+		2C024C3C2D5E338B009A3F1F /* Stat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stat.swift; sourceTree = "<group>"; };
+		2C024C3E2D5E338B009A3F1F /* StatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatViewModel.swift; sourceTree = "<group>"; };
 		2C0272FB2D6434A00033FC5B /* EventList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventList.swift; sourceTree = "<group>"; };
 		2C107AA62DE175C2007A9D17 /* ShowCaseHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowCaseHelper.swift; sourceTree = "<group>"; };
 		2C107AD02DE1BB64007A9D17 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
@@ -237,6 +243,7 @@
 			isa = PBXGroup;
 			children = (
 				2C024C3A2D5E3386009A3F1F /* StatTopBar.swift */,
+				2C024C3C2D5E338B009A3F1F /* Stat.swift */,
 			);
 			path = Stat;
 			sourceTree = "<group>";
@@ -244,6 +251,7 @@
 		2C14A3192C76C72900807FFB /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				2C024C3E2D5E338B009A3F1F /* StatViewModel.swift */,
 				2C96053A2C82D21900A1736D /* WelcomeVM.swift */,
 				2C74CB3C2C59DD9D00716233 /* ContentViewModel.swift */,
 				2CC16CEE2C63B2D0002DCF79 /* DayPlannerViewModel.swift */,
@@ -300,6 +308,7 @@
 			isa = PBXGroup;
 			children = (
 				2C15B7FB2C3D0F3600B008DB /* ContentView.swift */,
+				2D0000032F00000300000003 /* QuickFinish */,
 				2CC2E7172DD08DCA005D977B /* WelcomeScreen */,
 				2C9605392C82D15100A1736D /* Common */,
 				2C3F2CE22C562110008BD72A /* TopBar */,
@@ -326,6 +335,14 @@
 				2CB9912B2DDECED600713789 /* TempEvent.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		2D0000032F00000300000003 /* QuickFinish */ = {
+			isa = PBXGroup;
+			children = (
+				2D0000012F00000100000001 /* QuickFinishView.swift */,
+			);
+			path = QuickFinish;
 			sourceTree = "<group>";
 		};
 		2C3F2CDD2C561B74008BD72A /* Component */ = {
@@ -571,6 +588,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2D0000022F00000200000002 /* QuickFinishView.swift in Sources */,
 				2CFC59AD2D44CD4A00529099 /* EventActionHandler.swift in Sources */,
 				2CB754B32DE38BCC009BEF4B /* SettingTopBar.swift in Sources */,
 				2C01D5142C81670300D33BDA /* ECInfo.swift in Sources */,
@@ -589,6 +607,8 @@
 				2C68C9962C607E7000D38FBC /* CalTransfer.swift in Sources */,
 				2CB9912C2DDECED800713789 /* TempEvent.swift in Sources */,
 				2C024C3B2D5E338B009A3F1F /* StatTopBar.swift in Sources */,
+				2C024C3D2D5E338B009A3F1F /* Stat.swift in Sources */,
+				2C024C3F2D5E338B009A3F1F /* StatViewModel.swift in Sources */,
 				2CFCE0412C777E33001B915B /* EventDetailPopup.swift in Sources */,
 				2CC7ECA82D66F29900B3BF56 /* EditDeleteButtonView.swift in Sources */,
 				2C107AA82DE175C8007A9D17 /* ShowCaseHelper.swift in Sources */,

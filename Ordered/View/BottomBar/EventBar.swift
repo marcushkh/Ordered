@@ -69,7 +69,7 @@ struct EventBar: View {
             .padding(.top)
             .padding(.horizontal, K.horizontal_padding)
             .background(.color2)
-            .clipShape(UnevenRoundedRectangle(topLeadingRadius: 30, topTrailingRadius: 30))
+            .clipShape(UnevenRoundedRectangle(topLeadingRadius: 40, topTrailingRadius: 40))
             .gesture(
                 DragGesture(minimumDistance: 0, coordinateSpace: .global)
                     .onChanged { value in
@@ -275,7 +275,7 @@ struct EventBar: View {
     private func eventGrid(_ events: [Event], includesNewEvent: Bool = false) -> some View {
         LazyVGrid(columns: [GridItem(), GridItem()], spacing: K.horizontal_padding) {
             ForEach(events) { event in
-                EventInfo(e: event)
+                EventInfo(e: event, showsIconBackground: true)
                     .padding(.horizontal)
                     .modifier(
                         EventTapModifier(

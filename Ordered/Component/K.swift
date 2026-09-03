@@ -16,7 +16,7 @@ enum K{
         UIScreen.main.bounds.width / baseScreenWidth
     }
     
-    static var horizontal_padding: CGFloat { 20.0 * scaleFactor }
+    static var horizontal_padding: CGFloat { 26.0 * scaleFactor }
     static var vertical_padding: CGFloat { 16.0 * scaleFactor }
     
     static var xxxsmall_size: CGFloat { 8.0 * scaleFactor }

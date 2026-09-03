@@ -11,6 +11,7 @@ import ActivityKit
 struct TopBar: View {
     @ObservedObject var viewModel: ContentViewModel
     @ObservedObject var dayPlannerVM: DayPlannerViewModel
+    @ObservedObject var statViewModel: StatViewModel
     
     @Environment(\.colorScheme) var colorScheme
     
@@ -18,37 +19,67 @@ struct TopBar: View {
     @State var showClear: Bool = false
     
     var body: some View {
-        if viewModel.currentTab != .statistic {
-            ZStack{
-                
-                VStack{
-                    VStack(spacing: 0){
-                        if viewModel.currentTab == .home{
-                            homeTopBar
-                                .padding(.horizontal, K.horizontal_padding)
-                        }
-                        else if viewModel.currentTab == .setting{
-                            SettingTopBar(viewModel: viewModel)
-                        }
-                    }
-                    
-                    //            .background(.color1, ignoresSafeAreaEdges: .top)
-                    
-                    if [TabBarItem.home, TabBarItem.plan].contains(viewModel.currentTab){
-                        WeekBar(viewModel: viewModel, dayPlannerVM: dayPlannerVM)
-                            .padding(.horizontal, K.horizontal_padding)
-                            .padding(.bottom, K.xxxsmall_size)
-                            .background(.color1)
-                            .clipShape(UnevenRoundedRectangle(bottomLeadingRadius: 30, bottomTrailingRadius: 30))
-                    }
-                    else{
-                        UnevenRoundedRectangle(bottomLeadingRadius: 30, bottomTrailingRadius: 30)
-                            .fill(.color1)
-                            .frame(width: UIScreen.main.bounds.size.width, height: K.horizontal_padding)
+        VStack(spacing: 0){
+            VStack(spacing: 0){
+                if viewModel.currentTab == .home{
+                    homeTopBar
+                        .padding(.horizontal, K.horizontal_padding)
+                        .background(.color1, ignoresSafeAreaEdges: .top)
+                }
+                else if viewModel.currentTab == .quick{
+                    QuickFinishTopBar(
+                        viewModel: viewModel,
+                        dayPlannerVM: dayPlannerVM
+                    )
+                    .padding(.horizontal, K.horizontal_padding)
+                    .background {
+                        UnevenRoundedRectangle(
+                            bottomLeadingRadius: 30,
+                            bottomTrailingRadius: 30
+                        )
+                        .fill(.color1)
+                        .ignoresSafeArea(edges: .top)
                     }
                 }
+                else if viewModel.currentTab == .statistic{
+                    StatTopBar(viewModel: statViewModel, dayPlannerVM: dayPlannerVM)
+                        .background {
+                            UnevenRoundedRectangle(
+                                bottomLeadingRadius: 30,
+                                bottomTrailingRadius: 30
+                            )
+                            .fill(.color1)
+                            .ignoresSafeArea(edges: .top)
+                        }
+                }
+                else if viewModel.currentTab == .setting{
+                    SettingTopBar(viewModel: viewModel)
+                }
             }
+            .zIndex(1)
+            
+            if [TabBarItem.home, TabBarItem.plan].contains(viewModel.currentTab){
+                WeekBar(viewModel: viewModel, dayPlannerVM: dayPlannerVM)
+                    .padding(.horizontal, K.horizontal_padding)
+                    .padding(.vertical, K.xxxsmall_size)
+                    .background {
+                        UnevenRoundedRectangle(
+                            bottomLeadingRadius: 30,
+                            bottomTrailingRadius: 30
+                        )
+                        .fill(.color1)
+                        .ignoresSafeArea(edges: .top)
+                    }
+                    .zIndex(1)
+                
+            }
+            UnevenRoundedRectangle(bottomLeadingRadius: 30, bottomTrailingRadius: 30)
+                .fill(.color1)
+                .frame(width: UIScreen.main.bounds.size.width, height: K.horizontal_padding)
+                .padding(.top, -20)
+                .zIndex(0)
         }
+        
     }
     
     var homeTopBar: some View{
@@ -86,7 +117,7 @@ struct TopBar: View {
                     }
                 
                 Spacer()
-
+                
                 Image(systemName: "paintbrush")
                     .resizable()
                     .scaledToFit()
@@ -107,16 +138,16 @@ struct TopBar: View {
                         }
                     }
                 
-//                Image(systemName: "list.triangle")
-//                    .resizable()
-//                    .scaledToFit()
-//                    .frame(height: K.xxsmall_size)
-//                    .foregroundStyle(.color3)
-//                    .onTapGesture {
-//                        withAnimation {
-//                            viewModel.currentTab = .plan
-//                        }
-//                    }
+                //                Image(systemName: "list.triangle")
+                //                    .resizable()
+                //                    .scaledToFit()
+                //                    .frame(height: K.xxsmall_size)
+                //                    .foregroundStyle(.color3)
+                //                    .onTapGesture {
+                //                        withAnimation {
+                //                            viewModel.currentTab = .plan
+                //                        }
+                //                    }
             }
             // 40pt controls plus 8pt padding on each side preserve the previous
             // 24pt icon plus 16pt padding on each side overall height.
@@ -134,6 +165,35 @@ struct TopBar: View {
                 },
                         secondaryButton: .cancel())
             }
+        }
+    }
+}
+
+struct QuickFinishTopBar: View {
+    @ObservedObject var viewModel: ContentViewModel
+    @ObservedObject var dayPlannerVM: DayPlannerViewModel
+
+    @State private var selectedDate = MyCalendar.getToday()
+
+    var body: some View {
+        HStack {
+            Spacer()
+            Text("Finish Now!")
+                .font(.title2)
+                .bold()
+
+            Spacer()
+        }
+        .padding(.vertical, 8)
+        .onAppear {
+            selectedDate = dayPlannerVM.currentDate
+        }
+        .onChange(of: selectedDate) { _, newValue in
+            HapticFeedback.light()
+            dayPlannerVM.setCurrentDate(to: newValue)
+        }
+        .onChange(of: dayPlannerVM.currentDate) { _, newValue in
+            selectedDate = newValue
         }
     }
 }
