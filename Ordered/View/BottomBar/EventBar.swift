@@ -352,11 +352,15 @@ struct EventTapModifier: ViewModifier {
                     viewModel.highlightedEC = newEC
                     viewModel.highlightedSC = nil
                 }
-                // If both highlighted EC and SC are nil, create a new section
+                // With no selection, append to the last existing section.
                 else {
-                    let new_section_Cal = Section_Cal.new()
-                    new_section_Cal.add(event: newEC)
-                    cal.addSection(new_section_Cal)
+                    if let section = cal.section_cals?.lastObject as? Section_Cal {
+                        section.add(event: newEC)
+                    } else {
+                        let section = Section_Cal.new()
+                        cal.section_cals = NSOrderedSet(object: section)
+                        section.add(event: newEC)
+                    }
                     viewModel.highlightedEC = newEC
                     viewModel.highlightedSC = nil
                 }

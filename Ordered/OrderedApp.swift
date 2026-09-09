@@ -21,6 +21,7 @@ struct OrderedApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .preferredColorScheme(K.darkModeEnabled ? nil : .light)
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
                 .task{
                     //Load Data

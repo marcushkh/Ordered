@@ -12,13 +12,12 @@ struct SettingView: View{
 
     @AppStorage("DayStartTime") private var dayStartTime: Int = 4
     @AppStorage("DefaultPage") private var defaultPage: TabBarItem = TabBarItem.home
-    @State private var showLibrary = false
     
     var body: some View{
         
         List {
             Button {
-                showLibrary = true
+                viewModel.isShowLibrary = true
             } label: {
                 HStack {
                     Label("Library", systemImage: "square.grid.2x2")
@@ -94,10 +93,6 @@ struct SettingView: View{
                     .foregroundStyle(.secondary)
             }
             
-        }
-        .sheet(isPresented: $showLibrary) {
-            LibraryEditorView(viewModel: viewModel)
-                .presentationCornerRadius(K.presentationCornerRadius)
         }
     }
 }

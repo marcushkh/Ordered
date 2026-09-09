@@ -212,6 +212,7 @@
 		2CFCE0402C777E33001B915B /* EventDetailPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailPopup.swift; sourceTree = "<group>"; };
 		2CFF02D72C60A06400627CDF /* EventBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventBar.swift; sourceTree = "<group>"; };
 		2CFF02D92C60A07000627CDF /* BottomBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomBar.swift; sourceTree = "<group>"; };
+		2D0000043A00000000000004 /* QuickFinishSettings.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = QuickFinishSettings.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1033,8 +1034,9 @@
 				2C0000013A00000000000001 /* Sections.xcdatamodel */,
 				2C0000023A00000000000002 /* Categories.xcdatamodel */,
 				2C0000033A00000000000003 /* SingleCategory.xcdatamodel */,
+				2D0000043A00000000000004 /* QuickFinishSettings.xcdatamodel */,
 			);
-			currentVersion = 2C0000033A00000000000003 /* SingleCategory.xcdatamodel */;
+			currentVersion = 2D0000043A00000000000004 /* QuickFinishSettings.xcdatamodel */;
 			path = Ordered.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

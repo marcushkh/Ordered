@@ -76,6 +76,7 @@ struct SectionEditor: View {
         predicate: NSPredicate(format: "isActive == true")
     ) private var events: FetchedResults<Event>
 
+    @State private var showCreateEvent = false
     @State private var name: String
     @State private var icon: String
     @State private var eventIDs: [NSManagedObjectID]
@@ -131,6 +132,12 @@ struct SectionEditor: View {
                 }
 
                 SwiftUI.Section("Add Event") {
+                    Button {
+                        showCreateEvent = true
+                    } label: {
+                        Label("Create Event", systemImage: "plus.circle.fill")
+                    }
+
                     ForEach(events) { event in
                         Button {
                             eventIDs.append(event.objectID)
@@ -149,6 +156,11 @@ struct SectionEditor: View {
             }
             .navigationTitle(section == nil ? "New Section" : "Edit Section")
             .environment(\.editMode, .constant(.active))
+            .sheet(isPresented: $showCreateEvent) {
+                LibraryCreateEventSheet { eventID in
+                    eventIDs.append(eventID)
+                }
+            }
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { dismiss() }
@@ -207,17 +219,19 @@ struct CategoryEditor: View {
         predicate: NSPredicate(format: "isActive == true")
     ) private var events: FetchedResults<Event>
 
+    @State private var showCreateEvent = false
     @State private var name: String
     @State private var icon: String
-    @State private var selectedEventIDs: Set<NSManagedObjectID>
+    @State private var selectedEventIDs: [NSManagedObjectID]
+    @State private var saveError: String?
 
     init(category: Category? = nil, onSave: @escaping () -> Void = {}) {
         self.category = category
         self.onSave = onSave
         _name = State(initialValue: category?.name ?? "")
         _icon = State(initialValue: category?.icon ?? "🏷️")
-        let ids = (category?.events?.array as? [Event] ?? []).map(\.objectID)
-        _selectedEventIDs = State(initialValue: Set(ids))
+        let ids = (category?.events?.array as? [Event] ?? []).filter(\.isActive).map(\.objectID)
+        _selectedEventIDs = State(initialValue: ids)
     }
 
     var body: some View {
@@ -231,34 +245,69 @@ struct CategoryEditor: View {
                     }
                 }
 
-                SwiftUI.Section("Events") {
-                    if availableEvents.isEmpty {
-                        Text("No uncategorized events")
+                SwiftUI.Section("Events in Order") {
+                    if selectedEventIDs.isEmpty {
+                        Text("Add events below, then drag to reorder them.")
                             .font(.footnote)
                             .foregroundStyle(.secondary)
                     }
-
-                    ForEach(availableEvents) { event in
-                        Button {
-                            if selectedEventIDs.contains(event.objectID) {
-                                selectedEventIDs.remove(event.objectID)
-                            } else {
-                                selectedEventIDs.insert(event.objectID)
+                    ForEach(selectedEventIDs, id: \.self) { id in
+                        if let event = events.first(where: { $0.objectID == id }) {
+                            HStack {
+                                Text(event.icon ?? "")
+                                Text(event.name ?? "Event")
+                                Spacer()
+                                Button {
+                                    selectedEventIDs.removeAll { $0 == id }
+                                } label: {
+                                    Image(systemName: "minus.circle.fill")
+                                        .foregroundStyle(.red)
+                                }
+                                .buttonStyle(.borderless)
+                                .accessibilityLabel("Remove \(event.name ?? "event") from category")
                             }
+                        }
+                    }
+                    .onMove { source, destination in
+                        selectedEventIDs.move(fromOffsets: source, toOffset: destination)
+                    }
+                }
+
+                SwiftUI.Section("Add Events") {
+                    Button {
+                        showCreateEvent = true
+                    } label: {
+                        Label("Create Event", systemImage: "plus.circle.fill")
+                    }
+
+                    if availableEvents.allSatisfy({ selectedEventIDs.contains($0.objectID) }) {
+                        Text("No more uncategorized events")
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                    }
+                    ForEach(availableEvents.filter { !selectedEventIDs.contains($0.objectID) }) { event in
+                        Button {
+                            selectedEventIDs.append(event.objectID)
                         } label: {
                             HStack {
                                 Text(event.icon ?? "")
                                 Text(event.name ?? "Event")
                                 Spacer()
-                                Image(systemName: selectedEventIDs.contains(event.objectID) ? "checkmark.circle.fill" : "circle")
-                                    .foregroundStyle(selectedEventIDs.contains(event.objectID) ? .color3 : .secondary)
+                                Image(systemName: "plus.circle.fill")
+                                    .foregroundStyle(.color3)
                             }
                         }
                         .foregroundStyle(.primary)
                     }
                 }
             }
+            .environment(\.editMode, .constant(.active))
             .navigationTitle(category == nil ? "New Category" : "Edit Category")
+            .sheet(isPresented: $showCreateEvent) {
+                LibraryCreateEventSheet { eventID in
+                    selectedEventIDs.append(eventID)
+                }
+            }
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { dismiss() }
@@ -267,6 +316,14 @@ struct CategoryEditor: View {
                     Button("Save") { save() }
                         .disabled(name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                 }
+            }
+            .alert("Couldn't Save Category", isPresented: Binding(
+                get: { saveError != nil },
+                set: { if !$0 { saveError = nil } }
+            )) {
+                Button("OK", role: .cancel) { saveError = nil }
+            } message: {
+                Text(saveError ?? "Please try again.")
             }
         }
     }
@@ -278,28 +335,42 @@ struct CategoryEditor: View {
     }
 
     private func save() {
-        let target = category ?? Category.new(
-            colorScheme: colorScheme,
-            name: name,
-            icon: icon,
-            count: Category.count()
-        )
-        target.name = name.trimmingCharacters(in: .whitespacesAndNewlines)
-        target.icon = icon.isEmpty ? "🏷️" : icon
-        target.isActive = true
+        let context = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+        context.persistentStoreCoordinator = Model.viewContext.persistentStoreCoordinator
+        do {
+            let target: Category
+            if let category {
+                target = try context.existingObject(with: category.objectID) as! Category
+            } else {
+                target = Category(context: context)
+                let count = Category.count()
+                let colors = colorScheme == .dark ? K.defaultSectionColorDark : K.defaultSectionColor
+                target.color = colors[count % colors.count]
+                target.order = Int16(count)
+            }
+            target.name = name.trimmingCharacters(in: .whitespacesAndNewlines)
+            target.icon = icon.isEmpty ? "🏷️" : icon
+            target.isActive = true
 
-        for event in events where event.category == target && !selectedEventIDs.contains(event.objectID) {
-            event.setCategory(nil)
+            let selectedEvents = try selectedEventIDs.compactMap { id -> Event? in
+                guard availableEvents.contains(where: { $0.objectID == id }) else { return nil }
+                return try context.existingObject(with: id) as? Event
+            }
+            for event in target.events?.array as? [Event] ?? [] where !selectedEventIDs.contains(event.objectID) {
+                event.category = nil
+            }
+            for event in selectedEvents {
+                event.category = target
+                event.categories = NSSet()
+            }
+            target.events = NSOrderedSet(array: selectedEvents)
+            try context.save()
+            onSave()
+            dismiss()
+        } catch {
+            context.rollback()
+            saveError = error.localizedDescription
         }
-
-        let selectedEvents = availableEvents.filter { selectedEventIDs.contains($0.objectID) }
-        for event in selectedEvents {
-            event.setCategory(target)
-        }
-        target.events = NSOrderedSet(array: selectedEvents)
-        try? Model.viewContext.save()
-        onSave()
-        dismiss()
     }
 }
 
@@ -623,6 +694,7 @@ private struct SectionQuickAddSheet: View {
     ) private var events: FetchedResults<Event>
 
     @State private var refresh = false
+    @State private var showCreateEvent = false
 
     private var templates: [Event_Cal] {
         section.event_cals?.array as? [Event_Cal] ?? []
@@ -672,8 +744,17 @@ private struct SectionQuickAddSheet: View {
 
             Divider()
 
-            Text("Tap to Add")
-                .font(.headline)
+            HStack {
+                Text("Tap to Add")
+                    .font(.headline)
+                Spacer()
+                Button {
+                    showCreateEvent = true
+                } label: {
+                    Label("Create Event", systemImage: "plus.circle.fill")
+                }
+                .buttonStyle(.plain)
+            }
 
             ScrollView {
                 LazyVGrid(
@@ -710,6 +791,12 @@ private struct SectionQuickAddSheet: View {
         }
         .padding(.horizontal, K.horizontal_padding)
         .padding(.bottom, K.medium_size)
+        .sheet(isPresented: $showCreateEvent) {
+            LibraryCreateEventSheet(sectionID: section.objectID) { _ in
+                refresh.toggle()
+                onChange()
+            }
+        }
         .onAppear { materializeLegacyTemplates() }
         .onChange(of: refresh) { _, _ in }
     }
@@ -779,5 +866,99 @@ private struct SectionQuickAddSheet: View {
         }
         refresh.toggle()
         onChange()
+    }
+}
+
+private struct LibraryCreateEventSheet: View {
+    var sectionID: NSManagedObjectID? = nil
+    let onCreate: (NSManagedObjectID) -> Void
+
+    @Environment(\.dismiss) private var dismiss
+    @State private var name = ""
+    @State private var emoji = "💡"
+    @State private var saveError: String?
+    @FocusState private var nameTyping: Bool
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                SwiftUI.Section {
+                    EventAndEmoji(eventName: $name, selectedEmoji: $emoji, eventNameTyping: $nameTyping) {
+                        Text(emoji.isEmpty ? "💡" : emoji)
+                            .font(.system(size: 40))
+                            .frame(width: 60, height: 60)
+                            .background(Color.color1, in: RoundedRectangle(cornerRadius: 16))
+                    } eventNameView: {
+                        TextField("Event name", text: $name)
+                            .focused($nameTyping)
+                            .submitLabel(.done)
+                            .onSubmit { nameTyping = false }
+                    }
+                }
+            }
+            .environment(\.editMode, .constant(.inactive))
+            .navigationTitle("Create Event")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") { dismiss() }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Create", action: create)
+                        .disabled(name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                }
+            }
+            .onAppear { nameTyping = true }
+            .alert("Couldn't Create Event", isPresented: Binding(
+                get: { saveError != nil },
+                set: { if !$0 { saveError = nil } }
+            )) {
+                Button("OK", role: .cancel) { saveError = nil }
+            } message: {
+                Text(saveError ?? "Please try again.")
+            }
+        }
+    }
+
+    private func create() {
+        let context = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+        context.persistentStoreCoordinator = Model.viewContext.persistentStoreCoordinator
+        do {
+            let request: NSFetchRequest<Event> = Event.fetchRequest()
+            request.sortDescriptors = [NSSortDescriptor(keyPath: \Event.order, ascending: false)]
+            request.fetchLimit = 1
+            let lastOrder = try context.fetch(request).first?.order ?? -1
+            let event = Event(context: context)
+            event.name = name.trimmingCharacters(in: .whitespacesAndNewlines)
+            event.icon = emoji.isEmpty ? "💡" : emoji
+            event.isActive = true
+            event.isFavourite = false
+            event.duration = -1
+            event.order = lastOrder == Int16.max ? lastOrder : lastOrder + 1
+
+            // Quick-add saves the new event and its section entry together.
+            // The full editors instead append its ID to their editable ordering.
+            if let sectionID {
+                let section = try context.existingObject(with: sectionID) as! Section
+                let template = Event_Cal(context: context)
+                template.parent = event
+                template.section = section
+                template.duration = -1
+                let templates = section.event_cals?.mutableCopy() as? NSMutableOrderedSet ?? NSMutableOrderedSet()
+                // Setting the inverse may already append the template.
+                if !templates.contains(template) { templates.add(template) }
+                section.event_cals = templates
+                let events = section.events?.mutableCopy() as? NSMutableOrderedSet ?? NSMutableOrderedSet()
+                events.add(event)
+                section.events = events
+            }
+
+            try context.save()
+            onCreate(event.objectID)
+            dismiss()
+        } catch {
+            context.rollback()
+            saveError = error.localizedDescription
+        }
     }
 }

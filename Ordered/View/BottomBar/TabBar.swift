@@ -30,48 +30,60 @@ struct TabBar: View {
     }
 
     private var tabItems: some View {
-        LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 5), content: {
-            ForEach([TabBarItem.home, TabBarItem.quick, TabBarItem.plan, TabBarItem.statistic, TabBarItem.setting]) { item in
-                let tabBarIcon = Image(systemName: viewModel.currentTab != item ? item.icon : item.icon + ".fill")
+        HStack(spacing: 0) {
+            ForEach([TabBarItem.home, TabBarItem.plan, TabBarItem.quick, TabBarItem.statistic, TabBarItem.setting]) { item in
+                let tabBarIcon = Image(systemName: viewModel.currentTab == item ? item.selectedIcon : item.icon)
                     .resizable()
                     .scaledToFit()
                     .frame(width: K.small_size, height: K.small_size)
                     .symbolEffect(.bounce, value: viewModel.currentTab == item)
-                
-                VStack {
-                    if item == .plan{
-                        tabBarIcon
-                            .showCase(order: 2, title: "This helps you plan and record \n your day with a few clicks", cornerRadius: 10, scale: 1.5) {
-                                withAnimation {
-                                    viewModel.currentTab = .plan
-                                }
-                            }
-                    }
-                    else if item == .statistic{
-                        tabBarIcon
-                            .showCase(order: 11, title: "You can view Your Daily Progress Here!!", cornerRadius: 10, scale: 1.5) {
-                                withAnimation {
-                                    viewModel.currentTab = .home
-                                }
-                            }
-                    }
-                    else{
-                        tabBarIcon
-                    }
-                    
-                    
-                }
-                .foregroundStyle(viewModel.currentTab != item ? .primary : Color(.color3))
-                .onTapGesture {
+
+                Button {
                     withAnimation {
                         HapticFeedback.light()
                         viewModel.currentTab = item
                     }
+                } label: {
+                    VStack(spacing: 4) {
+                        Group {
+                            if item == .plan{
+                                tabBarIcon
+                                    .showCase(order: 2, title: "This helps you plan and record \n your day with a few clicks", cornerRadius: 10, scale: 1.5) {
+                                        withAnimation {
+                                            viewModel.currentTab = .plan
+                                        }
+                                    }
+                            }
+                            else if item == .statistic{
+                                tabBarIcon
+                                    .showCase(order: 11, title: "You can view Your Daily Progress Here!!", cornerRadius: 10, scale: 1.5) {
+                                        withAnimation {
+                                            viewModel.currentTab = .home
+                                        }
+                                    }
+                            }
+                            else{
+                                tabBarIcon
+                            }
+                        }
+
+                        Text(item.label)
+                            .font(.caption2)
+                            .fontWeight(viewModel.currentTab == item ? .semibold : .regular)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.7)
+                    }
+                    .foregroundStyle(viewModel.currentTab == item ? Color.color3 : Color.primary)
+                    .frame(maxWidth: .infinity, minHeight: 58)
+                    .contentShape(Rectangle())
+                    .padding(4)
                 }
+                .buttonStyle(.plain)
+                .frame(maxWidth: .infinity)
             }
-        })
-        .padding(.horizontal)
-        .padding(.vertical)
+        }
+        .padding(4)
+        .contentShape(Capsule())
     }
 }
 
@@ -98,6 +110,21 @@ enum TabBarItem: String, CaseIterable, Identifiable {
             return "chart.bar"
         case .setting:
             return "gearshape"
+        }
+    }
+
+    var selectedIcon: String {
+        switch self {
+        case .home:
+            return "house.fill"
+        case .quick:
+            return "checkmark.circle.fill"
+        case .plan:
+            return "list.bullet.indent"
+        case .statistic:
+            return "chart.bar.fill"
+        case .setting:
+            return "gearshape.fill"
         }
     }
     

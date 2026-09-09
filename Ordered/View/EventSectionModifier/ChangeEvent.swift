@@ -5,7 +5,6 @@
 //  Created by Kai Hin Hung on 12/3/2025.
 //
 import SwiftUI
-import MCEmojiPicker
 
 struct ChangeEvent: View{
     @ObservedObject var viewModel: ContentViewModel
@@ -14,7 +13,6 @@ struct ChangeEvent: View{
     @State var name: String = ""
     @FocusState var nameTyping: Bool
     
-    @State var showEmojiPicker = false
     @State var showAlert = false
     
     var body : some View{
@@ -38,13 +36,12 @@ struct ChangeEvent: View{
                         Text(icon)
                             .font(.custom("", size: 50))
                             .shadow(radius: K.medium_size)
-                            .onTapGesture {
-                                showEmojiPicker.toggle()
-                            }
-                            .emojiPicker(
-                                isPresented: $showEmojiPicker,
-                                selectedEmoji: $icon
-                            )
+                    }
+                    .accessibilityHidden(true)
+                    .overlay {
+                        NativeEmojiInput(emoji: $icon) {
+                            nameTyping = false
+                        }
                     }
                     Spacer()
                     
@@ -137,4 +134,3 @@ struct ChangeEvent: View{
         viewModel.showChangeEvent = false
     }
 }
-

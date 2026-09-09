@@ -15,7 +15,9 @@ class ContentViewModel: ObservableObject{
     @AppStorage("DefaultPage") private var defaultPage: TabBarItem = TabBarItem.home
     @Published var currentTab: TabBarItem = TabBarItem.home
     @Published var showQuickFinishSearch = false
+    @Published var showQuickFinishEditor = false
     @Published var quickFinishSearchText = ""
+    @Published var isShowLibrary = false
     
     @Published var showEventDetail = false
     @Published var eventDetail: Event_Cal? = nil

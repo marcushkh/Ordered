@@ -17,6 +17,7 @@ struct TopBar: View {
     
     @State var selectedDate: Date = MyCalendar.getToday()
     @State var showClear: Bool = false
+    @State private var showCalendar = false
     
     var body: some View {
         VStack(spacing: 0){
@@ -85,72 +86,79 @@ struct TopBar: View {
     var homeTopBar: some View{
         
         VStack{
-            //two icon + theme of day
+            // Clear, date selection, and library.
             HStack{
-                Image(systemName: "calendar")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(height: K.xsmall_size)
-                    .foregroundStyle(.color3)
-                    .overlay {
-                        DatePicker("", selection: $selectedDate, displayedComponents: .date)
-                            .blendMode(.destinationOver)
-                            .tint(.color4)
-                            .frame(width: K.xxl_size, height: K.xxl_size)
-                    }
-                    .onChange(of: selectedDate) { oldValue, newValue in
-                        HapticFeedback.light()
-                        dayPlannerVM.setCurrentDate(to: selectedDate)
-                    }
-                    .onChange(of: dayPlannerVM.currentDate) { oldValue, newValue in
-                        selectedDate = dayPlannerVM.currentDate
-                    }
-                
-                Spacer()
-                
-                Text(dayPlannerVM.currentDate.monthYYYY())
-                    .font(.title2)
-                    .bold()
-                    .onTapGesture {
-                        HapticFeedback.light()
-                        dayPlannerVM.setCurrentDate(to: MyCalendar.getToday())
-                    }
-                
-                Spacer()
-                
-                Image(systemName: "paintbrush")
-                    .resizable()
-                    .scaledToFit()
-                    .bold()
-                    .rotationEffect(Angle(degrees: 180))
-                    .frame(height: K.small_size)
-                    .foregroundStyle(.color3)
-                    .onTapGesture {
+                Button {
+                    HapticFeedback.heavy()
+                    showClear = true
+                } label: {
+                    Image(systemName: "paintbrush")
+                        .resizable()
+                        .scaledToFit()
+                        .bold()
+                        .rotationEffect(Angle(degrees: 180))
+                        .frame(height: K.small_size)
+                        .foregroundStyle(.color3)
+                        .frame(width: 44, height: 44)
+                        .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel("Clear Unfinished Events")
+                .showCase(order: 6, title: "Clear Unfinished Events", cornerRadius: 10, scale: 1.5) {
+                    withAnimation {
                         HapticFeedback.heavy()
-                        showClear = true
+                        Cal.clear(date: dayPlannerVM.currentDate)
+                        Cal.get(date: dayPlannerVM.currentDate)?.removeAllEmptyEvents()
+                        viewModel.refresh.toggle()
                     }
-                    .showCase(order: 6, title: "Clear All Events", cornerRadius: 10, scale: 1.5) {
-                        withAnimation {
-                            HapticFeedback.heavy()
-                            Cal.clear(date: dayPlannerVM.currentDate)
-                            Cal.get(date: dayPlannerVM.currentDate)?.removeAllEmptyEvents()
-                            viewModel.refresh.toggle()
-                        }
-                    }
+                }
                 
-                //                Image(systemName: "list.triangle")
-                //                    .resizable()
-                //                    .scaledToFit()
-                //                    .frame(height: K.xxsmall_size)
-                //                    .foregroundStyle(.color3)
-                //                    .onTapGesture {
-                //                        withAnimation {
-                //                            viewModel.currentTab = .plan
-                //                        }
-                //                    }
+                Spacer()
+
+                Button {
+                    HapticFeedback.light()
+                    selectedDate = dayPlannerVM.currentDate
+                    showCalendar = true
+                } label: {
+                    Text(dayPlannerVM.currentDate.monthYYYY())
+                        .font(.title2)
+                        .bold()
+                        .frame(minHeight: 44)
+                        .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .accessibilityHint("Choose a date")
+                .popover(isPresented: $showCalendar) {
+                    DatePicker("Choose a date", selection: $selectedDate, displayedComponents: .date)
+                        .datePickerStyle(.graphical)
+                        .tint(.color4)
+                        .frame(width: 320)
+                        .padding()
+                        .presentationCompactAdaptation(.popover)
+                        .onChange(of: selectedDate) { _, newValue in
+                            HapticFeedback.light()
+                            dayPlannerVM.setCurrentDate(to: newValue)
+                            showCalendar = false
+                        }
+                }
+
+                Spacer()
+
+                Button {
+                    HapticFeedback.light()
+                    viewModel.isShowLibrary = true
+                } label: {
+                    Image(systemName: "square.grid.2x2")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: K.small_size, height: K.small_size)
+                        .foregroundStyle(.color3)
+                        .frame(width: 44, height: 44)
+                        .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel("Library")
             }
-            // 40pt controls plus 8pt padding on each side preserve the previous
-            // 24pt icon plus 16pt padding on each side overall height.
             .padding(.vertical, 8)
             .alert(isPresented: $showClear) {
                 Alert(  title: Text("CLEAR the Unfinished Events"),
@@ -177,12 +185,27 @@ struct QuickFinishTopBar: View {
 
     var body: some View {
         HStack {
+            Color.clear
+                .frame(width: 44, height: 44)
             Spacer()
             Text("Finish Now!")
                 .font(.title2)
                 .bold()
 
             Spacer()
+
+            Button {
+                HapticFeedback.light()
+                viewModel.showQuickFinishEditor = true
+            } label: {
+                Image(systemName: "pencil")
+                    .font(.title3)
+                    .foregroundStyle(.color3)
+                    .frame(width: 44, height: 44)
+                    .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel("Edit Quick Finish")
         }
         .padding(.vertical, 8)
         .onAppear {

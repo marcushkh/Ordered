@@ -10,6 +10,9 @@ import SwiftUI
 
 
 enum K{
+    // Set to true to follow the device's light/dark appearance again.
+    static let darkModeEnabled = false
+
     private static let baseScreenWidth: CGFloat = 375.0 // iPhone 11/12/13/14/15
     
     private static var scaleFactor: CGFloat {

@@ -24,8 +24,6 @@ struct CreateEvent: View {
     @State private var eventName = ""
     @FocusState private var eventNameTyping: Bool
 
-    @State private var description = ""
-    @FocusState private var descriptionTyping: Bool
     @State private var event: Event? = nil
     @State private var isNewEvent = false
     @State private var selectedCategoryID: NSManagedObjectID?
@@ -33,7 +31,7 @@ struct CreateEvent: View {
     @Binding var display: Bool
 
     var body: some View {
-        Background(color: .cBackground, allFocusStates: [$eventNameTyping, $descriptionTyping]) {
+        Background(color: .cBackground, allFocusStates: [$eventNameTyping]) {
             VStack {
                 if !isNewEvent && event == nil && editEvent_Cal == nil {
                     eventPicker
@@ -51,7 +49,7 @@ struct CreateEvent: View {
                 selectedEmoji = newValue.icon ?? "💡"
                 eventName = newValue.name ?? ""
                 selectedCategoryID = newValue.activeCategories.first?.objectID
-                descriptionTyping = true
+                eventNameTyping = false
             }
         }
     }
@@ -114,16 +112,9 @@ struct CreateEvent: View {
 
                 Spacer()
 
-                VStack(alignment: .leading, spacing: 8) {
-                    Text(eventName + ":")
-                        .font(.system(size: 24))
-
-                    TextField("Description (Optional)", text: $description)
-                        .focused($descriptionTyping)
-                        .underlineTextField(underline: .color3, focus: descriptionTyping, focusColor: Color(.color2))
-                        .font(.system(size: 16))
-                        .frame(width: 228, height: 16)
-                }
+                Text(eventName)
+                    .font(.system(size: 24))
+                    .frame(width: 228, alignment: .leading)
             }
 
             categorySelector
@@ -191,7 +182,7 @@ struct CreateEvent: View {
                 withAnimation {
                     HapticFeedback.light()
                     isNewEvent = true
-                    descriptionTyping = true
+                    eventNameTyping = false
                 }
             }
         } label: {
@@ -229,8 +220,7 @@ struct CreateEvent: View {
             eventName = ec.parent?.name ?? ""
             selectedEmoji = ec.parent?.icon ?? "💡"
             selectedCategoryID = ec.parent?.activeCategories.first?.objectID
-            description = ec.detail ?? ""
-            descriptionTyping = true
+            eventNameTyping = false
         } else {
             eventNameTyping = true
         }
@@ -240,7 +230,7 @@ struct CreateEvent: View {
         if let ec = editEvent_Cal {
             let tickTime = ec.aEndTime == nil ? nil : (ec.aStartTime ?? ec.aEndTime)
             ec.edit(
-                detail: description,
+                detail: ec.detail,
                 startTime: nil,
                 endTime: nil,
                 duration: -1,
@@ -266,16 +256,28 @@ struct CreateEvent: View {
         )
         parent.setCategory(selectedCategory)
         let calendarEvent = parent.getEC()
-        calendarEvent.detail = description
-
-        let section = viewModel.createEvent_Section_Cal ?? Section_Cal.new()
-        section.add(event: calendarEvent)
 
         let calendar = Cal.get(date: date.getYYMMDD()) ?? Cal.new(date: date.getYYMMDD())
-        calendar.addSection(section)
+        let sections = calendar.section_cals?.array as? [Section_Cal] ?? []
+
+        if let section = viewModel.createEvent_Section_Cal, sections.contains(section) {
+            section.add(event: calendarEvent)
+        } else if let selectedEvent = viewModel.highlightedEC,
+                  let section = selectedEvent.section_cal, sections.contains(section) {
+            section.insert(calendarEvent, after: selectedEvent)
+        } else if let section = viewModel.highlightedSC, sections.contains(section) {
+            section.add(event: calendarEvent)
+        } else if let section = sections.last {
+            section.add(event: calendarEvent)
+        } else {
+            let section = Section_Cal.new()
+            calendar.section_cals = NSOrderedSet(object: section)
+            section.add(event: calendarEvent)
+        }
 
         if viewModel.currentTab == .plan {
             viewModel.highlightedEC = calendarEvent
+            viewModel.highlightedSC = nil
         }
         display = false
     }

@@ -129,6 +129,10 @@ struct ContentView: View {
                 .sheet(isPresented: $viewModel.showChangeEvent){
                     ChangeEvent(viewModel: viewModel)
                 }
+                .sheet(isPresented: $viewModel.isShowLibrary) {
+                    LibraryEditorView(viewModel: viewModel)
+                        .presentationCornerRadius(K.presentationCornerRadius)
+                }
                 .sheet(isPresented: $viewModel.showCreateEvent, onDismiss: {
                     viewModel.createEvent_Section_Cal = nil
                     viewModel.createEvent_Section = nil

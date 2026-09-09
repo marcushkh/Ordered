@@ -285,12 +285,10 @@ struct OneDay: View {
                             .onTapGesture {
                                 HapticFeedback.light()
                                 withAnimation {
-                                    // Open the picker directly. The Event_Cal is only
-                                    // inserted after the user chooses an event, so no
-                                    // intermediate "Select Event" row is displayed.
-                                    viewModel.emptyEventCal = nil
-                                    viewModel.eventSelectionSectionCal = sc
-                                    viewModel.showEmptyEventSelection = true
+                                    let lastEvent = sc.event_cals?.lastObject as? Event_Cal
+                                    viewModel.highlightedEC = lastEvent
+                                    viewModel.highlightedSC = lastEvent == nil ? sc : nil
+                                    viewModel.currentTab = .plan
                                 }
                             }
 
@@ -419,9 +417,12 @@ struct OneDay: View {
                     .padding(.top, 4)
                     .background()
                     .onTapGesture {
-                        // Create empty section at the bottom
-                        toDoForDate.first?.addSection()
-                        viewModel.refresh.toggle()
+                        HapticFeedback.light()
+                        withAnimation {
+                            viewModel.highlightedEC = nil
+                            viewModel.highlightedSC = currentCal.section_cals?.lastObject as? Section_Cal
+                            viewModel.currentTab = .plan
+                        }
                     }
                     //Padding at the bottom to allow Users to scroll down, for planning page needs more
                     .padding(.bottom, 125)
@@ -446,7 +447,8 @@ struct OneDay: View {
                 }
                 // For HighlighedEC
                 .onChange(of: viewModel.currentTab) { _, _ in
-                    if viewModel.currentTab == .plan && pos == .centerView{
+                    if viewModel.currentTab == .plan && pos == .centerView
+                        && viewModel.highlightedEC == nil && viewModel.highlightedSC == nil {
                         withAnimation {
                             viewModel.highlightedEC = toDoForDate.first?.getLastFinishedEvent()
                         }
