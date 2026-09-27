@@ -12,8 +12,9 @@ class ContentViewModel: ObservableObject{
     
     @Published var refresh = false
     
-    @AppStorage("DefaultPage") private var defaultPage: TabBarItem = TabBarItem.home
-    @Published var currentTab: TabBarItem = TabBarItem.home
+    @AppStorage("DefaultPage") private var defaultPage: TabBarItem = TabBarItem.quick
+    @AppStorage("DidSetQuickDefaultPage") private var didSetQuickDefaultPage = false
+    @Published var currentTab: TabBarItem = TabBarItem.quick
     @Published var showQuickFinishSearch = false
     @Published var showQuickFinishEditor = false
     @Published var quickFinishSearchText = ""
@@ -55,6 +56,11 @@ class ContentViewModel: ObservableObject{
     @Published var isSubscriptionActive = false
     
     init(){
+        // Adopt Quick for existing installs once, then respect future settings changes.
+        if !didSetQuickDefaultPage {
+            defaultPage = .quick
+            didSetQuickDefaultPage = true
+        }
         currentTab = defaultPage
         
         Purchases.shared.getCustomerInfo { customerInfo, error in

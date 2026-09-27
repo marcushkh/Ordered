@@ -31,7 +31,7 @@ struct TabBar: View {
 
     private var tabItems: some View {
         HStack(spacing: 0) {
-            ForEach([TabBarItem.home, TabBarItem.plan, TabBarItem.quick, TabBarItem.statistic, TabBarItem.setting]) { item in
+            ForEach([TabBarItem.quick, TabBarItem.home, TabBarItem.plan, TabBarItem.statistic, TabBarItem.setting]) { item in
                 let tabBarIcon = Image(systemName: viewModel.currentTab == item ? item.selectedIcon : item.icon)
                     .resizable()
                     .scaledToFit()
