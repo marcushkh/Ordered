@@ -11,7 +11,7 @@ struct SettingView: View{
     @ObservedObject var viewModel: ContentViewModel
 
     @AppStorage("DayStartTime") private var dayStartTime: Int = 4
-    @AppStorage("DefaultPage") private var defaultPage: TabBarItem = TabBarItem.home
+    @AppStorage("DefaultPage") private var defaultPage: TabBarItem = TabBarItem.quick
     
     var body: some View{
         
@@ -36,6 +36,11 @@ struct SettingView: View{
                     Spacer()
                     
                     Menu {
+                        Button {
+                            defaultPage = TabBarItem.quick
+                        } label: {
+                            Text(TabBarItem.quick.label)
+                        }
                         Button {
                             defaultPage = TabBarItem.home
                         } label: {

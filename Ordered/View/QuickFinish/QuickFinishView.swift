@@ -25,6 +25,8 @@ struct QuickFinishView: View {
         animation: .default
     ) private var events: FetchedResults<Event>
 
+    @State private var finishError: String?
+
     private let columns = Array(
         repeating: GridItem(.flexible(), spacing: 14),
         count: 3
@@ -67,6 +69,14 @@ struct QuickFinishView: View {
                 events: Array(events),
                 viewModel: viewModel
             )
+        }
+        .alert("Couldn't Finish Event", isPresented: Binding(
+            get: { finishError != nil },
+            set: { if !$0 { finishError = nil } }
+        )) {
+            Button("OK", role: .cancel) { finishError = nil }
+        } message: {
+            Text(finishError ?? "Please try again.")
         }
         .onChange(of: viewModel.refresh) { _, _ in }
     }
@@ -191,35 +201,11 @@ struct QuickFinishView: View {
     }
 
     private func quickFinish(_ event: Event) {
-        let cal = Cal.getOrCreateWithDefault(date: dayPlannerVM.currentDate)
-        let lastFinishedEvent = cal.getLastFinishedEvent()
-        let newEvent = event.getEC()
-
-        if let destination = event.quickFinishSection, destination.isActive {
-            let sections = cal.section_cals?.array as? [Section_Cal] ?? []
-            // Prefer the latest occurrence if this section appears more than once.
-            let section = sections.last(where: { $0.parent == destination }) ?? {
-                let section = Section_Cal.new()
-                section.parent = destination
-                cal.addSection(section)
-                return section
-            }()
-            section.add(event: newEvent)
+        do {
+            try EventActionHandler.shared.quickFinish(event, on: dayPlannerVM.currentDate)
+        } catch {
+            finishError = error.localizedDescription
         }
-        else if let lastFinishedEvent,
-           let section = lastFinishedEvent.section_cal {
-            section.insert(newEvent, after: lastFinishedEvent)
-        }
-        else if let section = cal.section_cals?.firstObject as? Section_Cal {
-            section.add(event: newEvent)
-        }
-        else {
-            let section = Section_Cal.new()
-            section.add(event: newEvent)
-            cal.addSection(section)
-        }
-
-        EventActionHandler.shared.tick(ec: newEvent)
         viewModel.refresh.toggle()
     }
 }

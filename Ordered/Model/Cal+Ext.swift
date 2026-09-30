@@ -52,6 +52,7 @@ extension Cal {
 
     static func new(date: String) -> Cal {
         let cal = Cal(context: Model.viewContext)
+        cal.section_cals = NSOrderedSet()
         cal.date = date
         do {
             try Model.viewContext.save()
@@ -64,6 +65,7 @@ extension Cal {
 
     static func new(date: Date) -> Cal {
         let cal = Cal(context: Model.viewContext)
+        cal.section_cals = NSOrderedSet()
         var d = date.getYYMMDD()
         cal.date = d
         do {
@@ -75,37 +77,9 @@ extension Cal {
         return cal
     }
 
-    // New function to get or create a Cal with default Wake Up event
-    static func getOrCreateWithDefault(date: Date) -> Cal {
-        // First try to get existing Cal
-        if let existingCal = get(date: date) {
-            // If Cal exists but has no sections, add default Wake Up event
-            if existingCal.section_cals?.count == 0 {
-                existingCal.createDefaultWakeUpEvent()
-            }
-            return existingCal
-        }
-
-        // Create new Cal with default Wake Up event
-        let cal = new(date: date)
-        cal.createDefaultWakeUpEvent()
-        return cal
-    }
-
-    // Function to create a default "Wake Up" event
-    func createDefaultWakeUpEvent() {
-        let wakeUpEvent = Event.findOrCreateInactive(icon: "☀️", name: "Wake Up")
-        let wakeUpEventCal = wakeUpEvent.getEC()
-        let wakeUpSection = Section_Cal.new()
-        wakeUpSection.add(event: wakeUpEventCal)
-
-        self.addSection(wakeUpSection)
-
-        do {
-            try Model.viewContext.save()
-        } catch {
-            print("Failed to save default Wake Up event: \(error.localizedDescription)")
-        }
+    /// New days begin empty; events are added by the user or Quick Finish.
+    static func getOrCreate(date: Date) -> Cal {
+        get(date: date) ?? new(date: date)
     }
 
     static func clear(date: Date) {
@@ -118,8 +92,8 @@ extension Cal {
 
             for j in i?.event_cals ?? []{
                 let j = j as? Event_Cal
-                // Don't delete Wake Up events or events that have already started
-                if j?.aStartTime == nil && j?.parent?.name != "Wake Up"{
+                // Preserve completed events when clearing the plan.
+                if j?.aStartTime == nil && j?.aEndTime == nil{
                     Model.viewContext.delete(j!)
                     do {
                         try Model.viewContext.save()
@@ -128,15 +102,10 @@ extension Cal {
                     }
                 }
             }
-            // Don't delete sections that still have events (including Wake Up events)
+            // Preserve sections that still contain completed events.
             if i?.event_cals?.count == 0 {
                 Model.viewContext.delete(i!)
             }
-        }
-
-        // If after clearing, there are no sections left, create a default Wake Up event
-        if cal?.section_cals?.count == 0 {
-            cal?.createDefaultWakeUpEvent()
         }
 
         do {

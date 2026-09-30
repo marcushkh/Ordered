@@ -19,7 +19,48 @@ final class EventActionHandler: ObservableObject {
 
     private init() {}
 
+    /// Create a fresh occurrence on every call, including repeated calls for the same event.
+    func quickFinish(_ event: Event, on date: Date) throws {
+        let cal = Cal.getOrCreate(date: date)
+        let lastFinishedEvent = cal.getLastFinishedEvent()
+        let newEvent = event.getEC()
+
+        if let destination = event.quickFinishSection, destination.isActive {
+            let sections = cal.section_cals?.array as? [Section_Cal] ?? []
+            // Prefer the latest occurrence if this section appears more than once.
+            let section = sections.last(where: { $0.parent == destination }) ?? {
+                let section = Section_Cal.new()
+                section.parent = destination
+                cal.addSection(section)
+                return section
+            }()
+            section.add(event: newEvent)
+        }
+        else if let lastFinishedEvent,
+           let section = lastFinishedEvent.section_cal {
+            section.insert(newEvent, after: lastFinishedEvent)
+        }
+        else if let section = cal.section_cals?.firstObject as? Section_Cal {
+            section.add(event: newEvent)
+        }
+        else {
+            let section = Section_Cal.new()
+            section.add(event: newEvent)
+            cal.addSection(section)
+        }
+
+        try tickAndSave(ec: newEvent)
+    }
+
     func tick(ec: Event_Cal) {
+        do {
+            try tickAndSave(ec: ec)
+        } catch {
+            print("Failed to tick event: \(error.localizedDescription)")
+        }
+    }
+
+    private func tickAndSave(ec: Event_Cal) throws {
         guard ec.aEndTime == nil else { return }
 
         HapticFeedback.heavy()
@@ -31,11 +72,7 @@ final class EventActionHandler: ObservableObject {
         ec.aStartTime = tickTime
         ec.aEndTime = tickTime
 
-        do {
-            try Model.viewContext.save()
-        } catch {
-            print("Failed to tick event: \(error.localizedDescription)")
-        }
+        try Model.viewContext.save()
 
         LiveActivityActions.refreshLiveActivities()
     }

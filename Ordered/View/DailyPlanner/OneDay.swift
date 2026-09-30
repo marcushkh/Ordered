@@ -44,10 +44,9 @@ struct OneDay: View {
             ScrollViewReader{ proxy in
                 ScrollView{
                     // Check if we have a Cal for this date
-                    let currentCal = toDoForDate.first ?? Cal.getOrCreateWithDefault(date: date)
+                    let currentCal = toDoForDate.first ?? Cal.getOrCreate(date: date)
 
-                    // Always show the calendar content since we now ensure there's always at least a Wake Up event
-                    ForEach(currentCal.section_cals?.array as! [Section_Cal], id: \.self){ sc in
+                    ForEach(currentCal.section_cals?.array as? [Section_Cal] ?? [], id: \.self){ sc in
 
                         VStack{
                             //Section Header
@@ -483,7 +482,7 @@ struct OneDay: View {
         viewModel.showSelectSection = true
         viewModel.changeSection_Cal = sc
         viewModel.changeSection = nil
-        viewModel.insertToCal = toDoForDate.first ?? Cal.getOrCreateWithDefault(date: date)
+        viewModel.insertToCal = toDoForDate.first ?? Cal.getOrCreate(date: date)
     }
 
 }

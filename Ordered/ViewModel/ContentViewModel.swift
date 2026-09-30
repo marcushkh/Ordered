@@ -12,8 +12,9 @@ class ContentViewModel: ObservableObject{
     
     @Published var refresh = false
     
-    @AppStorage("DefaultPage") private var defaultPage: TabBarItem = TabBarItem.home
-    @Published var currentTab: TabBarItem = TabBarItem.home
+    @AppStorage("DefaultPage") private var defaultPage: TabBarItem = TabBarItem.quick
+    @AppStorage("DidSetQuickFinishDefaultPage") private var didSetQuickFinishDefaultPage = false
+    @Published var currentTab: TabBarItem = TabBarItem.quick
     @Published var showQuickFinishSearch = false
     @Published var showQuickFinishEditor = false
     @Published var quickFinishSearchText = ""
@@ -55,6 +56,12 @@ class ContentViewModel: ObservableObject{
     @Published var isSubscriptionActive = false
     
     init(){
+        // Adopt the new opening page once for existing installations as well.
+        // Later changes in Settings remain the user's choice.
+        if !didSetQuickFinishDefaultPage {
+            defaultPage = .quick
+            didSetQuickFinishDefaultPage = true
+        }
         currentTab = defaultPage
         
         Purchases.shared.getCustomerInfo { customerInfo, error in

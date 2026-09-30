@@ -31,7 +31,7 @@ struct TabBar: View {
 
     private var tabItems: some View {
         HStack(spacing: 0) {
-            ForEach([TabBarItem.home, TabBarItem.plan, TabBarItem.quick, TabBarItem.statistic, TabBarItem.setting]) { item in
+            ForEach([TabBarItem.quick, TabBarItem.plan, TabBarItem.home, TabBarItem.statistic, TabBarItem.setting]) { item in
                 let tabBarIcon = Image(systemName: viewModel.currentTab == item ? item.selectedIcon : item.icon)
                     .resizable()
                     .scaledToFit()
@@ -66,18 +66,14 @@ struct TabBar: View {
                                 tabBarIcon
                             }
                         }
-
-                        Text(item.label)
-                            .font(.caption2)
-                            .fontWeight(viewModel.currentTab == item ? .semibold : .regular)
-                            .lineLimit(1)
-                            .minimumScaleFactor(0.7)
                     }
                     .foregroundStyle(viewModel.currentTab == item ? Color.color3 : Color.primary)
-                    .frame(maxWidth: .infinity, minHeight: 58)
+                    .frame(maxWidth: .infinity, minHeight: 44)
                     .contentShape(Rectangle())
-                    .padding(4)
+                    .padding(.horizontal, 4)
                 }
+                .accessibilityLabel(item.label)
+                .accessibilityAddTraits(viewModel.currentTab == item ? .isSelected : [])
                 .buttonStyle(.plain)
                 .frame(maxWidth: .infinity)
             }

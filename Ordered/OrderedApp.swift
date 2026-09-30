@@ -5,6 +5,7 @@
 //  Created by Kai Hin Hung on 9/7/2024.
 //
 
+import AppIntents
 import SwiftUI
 import UIKit
 
@@ -15,7 +16,7 @@ struct OrderedApp: App {
     @AppStorage("welcomeScreen") var welcomeScreen: Bool = true
     
     init(){
-        
+        OrderedShortcuts.updateAppShortcutParameters()
     }
     
     var body: some Scene {
