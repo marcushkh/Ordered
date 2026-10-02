@@ -18,7 +18,6 @@ struct QuickFinishView: View {
 
     @FetchRequest(
         sortDescriptors: [
-            SortDescriptor(\Event.isFavourite, order: .reverse),
             SortDescriptor(\Event.order, order: .forward)
         ],
         predicate: NSPredicate(format: "isActive == true"),
@@ -26,6 +25,7 @@ struct QuickFinishView: View {
     ) private var events: FetchedResults<Event>
 
     @State private var finishError: String?
+    @State private var scrollDragAnchor: CGFloat = 0
 
     private let columns = Array(
         repeating: GridItem(.flexible(), spacing: 14),
@@ -63,6 +63,22 @@ struct QuickFinishView: View {
             .padding(.bottom, 90)
         }
         .scrollIndicators(.hidden)
+        .simultaneousGesture(
+            DragGesture(minimumDistance: 3, coordinateSpace: .global)
+                .onChanged { value in
+                    guard abs(value.translation.height) > abs(value.translation.width) else { return }
+                    let movement = value.translation.height - scrollDragAnchor
+                    scrollDragAnchor = value.translation.height
+                    // Track the finger directly. Global coordinates avoid feedback as the header resizes.
+                    var transaction = Transaction(animation: nil)
+                    transaction.disablesAnimations = true
+                    withTransaction(transaction) {
+                        viewModel.resizePlanBar(by: movement)
+                    }
+                }
+                .onEnded { _ in scrollDragAnchor = 0 }
+        )
+        .onAppear { viewModel.planBarExpansion = 1 }
         .sheet(isPresented: $viewModel.showQuickFinishEditor) {
             QuickFinishEditor(
                 categories: Array(categories),
@@ -70,7 +86,7 @@ struct QuickFinishView: View {
                 viewModel: viewModel
             )
         }
-        .alert("Couldn't Finish Event", isPresented: Binding(
+        .alert("Couldn't Save Changes", isPresented: Binding(
             get: { finishError != nil },
             set: { if !$0 { finishError = nil } }
         )) {
@@ -82,7 +98,7 @@ struct QuickFinishView: View {
     }
 
     private var filteredEvents: [Event] {
-        let visibleEvents = quickFinishSorted(Array(events), order: { $0.quickFinishOrder })
+        let visibleEvents = Array(events)
             .filter { !$0.quickFinishHidden }
         guard !viewModel.quickFinishSearchText.isEmpty else {
             return visibleEvents
@@ -94,11 +110,8 @@ struct QuickFinishView: View {
     }
 
     private var eventGroups: [QuickFinishEventGroup] {
-        var groups = quickFinishSorted(Array(categories), order: { $0.quickFinishOrder }).compactMap { category -> QuickFinishEventGroup? in
-            let categoryEvents = quickFinishSorted(
-                (category.events?.array as? [Event] ?? []).filter { filteredEvents.contains($0) },
-                order: { $0.quickFinishOrder }
-            )
+        var groups = categories.compactMap { category -> QuickFinishEventGroup? in
+            let categoryEvents = category.orderedActiveEvents.filter { filteredEvents.contains($0) }
             guard !categoryEvents.isEmpty else { return nil }
 
             return QuickFinishEventGroup(
@@ -157,47 +170,42 @@ struct QuickFinishView: View {
     private func eventTile(_ event: Event, color: Color) -> some View {
         let count = finishedCount(for: event)
 
-        return Button {
-            quickFinish(event)
-        } label: {
-            VStack(spacing: 10) {
-                Text(event.name ?? "Event")
-                    .font(.subheadline)
-                    .foregroundStyle(.cPrimary)
-                    .lineLimit(2)
-                    .multilineTextAlignment(.center)
-                    .frame(maxWidth: .infinity)
-
-                Text(event.icon ?? "")
-                    .font(.title)
-                    .frame(width: 56, height: 56)
-                    .background(count > 0 ? Color.success : color, in: Circle())
-
-                Text(finishedLabel(count))
-                    .font(.caption)
-                    .bold(count > 0)
-                    .foregroundStyle(count > 0 ? Color.cPrimary : Color.secondary)
-                    .lineLimit(2)
-                    .multilineTextAlignment(.center)
-            }
-            .padding(.horizontal, 6)
-            .padding(.vertical, 12)
-            .frame(maxWidth: .infinity, minHeight: 142)
-            .background(
-                count > 0 ? color : Color.color5,
-                in: RoundedRectangle(cornerRadius: 20)
+        return QuickFinishCard(event: event, color: color, finishedCount: count)
+            .contentShape(RoundedRectangle(cornerRadius: 20))
+            .gesture(
+                LongPressGesture(minimumDuration: 0.45)
+                    .exclusively(before: TapGesture())
+                    .onEnded { gesture in
+                        switch gesture {
+                        case .first(true):
+                            addToPlan(event)
+                        case .second:
+                            quickFinish(event)
+                        default:
+                            break
+                        }
+                    }
             )
+            .accessibilityElement(children: .combine)
+            .accessibilityAddTraits(.isButton)
+            .accessibilityHint("Tap to finish. Hold to add to your plan.")
+            .accessibilityAction { quickFinish(event) }
+            .accessibilityAction(named: "Add to plan") { addToPlan(event) }
+    }
+
+    private func addToPlan(_ event: Event) {
+        HapticFeedback.light()
+        do {
+            try withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
+                try viewModel.plan(event)
+            }
+        } catch {
+            finishError = error.localizedDescription
         }
-        .buttonStyle(.plain)
     }
 
     private func finishedCount(for event: Event) -> Int {
         event.finished(on: dayPlannerVM.currentDate)
-    }
-
-    private func finishedLabel(_ count: Int) -> String {
-        guard count > 0 else { return "Finish" }
-        return "\(count) \(count == 1 ? "time" : "times") today"
     }
 
     private func quickFinish(_ event: Event) {
@@ -210,6 +218,49 @@ struct QuickFinishView: View {
     }
 }
 
+/// Shared appearance for the full event tile and its shorter planned copy.
+struct QuickFinishCard: View {
+    @ObservedObject var event: Event
+    let color: Color
+    var finishedCount: Int? = nil
+    var planExpansion: CGFloat = 1
+
+    var body: some View {
+        let isFinished = (finishedCount ?? 0) > 0
+        let expansion = min(1, max(0, planExpansion))
+        VStack(spacing: 10 * expansion) {
+            Text(event.name ?? "Event")
+                .font(.subheadline)
+                .foregroundStyle(.cPrimary)
+                .lineLimit(2)
+                .multilineTextAlignment(.center)
+                .frame(maxWidth: .infinity)
+                .frame(height: finishedCount == nil ? 36 * expansion : nil)
+                .opacity(expansion)
+                .clipped()
+                .accessibilityHidden(expansion < 0.01)
+
+            Text(event.icon ?? "")
+                .font(.system(size: 22 + 6 * expansion))
+                .frame(width: 44 + 12 * expansion, height: 44 + 12 * expansion)
+                .background(isFinished ? Color.success : color, in: Circle())
+
+            if let count = finishedCount {
+                Text(count > 0 ? "\(count) \(count == 1 ? "time" : "times") today" : "Finish")
+                    .font(.caption)
+                    .bold(isFinished)
+                    .foregroundStyle(isFinished ? Color.cPrimary : Color.secondary)
+                    .lineLimit(2)
+                    .multilineTextAlignment(.center)
+            }
+        }
+        .padding(.horizontal, 6 * expansion)
+        .padding(.vertical, 12 * expansion)
+        .frame(maxWidth: .infinity, minHeight: 44 + ((finishedCount == nil ? 118 : 142) - 44) * expansion)
+        .background((isFinished ? color : Color.color5).opacity(expansion), in: RoundedRectangle(cornerRadius: 20))
+    }
+}
+
 private struct QuickFinishEventGroup: Identifiable {
     let id: String
     let icon: String
@@ -218,21 +269,11 @@ private struct QuickFinishEventGroup: Identifiable {
     let events: [Event]
 }
 
-// Unconfigured entries keep their Library order, after explicitly ordered entries.
-private func quickFinishSorted<T>(_ items: [T], order: (T) -> Int64) -> [T] {
-    items.enumerated().sorted { lhs, rhs in
-        let left = order(lhs.element) < 0 ? Int64.max : order(lhs.element)
-        let right = order(rhs.element) < 0 ? Int64.max : order(rhs.element)
-        return left == right ? lhs.offset < rhs.offset : left < right
-    }.map(\.element)
-}
-
 private struct QuickFinishItemDraft: Identifiable {
     let id: NSManagedObjectID
     let name: String
     let icon: String
     var isVisible: Bool
-    var sectionID: NSManagedObjectID?
 }
 
 private struct QuickFinishGroupDraft: Identifiable {
@@ -250,38 +291,28 @@ private struct QuickFinishEditor: View {
     @State private var groups: [QuickFinishGroupDraft]
     @State private var saveError: String?
 
-    @FetchRequest(
-        sortDescriptors: [SortDescriptor(\Section.order, order: .forward)],
-        predicate: NSPredicate(format: "isActive == true")
-    ) private var sections: FetchedResults<Section>
-
     init(categories: [Category], events: [Event], viewModel: ContentViewModel) {
         self.viewModel = viewModel
-        let orderedEvents = quickFinishSorted(events, order: { $0.quickFinishOrder })
         func items(_ events: [Event]) -> [QuickFinishItemDraft] {
             events.map {
                 QuickFinishItemDraft(
                     id: $0.objectID,
                     name: $0.name ?? "Event",
                     icon: $0.icon ?? "",
-                    isVisible: !$0.quickFinishHidden,
-                    sectionID: $0.quickFinishSection?.isActive == true ? $0.quickFinishSection?.objectID : nil
+                    isVisible: !$0.quickFinishHidden
                 )
             }
         }
-        var drafts = quickFinishSorted(categories, order: { $0.quickFinishOrder }).map { category in
+        var drafts = categories.map { category in
             QuickFinishGroupDraft(
                 id: category.objectID.uriRepresentation().absoluteString,
                 categoryID: category.objectID,
                 name: category.name ?? "Category",
                 icon: category.icon ?? "🏷️",
-                items: items(quickFinishSorted(
-                    (category.events?.array as? [Event] ?? []).filter(\.isActive),
-                    order: { $0.quickFinishOrder }
-                ))
+                items: items(category.orderedActiveEvents)
             )
         }
-        let uncategorized = orderedEvents.filter { $0.activeCategories.isEmpty }
+        let uncategorized = events.filter { $0.activeCategories.isEmpty }
         if !uncategorized.isEmpty {
             drafts.append(QuickFinishGroupDraft(
                 id: "uncategorized", categoryID: nil, name: "Uncategorized", icon: "🏷️",
@@ -295,7 +326,7 @@ private struct QuickFinishEditor: View {
         NavigationStack {
             List {
                 SwiftUI.Section {
-                    Text("Drag to reorder categories and events. Tap an event to choose its Plan section or hide it from Quick Finish.")
+                    Text("Drag to reorder categories and events in both Finish Now and Library. Tap an event to show or hide it in Quick Finish.")
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                 }
@@ -358,17 +389,7 @@ private struct QuickFinishEditor: View {
             SwiftUI.Section {
                 Toggle("Show in Quick Finish", isOn: item.isVisible)
             }
-            SwiftUI.Section {
-                Picker("Plan Section", selection: item.sectionID) {
-                    Text("Automatic").tag(nil as NSManagedObjectID?)
-                    ForEach(sections) { section in
-                        Text("\(section.icon ?? "📁") \(section.name ?? "Section")")
-                            .tag(Optional(section.objectID))
-                    }
-                }
-            } footer: {
-                Text("Automatic places the event after the last finished event. A selected section receives the event and is added to the day if needed.")
-            }
+
         }
         .environment(\.editMode, .constant(.inactive))
         .navigationTitle(item.wrappedValue.name)
@@ -381,19 +402,20 @@ private struct QuickFinishEditor: View {
         context.persistentStoreCoordinator = viewContext.persistentStoreCoordinator
         do {
             for (groupIndex, group) in groups.enumerated() {
+                let orderedEvents = try group.items.map { item -> Event in
+                    let event = try context.existingObject(with: item.id) as! Event
+                    event.quickFinishHidden = !item.isVisible
+                    return event
+                }
                 if let id = group.categoryID {
                     let category = try context.existingObject(with: id) as! Category
-                    category.quickFinishOrder = Int64(groupIndex)
-                }
-                for (itemIndex, item) in group.items.enumerated() {
-                    let event = try context.existingObject(with: item.id) as! Event
-                    event.quickFinishOrder = Int64(itemIndex)
-                    event.quickFinishHidden = !item.isVisible
-                    if let id = item.sectionID {
-                        let section = try context.existingObject(with: id) as! Section
-                        event.quickFinishSection = section.isActive ? section : nil
-                    } else {
-                        event.quickFinishSection = nil
+                    category.order = Int16(clamping: groupIndex)
+                    // Keep inactive members while updating the order shared with Library.
+                    let inactiveEvents = (category.events?.array as? [Event] ?? []).filter { !$0.isActive }
+                    category.events = NSOrderedSet(array: orderedEvents + inactiveEvents)
+                } else {
+                    for (index, event) in orderedEvents.enumerated() {
+                        event.order = Int16(clamping: index)
                     }
                 }
             }

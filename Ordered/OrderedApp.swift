@@ -11,24 +11,33 @@ import UIKit
 
 @main
 struct OrderedApp: App {
-    let persistenceController = PersistenceController.shared
+    @StateObject private var persistenceController = PersistenceController.shared
     
     @AppStorage("welcomeScreen") var welcomeScreen: Bool = true
     
-    init(){
+    init() {
         OrderedShortcuts.updateAppShortcutParameters()
     }
-    
+
     var body: some Scene {
         WindowGroup {
-            ContentView()
-                .preferredColorScheme(K.darkModeEnabled ? nil : .light)
-                .environment(\.managedObjectContext, persistenceController.container.viewContext)
-                .task{
-                    //Load Data
+            Group {
+                if persistenceController.isReady {
+                    ContentView()
+                        .environment(\.managedObjectContext, persistenceController.container.viewContext)
+                } else if let error = persistenceController.loadingError {
+                    ContentUnavailableView {
+                        Label("Couldn't Open Your Data", systemImage: "externaldrive.badge.exclamationmark")
+                    } description: {
+                        Text("Your saved data has been kept. \(error)")
+                    } actions: {
+                        Button("Try Again") { persistenceController.load() }
+                    }
+                } else {
+                    ProgressView("Loading…")
                 }
-                
-            
+            }
+            .preferredColorScheme(K.darkModeEnabled ? nil : .light)
         }
     }
 }

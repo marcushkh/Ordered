@@ -11,54 +11,46 @@ import RevenueCat
 class ContentViewModel: ObservableObject{
     
     @Published var refresh = false
-    
+    // 0 is compact, 1 is fully expanded; intermediate values follow the user's drag.
+    @Published var planBarExpansion: CGFloat = 1
+
+    func resizePlanBar(by distance: CGFloat) {
+        planBarExpansion = min(1, max(0, planBarExpansion + distance / 78))
+    }
+    func plan(_ event: Event) throws {
+        try event.addToPlan()
+    }
+
+    func clearPlan() throws {
+        try Event.clearPlan(in: Model.viewContext)
+    }
+
+    func removeFromPlan(_ event: Event) throws {
+        try event.removeFromPlan()
+    }
+
     @AppStorage("DefaultPage") private var defaultPage: TabBarItem = TabBarItem.quick
     @AppStorage("DidSetQuickFinishDefaultPage") private var didSetQuickFinishDefaultPage = false
     @Published var currentTab: TabBarItem = TabBarItem.quick
     @Published var showQuickFinishSearch = false
     @Published var showQuickFinishEditor = false
     @Published var quickFinishSearchText = ""
-    @Published var isShowLibrary = false
-    
-    @Published var showEventDetail = false
-    @Published var eventDetail: Event_Cal? = nil
-    @Published var editEvent_Cal: Event_Cal? = nil
-    
-    //Create Event_Cal
-    @Published var showCreateEvent = false
-    @Published var createEvent_Section_Cal: Section_Cal? = nil
-    @Published var createEvent_Section: Section? = nil
-    
-    //Change Event
+    @Published var libraryEditorRoute: LibraryEditorRoute?
     @Published var showChangeEvent = false
     @Published var changeEvent: Event? = nil
-    
-    //Change Section
-    @Published var showSelectSection = false
-    @Published var changeSection_Cal: Section_Cal? = nil
-    @Published var changeSection: Section? = nil
-    @Published var insertToCal: Cal? = nil
-    @Published var insertIndex: Int? = nil
-    
-    //For Planning page
-    @Published var highlightedEC: Event_Cal? = nil
-    @Published var highlightedSC: Section_Cal? = nil
-    
-    //For Empty Event Selection
-    @Published var showEmptyEventSelection = false
-    @Published var emptyEventCal: Event_Cal? = nil
-    @Published var eventSelectionSectionCal: Section_Cal? = nil
-    
-    //for welcome and showcase
-    @Published var showCase = false
+
+    // Onboarding and subscription
     @Published var isShowPaywall = false
     
     @Published var isSubscriptionActive = false
     
     init(){
-        // Adopt the new opening page once for existing installations as well.
-        // Later changes in Settings remain the user's choice.
-        if !didSetQuickFinishDefaultPage {
+        // Move retired opening-page choices to View, preserving all other choices.
+        let savedPage = UserDefaults.standard.string(forKey: "DefaultPage")
+        if savedPage == "home" || savedPage == "plan" {
+            defaultPage = .view
+            didSetQuickFinishDefaultPage = true
+        } else if !didSetQuickFinishDefaultPage {
             defaultPage = .quick
             didSetQuickFinishDefaultPage = true
         }

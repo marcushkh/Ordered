@@ -6,12 +6,6 @@ struct StatTopBar: View {
     @ObservedObject var viewModel: StatViewModel
     @ObservedObject var dayPlannerVM: DayPlannerViewModel
 
-    @FetchRequest(
-        entity: Event_Cal.entity(),
-        sortDescriptors: [],
-        predicate: NSPredicate(format: "aEndTime != nil")
-    ) private var completedEvents: FetchedResults<Event_Cal>
-
     var body: some View {
         Group {
             if let selectedEvent = viewModel.selectedEvent {
@@ -43,7 +37,6 @@ struct StatTopBar: View {
                 }
             }
         }
-        .padding(.horizontal, K.horizontal_padding)
         .padding(.top, 12)
         .padding(.bottom, 14)
     }
@@ -75,17 +68,8 @@ struct StatTopBar: View {
                     .lineLimit(1)
             }
 
-            Text(
-                viewModel.eventHeadline(
-                    for: event,
-                    completedEvents: Array(completedEvents),
-                    dayPlannerVM: dayPlannerVM
-                )
-            )
-            .font(.callout)
-            .foregroundStyle(.secondary)
+
         }
-        .padding(.horizontal, K.horizontal_padding)
         .padding(.top, 12)
         .padding(.bottom, 18)
         .background(.color1)

@@ -23,6 +23,7 @@ struct OrderedEventEntity: AppEntity {
 struct OrderedEventQuery: EntityStringQuery {
     @MainActor
     func entities(for identifiers: [String]) async throws -> [OrderedEventEntity] {
+        try await PersistenceController.shared.waitUntilReady()
         let context = Model.viewContext
         return try identifiers.compactMap { identifier in
             guard let url = URL(string: identifier),
@@ -35,12 +36,14 @@ struct OrderedEventQuery: EntityStringQuery {
 
     @MainActor
     func suggestedEntities() async throws -> [OrderedEventEntity] {
-        try events(matching: nil)
+        try await PersistenceController.shared.waitUntilReady()
+        return try events(matching: nil)
     }
 
     @MainActor
     func entities(matching string: String) async throws -> [OrderedEventEntity] {
-        try events(matching: string)
+        try await PersistenceController.shared.waitUntilReady()
+        return try events(matching: string)
     }
 
     @MainActor
@@ -76,6 +79,7 @@ struct QuickFinishEventIntent: AppIntent {
 
     @MainActor
     func perform() async throws -> some IntentResult {
+        try await PersistenceController.shared.waitUntilReady()
         let context = Model.viewContext
         guard let url = URL(string: event.id),
               let objectID = context.persistentStoreCoordinator?.managedObjectID(forURIRepresentation: url),

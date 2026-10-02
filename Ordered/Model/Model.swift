@@ -11,28 +11,6 @@ import CoreData
 enum Model{
     static var viewContext = PersistenceController.shared.container.viewContext
     
-    case Event_, Section_
-    
-    static func getHighestOrder(c: Model) -> Int16 {
-        switch(c){
-        case .Event_:
-            do{
-                let allItems = try viewContext.fetch(Event.fetchRequest()) as? [Event]
-                return allItems?.max { $0.order < $1.order }?.order ?? 1
-            }catch{
-                fatalError("Unresolved error \(error)")
-            }
-        case .Section_:
-            do{
-                let allItems = try viewContext.fetch(Section.fetchRequest()) as? [Section]
-                return allItems?.max { $0.order < $1.order }?.order ?? 1
-            }catch{
-                fatalError("Unresolved error \(error)")
-            }
-        }
-    }
-    
-    
     static func swapOrder<T: OrderedItem>(item1: inout T, item2: inout T){
         let tmp: Int16 = item1.order
         item1.order = item2.order

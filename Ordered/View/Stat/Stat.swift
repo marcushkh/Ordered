@@ -100,9 +100,6 @@ struct Stat: View {
             HStack(alignment: .firstTextBaseline) {
                 Text("This \(viewModel.range.unit)").font(.headline)
                 Spacer()
-                Text("\(viewModel.signed(viewModel.percentChange(completedEvents: Array(completedEvents), dayPlannerVM: dayPlannerVM)))% vs last \(viewModel.range.unit)")
-                    .font(.footnote.bold())
-                    .foregroundStyle(.color3)
             }
             barChart(columns: chartColumns, height: 104)
         }
@@ -113,7 +110,7 @@ struct Stat: View {
             HStack(alignment: .firstTextBaseline) {
                 Text("Ranked").font(.title3.bold())
                 Spacer()
-                Text("this \(viewModel.range.unit) · change")
+                Text("this \(viewModel.range.unit)")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }
@@ -145,27 +142,47 @@ struct Stat: View {
     }
 
     private func rankedRow(_ statistic: EventStatistic) -> some View {
-        HStack(spacing: 10) {
+        let todayIndex = viewModel.range == .week
+            ? viewModel.currentDates(dayPlannerVM: dayPlannerVM).firstIndex {
+                Calendar.current.isDate($0, inSameDayAs: MyCalendar.getToday())
+            }
+            : nil
+
+        return HStack(spacing: 10) {
             eventBubble(statistic.event, size: 36)
             Text(statistic.event.name ?? "Event")
                 .font(.body)
                 .lineLimit(1)
                 .frame(maxWidth: .infinity, alignment: .leading)
             HStack(spacing: 3) {
-                ForEach(Array(statistic.columnCounts.enumerated()), id: \.offset) { _, count in
+                ForEach(Array(statistic.columnCounts.enumerated()), id: \.offset) { index, count in
                     RoundedRectangle(cornerRadius: 2)
-                        .fill(count > 0 ? Color.color4 : Color.color2.opacity(0.55))
-                        .frame(width: 7, height: 18)
+                        .fill(finishMarkColor(for: count))
+                        .frame(width: viewModel.range == .week ? 11 : 7, height: 18)
+                        .overlay {
+                            if index == todayIndex {
+                                RoundedRectangle(cornerRadius: 2)
+                                    .strokeBorder(Color(hex: "FF6B6B"), lineWidth: 1.5)
+                            }
+                        }
                 }
             }
             Text("\(statistic.total)")
                 .font(.body.bold())
                 .frame(width: 28, alignment: .trailing)
-            deltaChip(statistic.delta).frame(width: 40)
         }
         .padding(.vertical, 12)
         .overlay(alignment: .bottom) {
             Rectangle().fill(Color.gray.opacity(0.3)).frame(height: 1)
+        }
+    }
+
+    private func finishMarkColor(for count: Int) -> Color {
+        switch count {
+        case ...0: return Color.color2.opacity(0.55)
+        case 1: return .color4
+        case 2: return Color(hex: "56678C")
+        default: return .color3
         }
     }
 
@@ -176,13 +193,12 @@ struct Stat: View {
             HStack(spacing: 10) {
                 detailMiniCard(
                     title: "This \(viewModel.range.unit)",
-                    value: "\(statistic.total)",
-                    delta: statistic.delta
+                    value: "\(statistic.total)"
                 )
                 detailMiniCard(
                     title: "Streak",
                     value: "\(viewModel.currentStreak(for: event, completedEvents: Array(completedEvents)))",
-                    delta: nil
+                    valueColor: .color3
                 )
             }
 
@@ -208,15 +224,12 @@ struct Stat: View {
         }
     }
 
-    private func detailMiniCard(title: String, value: String, delta: Int?) -> some View {
+    private func detailMiniCard(title: String, value: String, valueColor: Color = .primary) -> some View {
         VStack(alignment: .leading, spacing: 3) {
             Text(title).font(.caption).foregroundStyle(.secondary)
-            HStack(alignment: .bottom, spacing: 6) {
-                Text(value)
-                    .font(.title.bold())
-                    .foregroundStyle(delta == nil ? Color.color3 : Color.primary)
-                if let delta { deltaChip(delta) }
-            }
+            Text(value)
+                .font(.title.bold())
+                .foregroundStyle(valueColor)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(14)
@@ -233,7 +246,7 @@ struct Stat: View {
 
     private func barChart(columns: [StatisticColumn], height: CGFloat) -> some View {
         let maximum = max(1, columns.map(\.count).max() ?? 0)
-        return HStack(alignment: .bottom, spacing: 8) {
+        return HStack(alignment: .bottom, spacing: viewModel.range == .week ? 6 : 8) {
             ForEach(columns) { column in
                 VStack(spacing: 6) {
                     Text("\(column.count)").font(.system(size: 10)).foregroundStyle(.secondary)
@@ -251,15 +264,6 @@ struct Stat: View {
                 .frame(maxWidth: .infinity)
             }
         }
-    }
-
-    private func deltaChip(_ delta: Int) -> some View {
-        Text(viewModel.signed(delta))
-            .font(.caption2.bold())
-            .foregroundStyle(.primary)
-            .padding(.horizontal, 8)
-            .padding(.vertical, 4)
-            .background(viewModel.deltaColor(delta), in: Capsule())
     }
 
     private func eventBubble(_ event: Event, size: CGFloat) -> some View {

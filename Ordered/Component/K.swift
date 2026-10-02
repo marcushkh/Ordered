@@ -31,7 +31,7 @@ enum K{
     static var xlarge_size: CGFloat  { 36.0 * scaleFactor }
     static var xxl_size: CGFloat     { 40.0 * scaleFactor }
     
-    static let defaultSectionColor = [
+    static let categoryColors = [
         "DCEDFA",
         "E3BCB5",
         "F0DCB8",
@@ -40,7 +40,7 @@ enum K{
         "E6EEDA"
     ]
     
-    static let defaultSectionColorDark = [
+    static let categoryColorsDark = [
         "88C0ED",
         "C4819B",
         "D69569",
@@ -49,7 +49,7 @@ enum K{
         "819A59"
     ]
     
-    static let defaultSection = ["Welcome", "Events", "Privacy"]
+    static let onboardingSteps = ["Welcome", "Events", "Privacy"]
     
     static let presentationCornerRadius: CGFloat = 30
 }

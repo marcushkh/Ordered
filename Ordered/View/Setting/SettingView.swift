@@ -17,7 +17,7 @@ struct SettingView: View{
         
         List {
             Button {
-                viewModel.isShowLibrary = true
+                viewModel.currentTab = .library
             } label: {
                 HStack {
                     Label("Library", systemImage: "square.grid.2x2")
@@ -41,10 +41,8 @@ struct SettingView: View{
                         } label: {
                             Text(TabBarItem.quick.label)
                         }
-                        Button {
-                            defaultPage = TabBarItem.home
-                        } label: {
-                            Text(TabBarItem.home.label)
+                        ForEach([TabBarItem.view, .library]) { page in
+                            Button(page.label) { defaultPage = page }
                         }
                         
                     } label: {

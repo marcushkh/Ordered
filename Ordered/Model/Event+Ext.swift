@@ -198,7 +198,7 @@ extension Event {
     
     func finished(on date: Date) -> Int{
         let fetchRequest: NSFetchRequest<Event_Cal> = Event_Cal.fetchRequest()
-        let datePredicate = NSPredicate(format: "section_cal.cal.date == %@", date.getYYMMDD())
+        let datePredicate = NSPredicate(format: "cal.date == %@", date.getYYMMDD())
         let parentPredicate = NSPredicate(format: "parent == %@", self)
         let endTimePredicate = NSPredicate(format: "aEndTime != nil")
         
@@ -216,7 +216,7 @@ extension Event {
     
     func totalTime(on date: Date) -> Int{
         let fetchRequest: NSFetchRequest<Event_Cal> = Event_Cal.fetchRequest()
-        let datePredicate = NSPredicate(format: "section_cal.cal.date == %@", date.getYYMMDD())
+        let datePredicate = NSPredicate(format: "cal.date == %@", date.getYYMMDD())
         let parentPredicate = NSPredicate(format: "parent == %@", self)
         let endTimePredicate = NSPredicate(format: "aEndTime != nil")
         
@@ -348,5 +348,52 @@ enum EventStatus: String{
             return .Completed
         }
         return .TickEvent
+    }
+}
+
+extension Event {
+    static func clearPlan(in context: NSManagedObjectContext) throws {
+        let request: NSFetchRequest<Event> = Event.fetchRequest()
+        request.predicate = NSPredicate(format: "planOrder >= 0")
+        let events = try context.fetch(request)
+        guard !events.isEmpty else { return }
+        let previousOrders = events.map { ($0, $0.planOrder) }
+        for event in events { event.planOrder = -1 }
+        do {
+            try context.save()
+        } catch {
+            for (event, order) in previousOrders { event.planOrder = order }
+            throw error
+        }
+    }
+
+    /// Negative order means the event is not planned. Nonnegative values preserve insertion order.
+    func addToPlan() throws {
+        guard isActive, planOrder < 0, let context = managedObjectContext else { return }
+        let request: NSFetchRequest<Event> = Event.fetchRequest()
+        request.predicate = NSPredicate(format: "planOrder >= 0")
+        request.sortDescriptors = [NSSortDescriptor(keyPath: \Event.planOrder, ascending: false)]
+        request.fetchLimit = 1
+        let lastOrder = try context.fetch(request).first?.planOrder ?? -1
+        let previousOrder = planOrder
+        planOrder = lastOrder + 1
+        do {
+            try context.save()
+        } catch {
+            planOrder = previousOrder
+            throw error
+        }
+    }
+
+    func removeFromPlan() throws {
+        guard let context = managedObjectContext else { return }
+        let previousOrder = planOrder
+        planOrder = -1
+        do {
+            try context.save()
+        } catch {
+            planOrder = previousOrder
+            throw error
+        }
     }
 }

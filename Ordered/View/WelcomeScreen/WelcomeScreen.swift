@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import PopupView
 
 struct WelcomeScreen: View {
     @ObservedObject var viewModel: ContentViewModel
@@ -16,7 +15,7 @@ struct WelcomeScreen: View {
     
     @AppStorage("welcomeScreen") var welcomeScreen: Bool = true
     
-    let listOfSteps = K.defaultSection
+    let listOfSteps = K.onboardingSteps
     
     var body: some View {
         
@@ -53,7 +52,7 @@ struct WelcomeScreen: View {
                     else{
                         withAnimation {
                             welcomeScreen = false
-                            viewModel.showCase = true
+                            viewModel.isShowPaywall = !viewModel.isSubscriptionActive
                             UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { _, _ in }
                             HapticFeedback.heavy()
                         }

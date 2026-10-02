@@ -31,7 +31,7 @@ struct TabBar: View {
 
     private var tabItems: some View {
         HStack(spacing: 0) {
-            ForEach([TabBarItem.quick, TabBarItem.plan, TabBarItem.home, TabBarItem.statistic, TabBarItem.setting]) { item in
+            ForEach([TabBarItem.quick, TabBarItem.view, TabBarItem.library, TabBarItem.statistic, TabBarItem.setting]) { item in
                 let tabBarIcon = Image(systemName: viewModel.currentTab == item ? item.selectedIcon : item.icon)
                     .resizable()
                     .scaledToFit()
@@ -45,27 +45,7 @@ struct TabBar: View {
                     }
                 } label: {
                     VStack(spacing: 4) {
-                        Group {
-                            if item == .plan{
-                                tabBarIcon
-                                    .showCase(order: 2, title: "This helps you plan and record \n your day with a few clicks", cornerRadius: 10, scale: 1.5) {
-                                        withAnimation {
-                                            viewModel.currentTab = .plan
-                                        }
-                                    }
-                            }
-                            else if item == .statistic{
-                                tabBarIcon
-                                    .showCase(order: 11, title: "You can view Your Daily Progress Here!!", cornerRadius: 10, scale: 1.5) {
-                                        withAnimation {
-                                            viewModel.currentTab = .home
-                                        }
-                                    }
-                            }
-                            else{
-                                tabBarIcon
-                            }
-                        }
+                        tabBarIcon
                     }
                     .foregroundStyle(viewModel.currentTab == item ? Color.color3 : Color.primary)
                     .frame(maxWidth: .infinity, minHeight: 44)
@@ -85,9 +65,9 @@ struct TabBar: View {
 
 
 enum TabBarItem: String, CaseIterable, Identifiable {
-    case home
+    case view
     case quick
-    case plan
+    case library
     case statistic
     case setting
     
@@ -96,12 +76,12 @@ enum TabBarItem: String, CaseIterable, Identifiable {
     var icon: String {
         switch self {
         
-        case .home:
-            return "house"
+        case .view:
+            return "rectangle"
         case .quick:
-            return "checkmark.circle"
-        case .plan:
-            return "list.bullet.indent"
+            return "house"
+        case .library:
+            return "books.vertical"
         case .statistic:
             return "chart.bar"
         case .setting:
@@ -111,12 +91,12 @@ enum TabBarItem: String, CaseIterable, Identifiable {
 
     var selectedIcon: String {
         switch self {
-        case .home:
-            return "house.fill"
+        case .view:
+            return "rectangle.fill"
         case .quick:
-            return "checkmark.circle.fill"
-        case .plan:
-            return "list.bullet.indent"
+            return "house.fill"
+        case .library:
+            return "books.vertical.fill"
         case .statistic:
             return "chart.bar.fill"
         case .setting:
@@ -126,12 +106,12 @@ enum TabBarItem: String, CaseIterable, Identifiable {
     
     var label: String {
         switch self {
-        case .home:
-            return "Home"
+        case .view:
+            return "View"
         case .quick:
             return "Quick Finish"
-        case .plan:
-            return "Plan"
+        case .library:
+            return "Library"
         case .statistic:
             return "Statistic"
         case .setting:

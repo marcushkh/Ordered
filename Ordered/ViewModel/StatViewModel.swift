@@ -154,7 +154,7 @@ final class StatViewModel: ObservableObject {
     ) -> Int {
         let dateKeys = Set(dates.map { $0.getYYMMDD() })
         return completedEvents.reduce(into: 0) { result, completion in
-            guard let key = completion.section_cal?.cal?.date,
+            guard let key = completion.cal?.date,
                   dateKeys.contains(key) else { return }
             guard event == nil || completion.parent == event else { return }
             result += 1
@@ -164,7 +164,7 @@ final class StatViewModel: ObservableObject {
     func currentStreak(for event: Event, completedEvents: [Event_Cal]) -> Int {
         let completedDateKeys = Set(completedEvents.compactMap { completion -> String? in
             guard completion.parent == event else { return nil }
-            return completion.section_cal?.cal?.date
+            return completion.cal?.date
         })
         var cursor = MyCalendar.getToday()
         if !completedDateKeys.contains(cursor.getYYMMDD()) {
@@ -244,7 +244,7 @@ final class StatViewModel: ObservableObject {
         let dateKeys = Set(currentDates(dayPlannerVM: dayPlannerVM).map { $0.getYYMMDD() })
         let minutes = completedEvents.compactMap { completion -> Int? in
             guard completion.parent == event,
-                  let key = completion.section_cal?.cal?.date,
+                  let key = completion.cal?.date,
                   dateKeys.contains(key),
                   let time = completion.aEndTime ?? completion.aStartTime else {
                 return nil
@@ -309,7 +309,7 @@ final class StatViewModel: ObservableObject {
         if let categoryColor = event.activeCategories.first?.color {
             return Color(hex: categoryColor)
         }
-        let palette = K.defaultSectionColor
+        let palette = K.categoryColors
         return Color(hex: palette[Int(event.order) % palette.count])
     }
 

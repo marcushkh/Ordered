@@ -7,7 +7,6 @@
 
 import SwiftUI
 import CoreData
-import PopupView
 import RevenueCat
 import RevenueCatUI
 
@@ -50,10 +49,11 @@ struct ContentView: View {
                         .zIndex(2)
                     
                     //Main page
-                    if [TabBarItem.home, TabBarItem.plan].contains(viewModel.currentTab){
-                        //Records
-                        MainList(viewModel: viewModel, dayPlannerVM: dayPlannerVM)
-                            .ignoresSafeArea()
+                    if viewModel.currentTab == .view {
+                        CompletedEventsView(viewModel: viewModel)
+                    }
+                    else if viewModel.currentTab == .library {
+                        LibraryEditorView(viewModel: viewModel)
                     }
                     else if viewModel.currentTab == .quick {
                         QuickFinishView(
@@ -69,57 +69,15 @@ struct ContentView: View {
                     }
                     
                     
-                    // Bottom Bar
-                    if viewModel.currentTab == .plan{
-                        EventBar(viewModel: viewModel, dayPlannerVM: dayPlannerVM)
-                            .onDisappear{
-                                viewModel.highlightedEC = nil
-                                viewModel.highlightedSC = nil
-                            }
-                            .onTapGesture {
-                                
-                            }
-                            .frame(width: UIScreen.main.bounds.width)
-                    }
                 }
                 .frame(width: w, height: h)
                 .overlay(alignment: .bottom){// TabBar
                     if !searchTyping{
-                        BottomBar(viewModel: viewModel)
+                        TabBar(viewModel: viewModel)
                             .padding(.bottom, 10)
                     }
                 }
                 
-                .popup(isPresented: $viewModel.showEventDetail){
-                    EventDetailPopup(viewModel: viewModel)
-                } customize: {
-                    $0
-                        .type(.floater())
-                        .closeOnTap(false)
-                        .closeOnTapOutside(true)
-                        .backgroundColor(.cPrimary.opacity(0.2))
-                }
-                .popup(isPresented: $viewModel.showSelectSection) {
-                    SelectSection(viewModel: viewModel)
-                } customize: {
-                        $0
-                            .type(.floater())
-                            .closeOnTap(false)
-                            .closeOnTapOutside(true)
-                            .dragToDismiss(false)
-                            .backgroundColor(.cPrimary.opacity(0.2))
-                }
-                .popup(isPresented: $viewModel.showEmptyEventSelection) {
-                    //Empty Event Selection
-                    EmptyEventSelectionPopup(viewModel: viewModel)
-                } customize: {
-                    $0
-                        .type(.floater())
-                        .closeOnTap(false)
-                        .closeOnTapOutside(false)
-                        .dragToDismiss(false)
-                        .backgroundColor(.cPrimary.opacity(0.2))
-                }
                 .overlay{
                     if welcomeScreen {
                         WelcomeScreen(viewModel: viewModel)
@@ -129,31 +87,6 @@ struct ContentView: View {
                 .sheet(isPresented: $viewModel.showChangeEvent){
                     ChangeEvent(viewModel: viewModel)
                 }
-                .sheet(isPresented: $viewModel.isShowLibrary) {
-                    LibraryEditorView(viewModel: viewModel)
-                        .presentationCornerRadius(K.presentationCornerRadius)
-                }
-                .sheet(isPresented: $viewModel.showCreateEvent, onDismiss: {
-                    viewModel.createEvent_Section_Cal = nil
-                    viewModel.createEvent_Section = nil
-                    viewModel.refresh.toggle()
-                }) {
-                    CreateEvent(viewModel: viewModel, editEvent_Cal: viewModel.editEvent_Cal, date: dayPlannerVM.currentDate, display: $viewModel.showCreateEvent)
-                        .presentationCornerRadius(K.presentationCornerRadius)
-                }
-                .onChange(of: viewModel.currentTab) { oldValue, newValue in
-                    if viewModel.currentTab != .plan{
-                        withAnimation {
-                            viewModel.highlightedEC = nil
-                            viewModel.highlightedSC = nil
-                        }
-                    }
-                    
-                }
-                //On change of Cal
-                .onChange(of: viewModel.refresh) { oldValue, newValue in
-                    LiveActivityActions.refreshLiveActivities()
-                }
                 // when the app is re-entered set to current date
                 .onChange(of: scenePhase, { oldValue, newValue in
                     if newValue == .active {
@@ -161,20 +94,6 @@ struct ContentView: View {
                     }
                 })
             }
-            .onTapGesture {
-                withAnimation {
-                    if viewModel.currentTab == .plan{
-                        viewModel.currentTab = .home
-                        viewModel.highlightedEC = nil
-                        viewModel.highlightedEC = nil
-                    }
-                }
-            }
-            .modifier(ShowCaseRoot(showHighlights: viewModel.showCase, onFinished: {
-                if !viewModel.isSubscriptionActive{
-                    viewModel.isShowPaywall = true
-                }
-            }))
             .sheet(isPresented: $viewModel.isShowPaywall) {
                 PaywallView()
                     .onPurchaseCompleted { customerInfo in
