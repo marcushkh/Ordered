@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024" role="img" aria-labelledby="title description">
+  <title id="title">Ordered app icon</title>
+  <desc id="description">A light rounded card with a dark checkmark, centered on a white square.</desc>
+  <rect width="1024" height="1024" fill="#FFFFFF"/>
+  <!-- Light-appearance Color1, with its original Display P3 values. -->
+  <rect x="232" y="176" width="560" height="672" rx="80"
+        fill="#E4E5F1" style="fill: color(display-p3 0.8941176471 0.8980392157 0.9450980392)"/>
+  <!-- Light-appearance Color3; rounded ends keep the mark clear at small sizes. -->
+  <path d="M 364 512 L 468 616 L 660 408" fill="none"
+        stroke="#484B6A" style="stroke: color(display-p3 0.2823529412 0.2941176471 0.4156862745)"
+        stroke-width="64" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

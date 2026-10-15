@@ -8,94 +8,41 @@
 import SwiftUI
 
 struct SettingView: View{
-    @ObservedObject var viewModel: ContentViewModel
-
-    @AppStorage("DayStartTime") private var dayStartTime: Int = 4
-    @AppStorage("DefaultPage") private var defaultPage: TabBarItem = TabBarItem.quick
+    @AppStorage("DayStartTime") private var dayStartTime = MyCalendar.defaultDayStartHour
+    @AppStorage("FirstWeekday") private var firstWeekday = 0
     
     var body: some View{
         
         List {
-            Button {
-                viewModel.currentTab = .library
-            } label: {
-                HStack {
-                    Label("Library", systemImage: "square.grid.2x2")
-                    Spacer()
-                    Image(systemName: "chevron.right")
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
+            SwiftUI.Section {
+                Picker("First day of week", selection: Binding(
+                    get: { (0...2).contains(firstWeekday) ? firstWeekday : 0 },
+                    set: { firstWeekday = $0 }
+                )) {
+                    Text("System Default").tag(0)
+                    ForEach(1...2, id: \.self) { day in
+                        Text(Calendar.autoupdatingCurrent.weekdaySymbols[day - 1]).tag(day)
+                    }
                 }
-                .foregroundStyle(.cPrimary)
+                .pickerStyle(.menu)
+                .tint(.cPrimary)
+                
+                Picker("Day starts at", selection: $dayStartTime) {
+                    ForEach(0..<24, id: \.self) { hour in
+                        Text(hourLabel(hour)).tag(hour)
+                    }
+                }
+                .pickerStyle(.menu)
+                .tint(.cPrimary)
             }
 
-            VStack(alignment: .leading){
-                
-                HStack{
-                    Text("Default Page")
-                    Spacer()
-                    
-                    Menu {
-                        Button {
-                            defaultPage = TabBarItem.quick
-                        } label: {
-                            Text(TabBarItem.quick.label)
-                        }
-                        ForEach([TabBarItem.view, .library]) { page in
-                            Button(page.label) { defaultPage = page }
-                        }
-                        
-                    } label: {
-                        HStack{
-                            Text(defaultPage.label)
-                            Image(systemName: "chevron.down")
-                                .font(.footnote)
-                        }
-                        .foregroundStyle(.cPrimary)
-                    }
-                }
-            }
-            
-            VStack(alignment: .leading){
-                HStack{
-                    Text("The start of your day")
-                    
-                    Spacer()
-                    Menu {
-                        Button {
-                            dayStartTime = 0
-                        } label: {
-                            Text("Mid Night")
-                        }
-                        ForEach(1..<10, id: \.self){ num in
-                            Button {
-                                dayStartTime = num
-                            } label: {
-                                Text(String(num) + " am")
-                                
-                            }
-                        }
-                        
-                    } label: {
-                        HStack{
-                            if dayStartTime == 12{
-                                Text("Mid Night")
-                            }
-                            else{
-                                Text(String(dayStartTime) + " am")
-                            }
-                            Image(systemName: "chevron.down")
-                                .font(.footnote)
-                        }
-                        .foregroundStyle(.cPrimary)
-                    }
-                    
-                }
-                Text("Many night owls have schedule after midnight. \nChoose a time that’s a few hours after you usually go to sleep.")
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
-            }
-            
         }
+        .contentMargins(.bottom, 80, for: .scrollContent)
+        .ignoresSafeArea(.container, edges: .bottom)
+    }
+
+    private func hourLabel(_ hour: Int) -> String {
+        let date = Calendar.current.date(from: DateComponents(year: 2026, month: 1, day: 1, hour: hour)) ?? .now
+        return date.formatted(date: .omitted, time: .shortened)
     }
 }

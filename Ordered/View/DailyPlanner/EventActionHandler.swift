@@ -13,8 +13,15 @@ final class EventActionHandler: ObservableObject {
 
     private init() {}
 
-    /// Create a fresh occurrence on every call, including repeated calls for the same event.
-    func quickFinish(_ event: Event, on date: Date, removingFromPlan: Bool = false) throws {
+    /// Every completion clears this event from the plan, regardless of its entry point.
+    /// Repeated completions still create separate occurrences.
+    @MainActor
+    @discardableResult
+    func quickFinish(_ event: Event, on date: Date) throws -> Event_Cal {
+        let celebrations = EventCompletionCelebrations.shared
+        let preparation = celebrations.prepareCompletion(eventID: event.objectID)
+        defer { celebrations.endPreparation(eventID: event.objectID, token: preparation) }
+        HapticFeedback.soft()
         let cal = Cal.getOrCreate(date: date)
         let lastFinishedEvent = cal.getLastFinishedEvent()
         let newEvent = event.getEC()
@@ -27,9 +34,11 @@ final class EventActionHandler: ObservableObject {
 
         // Completion and plan removal must reach disk in the same transaction.
         let previousPlanOrder = event.planOrder
-        if removingFromPlan { event.planOrder = -1 }
+        event.planOrder = -1
         do {
             try tickAndSave(ec: newEvent)
+            celebrations.celebrate(eventID: event.objectID, completionID: newEvent.objectID)
+            return newEvent
         } catch {
             event.planOrder = previousPlanOrder
             Model.viewContext.delete(newEvent)
@@ -40,7 +49,6 @@ final class EventActionHandler: ObservableObject {
     private func tickAndSave(ec: Event_Cal) throws {
         guard ec.aEndTime == nil else { return }
 
-        HapticFeedback.heavy()
         let tickTime = Date.now.getHHMM()
         ec.startTime = nil
         ec.endTime = nil

@@ -24,7 +24,7 @@ extension Cal {
     static func getOrCreate(date: Date) -> Cal { get(date: date) ?? new(date: date) }
 
     func getLastFinishedEvent() -> Event_Cal? {
-        orderedEvents.last { $0.parent != nil && $0.aEndTime != nil }
+        orderedEvents.last { ($0.parent != nil || $0.isOneTime) && $0.aEndTime != nil }
     }
 
 }

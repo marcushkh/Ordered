@@ -49,7 +49,6 @@ enum K{
         "819A59"
     ]
     
-    static let onboardingSteps = ["Welcome", "Events", "Privacy"]
     
     static let presentationCornerRadius: CGFloat = 30
 }

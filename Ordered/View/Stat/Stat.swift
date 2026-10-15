@@ -3,8 +3,11 @@ import CoreData
 
 /// The scrollable Statistics content displayed below `StatTopBar`.
 struct Stat: View {
+    @ObservedObject var appViewModel: ContentViewModel
     @ObservedObject var viewModel: StatViewModel
     @ObservedObject var dayPlannerVM: DayPlannerViewModel
+    @Environment(\.managedObjectContext) private var viewContext
+    @State private var pinError: String?
 
     @FetchRequest(
         entity: Event.entity(),
@@ -22,6 +25,7 @@ struct Stat: View {
     ) private var completedEvents: FetchedResults<Event_Cal>
 
     var body: some View {
+        ScrollViewReader { proxy in
         ScrollView {
             Group {
                 if let selectedEvent = viewModel.selectedEvent {
@@ -35,6 +39,25 @@ struct Stat: View {
             .padding(.bottom, 120)
         }
         .scrollIndicators(.hidden)
+        .onChange(of: appViewModel.tutorial.step, initial: true) { _, step in
+            if step == .pinEvent || step == .unpinEvent {
+                viewModel.selectedEvent = nil
+                if let id = appViewModel.tutorial.pinEventID { proxy.scrollTo(id, anchor: .center) }
+            }
+        }
+        .onChange(of: allEvents.map(\.objectID)) { _, _ in
+            if appViewModel.tutorial.step == .pinEvent || appViewModel.tutorial.step == .unpinEvent,
+               let id = appViewModel.tutorial.pinEventID { proxy.scrollTo(id, anchor: .center) }
+        }
+        }
+        .alert("Couldn't Save Pin", isPresented: Binding(
+            get: { pinError != nil },
+            set: { if !$0 { pinError = nil } }
+        )) {
+            Button("OK", role: .cancel) { pinError = nil }
+        } message: {
+            Text(pinError ?? "Please try again.")
+        }
     }
 
     private var chartColumns: [StatisticColumn] {
@@ -129,13 +152,34 @@ struct Stat: View {
                 .padding(.vertical, 32)
             } else {
                 ForEach(rankedStatistics) { statistic in
-                    Button {
-                        HapticFeedback.light()
-                        withAnimation { viewModel.selectEvent(statistic.event) }
-                    } label: {
-                        rankedRow(statistic)
+                    HStack(spacing: 4) {
+                        Button {
+                            HapticFeedback.light()
+                            withAnimation { viewModel.selectEvent(statistic.event) }
+                        } label: {
+                            rankedRow(statistic)
+                                .contentShape(Rectangle())
+                        }
+                        .buttonStyle(.plain)
+
+                        Button {
+                            togglePin(statistic.event)
+                        } label: {
+                            Image(systemName: (statistic.event.isFavourite || (appViewModel.tutorial.step == .unpinEvent && statistic.event.objectID.uriRepresentation().absoluteString == appViewModel.tutorial.pinEventID)) ? "pin.fill" : "pin")
+                                .foregroundStyle(statistic.event.isFavourite ? Color.color3 : Color.secondary)
+                                .frame(width: 44, height: 44)
+                                .contentShape(Rectangle())
+                        }
+                        .buttonStyle(.plain)
+                        .showCase(.pinEvent, enabled: statistic.event.objectID.uriRepresentation().absoluteString == appViewModel.tutorial.pinEventID)
+                        .showCase(.unpinEvent, enabled: statistic.event.objectID.uriRepresentation().absoluteString == appViewModel.tutorial.pinEventID)
+                        .accessibilityLabel("\(statistic.event.isFavourite ? "Unpin" : "Pin") \(statistic.event.name ?? "event")")
+                        .accessibilityValue(statistic.event.isFavourite ? "Pinned" : "Not pinned")
                     }
-                    .buttonStyle(.plain)
+                    .id(statistic.event.objectID.uriRepresentation().absoluteString)
+                    .overlay(alignment: .bottom) {
+                        Rectangle().fill(Color.gray.opacity(0.3)).frame(height: 1)
+                    }
                 }
             }
         }
@@ -172,8 +216,19 @@ struct Stat: View {
                 .frame(width: 28, alignment: .trailing)
         }
         .padding(.vertical, 12)
-        .overlay(alignment: .bottom) {
-            Rectangle().fill(Color.gray.opacity(0.3)).frame(height: 1)
+    }
+
+    private func togglePin(_ event: Event) {
+        let wasPinned = event.isFavourite
+        do {
+            try withAnimation {
+                event.isFavourite.toggle()
+                try viewContext.save()
+            }
+            HapticFeedback.light()
+        } catch {
+            event.isFavourite = wasPinned
+            pinError = error.localizedDescription
         }
     }
 

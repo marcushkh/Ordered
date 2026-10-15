@@ -96,6 +96,9 @@ final class StatViewModel: ObservableObject {
             )
         }
         .sorted {
+            if $0.event.isFavourite != $1.event.isFavourite {
+                return $0.event.isFavourite
+            }
             if $0.total == $1.total {
                 return $0.event.order < $1.event.order
             }

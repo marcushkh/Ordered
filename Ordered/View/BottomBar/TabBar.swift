@@ -42,6 +42,7 @@ struct TabBar: View {
                     withAnimation {
                         HapticFeedback.light()
                         viewModel.currentTab = item
+                        viewModel.tutorial.openedTab(item.rawValue)
                     }
                 } label: {
                     VStack(spacing: 4) {
@@ -52,6 +53,9 @@ struct TabBar: View {
                     .contentShape(Rectangle())
                     .padding(.horizontal, 4)
                 }
+                .showCase(.completedTab, enabled: item == .view)
+                .showCase(.libraryTab, enabled: item == .library)
+                .showCase(.statisticsTab, enabled: item == .statistic)
                 .accessibilityLabel(item.label)
                 .accessibilityAddTraits(viewModel.currentTab == item ? .isSelected : [])
                 .buttonStyle(.plain)
@@ -77,7 +81,7 @@ enum TabBarItem: String, CaseIterable, Identifiable {
         switch self {
         
         case .view:
-            return "rectangle"
+            return "list.triangle"
         case .quick:
             return "house"
         case .library:
@@ -92,7 +96,7 @@ enum TabBarItem: String, CaseIterable, Identifiable {
     var selectedIcon: String {
         switch self {
         case .view:
-            return "rectangle.fill"
+            return "list.triangle"
         case .quick:
             return "house.fill"
         case .library:
@@ -109,7 +113,7 @@ enum TabBarItem: String, CaseIterable, Identifiable {
         case .view:
             return "View"
         case .quick:
-            return "Quick Finish"
+            return "Home"
         case .library:
             return "Library"
         case .statistic:

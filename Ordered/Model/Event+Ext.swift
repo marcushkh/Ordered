@@ -352,6 +352,12 @@ enum EventStatus: String{
 }
 
 extension Event {
+    /// Move only the plan occurrence; Library ordering and completion history stay intact.
+    func moveInPlan(to target: Event) throws {
+        guard let context = managedObjectContext, target.managedObjectContext === context else { return }
+        try PlanStore.move(objectID, to: target.objectID, in: context)
+    }
+
     static func clearPlan(in context: NSManagedObjectContext) throws {
         let request: NSFetchRequest<Event> = Event.fetchRequest()
         request.predicate = NSPredicate(format: "planOrder >= 0")
@@ -370,13 +376,9 @@ extension Event {
     /// Negative order means the event is not planned. Nonnegative values preserve insertion order.
     func addToPlan() throws {
         guard isActive, planOrder < 0, let context = managedObjectContext else { return }
-        let request: NSFetchRequest<Event> = Event.fetchRequest()
-        request.predicate = NSPredicate(format: "planOrder >= 0")
-        request.sortDescriptors = [NSSortDescriptor(keyPath: \Event.planOrder, ascending: false)]
-        request.fetchLimit = 1
-        let lastOrder = try context.fetch(request).first?.planOrder ?? -1
+        let nextOrder = try PlanStore.nextOrder(in: context)
         let previousOrder = planOrder
-        planOrder = lastOrder + 1
+        planOrder = nextOrder
         do {
             try context.save()
         } catch {

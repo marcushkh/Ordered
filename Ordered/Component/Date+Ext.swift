@@ -73,7 +73,7 @@ extension Date {
     
     static func greaterHHMM(_ str1: String, _ str2: String) -> Bool{
         let calendar = Calendar.current
-        let dayStartTime = UserDefaults.standard.integer(forKey: "DayStartTime")
+        let dayStartTime = MyCalendar.dayStartHour
         
         var date1 = getDateFromHHMM(str1, currentDate: MyCalendar.getToday())
         var date2 = getDateFromHHMM(str2, currentDate: MyCalendar.getToday())

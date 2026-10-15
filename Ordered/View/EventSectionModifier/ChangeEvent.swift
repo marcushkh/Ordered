@@ -5,132 +5,201 @@
 //  Created by Kai Hin Hung on 12/3/2025.
 //
 import SwiftUI
+import CoreData
+import UIKit
 
 struct ChangeEvent: View{
     @ObservedObject var viewModel: ContentViewModel
+    var event: Event? = nil
+    @Environment(\.dismiss) private var dismissSheet
+
+    private var editingEvent: Event? { event ?? viewModel.changeEvent }
     
     @State var icon: String = ""
     @State var name: String = ""
     @FocusState var nameTyping: Bool
     
-    @State var showAlert = false
+    @State private var activeAlert: EditorAlert?
+    @State private var hasLoaded = false
+    @State private var originalName = ""
+    @State private var originalIcon = ""
+
+    private var hasUnsavedChanges: Bool {
+        hasLoaded && (name != originalName || icon != originalIcon)
+    }
     
     var body : some View{
-        ZStack{
-            //Background
-            Color(.cPrimary.opacity(0.2))
-                .ignoresSafeArea()
-                .onTapGesture {
-                    withAnimation {
-                        dismiss()
-                    }
+        NavigationStack {
+            EventDetailsForm(name: $name, emoji: $icon, nameTyping: $nameTyping)
+                .onAppear {
+                    guard !hasLoaded else { return }
+                    icon = editingEvent?.icon ?? "💡"
+                    name = editingEvent?.name ?? ""
+                    originalName = name
+                    originalIcon = icon
+                    hasLoaded = true
+                    nameTyping = true
                 }
-            
-            VStack{
-                HStack{
-                    ZStack{
-                        RoundedRectangle(cornerRadius: 20)
-                            .fill(Color(.color1))
-                            .frame(width: 60, height: 60)
-                        
-                        Text(icon)
-                            .font(.custom("", size: 50))
-                            .shadow(radius: K.medium_size)
-                    }
-                    .accessibilityHidden(true)
-                    .overlay {
-                        NativeEmojiInput(emoji: $icon) {
-                            nameTyping = false
+                .navigationTitle("Edit Event")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .topBarLeading) {
+                        Button("Delete", role: .destructive) {
+                            activeAlert = .delete
                         }
                     }
-                    Spacer()
-                    
-                    ZStack{
-                        TextField("Event", text: $name)
-                            .multilineTextAlignment(.leading)
-                            .focused($nameTyping)
-                            .underlineTextField(underline: .color3, focus: nameTyping, focusColor: Color(.color2))
-                            .font(.system(size: 24))
-                            .frame(width: 228, height: 80)
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button("Save") {
+                            if save() { dismiss() }
+                        }
+                        .disabled(name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                     }
                 }
-                
-                Spacer()
-                
-                // Two Button Layout - Delete on left, Save on right
-                HStack(spacing: 12) {
-                    // Delete Button
-                    Button(action: {
-                        showAlert = true
-                    }) {
-                        ZStack{
-                            RoundedRectangle(cornerRadius: 20)
-                                .fill(Color.error)
-                                .frame(height: 40)
-                            
-                            Image(systemName: "xmark")
-                                .font(.title3)
-                                .foregroundStyle(Color.white)
-                                .bold()
-                        }
-                    }
-                    .frame(width: 60)
-                    
-                    // Save Button
-                    Button(action: {
-                        Event.save(
-                            icon: icon,
-                            name: name,
-                            startTime: viewModel.changeEvent?.startTime,
-                            endTime: viewModel.changeEvent?.endTime,
-                            duration: Int(viewModel.changeEvent?.duration ?? -1),
-                            isFavourite: viewModel.changeEvent?.isFavourite ?? false,
-                            isActive: viewModel.changeEvent?.isActive ?? true,
-                            event: viewModel.changeEvent
-                        )
-                        dismiss()
-                    }) {
-                        ZStack{
-                            RoundedRectangle(cornerRadius: 20)
-                                .fill(name.isEmpty ? Color.gray : Color.color3)
-                                .frame(height: 40)
-                            
-                            HStack {
-                                Text("Save")
-                            }
-                            .font(.title3)
-                            .foregroundStyle(Color.white)
-                            .bold()
-                        }
-                    }
-                    .disabled(name.isEmpty)
-                }
-                .padding(.bottom)
+        }
+        .presentationDragIndicator(.visible)
+        .background {
+            EventDismissalGuard(hasUnsavedChanges: hasUnsavedChanges) {
+                nameTyping = false
+                activeAlert = .discard
             }
-            .onAppear{
-                icon = viewModel.changeEvent?.icon ?? ""
-                name = viewModel.changeEvent?.name ?? ""
-                nameTyping = true
-            }
-            .padding(.vertical)
-            .padding(.horizontal)
-            .padding(.horizontal, K.horizontal_padding)
-            .background()
-            .alert(isPresented: $showAlert) {
-                Alert(
+        }
+        .alert(item: $activeAlert) { alert in
+            switch alert {
+            case .delete:
+                return Alert(
                     title: Text("Delete Event"),
                     message: Text("Are you sure you want to delete this event?"),
-                    primaryButton: .destructive(Text("Delete")) {
-                        viewModel.changeEvent?.delete()
+                    primaryButton: .cancel(Text("Cancel")),
+                    secondaryButton: .destructive(Text("Delete")) {
+                        editingEvent?.delete()
                         dismiss()
-                    },
-                    secondaryButton: .cancel()
+                    }
+                )
+            case .discard:
+                return Alert(
+                    title: Text("Discard Changes?"),
+                    message: Text("Your changes to this event haven't been saved."),
+                    primaryButton: .cancel(Text("Cancel")),
+                    secondaryButton: .destructive(Text("Discard")) { dismiss() }
+                )
+            case .saveFailure(let message):
+                return Alert(
+                    title: Text("Couldn't Save Event"),
+                    message: Text(message),
+                    primaryButton: .default(Text("Retry")) { if save() { dismiss() } },
+                    secondaryButton: .cancel(Text("OK"))
                 )
             }
         }
     }
+
+    private enum EditorAlert: Identifiable {
+        case delete, discard, saveFailure(String)
+
+        var id: String {
+            switch self {
+            case .delete: return "delete"
+            case .discard: return "discard"
+            case .saveFailure: return "saveFailure"
+            }
+        }
+    }
+
+    private func save() -> Bool {
+        let trimmedName = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmedName.isEmpty else {
+            activeAlert = .saveFailure("Enter an event name before closing.")
+            return false
+        }
+        guard let event = editingEvent, event.isActive else { return true }
+        guard event.name != trimmedName || event.icon != icon else {
+            return true
+        }
+        let context = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+        context.persistentStoreCoordinator = Model.viewContext.persistentStoreCoordinator
+        do {
+            let target = try context.existingObject(with: event.objectID) as! Event
+            target.name = trimmedName
+            target.icon = icon
+            try context.save()
+            activeAlert = nil
+            originalName = name
+            originalIcon = icon
+            viewModel.refresh.toggle()
+            return true
+        } catch {
+            context.rollback()
+            activeAlert = .saveFailure(error.localizedDescription)
+            return false
+        }
+    }
+
     func dismiss(){
-        viewModel.changeEvent = nil;
-        viewModel.showChangeEvent = false
+        if event == nil {
+            viewModel.changeEvent = nil
+            viewModel.showChangeEvent = false
+        }
+        dismissSheet()
+    }
+}
+
+/// Observes a sheet dismissal attempt without dismissing or saving its draft.
+private struct EventDismissalGuard: UIViewControllerRepresentable {
+    var hasUnsavedChanges: Bool
+    var onAttemptToDismiss: () -> Void
+
+    func makeUIViewController(context: Context) -> Controller {
+        Controller()
+    }
+
+    func updateUIViewController(_ controller: Controller, context: Context) {
+        controller.hasUnsavedChanges = hasUnsavedChanges
+        controller.onAttemptToDismiss = onAttemptToDismiss
+        // SwiftUI attaches the hosting controller after updating this background.
+        DispatchQueue.main.async { [weak controller] in
+            controller?.installDelegate()
+        }
+    }
+
+    final class Controller: UIViewController, UIAdaptivePresentationControllerDelegate {
+        var hasUnsavedChanges = false
+        var onAttemptToDismiss: (() -> Void)?
+        private weak var previousDelegate: UIAdaptivePresentationControllerDelegate?
+
+        override func viewDidAppear(_ animated: Bool) {
+            super.viewDidAppear(animated)
+            installDelegate()
+        }
+
+        func installDelegate() {
+            var candidate: UIViewController? = parent
+            while let controller = candidate {
+                if let presentation = controller.presentationController,
+                   controller.presentingViewController != nil {
+                    if presentation.delegate !== self {
+                        previousDelegate = presentation.delegate
+                        presentation.delegate = self
+                    }
+                    return
+                }
+                candidate = controller.parent
+            }
+        }
+
+        func presentationControllerShouldDismiss(_ presentationController: UIPresentationController) -> Bool {
+            !hasUnsavedChanges && (previousDelegate?.presentationControllerShouldDismiss?(presentationController) ?? true)
+        }
+
+        func presentationControllerWillDismiss(_ presentationController: UIPresentationController) {
+            previousDelegate?.presentationControllerWillDismiss?(presentationController)
+        }
+
+        func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
+            previousDelegate?.presentationControllerDidDismiss?(presentationController)
+        }
+
+        func presentationControllerDidAttemptToDismiss(_ presentationController: UIPresentationController) {
+            onAttemptToDismiss?()
+        }
     }
 }

@@ -8,6 +8,32 @@
 import SwiftUI
 import UIKit
 
+struct EventDetailsForm: View {
+    @Binding var name: String
+    @Binding var emoji: String
+    @FocusState.Binding var nameTyping: Bool
+
+    var body: some View {
+        Form {
+            SwiftUI.Section {
+                EventAndEmoji(eventName: $name, selectedEmoji: $emoji, eventNameTyping: $nameTyping) {
+                    Text(emoji.isEmpty ? "💡" : emoji)
+                        .font(.system(size: 40))
+                        .frame(width: 60, height: 60)
+                        .background(Color.color1, in: RoundedRectangle(cornerRadius: 16))
+                } eventNameView: {
+                    TextField("Event name", text: $name)
+                        .focused($nameTyping)
+                        .submitLabel(.done)
+                        .onSubmit { nameTyping = false }
+                }
+            }
+        }
+        .contentMargins(.top, 12, for: .scrollContent)
+        .environment(\.editMode, .constant(.inactive))
+    }
+}
+
 struct EventAndEmoji<Emoji: View, EventName: View>: View {
     @Binding var eventName: String
     @Binding var selectedEmoji: String
@@ -21,9 +47,7 @@ struct EventAndEmoji<Emoji: View, EventName: View>: View {
             emojiView()
                 .accessibilityHidden(true)
                 .overlay {
-                    NativeEmojiInput(emoji: $selectedEmoji) {
-                        eventNameTyping = false
-                    }
+                    NativeEmojiInput(emoji: $selectedEmoji)
                 }
 
             Spacer()
@@ -45,7 +69,8 @@ final class EmojiKeyboardTextField: UITextField {
 /// The existing emoji artwork remains visible underneath this native input control.
 struct NativeEmojiInput: UIViewRepresentable {
     @Binding var emoji: String
-    var onBeginEditing: () -> Void = {}
+    var accessibilityLabel = "Event emoji"
+    var fallbackEmoji = "💡"
 
     func makeUIView(context: Context) -> EmojiKeyboardTextField {
         let field = EmojiKeyboardTextField()
@@ -58,7 +83,7 @@ struct NativeEmojiInput: UIViewRepresentable {
         field.autocorrectionType = .no
         field.spellCheckingType = .no
         field.returnKeyType = .done
-        field.accessibilityLabel = "Event emoji"
+        field.accessibilityLabel = accessibilityLabel
         field.accessibilityHint = "Type an emoji using the keyboard"
         field.accessibilityValue = emoji
         field.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
@@ -76,6 +101,7 @@ struct NativeEmojiInput: UIViewRepresentable {
     func updateUIView(_ field: EmojiKeyboardTextField, context: Context) {
         context.coordinator.parent = self
         if field.text != emoji { field.text = emoji }
+        field.accessibilityLabel = accessibilityLabel
         field.accessibilityValue = emoji
     }
 
@@ -85,10 +111,6 @@ struct NativeEmojiInput: UIViewRepresentable {
         var parent: NativeEmojiInput
 
         init(parent: NativeEmojiInput) { self.parent = parent }
-
-        func textFieldDidBeginEditing(_ textField: UITextField) {
-            parent.onBeginEditing()
-        }
 
         func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
             if string.isEmpty {
@@ -111,7 +133,7 @@ struct NativeEmojiInput: UIViewRepresentable {
 
         func textFieldDidEndEditing(_ textField: UITextField) {
             if parent.emoji.isEmpty {
-                parent.emoji = "💡"
+                parent.emoji = parent.fallbackEmoji
                 textField.text = parent.emoji
             }
         }

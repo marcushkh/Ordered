@@ -17,6 +17,10 @@ struct HapticFeedback {
         impactFeedback.impactOccurred()
     }
     
+    static func soft() {
+        triggerHapticFeedback(style: .soft)
+    }
+
     static func light() {
         triggerHapticFeedback(style: .light)
     }

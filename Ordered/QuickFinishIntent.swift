@@ -67,8 +67,8 @@ struct OrderedEventQuery: EntityStringQuery {
 
 struct QuickFinishEventIntent: AppIntent {
     static var title: LocalizedStringResource = "Quick Finish Event"
-    static var description = IntentDescription("Record one completion of the selected event for today, just like Quick Finish. Each run records a new completion.")
-    static var openAppWhenRun = false
+    static var description = IntentDescription("Record one completion of the selected event for today, just like on Home. Each run records a new completion.")
+    static var openAppWhenRun = true
 
     @Parameter(title: "Event")
     var event: OrderedEventEntity

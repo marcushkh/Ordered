@@ -1,105 +1,79 @@
-//
-//  WelcomeScreen1.swift
-//  Ordered
-//
-//  Created by Kai Hin Hung on 28/8/2024.
-//
-
 import SwiftUI
 
 struct WelcomeScreen: View {
     @ObservedObject var viewModel: ContentViewModel
-    @StateObject var welcomeVM = WelcomeVM()
-    
-    @State var currentItem = 0
-    
-    @AppStorage("welcomeScreen") var welcomeScreen: Bool = true
-    
-    let listOfSteps = K.onboardingSteps
-    
+    @StateObject private var welcomeVM = WelcomeVM()
+    @Environment(\.managedObjectContext) private var context
+    @Environment(\.colorScheme) private var colorScheme
+    @State private var showingPrivacy = false
+    @AppStorage("welcomeScreen") private var welcomeScreen = true
+
     var body: some View {
-        
-        VStack{
-            ProgressStepBar(listOfTitle: listOfSteps, currentItem: $currentItem)
-            
-            Spacer()
-            
-            SwipeableStack(listOfSteps, jumpTo: listOfSteps[currentItem]) { d, pos in
-                
-                CaseSeparation(currentPage: d, listOfSteps: listOfSteps, welcomeVM: welcomeVM, viewModel: viewModel)
-                    .onChange(of: d){
-                        if pos == .centerView{
-                            withAnimation {
-                                currentItem = listOfSteps.firstIndex(of: d) ?? 0
-                            }
-                        }
-                    }
+        VStack(spacing: 0) {
+            HStack {
+                Button(action: goBack) {
+                    Label("Back", systemImage: "chevron.left")
+                        .font(.body.weight(.semibold))
+                        .frame(minHeight: 44)
+                        .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .disabled(!showingPrivacy && welcomeVM.categoryIndex == 0)
+                Spacer()
             }
-            
-            Button{
-                if currentItem < listOfSteps.count - 1{
-                    withAnimation {
-                        currentItem += 1
-                        HapticFeedback.light()
+            .padding(.bottom, 8)
+
+
+            if showingPrivacy {
+                Privacy()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+
+                Button(action: startTutorial) {
+                    HStack {
+                        Spacer()
+                        Text("Show Me Around")
+                        Image(systemName: "arrow.right")
+                        Spacer()
                     }
+                    .font(.headline)
+                    .foregroundStyle(.white)
+                    .padding(.horizontal, 20)
+                    .padding(.vertical)
+                    .background(Color(hex: "484B6A"), in: RoundedRectangle(cornerRadius: 20))
                 }
-                else{
-                    if Event.count() == 0 {
-                        currentItem = 1
-                        welcomeVM.alertMessage = "Minimum of one event is required"
-                        welcomeVM.showAlert = true
-                    }
-                    else{
-                        withAnimation {
-                            welcomeScreen = false
-                            viewModel.isShowPaywall = !viewModel.isSubscriptionActive
-                            UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { _, _ in }
-                            HapticFeedback.heavy()
-                        }
-                    }
+                .buttonStyle(.plain)
+            } else {
+                CategoryOnboarding(welcomeVM: welcomeVM) {
+                    withAnimation(.easeInOut(duration: 0.25)) { showingPrivacy = true }
                 }
-            } label: {
-                Text(currentItem < listOfSteps.count - 1 ? "Next" : "Start!")
-                    .font(.title2)
-                    .foregroundStyle(Color(.white))
-                    .bold()
-                    .padding([.top, .bottom], 10)
-                    .padding([.leading, .trailing], UIScreen.main.bounds.width * 0.35)
-                    .background(Color(hex: "484B6A"))
-                    .clipShape(.rect(cornerRadius: 20))
             }
         }
         .padding(.horizontal, K.horizontal_padding)
-        .padding(.vertical)
+        .padding(.vertical, 16)
+        .background(Color.cBackground.ignoresSafeArea())
         .alert(welcomeVM.alertMessage, isPresented: $welcomeVM.showAlert) {
-            Button{
-                welcomeVM.showAlert = false
-            } label: {
-                Text("ok")
-            }
+            Button("OK", role: .cancel) { }
         }
     }
-}
 
-struct CaseSeparation: View{
-    var currentPage: String
-    var listOfSteps: [String]
-    @ObservedObject var welcomeVM: WelcomeVM
-    @ObservedObject var viewModel: ContentViewModel
-    
-    var body: some View{
-        switch(currentPage){
-        case listOfSteps[0]:
-            Intro()
-            
-        case listOfSteps[1]:
-            Personal(viewModel: viewModel, welcomeVM: welcomeVM)
-            
-        case listOfSteps[2]:
-            Privacy()
-            
-        default:
-            Text("Default")
+    private func goBack() {
+        withAnimation(.easeInOut(duration: 0.25)) {
+            welcomeVM.previousCategory()
+            showingPrivacy = false
+        }
+        HapticFeedback.light()
+    }
+
+    private func startTutorial() {
+        do {
+            try welcomeVM.saveCategories(in: context, colorScheme: colorScheme)
+            viewModel.refresh.toggle()
+            viewModel.appTutorialPending = true
+            withAnimation { welcomeScreen = false }
+            HapticFeedback.heavy()
+        } catch {
+            welcomeVM.alertMessage = "Couldn’t save your setup. Please try again. \(error.localizedDescription)"
+            welcomeVM.showAlert = true
         }
     }
 }

@@ -4,7 +4,18 @@ import Foundation
 // Source: https://www.youtube.com/watch?v=PZySRHE783s&t=845s&ab_channel=CodingInANutshell
 // Modifications: I made modification to make the jumpTo looks better when it is changed from the outside
 struct MyCalendar {
-    var calendar = Calendar(identifier: .iso8601)
+    var calendar: Calendar { Self.weekCalendar }
+
+    /// Zero follows iOS; 1 selects Sunday and 2 selects Monday.
+    static func resolvedFirstWeekday(_ preference: Int, systemCalendar: Calendar = .autoupdatingCurrent) -> Int {
+        (1...2).contains(preference) ? preference : systemCalendar.firstWeekday
+    }
+
+    static var weekCalendar: Calendar {
+        var calendar = Calendar(identifier: .iso8601)
+        calendar.firstWeekday = resolvedFirstWeekday(UserDefaults.standard.integer(forKey: "FirstWeekday"))
+        return calendar
+    }
     var today: Date
     var currentDate: Date
     var startDate: Date
@@ -12,10 +23,8 @@ struct MyCalendar {
     let dateFormatter = DateFormatter()
     
     init() {
-        calendar.firstWeekday = Calendar.autoupdatingCurrent.firstWeekday
+        let calendar = Self.weekCalendar
         dateFormatter.dateFormat = "yyyyMMdd"
-        
-        let dayStartTime = UserDefaults.standard.integer(forKey: "DayStartTime")
         
         today = calendar.date(from: calendar.dateComponents([.year, .month, .day], from: MyCalendar.getToday())) ?? Date.now
         currentDate = today
@@ -117,8 +126,7 @@ struct MyCalendar {
     }
     
     static func getWeekOrder() -> [Int] {
-        var calendar = Calendar(identifier: .iso8601)
-        calendar.firstWeekday = Calendar.autoupdatingCurrent.firstWeekday
+        let calendar = weekCalendar
         
         let isoWeekdays = [0, 1, 2, 3, 4, 5, 6]
         let firstWeekdayIndex = calendar.firstWeekday - 1
@@ -128,10 +136,35 @@ struct MyCalendar {
         return weekdayNumbers
     }
     
-    static func getToday() -> Date{
-        let calendar = Calendar.current
-        let dayStartTime = UserDefaults.standard.integer(forKey: "DayStartTime")
-        
-        return calendar.date(from: calendar.dateComponents([.year, .month, .day], from: calendar.date(byAdding: .hour, value: dayStartTime * -1, to: Date.now) ?? Date())) ?? Date()
+    static let defaultDayStartHour = 4
+
+    static var dayStartHour: Int {
+        let saved = UserDefaults.standard.object(forKey: "DayStartTime") as? Int
+        return min(23, max(0, saved ?? defaultDayStartHour))
+    }
+
+    static func getToday() -> Date {
+        day(containing: .now, startingAt: dayStartHour)
+    }
+
+    /// Week navigation keeps the selected weekday, but returning to this week selects today.
+    static func selection(inWeekContaining target: Date, preserving selected: Date,
+                          today: Date, calendar: Calendar) -> Date {
+        let start = calendar.dateInterval(of: .weekOfYear, for: target)?.start
+            ?? calendar.startOfDay(for: target)
+        if let currentWeek = calendar.dateInterval(of: .weekOfYear, for: today),
+           currentWeek.start == start {
+            return calendar.startOfDay(for: today)
+        }
+        let weekday = calendar.component(.weekday, from: selected)
+        let offset = (weekday - calendar.component(.weekday, from: start) + 7) % 7
+        return calendar.date(byAdding: .day, value: offset, to: start) ?? start
+    }
+
+    /// Compare local clock hours instead of subtracting elapsed hours across DST changes.
+    static func day(containing date: Date, startingAt hour: Int, calendar: Calendar = .current) -> Date {
+        let midnight = calendar.startOfDay(for: date)
+        guard calendar.component(.hour, from: date) < hour else { return midnight }
+        return calendar.date(byAdding: .day, value: -1, to: midnight) ?? midnight
     }
 }

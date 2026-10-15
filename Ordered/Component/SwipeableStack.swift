@@ -1,5 +1,5 @@
 //
-//  SwapeableStack.swift
+//  SwipeableStack.swift
 //  Ordered
 //
 //  Created by Kai Hin Hung on 15/8/2024.
@@ -7,109 +7,136 @@
 
 import SwiftUI
 
-struct SwipeableStack<WhateverTypeOfData: Hashable, Content>: View where Content : View{
-    var WhateverData: [WhateverTypeOfData] = []
-    let content: (WhateverTypeOfData, ViewPosition) -> Content
-    var jumpTo: WhateverTypeOfData?
-    
-    @State private var dragged = CGSize.zero
-    @State var dataIndex = 1
-    
-    var previousExist: Bool{
-        return (dataIndex - 1) >= 0
-    }
-    var nextExist: Bool{
-        return dataIndex < (WhateverData.count - 1)
-    }
-    
-    init(_ data: [WhateverTypeOfData], jumpTo: WhateverTypeOfData? = nil, @ViewBuilder content: @escaping (WhateverTypeOfData, ViewPosition) -> Content) {
-        self.WhateverData = data
-        self.content = content
-        if let jumpTo{
-            self.jumpTo = jumpTo
-        }
-        
-    }
-    
-    var body: some View{
-        GeometryReader{ geo in
-            let w = geo.size.width
-            let h = geo.size.height
-            HStack(spacing: K.horizontal_padding * 2){
-                if previousExist{
-                    content(WhateverData[dataIndex - 1], .previousView) //Last week
-                        .frame(width: w, height: h)
-                        .offset(x: previousExist ? -w-K.horizontal_padding*2 : 0)
-                }
-                content(WhateverData[dataIndex], .centerView) //This week
-                    .frame(width: w, height: h)
-                    .offset(x: previousExist ? -w-K.horizontal_padding*2 : 0)
+struct SwipeableStack<Data: Hashable, Content: View>: View {
+    let data: [Data]
+    let jumpTo: Data?
+    let onPageChanged: (Data) -> Void
+    let content: (Data, ViewPosition) -> Content
 
-                if nextExist{
-                    content(WhateverData[dataIndex + 1], .nextView) //Next week
-                        .frame(width: w, height: h)
-                        .offset(x: previousExist ? -w-K.horizontal_padding*2 : 0)
-                }
-            }
-            //when first time
-            .onAppear {
-                if let jumpTo{
-                    if let pos = WhateverData.firstIndex(of: jumpTo) {
-                        dataIndex = pos
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var currentData: Data?
+    @State private var dragOffset: CGFloat = 0
+    @State private var isSettling = false
+    @State private var isDragging = false
+    @State private var animationID = UUID()
+
+    init(_ data: [Data], jumpTo: Data? = nil,
+         onPageChanged: @escaping (Data) -> Void = { _ in },
+         @ViewBuilder content: @escaping (Data, ViewPosition) -> Content) {
+        self.data = data
+        self.jumpTo = jumpTo
+        self.onPageChanged = onPageChanged
+        self.content = content
+        _currentData = State(initialValue: jumpTo ?? data.first)
+    }
+
+    private var currentIndex: Int? {
+        guard let currentData else { return data.isEmpty ? nil : 0 }
+        return data.firstIndex(of: currentData)
+    }
+
+    var body: some View {
+        GeometryReader { geometry in
+            let distance = geometry.size.width + K.horizontal_padding * 2
+            ZStack {
+                if let index = currentIndex {
+                    ForEach(-1...1, id: \.self) { offset in
+                        let pageIndex = index + offset
+                        if data.indices.contains(pageIndex) {
+                            content(data[pageIndex], position(for: offset))
+                                .allowsHitTesting(!isDragging && !isSettling)
+                                .frame(width: geometry.size.width, height: geometry.size.height)
+                                .offset(x: CGFloat(offset) * distance + dragOffset)
+                                .accessibilityHidden(offset != 0)
+                        }
                     }
                 }
             }
-            // Give animation and change the view when jumpTo is changed
-            .onChange(of: jumpTo) { oldValue, newValue in
-                if let jumpTo{
-                    if let pos = WhateverData.firstIndex(of: jumpTo) {
-                        
-                        let direction = (pos == dataIndex) ? 0 : (pos > dataIndex ? -1 : 1)
-                        withAnimation(.smooth(duration: 0.5)) {
-                            dragged.width = CGFloat(direction) * (w + K.horizontal_padding * 2)
-                        }
-                        
-                        dataIndex = pos
-                        dragged = CGSize.zero
+            .frame(width: geometry.size.width, height: geometry.size.height)
+            .contentShape(Rectangle())
+            .highPriorityGesture(
+                DragGesture(minimumDistance: 15)
+                    .onChanged { value in
+                        guard !isSettling, let index = currentIndex,
+                              abs(value.translation.width) > abs(value.translation.height) else { return }
+                        isDragging = true
+                        let atEdge = (value.translation.width > 0 && index == 0)
+                            || (value.translation.width < 0 && index == data.count - 1)
+                        dragOffset = value.translation.width * (atEdge ? 0.25 : 1)
                     }
-                }
-            }
-            .offset(x: dragged.width)
-            .gesture(
-                DragGesture()
-                    .onChanged({ value in
-                        dragged.width = value.translation.width
-                    })
-                    .onEnded({ value in
-                        var indexOffset = 0
-                        withAnimation(.smooth(duration: 0.5)) {
-                            dragged = CGSize.zero
-                            if value.predictedEndTranslation.width < -w/2 && nextExist{
-                                dragged.width = -w - K.horizontal_padding*2
-                                indexOffset = 1 //Next
-                            }
-                            if value.predictedEndTranslation.width > w/2 && previousExist{
-                                dragged.width = w + K.horizontal_padding*2
-                                indexOffset = -1 //Previous
-                            }
-                            
+                    .onEnded { value in
+                        isDragging = false
+                        guard !isSettling, let index = currentIndex else { return }
+                        let horizontal = abs(value.translation.width) > abs(value.translation.height)
+                        let projected = value.predictedEndTranslation.width
+                        var targetIndex = index
+                        if horizontal && (value.translation.width < -geometry.size.width * 0.25 || projected < -geometry.size.width * 0.5) {
+                            targetIndex = min(index + 1, data.count - 1)
+                        } else if horizontal && (value.translation.width > geometry.size.width * 0.25 || projected > geometry.size.width * 0.5) {
+                            targetIndex = max(index - 1, 0)
                         }
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5){
-                            dragged = CGSize.zero
-                            if indexOffset == 1 && nextExist{
-                                dataIndex += indexOffset
-                            }
-                            if indexOffset == -1 && previousExist{
-                                dataIndex += indexOffset
-                            }
-                        }
-                    })
+                        settle(from: index, to: targetIndex, distance: distance)
+                    }
             )
+        }
+        .clipped()
+        .onChange(of: jumpTo) { _, value in synchronize(to: value) }
+        .onChange(of: data) { _, values in
+            if let currentData, values.contains(currentData) { return }
+            synchronize(to: jumpTo ?? values.first)
+        }
+    }
+
+    private func position(for offset: Int) -> ViewPosition {
+        switch offset {
+        case -1: return .previousView
+        case 1: return .nextView
+        default: return .centerView
+        }
+    }
+
+    private func synchronize(to value: Data?) {
+        guard let value, data.contains(value), value != currentData else { return }
+        animationID = UUID()
+        var transaction = Transaction()
+        transaction.disablesAnimations = true
+        withTransaction(transaction) {
+            currentData = value
+            dragOffset = 0
+            isSettling = false
+            isDragging = false
+        }
+    }
+
+    private func settle(from index: Int, to targetIndex: Int, distance: CGFloat) {
+        let target = data[targetIndex]
+        let token = UUID()
+        animationID = token
+        isSettling = true
+        let finish = {
+            guard animationID == token else { return }
+            var transaction = Transaction()
+            transaction.disablesAnimations = true
+            withTransaction(transaction) {
+                currentData = target
+                dragOffset = 0
+                isSettling = false
+                if targetIndex != index { onPageChanged(target) }
+            }
+        }
+        if reduceMotion {
+            finish()
+        } else {
+            withAnimation(.smooth(duration: 0.3), completionCriteria: .removed) {
+                dragOffset = -CGFloat(targetIndex - index) * distance
+            } completion: {
+                finish()
+            }
         }
     }
 }
 
-enum ViewPosition{
+enum ViewPosition {
     case centerView
     case previousView
     case nextView

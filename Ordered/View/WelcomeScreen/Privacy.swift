@@ -1,38 +1,30 @@
-//
-//  Privacy.swift
-//  Ordered
-//
-//  Created by Kai Hin Hung on 22/5/2025.
-//
-
 import SwiftUI
 
 struct Privacy: View {
     var body: some View {
-        GeometryReader{ geo in
-            VStack{
-                Image("Privacy")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: geo.size.width * 0.9)
-                
-                Text("Your Privacy Matters")
-                    .font(.title)
-                    .bold()
-                    .padding()
-                    .multilineTextAlignment(.center)
-                
-                Text("All data are Stored Locally")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                    .multilineTextAlignment(.center)
-                
-                Text("iCloud can be used for backup and synchronization")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
+        ScrollView {
+            VStack(alignment: .leading, spacing: 28) {
+                HStack{
+                    Spacer()
+                    Image("Privacy")
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 300, height: 300)
+                    Spacer()
+                }
+
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("All Data are Secure")
+                        .font(.system(.largeTitle, design: .rounded, weight: .bold))
+                    Text("We do not collect any data from you. All data are saved in device or user can opt-in for iCloud backup.")
+                        .font(.body)
+                        .foregroundStyle(.secondary)
+                }
             }
-            .frame(width: geo.size.width)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.top, 40)
+            .padding(.bottom, 24)
         }
+        .scrollIndicators(.hidden)
     }
 }

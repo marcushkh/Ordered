@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Combine
 import CoreData
 import RevenueCat
 import RevenueCatUI
@@ -19,15 +20,12 @@ struct ContentView: View {
     
     @AppStorage("welcomeScreen") var welcomeScreen: Bool = true
     
+    @AppStorage("DayStartTime") private var dayStartTime = MyCalendar.defaultDayStartHour
+    @AppStorage("FirstWeekday") private var firstWeekday = 0
+    private let dayClock = Timer.publish(every: 30, on: .main, in: .common).autoconnect()
+
     @FocusState var searchTyping: Bool
     @Environment(\.scenePhase) private var scenePhase
-    
-    init(){
-        #if DEBUG
-//        welcomeScreen = true
-        #endif
-        Purchases.configure(withAPIKey: "appl_xnYsiELHTsABRcVdfAShQCpYvQK")
-    }
     
     var body: some View {
         GeometryReader{ geo in
@@ -62,10 +60,11 @@ struct ContentView: View {
                         )
                     }
                     else if viewModel.currentTab == .statistic{
-                        Stat(viewModel: statViewModel, dayPlannerVM: dayPlannerVM)
+                        Stat(appViewModel: viewModel, viewModel: statViewModel, dayPlannerVM: dayPlannerVM)
+                            .showCase(.statistics)
                     }
                     else if viewModel.currentTab == .setting{
-                        SettingView(viewModel: viewModel)
+                        SettingView()
                     }
                     
                     
@@ -78,6 +77,7 @@ struct ContentView: View {
                     }
                 }
                 
+                .tutorialShowCase(viewModel)
                 .overlay{
                     if welcomeScreen {
                         WelcomeScreen(viewModel: viewModel)
@@ -87,25 +87,67 @@ struct ContentView: View {
                 .sheet(isPresented: $viewModel.showChangeEvent){
                     ChangeEvent(viewModel: viewModel)
                 }
+                .onAppear {
+                    refreshCurrentDay()
+                    if !welcomeScreen { viewModel.startTutorialIfNeeded() }
+                }
+                .onChange(of: welcomeScreen) { _, isShowing in
+                    if !isShowing { viewModel.startTutorialIfNeeded() }
+                }
+                .onChange(of: viewModel.tutorial.isActive) { wasActive, isActive in
+                    if wasActive && !isActive {
+                        viewModel.presentTutorialFollowUpIfNeeded()
+                    }
+                }
+                .onReceive(dayClock) { _ in refreshCurrentDay() }
+                .onChange(of: dayStartTime) { _, _ in
+                    refreshCurrentDay()
+                    viewModel.viewedDate = MyCalendar.getToday()
+                    statViewModel.returnToCurrentPeriod()
+                }
                 // when the app is re-entered set to current date
                 .onChange(of: scenePhase, { oldValue, newValue in
                     if newValue == .active {
-                        dayPlannerVM.setCurrentDate(to: MyCalendar.getToday())
+                        refreshCurrentDay()
+                        Task { await viewModel.refreshSubscriptionStatus() }
                     }
                 })
             }
             .sheet(isPresented: $viewModel.isShowPaywall) {
                 PaywallView()
                     .onPurchaseCompleted { customerInfo in
-                        viewModel.isSubscriptionActive = customerInfo.entitlements.all["Premium"]?.isActive == true
-                        viewModel.isShowPaywall = false
+                        viewModel.updateSubscription(customerInfo)
+                        if viewModel.isSubscriptionActive { viewModel.isShowPaywall = false }
                     }
                     .onRestoreCompleted { customerInfo in
-                        viewModel.isSubscriptionActive = customerInfo.entitlements.all["Premium"]?.isActive == true
-                        viewModel.isShowPaywall = false
+                        viewModel.updateSubscription(customerInfo)
+                        if viewModel.isSubscriptionActive { viewModel.isShowPaywall = false }
                     }
             }
         }
-        
+        .environment(\.calendar, preferredCalendar)
+        .task { await viewModel.observeSubscriptionUpdates() }
+        .task { await viewModel.refreshSubscriptionStatus() }
+        .alert("Couldn't Check Subscription", isPresented: Binding(
+            get: { viewModel.subscriptionError != nil },
+            set: { if !$0 { viewModel.subscriptionError = nil } }
+        )) {
+            Button("OK", role: .cancel) { viewModel.subscriptionError = nil }
+        } message: {
+            Text(viewModel.subscriptionError ?? "Please try again.")
+        }
     }
+    private var preferredCalendar: Calendar {
+        var calendar = Calendar.autoupdatingCurrent
+        calendar.firstWeekday = MyCalendar.resolvedFirstWeekday(firstWeekday)
+        return calendar
+    }
+
+    private func refreshCurrentDay() {
+        let today = MyCalendar.getToday()
+        if dayPlannerVM.currentDate != today {
+            dayPlannerVM.setCurrentDate(to: today)
+        }
+    }
+
 }
