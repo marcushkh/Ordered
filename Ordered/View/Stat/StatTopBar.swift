@@ -42,24 +42,19 @@ struct StatTopBar: View {
     }
 
     private func detailHeader(for event: Event) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                Button {
-                    HapticFeedback.light()
-                    withAnimation {
-                        viewModel.clearSelectedEvent()
-                    }
-                } label: {
-                    Image(systemName: "chevron.left")
-                        .font(.system(size: 20, weight: .semibold))
-                        .foregroundStyle(.color3)
-                        .frame(width: 32, height: 32, alignment: .leading)
+        HStack(spacing: 10) {
+            Button {
+                HapticFeedback.light()
+                withAnimation {
+                    viewModel.clearSelectedEvent()
                 }
-                Spacer()
-                Text(viewModel.periodLabel(dayPlannerVM: dayPlannerVM))
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
+            } label: {
+                Image(systemName: "chevron.left")
+                    .font(.system(size: 20, weight: .semibold))
+                    .foregroundStyle(.color3)
+                    .frame(width: 32, height: 32, alignment: .leading)
             }
+            .accessibilityLabel("Back to statistics")
 
             HStack(spacing: 12) {
                 eventBubble(event, size: 36)
@@ -67,8 +62,7 @@ struct StatTopBar: View {
                     .font(.title.bold())
                     .lineLimit(1)
             }
-
-
+            Spacer()
         }
         .padding(.top, 12)
         .padding(.bottom, 18)

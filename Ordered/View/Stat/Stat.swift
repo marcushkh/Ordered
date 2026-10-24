@@ -18,11 +18,7 @@ struct Stat: View {
         predicate: NSPredicate(format: "isActive == true")
     ) private var allEvents: FetchedResults<Event>
 
-    @FetchRequest(
-        entity: Event_Cal.entity(),
-        sortDescriptors: [],
-        predicate: NSPredicate(format: "aEndTime != nil")
-    ) private var completedEvents: FetchedResults<Event_Cal>
+    @StateObject private var completionStore = CompletionSnapshotStore()
 
     var body: some View {
         ScrollViewReader { proxy in
@@ -50,6 +46,17 @@ struct Stat: View {
                let id = appViewModel.tutorial.pinEventID { proxy.scrollTo(id, anchor: .center) }
         }
         }
+        .onAppear { completionStore.activate(in: viewContext) }
+        .onDisappear { completionStore.deactivate() }
+        .alert("Couldn't Load Statistics", isPresented: Binding(
+            get: { completionStore.errorMessage != nil },
+            set: { if !$0 { completionStore.clearError() } }
+        )) {
+            Button("Retry") { completionStore.activate(in: viewContext) }
+            Button("Cancel", role: .cancel) { completionStore.clearError() }
+        } message: {
+            Text(completionStore.errorMessage ?? "Please try again.")
+        }
         .alert("Couldn't Save Pin", isPresented: Binding(
             get: { pinError != nil },
             set: { if !$0 { pinError = nil } }
@@ -62,7 +69,7 @@ struct Stat: View {
 
     private var chartColumns: [StatisticColumn] {
         viewModel.chartColumns(
-            completedEvents: Array(completedEvents),
+            completions: completionStore.snapshot,
             dayPlannerVM: dayPlannerVM
         )
     }
@@ -70,7 +77,7 @@ struct Stat: View {
     private var rankedStatistics: [EventStatistic] {
         viewModel.rankedStatistics(
             allEvents: Array(allEvents),
-            completedEvents: Array(completedEvents),
+            completions: completionStore.snapshot,
             dayPlannerVM: dayPlannerVM
         )
     }
@@ -129,7 +136,8 @@ struct Stat: View {
     }
 
     private var rankedEvents: some View {
-        VStack(spacing: 0) {
+        let statistics = rankedStatistics
+        return LazyVStack(spacing: 0) {
             HStack(alignment: .firstTextBaseline) {
                 Text("Ranked").font(.title3.bold())
                 Spacer()
@@ -141,7 +149,7 @@ struct Stat: View {
 
             Rectangle().fill(.color3).frame(height: 2)
 
-            if rankedStatistics.isEmpty {
+            if statistics.isEmpty {
                 VStack(spacing: 8) {
                     Image(systemName: "chart.bar").font(.title).foregroundStyle(.color3)
                     Text("Tick an event to begin your statistics.")
@@ -151,7 +159,7 @@ struct Stat: View {
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 32)
             } else {
-                ForEach(rankedStatistics) { statistic in
+                ForEach(statistics) { statistic in
                     HStack(spacing: 4) {
                         Button {
                             HapticFeedback.light()
@@ -242,7 +250,7 @@ struct Stat: View {
     }
 
     private func eventDetail(for event: Event) -> some View {
-        let statistic = viewModel.statistics(for: event, completedEvents: Array(completedEvents), dayPlannerVM: dayPlannerVM)
+        let statistic = viewModel.statistics(for: event, completions: completionStore.snapshot, dayPlannerVM: dayPlannerVM)
 
         return VStack(spacing: 20) {
             HStack(spacing: 10) {
@@ -252,7 +260,7 @@ struct Stat: View {
                 )
                 detailMiniCard(
                     title: "Streak",
-                    value: "\(viewModel.currentStreak(for: event, completedEvents: Array(completedEvents)))",
+                    value: "\(viewModel.currentStreak(for: event, completions: completionStore.snapshot))",
                     valueColor: .color3
                 )
             }
@@ -261,18 +269,17 @@ struct Stat: View {
                 HStack {
                     Text("Day by Day").font(.headline)
                     Spacer()
-                    Text("\(viewModel.activeDayCount(for: event, completedEvents: Array(completedEvents), dayPlannerVM: dayPlannerVM)) of \(viewModel.currentDates(dayPlannerVM: dayPlannerVM).count) days")
+                    Text("\(viewModel.activeDayCount(for: event, completions: completionStore.snapshot, dayPlannerVM: dayPlannerVM)) of \(viewModel.currentDates(dayPlannerVM: dayPlannerVM).count) days")
                         .font(.footnote)
                         .foregroundStyle(.secondary)
                 }
-                barChart(columns: viewModel.eventColumns(for: event, completedEvents: Array(completedEvents), dayPlannerVM: dayPlannerVM), height: 100)
+                barChart(columns: viewModel.eventColumns(for: event, completions: completionStore.snapshot, dayPlannerVM: dayPlannerVM), height: 100)
             }
 
             VStack(spacing: 12) {
                 detailValueRow("Last \(viewModel.range.unit)", "\(statistic.previousTotal) times")
-                detailValueRow("Best day", viewModel.bestDay(for: event, completedEvents: Array(completedEvents), dayPlannerVM: dayPlannerVM))
-                detailValueRow("Share of your \(viewModel.range.unit)", viewModel.shareLabel(for: event, completedEvents: Array(completedEvents), dayPlannerVM: dayPlannerVM))
-                detailValueRow("Usual tick time", viewModel.usualTickTime(for: event, completedEvents: Array(completedEvents), dayPlannerVM: dayPlannerVM))
+                detailValueRow("Best day", viewModel.bestDay(for: event, completions: completionStore.snapshot, dayPlannerVM: dayPlannerVM))
+                detailValueRow("Usual tick time", viewModel.usualTickTime(for: event, completions: completionStore.snapshot, dayPlannerVM: dayPlannerVM))
             }
             .padding(16)
             .background(.color5, in: RoundedRectangle(cornerRadius: 24))

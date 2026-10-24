@@ -135,7 +135,6 @@ struct QuickFinishTopBar: View {
             .buttonStyle(.plain)
             .menuOrder(.fixed)
             .accessibilityLabel("Home actions")
-            .frame(width: 64)
 
             QuickFinishOrderTitle(viewModel: viewModel)
                 .frame(maxWidth: .infinity)
@@ -158,7 +157,6 @@ struct QuickFinishTopBar: View {
                         .accessibilityHidden(true)
                 }
             }
-            .frame(width: 64)
         }
         .padding(.vertical, 8)
         .transaction { transaction in

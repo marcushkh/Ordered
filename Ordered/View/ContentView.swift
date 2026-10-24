@@ -26,6 +26,7 @@ struct ContentView: View {
 
     @FocusState var searchTyping: Bool
     @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     
     var body: some View {
         GeometryReader{ geo in
@@ -43,31 +44,29 @@ struct ContentView: View {
                         .onTapGesture {
                             searchTyping = false
                         }
-                        .transition(.move(edge: .top).combined(with: .opacity))
+                        .animation(reduceMotion ? nil : .easeInOut(duration: 0.2), value: viewModel.currentTab)
                         .zIndex(2)
                     
-                    //Main page
-                    if viewModel.currentTab == .view {
+                    // Keep each tab's identity, scroll position and loaded data.
+                    TabView(selection: $viewModel.currentTab) {
+                        QuickFinishView(viewModel: viewModel, dayPlannerVM: dayPlannerVM)
+                            .toolbar(.hidden, for: .tabBar)
+                            .tag(TabBarItem.quick)
                         CompletedEventsView(viewModel: viewModel)
-                    }
-                    else if viewModel.currentTab == .library {
+                            .toolbar(.hidden, for: .tabBar)
+                            .tag(TabBarItem.view)
                         LibraryEditorView(viewModel: viewModel)
-                    }
-                    else if viewModel.currentTab == .quick {
-                        QuickFinishView(
-                            viewModel: viewModel,
-                            dayPlannerVM: dayPlannerVM
-                        )
-                    }
-                    else if viewModel.currentTab == .statistic{
+                            .toolbar(.hidden, for: .tabBar)
+                            .tag(TabBarItem.library)
                         Stat(appViewModel: viewModel, viewModel: statViewModel, dayPlannerVM: dayPlannerVM)
                             .showCase(.statistics)
-                    }
-                    else if viewModel.currentTab == .setting{
+                            .toolbar(.hidden, for: .tabBar)
+                            .tag(TabBarItem.statistic)
                         SettingView()
+                            .toolbar(.hidden, for: .tabBar)
+                            .tag(TabBarItem.setting)
                     }
-                    
-                    
+
                 }
                 .frame(width: w, height: h)
                 .overlay(alignment: .bottom){// TabBar

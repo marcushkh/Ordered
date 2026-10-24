@@ -114,7 +114,7 @@ struct OnboardingCategory {
         category("Morning", "☀️", "What do you do in the morning?", [
             ("Brush", "🪥"), ("Water", "💧"), ("Make Bed", "🛏️"),
             ("Shower", "🚿"), ("Meditate", "🧘"), ("Skincare", "🧴"),
-            ("Plan the Day", "📝"), ("Target Setting", "🎯")
+            ("Plan the Day", "📝"), ("Set Target", "🎯")
         ]),
         category("Work", "🧳", "What do you do at work?", [
             ("Check Email", "📧"), ("Plan Tasks", "📋"), ("Focus Time", "🧑🏻‍💻"),

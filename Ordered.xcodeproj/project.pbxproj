@@ -7,21 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-        A11320260000000000000001 /* EventCompletionIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11320260000000000000002; };
-        A11320260000000000000003 /* party-popper.json in Resources */ = {isa = PBXBuildFile; fileRef = A11320260000000000000004; };
-        A11320260000000000000005 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = A11320260000000000000006; };
-		A10920260000000000000009 /* ShowCaseHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1092026000000000000000A /* ShowCaseHelper.swift */; };
-		A10920260000000000000007 /* AppTutorial.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10920260000000000000008 /* AppTutorial.swift */; };
-		A10920260000000000000005 /* CategoryOnboarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10920260000000000000006 /* CategoryOnboarding.swift */; };
-		A10920260000000000000003 /* PremiumAccessState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10920260000000000000004 /* PremiumAccessState.swift */; };
-		A10920260000000000000001 /* EventCreationGate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10920260000000000000002 /* EventCreationGate.swift */; };
-		A10320260000000000000011 /* PlanItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10320260000000000000012 /* PlanItem.swift */; };
-		A10320260000000000000013 /* OneTimeEventEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10320260000000000000014 /* OneTimeEventEditor.swift */; };
-		A10320260000000000000001 /* CompletedEventsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10320260000000000000002 /* CompletedEventsView.swift */; };
 		2C024C3B2D5E338B009A3F1F /* StatTopBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C024C3A2D5E3386009A3F1F /* StatTopBar.swift */; };
 		2C024C3D2D5E338B009A3F1F /* Stat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C024C3C2D5E338B009A3F1F /* Stat.swift */; };
 		2C024C3F2D5E338B009A3F1F /* StatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C024C3E2D5E338B009A3F1F /* StatViewModel.swift */; };
 		2C0272FC2D6434C20033FC5B /* EventList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0272FB2D6434A00033FC5B /* EventList.swift */; };
+		2C0AE0173089DB70009222E2 /* RevenueCat in Frameworks */ = {isa = PBXBuildFile; productRef = 2C0AE0163089DB70009222E2 /* RevenueCat */; };
+		2C0AE0193089DB70009222E2 /* RevenueCatUI in Frameworks */ = {isa = PBXBuildFile; productRef = 2C0AE0183089DB70009222E2 /* RevenueCatUI */; };
+		2C0AE01F3089E187009222E2 /* Ordered.icon in Resources */ = {isa = PBXBuildFile; fileRef = 2C0AE01E3089E187009222E2 /* Ordered.icon */; };
 		2C107AD12DE1BB64007A9D17 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C107AD02DE1BB64007A9D17 /* StoreKit.framework */; };
 		2C107AD82DE1BF00007A9D17 /* Configuration.storekit in Resources */ = {isa = PBXBuildFile; fileRef = 2C107AD72DE1BF00007A9D17 /* Configuration.storekit */; };
 		2C14A3102C6A0DEE00807FFB /* Date+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C14A30F2C6A0DEE00807FFB /* Date+Ext.swift */; };
@@ -35,8 +27,6 @@
 		2C3F2CDF2C561BAD008BD72A /* View+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C3F2CDE2C561BAD008BD72A /* View+Ext.swift */; };
 		2C40F3EA2C7B0A0D004DF24C /* PopupView in Frameworks */ = {isa = PBXBuildFile; productRef = 2C40F3E92C7B0A0D004DF24C /* PopupView */; };
 		2C4BCF9F2C84D0560001AD4C /* EventInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4BCF9E2C84D04E0001AD4C /* EventInfo.swift */; };
-		2C4E670D2E0F9C3B00FF00D8 /* RevenueCat in Frameworks */ = {isa = PBXBuildFile; productRef = 2C4E670C2E0F9C3B00FF00D8 /* RevenueCat */; };
-		2C4E670F2E0F9C3B00FF00D8 /* RevenueCatUI in Frameworks */ = {isa = PBXBuildFile; productRef = 2C4E670E2E0F9C3B00FF00D8 /* RevenueCatUI */; };
 		2C5C1C9B2C576E9B0079482A /* TopBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5C1C9A2C576E9B0079482A /* TopBar.swift */; };
 		2C5C1C9E2C5781B30079482A /* TabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5C1C9D2C5781B30079482A /* TabBar.swift */; };
 		2C601C5C2C5B411A00FBC8E2 /* Color+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C601C5B2C5B411A00FBC8E2 /* Color+Ext.swift */; };
@@ -68,27 +58,23 @@
 		2CFC59AD2D44CD4A00529099 /* EventActionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFC59AC2D44CD3000529099 /* EventActionHandler.swift */; };
 		2CFC59B62D44D1CA00529099 /* Ordered.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2CFC59B42D44D1CA00529099 /* Ordered.xcdatamodeld */; };
 		2D0000022F00000200000002 /* QuickFinishView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D0000012F00000100000001 /* QuickFinishView.swift */; };
-        A12709260000000000000001 /* QuickFinishIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A12709260000000000000002 /* QuickFinishIntent.swift */; };
-		A24000000000000000000001 /* QuickFinishOrder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24000000000000000000002 /* QuickFinishOrder.swift */; };
+		A10320260000000000000001 /* CompletedEventsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10320260000000000000002 /* CompletedEventsView.swift */; };
+		A10320260000000000000011 /* PlanItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10320260000000000000012 /* PlanItem.swift */; };
+		A10320260000000000000013 /* OneTimeEventEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10320260000000000000014 /* OneTimeEventEditor.swift */; };
+		A10920260000000000000001 /* EventCreationGate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10920260000000000000002 /* EventCreationGate.swift */; };
+		A10920260000000000000003 /* PremiumAccessState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10920260000000000000004 /* PremiumAccessState.swift */; };
+		A10920260000000000000005 /* CategoryOnboarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10920260000000000000006 /* CategoryOnboarding.swift */; };
+		A10920260000000000000007 /* AppTutorial.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10920260000000000000008 /* AppTutorial.swift */; };
+		A10920260000000000000009 /* ShowCaseHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1092026000000000000000A /* ShowCaseHelper.swift */; };
+		A11320260000000000000001 /* EventCompletionIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11320260000000000000002 /* EventCompletionIcon.swift */; };
+		A11320260000000000000003 /* Ordered/Resources/party-popper.json in Resources */ = {isa = PBXBuildFile; fileRef = A11320260000000000000004 /* Ordered/Resources/party-popper.json */; };
+		A11320260000000000000005 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = A11320260000000000000006 /* Lottie */; };
+		A11520260000000000000001 /* CompletionSnapshotStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11520260000000000000002 /* CompletionSnapshotStore.swift */; };
+		A12709260000000000000001 /* QuickFinishIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A12709260000000000000002 /* QuickFinishIntent.swift */; };
+		A24000000000000000000001 /* Model/QuickFinishOrder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24000000000000000000002 /* Model/QuickFinishOrder.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-        A11320260000000000000002 /* EventCompletionIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventCompletionIcon.swift; sourceTree = "<group>"; };
-        A11320260000000000000004 /* party-popper.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Ordered/Resources/party-popper.json; sourceTree = SOURCE_ROOT; };
-        A11020260000000000000004 /* DailyCategoryOverride.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DailyCategoryOverride.xcdatamodel; sourceTree = "<group>"; };
-        A11020260000000000000003 /* DailyCategoryVisibility.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DailyCategoryVisibility.xcdatamodel; sourceTree = "<group>"; };
-        A11020260000000000000002 /* DailyVisibilityOverride.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DailyVisibilityOverride.xcdatamodel; sourceTree = "<group>"; };
-        A11020260000000000000001 /* DailyEventVisibility.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DailyEventVisibility.xcdatamodel; sourceTree = "<group>"; };
-		A1092026000000000000000A /* ShowCaseHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowCaseHelper.swift; sourceTree = "<group>"; };
-		A10920260000000000000008 /* AppTutorial.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTutorial.swift; sourceTree = "<group>"; };
-		A10920260000000000000006 /* CategoryOnboarding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryOnboarding.swift; sourceTree = "<group>"; };
-		A10920260000000000000004 /* PremiumAccessState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumAccessState.swift; sourceTree = "<group>"; };
-		A10920260000000000000002 /* EventCreationGate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventCreationGate.swift; sourceTree = "<group>"; };
-        A10320260000000000000012 /* PlanItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanItem.swift; sourceTree = "<group>"; };
-        A10320260000000000000014 /* OneTimeEventEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OneTimeEventEditor.swift; sourceTree = "<group>"; };
-        A10720260000000000000001 /* CategoryDisplayState.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CategoryDisplayState.xcdatamodel; sourceTree = "<group>"; };
-        A10320260000000000000015 /* OneTimePlan.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = OneTimePlan.xcdatamodel; sourceTree = "<group>"; };
-		A10320260000000000000002 /* CompletedEventsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompletedEventsView.swift; sourceTree = "<group>"; };
 		2C0000013A00000000000001 /* Sections.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Sections.xcdatamodel; sourceTree = "<group>"; };
 		2C0000023A00000000000002 /* Categories.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Categories.xcdatamodel; sourceTree = "<group>"; };
 		2C0000033A00000000000003 /* SingleCategory.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SingleCategory.xcdatamodel; sourceTree = "<group>"; };
@@ -96,6 +82,7 @@
 		2C024C3C2D5E338B009A3F1F /* Stat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stat.swift; sourceTree = "<group>"; };
 		2C024C3E2D5E338B009A3F1F /* StatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatViewModel.swift; sourceTree = "<group>"; };
 		2C0272FB2D6434A00033FC5B /* EventList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventList.swift; sourceTree = "<group>"; };
+		2C0AE01E3089E187009222E2 /* Ordered.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; name = Ordered.icon; path = "/Users/marcus/Desktop/iOS development/Asset Files/Ordered.icon"; sourceTree = "<absolute>"; };
 		2C107AD02DE1BB64007A9D17 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		2C107AD72DE1BF00007A9D17 /* Configuration.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = Configuration.storekit; sourceTree = "<group>"; };
 		2C14A30F2C6A0DEE00807FFB /* Date+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Ext.swift"; sourceTree = "<group>"; };
@@ -142,11 +129,28 @@
 		2CFC59B52D44D1CA00529099 /* Ordered.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Ordered.xcdatamodel; sourceTree = "<group>"; };
 		2D0000012F00000100000001 /* QuickFinishView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickFinishView.swift; sourceTree = "<group>"; };
 		2D0000043A00000000000004 /* QuickFinishSettings.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = QuickFinishSettings.xcdatamodel; sourceTree = "<group>"; };
+		A10320260000000000000002 /* CompletedEventsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompletedEventsView.swift; sourceTree = "<group>"; };
+		A10320260000000000000012 /* PlanItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanItem.swift; sourceTree = "<group>"; };
+		A10320260000000000000014 /* OneTimeEventEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OneTimeEventEditor.swift; sourceTree = "<group>"; };
+		A10320260000000000000015 /* OneTimePlan.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = OneTimePlan.xcdatamodel; sourceTree = "<group>"; };
+		A10720260000000000000001 /* CategoryDisplayState.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CategoryDisplayState.xcdatamodel; sourceTree = "<group>"; };
+		A10920260000000000000002 /* EventCreationGate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventCreationGate.swift; sourceTree = "<group>"; };
+		A10920260000000000000004 /* PremiumAccessState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PremiumAccessState.swift; sourceTree = "<group>"; };
+		A10920260000000000000006 /* CategoryOnboarding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryOnboarding.swift; sourceTree = "<group>"; };
+		A10920260000000000000008 /* AppTutorial.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTutorial.swift; sourceTree = "<group>"; };
+		A1092026000000000000000A /* ShowCaseHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowCaseHelper.swift; sourceTree = "<group>"; };
+		A11020260000000000000001 /* DailyEventVisibility.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DailyEventVisibility.xcdatamodel; sourceTree = "<group>"; };
+		A11020260000000000000002 /* DailyVisibilityOverride.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DailyVisibilityOverride.xcdatamodel; sourceTree = "<group>"; };
+		A11020260000000000000003 /* DailyCategoryVisibility.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DailyCategoryVisibility.xcdatamodel; sourceTree = "<group>"; };
+		A11020260000000000000004 /* DailyCategoryOverride.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DailyCategoryOverride.xcdatamodel; sourceTree = "<group>"; };
+		A11320260000000000000002 /* EventCompletionIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventCompletionIcon.swift; sourceTree = "<group>"; };
+		A11320260000000000000004 /* Ordered/Resources/party-popper.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "Ordered/Resources/party-popper.json"; sourceTree = SOURCE_ROOT; };
+		A11520260000000000000002 /* CompletionSnapshotStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompletionSnapshotStore.swift; sourceTree = "<group>"; };
+		A12709260000000000000002 /* QuickFinishIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickFinishIntent.swift; sourceTree = "<group>"; };
 		A23000000000000000000003 /* FlatEvents.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = FlatEvents.xcdatamodel; sourceTree = "<group>"; };
 		A23000000000000000000004 /* Sectionless.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Sectionless.xcdatamodel; sourceTree = "<group>"; };
 		A23000000000000000000005 /* PersistentPlan.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = PersistentPlan.xcdatamodel; sourceTree = "<group>"; };
-        A12709260000000000000002 /* QuickFinishIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickFinishIntent.swift; sourceTree = "<group>"; };
-		A24000000000000000000002 /* QuickFinishOrder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model/QuickFinishOrder.swift; sourceTree = "<group>"; };
+		A24000000000000000000002 /* Model/QuickFinishOrder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model/QuickFinishOrder.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -154,11 +158,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-                A11320260000000000000005 /* Lottie in Frameworks */,
-				2C4E670D2E0F9C3B00FF00D8 /* RevenueCat in Frameworks */,
+				A11320260000000000000005 /* Lottie in Frameworks */,
 				2C107AD12DE1BB64007A9D17 /* StoreKit.framework in Frameworks */,
+				2C0AE0193089DB70009222E2 /* RevenueCatUI in Frameworks */,
+				2C0AE0173089DB70009222E2 /* RevenueCat in Frameworks */,
 				2C40F3EA2C7B0A0D004DF24C /* PopupView in Frameworks */,
-				2C4E670F2E0F9C3B00FF00D8 /* RevenueCatUI in Frameworks */,
 				2CFC59A32D43844800529099 /* MCEmojiPicker in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -179,6 +183,7 @@
 			isa = PBXGroup;
 			children = (
 				2C024C3E2D5E338B009A3F1F /* StatViewModel.swift */,
+				A11520260000000000000002 /* CompletionSnapshotStore.swift */,
 				2C96053A2C82D21900A1736D /* WelcomeVM.swift */,
 				A10920260000000000000008 /* AppTutorial.swift */,
 				2C74CB3C2C59DD9D00716233 /* ContentViewModel.swift */,
@@ -192,6 +197,7 @@
 		2C15B7ED2C3D0F3600B008DB = {
 			isa = PBXGroup;
 			children = (
+				2C0AE01E3089E187009222E2 /* Ordered.icon */,
 				2C15B7F82C3D0F3600B008DB /* Ordered */,
 				2C6A82D12CC1705A006B533E /* Frameworks */,
 				2C15B7F72C3D0F3600B008DB /* Products */,
@@ -218,8 +224,8 @@
 				2C15B7FD2C3D0F3800B008DB /* Assets.xcassets */,
 				2C15B7F92C3D0F3600B008DB /* OrderedApp.swift */,
 				2C15B8022C3D0F3800B008DB /* Persistence.swift */,
-                A12709260000000000000002 /* QuickFinishIntent.swift */,
-				A24000000000000000000002 /* QuickFinishOrder.swift */,
+				A12709260000000000000002 /* QuickFinishIntent.swift */,
+				A24000000000000000000002 /* Model/QuickFinishOrder.swift */,
 				2CFC59B42D44D1CA00529099 /* Ordered.xcdatamodeld */,
 				2C15B7FF2C3D0F3800B008DB /* Preview Content */,
 			);
@@ -239,7 +245,7 @@
 			children = (
 				2C15B7FB2C3D0F3600B008DB /* ContentView.swift */,
 				A10320260000000000000002 /* CompletedEventsView.swift */,
-                A10320260000000000000014 /* OneTimeEventEditor.swift */,
+				A10320260000000000000014 /* OneTimeEventEditor.swift */,
 				2D0000032F00000300000003 /* QuickFinish */,
 				2CC2E7172DD08DCA005D977B /* WelcomeScreen */,
 				2C9605392C82D15100A1736D /* Common */,
@@ -259,7 +265,7 @@
 				2CC16CEC2C63B2A2002DCF79 /* MyCalendar.swift */,
 				2C14A3172C75A95B00807FFB /* Model.swift */,
 				2CA35CD22D28E15900011B89 /* Cal+Ext.swift */,
-                A10320260000000000000012 /* PlanItem.swift */,
+				A10320260000000000000012 /* PlanItem.swift */,
 				2CA35CD42D28E1EE00011B89 /* Event+Ext.swift */,
 				2CA35CD62D290EC300011B89 /* Category+Ext.swift */,
 				2CE4B7902D6E1C19001AD492 /* CustomEvent.swift */,
@@ -330,8 +336,8 @@
 			isa = PBXGroup;
 			children = (
 				2C4BCF9E2C84D04E0001AD4C /* EventInfo.swift */,
-                A11320260000000000000002 /* EventCompletionIcon.swift */,
-                A11320260000000000000004 /* party-popper.json */,
+				A11320260000000000000002 /* EventCompletionIcon.swift */,
+				A11320260000000000000004 /* Ordered/Resources/party-popper.json */,
 				2C0272FB2D6434A00033FC5B /* EventList.swift */,
 				2CC2E7242DD0C101005D977B /* ProgressStepBar.swift */,
 				A1092026000000000000000A /* ShowCaseHelper.swift */,
@@ -385,11 +391,11 @@
 			);
 			name = Ordered;
 			packageProductDependencies = (
-                A11320260000000000000006 /* Lottie */,
+				A11320260000000000000006 /* Lottie */,
 				2C40F3E92C7B0A0D004DF24C /* PopupView */,
 				2CFC59A22D43844800529099 /* MCEmojiPicker */,
-				2C4E670C2E0F9C3B00FF00D8 /* RevenueCat */,
-				2C4E670E2E0F9C3B00FF00D8 /* RevenueCatUI */,
+				2C0AE0163089DB70009222E2 /* RevenueCat */,
+				2C0AE0183089DB70009222E2 /* RevenueCatUI */,
 			);
 			productName = Ordered;
 			productReference = 2C15B7F62C3D0F3600B008DB /* Ordered.app */;
@@ -420,10 +426,10 @@
 			);
 			mainGroup = 2C15B7ED2C3D0F3600B008DB;
 			packageReferences = (
-                A11320260000000000000007 /* lottie-ios */,
+				A11320260000000000000007 /* XCRemoteSwiftPackageReference "lottie-ios" */,
 				2C40F3E82C7B0A0D004DF24C /* XCRemoteSwiftPackageReference "PopupView" */,
 				2CFC59A12D43844800529099 /* XCRemoteSwiftPackageReference "MCEmojiPicker" */,
-				2C4E670B2E0F9C3B00FF00D8 /* XCRemoteSwiftPackageReference "purchases-ios" */,
+				2C0AE0153089DB70009222E2 /* XCRemoteSwiftPackageReference "purchases-ios-spm" */,
 			);
 			productRefGroup = 2C15B7F72C3D0F3600B008DB /* Products */;
 			projectDirPath = "";
@@ -439,7 +445,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-                A11320260000000000000003 /* party-popper.json in Resources */,
+				A11320260000000000000003 /* Ordered/Resources/party-popper.json in Resources */,
+				2C0AE01F3089E187009222E2 /* Ordered.icon in Resources */,
 				2C15B8012C3D0F3800B008DB /* Preview Assets.xcassets in Resources */,
 				2C107AD82DE1BF00007A9D17 /* Configuration.storekit in Resources */,
 				2C15B7FE2C3D0F3800B008DB /* Assets.xcassets in Resources */,
@@ -453,9 +460,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-                A11320260000000000000001 /* EventCompletionIcon.swift in Sources */,
-                A12709260000000000000001 /* QuickFinishIntent.swift in Sources */,
-				A24000000000000000000001 /* QuickFinishOrder.swift in Sources */,
+				A11320260000000000000001 /* EventCompletionIcon.swift in Sources */,
+				A12709260000000000000001 /* QuickFinishIntent.swift in Sources */,
+				A24000000000000000000001 /* Model/QuickFinishOrder.swift in Sources */,
 				2D0000022F00000200000002 /* QuickFinishView.swift in Sources */,
 				2CFC59AD2D44CD4A00529099 /* EventActionHandler.swift in Sources */,
 				2CB754B32DE38BCC009BEF4B /* SettingTopBar.swift in Sources */,
@@ -472,6 +479,7 @@
 				2C024C3B2D5E338B009A3F1F /* StatTopBar.swift in Sources */,
 				2C024C3D2D5E338B009A3F1F /* Stat.swift in Sources */,
 				2C024C3F2D5E338B009A3F1F /* StatViewModel.swift in Sources */,
+				A11520260000000000000001 /* CompletionSnapshotStore.swift in Sources */,
 				2CCBD79F2D809CDD00070967 /* SettingView.swift in Sources */,
 				2CA35CD32D28E16300011B89 /* Cal+Ext.swift in Sources */,
 				2C15B8032C3D0F3800B008DB /* Persistence.swift in Sources */,
@@ -502,8 +510,8 @@
 				2C3F2CDF2C561BAD008BD72A /* View+Ext.swift in Sources */,
 				2C15B7FC2C3D0F3600B008DB /* ContentView.swift in Sources */,
 				A10320260000000000000001 /* CompletedEventsView.swift in Sources */,
-                A10320260000000000000011 /* PlanItem.swift in Sources */,
-                A10320260000000000000013 /* OneTimeEventEditor.swift in Sources */,
+				A10320260000000000000011 /* PlanItem.swift in Sources */,
+				A10320260000000000000013 /* OneTimeEventEditor.swift in Sources */,
 				2CC8BC2F2D6F78A50049E579 /* Line.swift in Sources */,
 				2C15B7FA2C3D0F3600B008DB /* OrderedApp.swift in Sources */,
 			);
@@ -634,7 +642,7 @@
 		2C15B80A2C3D0F3800B008DB /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = Ordered;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Ordered/Ordered.entitlements;
 				CODE_SIGN_STYLE = Automatic;
@@ -655,7 +663,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.1;
+				MARKETING_VERSION = 4.0;
 				PRODUCT_BUNDLE_IDENTIFIER = website.ordered;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -669,7 +677,7 @@
 		2C15B80B2C3D0F3800B008DB /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = Ordered;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Ordered/Ordered.entitlements;
 				CODE_SIGN_STYLE = Automatic;
@@ -690,7 +698,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.1;
+				MARKETING_VERSION = 4.0;
 				PRODUCT_BUNDLE_IDENTIFIER = website.ordered;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -725,25 +733,20 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-        A11320260000000000000007 /* lottie-ios */ = {
-            isa = XCRemoteSwiftPackageReference;
-            repositoryURL = "https://github.com/airbnb/lottie-ios.git";
-            requirement = { kind = exactVersion; version = 4.5.2; };
-        };
+		2C0AE0153089DB70009222E2 /* XCRemoteSwiftPackageReference "purchases-ios-spm" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/RevenueCat/purchases-ios-spm.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.97.0;
+			};
+		};
 		2C40F3E82C7B0A0D004DF24C /* XCRemoteSwiftPackageReference "PopupView" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/exyte/PopupView.git";
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 3.0.6;
-			};
-		};
-		2C4E670B2E0F9C3B00FF00D8 /* XCRemoteSwiftPackageReference "purchases-ios" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/RevenueCat/purchases-ios";
-			requirement = {
-				kind = upToNextMinorVersion;
-				minimumVersion = 5.30.0;
 			};
 		};
 		2CFC59A12D43844800529099 /* XCRemoteSwiftPackageReference "MCEmojiPicker" */ = {
@@ -754,33 +757,41 @@
 				minimumVersion = 1.2.3;
 			};
 		};
+		A11320260000000000000007 /* XCRemoteSwiftPackageReference "lottie-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/airbnb/lottie-ios.git";
+			requirement = {
+				kind = exactVersion;
+				version = 4.5.2;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-        A11320260000000000000006 /* Lottie */ = {
-            isa = XCSwiftPackageProductDependency;
-            package = A11320260000000000000007;
-            productName = Lottie;
-        };
+		2C0AE0163089DB70009222E2 /* RevenueCat */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2C0AE0153089DB70009222E2 /* XCRemoteSwiftPackageReference "purchases-ios-spm" */;
+			productName = RevenueCat;
+		};
+		2C0AE0183089DB70009222E2 /* RevenueCatUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2C0AE0153089DB70009222E2 /* XCRemoteSwiftPackageReference "purchases-ios-spm" */;
+			productName = RevenueCatUI;
+		};
 		2C40F3E92C7B0A0D004DF24C /* PopupView */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 2C40F3E82C7B0A0D004DF24C /* XCRemoteSwiftPackageReference "PopupView" */;
 			productName = PopupView;
 		};
-		2C4E670C2E0F9C3B00FF00D8 /* RevenueCat */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 2C4E670B2E0F9C3B00FF00D8 /* XCRemoteSwiftPackageReference "purchases-ios" */;
-			productName = RevenueCat;
-		};
-		2C4E670E2E0F9C3B00FF00D8 /* RevenueCatUI */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 2C4E670B2E0F9C3B00FF00D8 /* XCRemoteSwiftPackageReference "purchases-ios" */;
-			productName = RevenueCatUI;
-		};
 		2CFC59A22D43844800529099 /* MCEmojiPicker */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 2CFC59A12D43844800529099 /* XCRemoteSwiftPackageReference "MCEmojiPicker" */;
 			productName = MCEmojiPicker;
+		};
+		A11320260000000000000006 /* Lottie */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A11320260000000000000007 /* XCRemoteSwiftPackageReference "lottie-ios" */;
+			productName = Lottie;
 		};
 /* End XCSwiftPackageProductDependency section */
 
@@ -797,12 +808,12 @@
 				A23000000000000000000003 /* FlatEvents.xcdatamodel */,
 				A23000000000000000000004 /* Sectionless.xcdatamodel */,
 				A23000000000000000000005 /* PersistentPlan.xcdatamodel */,
-                A10320260000000000000015 /* OneTimePlan.xcdatamodel */,
-                A10720260000000000000001 /* CategoryDisplayState.xcdatamodel */,
-                A11020260000000000000001 /* DailyEventVisibility.xcdatamodel */,
-                A11020260000000000000002 /* DailyVisibilityOverride.xcdatamodel */,
-                A11020260000000000000003 /* DailyCategoryVisibility.xcdatamodel */,
-                A11020260000000000000004 /* DailyCategoryOverride.xcdatamodel */,
+				A10320260000000000000015 /* OneTimePlan.xcdatamodel */,
+				A10720260000000000000001 /* CategoryDisplayState.xcdatamodel */,
+				A11020260000000000000001 /* DailyEventVisibility.xcdatamodel */,
+				A11020260000000000000002 /* DailyVisibilityOverride.xcdatamodel */,
+				A11020260000000000000003 /* DailyCategoryVisibility.xcdatamodel */,
+				A11020260000000000000004 /* DailyCategoryOverride.xcdatamodel */,
 			);
 			currentVersion = A11020260000000000000004 /* DailyCategoryOverride.xcdatamodel */;
 			path = Ordered.xcdatamodeld;

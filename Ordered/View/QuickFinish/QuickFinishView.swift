@@ -30,7 +30,9 @@ struct QuickFinishView: View {
         predicate: NSPredicate(format: "isOneTime == true AND aEndTime == nil AND planOrder >= 0")
     ) private var oneTimePlanEvents: FetchedResults<Event_Cal>
 
+    @StateObject private var completionStore = CompletionSnapshotStore()
     @ObservedObject private var celebrations = EventCompletionCelebrations.shared
+    @State private var dayKey = MyCalendar.getToday().getYYMMDD()
     @State private var categoryPreview: QuickFinishEventGroup?
     @State private var finishError: String?
     @Environment(\.managedObjectContext) private var context
@@ -47,10 +49,14 @@ struct QuickFinishView: View {
     }
 
     var body: some View {
-        let finishedIDs = finishedGroupIDs
-        let groups = eventGroups
+        let visibleGroups = makeEventGroups(from: visibleEvents)
+        let finishedIDs = finishedGroupIDs(in: visibleGroups)
+        let groups = viewModel.quickFinishSearchText.isEmpty ? visibleGroups : eventGroups
+        let heldIDs = Set(visibleGroups.filter { group in
+            group.events.contains { celebrations.holdsCategoryOpen(eventID: $0.objectID) }
+        }.map(\.id))
         // Publish the capsule and collapse the category in the same layout update.
-        let settledFinishedIDs = finishedIDs.subtracting(completionHeldGroupIDs)
+        let settledFinishedIDs = finishedIDs.subtracting(heldIDs)
         let finishedGroups = groups.filter { settledFinishedIDs.contains($0.id) }
         let hiddenIDs = hiddenCategoryIDs
         let pillGroups = makeEventGroups(from: Array(events), includingHiddenCategories: true).filter { group in
@@ -58,7 +64,7 @@ struct QuickFinishView: View {
         }
 
         ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
+            LazyVStack(alignment: .leading, spacing: 20) {
                 if viewModel.showQuickFinishSearch {
                     TextField("Search events", text: $viewModel.quickFinishSearchText)
                         .textFieldStyle(.roundedBorder)
@@ -82,7 +88,7 @@ struct QuickFinishView: View {
                     eventGroup(group, isFinished: finishedIDs.contains(group.id))
                 }
 
-                if eventGroups.isEmpty && pillGroups.isEmpty {
+                if groups.isEmpty && pillGroups.isEmpty {
                     ContentUnavailableView(
                         viewModel.quickFinishSearchText.isEmpty ? (events.isEmpty ? "No Events" : "No Visible Events") : "No Results",
                         systemImage: "checkmark.circle",
@@ -112,7 +118,21 @@ struct QuickFinishView: View {
                 },
             including: shouldTrackPlanCollapse ? .all : .subviews
         )
-        .onAppear { viewModel.planBarExpansion = 0 }
+        .onAppear {
+            // Restore saved completion state without animating categories closed.
+            var transaction = Transaction(animation: nil)
+            transaction.disablesAnimations = true
+            withTransaction(transaction) {
+                refreshCompletionCounts()
+            }
+        }
+        .onDisappear { completionStore.deactivate() }
+        .onChange(of: dayPlannerVM.currentDate) { _, _ in
+            if viewModel.currentTab == .quick { refreshCompletionCounts() }
+        }
+        .onChange(of: completionStore.errorMessage) { _, error in
+            if let error { finishError = error }
+        }
         .sheet(item: $categoryPreview) { group in
             NavigationStack {
                 ScrollView {
@@ -162,7 +182,9 @@ struct QuickFinishView: View {
         }
         .onChange(of: viewModel.refresh) { _, _ in }
         .onChange(of: finishedIDs, initial: true) { _, finishedIDs in
-            clearUnfinishedExpansionOverrides(finishedIDs: finishedIDs)
+            if completionStore.isLoaded && viewModel.currentTab == .quick {
+                clearUnfinishedExpansionOverrides(finishedIDs: finishedIDs)
+            }
         }
         .onChange(of: viewModel.quickFinishOrders.selectedID) { _, _ in
             withAnimation(.easeInOut(duration: 0.2)) {
@@ -182,7 +204,7 @@ struct QuickFinishView: View {
     }
 
     private func isHiddenToday(_ event: Event) -> Bool {
-        let day = dayPlannerVM.currentDate.getYYMMDD()
+        let day = dayKey
         if event.hiddenDay == day { return true }
         if event.visibleDay == day { return false }
         return viewModel.quickFinishOrders.selected?.hiddenEventIDs
@@ -204,21 +226,24 @@ struct QuickFinishView: View {
     }
 
     private var finishedGroupIDs: Set<String> {
+        finishedGroupIDs(in: makeEventGroups(from: visibleEvents))
+    }
+
+    private func finishedGroupIDs(in groups: [QuickFinishEventGroup]) -> Set<String> {
         // Search only changes the displayed tiles, never category completion.
-        Set(makeEventGroups(from: visibleEvents).filter { group in
+        Set(groups.filter { group in
             !group.events.isEmpty && group.events.allSatisfy { finishedCount(for: $0) > 0 }
         }.map(\.id))
     }
 
     private var completionHeldGroupIDs: Set<String> {
-        // Search must not detach the capsule timing from a category's celebration.
         Set(makeEventGroups(from: visibleEvents).filter { group in
             group.events.contains { celebrations.holdsCategoryOpen(eventID: $0.objectID) }
         }.map(\.id))
     }
 
     private var hiddenCategoryIDs: Set<String> {
-        let day = dayPlannerVM.currentDate.getYYMMDD()
+        let day = dayKey
         let dailyHidden = Set(categoryDisplayStates.filter { $0.hiddenDay == day }.compactMap(\.groupID))
         let dailyVisible = Set(categoryDisplayStates.filter { $0.visibleDay == day }.compactMap(\.groupID))
         let orderHidden = viewModel.quickFinishOrders.selected?.hiddenGroupIDs ?? []
@@ -226,8 +251,9 @@ struct QuickFinishView: View {
     }
 
     private func makeEventGroups(from includedEvents: [Event], includingHiddenCategories: Bool = false) -> [QuickFinishEventGroup] {
+        let includedIDs = Set(includedEvents.map(\.objectID))
         var groups = categories.compactMap { category -> QuickFinishEventGroup? in
-            let categoryEvents = category.orderedActiveEvents.filter { includedEvents.contains($0) }
+            let categoryEvents = category.orderedActiveEvents.filter { includedIDs.contains($0.objectID) }
             guard !categoryEvents.isEmpty else { return nil }
 
             return QuickFinishEventGroup(
@@ -260,7 +286,8 @@ struct QuickFinishView: View {
                             identifier: { $0.objectID.uriRepresentation().absoluteString }))
                 }
         }
-        return includingHiddenCategories ? groups : groups.filter { !hiddenCategoryIDs.contains($0.id) }
+        let hiddenIDs = hiddenCategoryIDs
+        return includingHiddenCategories ? groups : groups.filter { !hiddenIDs.contains($0.id) }
     }
 
     private var finishedEventCount: Int {
@@ -273,7 +300,7 @@ struct QuickFinishView: View {
             ObservedCategoryDisplayState(
                 state: savedState,
                 isFinished: isFinished,
-                day: dayPlannerVM.currentDate.getYYMMDD()
+                day: dayKey
             ) { isCollapsed in
                 eventGroupContent(group, isFinished: isFinished, isCollapsed: viewModel.tutorial.step == .finishEvent ? false : isCollapsed)
             }
@@ -296,7 +323,7 @@ struct QuickFinishView: View {
         let previousDay = state.hiddenDay
         let previousVisibleDay = state.visibleDay
         state.groupID = group.id
-        let day = dayPlannerVM.currentDate.getYYMMDD()
+        let day = dayKey
         state.hiddenDay = hidden ? day : nil
         state.visibleDay = hidden ? nil : day
         do {
@@ -415,7 +442,7 @@ struct QuickFinishView: View {
         let previousExpandedDay = state.expandedFinishedDay
         state.groupID = groupID
         state.isMinimized = minimized
-        state.expandedFinishedDay = !minimized && isFinished ? dayPlannerVM.currentDate.getYYMMDD() : nil
+        state.expandedFinishedDay = !minimized && isFinished ? dayKey : nil
         do {
             try context.save()
         } catch {
@@ -431,7 +458,7 @@ struct QuickFinishView: View {
 
     private func expandCategoriesForSelectedOrder(includingFinished: Bool = true) {
         let finishedIDs = finishedGroupIDs
-        let day = dayPlannerVM.currentDate.getYYMMDD()
+        let day = dayKey
         // Include every visible category in the order, even when search hides its tiles.
         let groupsToExpand = makeEventGroups(from: visibleEvents).filter { group in
             if includingFinished { return true }
@@ -548,7 +575,7 @@ struct QuickFinishView: View {
         HapticFeedback.light()
         withAnimation(.easeInOut(duration: 0.2)) {
             event.hiddenDay = nil
-            event.visibleDay = dayPlannerVM.currentDate.getYYMMDD()
+            event.visibleDay = dayKey
             do {
                 try context.save()
                 viewModel.refresh.toggle()
@@ -564,7 +591,7 @@ struct QuickFinishView: View {
         let previousDay = event.hiddenDay
         HapticFeedback.light()
         withAnimation(.easeInOut(duration: 0.2)) {
-            event.hiddenDay = dayPlannerVM.currentDate.getYYMMDD()
+            event.hiddenDay = dayKey
             do {
                 try context.save()
                 viewModel.refresh.toggle()
@@ -586,8 +613,14 @@ struct QuickFinishView: View {
         }
     }
 
+    private func refreshCompletionCounts() {
+        dayKey = dayPlannerVM.currentDate.getYYMMDD()
+        completionStore.activate(in: context, day: dayKey)
+    }
+
     private func finishedCount(for event: Event) -> Int {
-        event.finished(on: dayPlannerVM.currentDate)
+        // This snapshot contains only the currently selected day's completions.
+        completionStore.snapshot.countsByEvent[event.objectID]?.values.reduce(0, +) ?? 0
     }
 
     private func quickFinish(_ event: Event) {

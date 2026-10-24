@@ -39,11 +39,10 @@ struct TabBar: View {
                     .symbolEffect(.bounce, value: viewModel.currentTab == item)
 
                 Button {
-                    withAnimation {
-                        HapticFeedback.light()
-                        viewModel.currentTab = item
-                        viewModel.tutorial.openedTab(item.rawValue)
-                    }
+                    guard viewModel.currentTab != item else { return }
+                    HapticFeedback.light()
+                    viewModel.currentTab = item
+                    viewModel.tutorial.openedTab(item.rawValue)
                 } label: {
                     VStack(spacing: 4) {
                         tabBarIcon

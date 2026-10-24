@@ -84,8 +84,7 @@ struct CompletedEventsView: View {
             }
         }
         .onAppear {
-            today = MyCalendar.getToday()
-            viewModel.viewedDate = today
+            refreshToday()
             refreshSelection()
         }
         .onChange(of: viewModel.viewedDate) { _, _ in refreshSelection() }

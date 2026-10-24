@@ -7,7 +7,44 @@ final class StatViewModel: ObservableObject {
     @Published var selectedEvent: Event?
     @Published var searchEventName = ""
 
-    private let calendar = Calendar.current
+    private var calendar: Calendar { .autoupdatingCurrent }
+
+    private struct PeriodKey: Equatable {
+        let anchor: Date
+        let range: StatisticRange
+        let firstWeekday: Int
+        let timeZone: String
+        let calendar: String
+    }
+    private struct EventRankKey: Equatable {
+        let id: NSManagedObjectID
+        let pinned: Bool
+        let order: Int16
+    }
+    private struct RankingKey: Equatable {
+        let snapshotID: UUID
+        let period: PeriodKey
+        let events: [EventRankKey]
+    }
+    private var periodCache: (key: PeriodKey, current: [Date], previous: [Date])?
+    private var rankingCache: (key: RankingKey, rows: [EventStatistic])?
+    private var chartCache: (snapshotID: UUID, period: PeriodKey, columns: [StatisticColumn])?
+    private(set) var rankingBuildCount = 0
+
+    private var periodKey: PeriodKey {
+        PeriodKey(anchor: currentDate, range: range,
+                  firstWeekday: MyCalendar.weekCalendar.firstWeekday,
+                  timeZone: calendar.timeZone.identifier,
+                  calendar: String(describing: calendar.identifier))
+    }
+
+    private func preparePeriod(dayPlannerVM: DayPlannerViewModel) {
+        let key = periodKey
+        guard periodCache?.key != key else { return }
+        let previous = calendar.date(byAdding: range.calendarComponent, value: -1, to: currentDate) ?? currentDate
+        periodCache = (key, dates(for: currentDate, range: range, dayPlannerVM: dayPlannerVM),
+                       dates(for: previous, range: range, dayPlannerVM: dayPlannerVM))
+    }
 
     func returnToCurrentPeriod() {
         currentDate = MyCalendar.getToday()
@@ -27,16 +64,13 @@ final class StatViewModel: ObservableObject {
     }
 
     func currentDates(dayPlannerVM: DayPlannerViewModel) -> [Date] {
-        dates(for: currentDate, range: range, dayPlannerVM: dayPlannerVM)
+        preparePeriod(dayPlannerVM: dayPlannerVM)
+        return periodCache?.current ?? []
     }
 
     func previousDates(dayPlannerVM: DayPlannerViewModel) -> [Date] {
-        let anchor = calendar.date(
-            byAdding: range.calendarComponent,
-            value: -1,
-            to: currentDate
-        ) ?? currentDate
-        return dates(for: anchor, range: range, dayPlannerVM: dayPlannerVM)
+        preparePeriod(dayPlannerVM: dayPlannerVM)
+        return periodCache?.previous ?? []
     }
 
     func chartDateGroups(dayPlannerVM: DayPlannerViewModel) -> [[Date]] {
@@ -50,10 +84,14 @@ final class StatViewModel: ObservableObject {
     }
 
     func chartColumns(
-        completedEvents: [Event_Cal],
+        completions: CompletionSnapshot,
         dayPlannerVM: DayPlannerViewModel
     ) -> [StatisticColumn] {
-        chartDateGroups(dayPlannerVM: dayPlannerVM).enumerated().map { index, dates in
+        let key = periodKey
+        if let cache = chartCache, cache.snapshotID == completions.identity, cache.period == key {
+            return cache.columns
+        }
+        let columns = chartDateGroups(dayPlannerVM: dayPlannerVM).enumerated().map { index, dates in
             StatisticColumn(
                 id: index,
                 label: range == .week
@@ -62,21 +100,23 @@ final class StatViewModel: ObservableObject {
                 shortLabel: range == .week
                     ? String((dates.first?.weekDayAbbrev() ?? " ").prefix(1))
                     : "W\(index + 1)",
-                count: completionCount(completedEvents: completedEvents, dates: dates)
+                count: completionCount(completions: completions, dates: dates)
             )
         }
+        chartCache = (completions.identity, key, columns)
+        return columns
     }
 
     func percentChange(
-        completedEvents: [Event_Cal],
+        completions: CompletionSnapshot,
         dayPlannerVM: DayPlannerViewModel
     ) -> Int {
         let current = completionCount(
-            completedEvents: completedEvents,
+            completions: completions,
             dates: currentDates(dayPlannerVM: dayPlannerVM)
         )
         let previous = completionCount(
-            completedEvents: completedEvents,
+            completions: completions,
             dates: previousDates(dayPlannerVM: dayPlannerVM)
         )
         guard previous > 0 else { return current == 0 ? 0 : 100 }
@@ -85,39 +125,42 @@ final class StatViewModel: ObservableObject {
 
     func rankedStatistics(
         allEvents: [Event],
-        completedEvents: [Event_Cal],
+        completions: CompletionSnapshot,
         dayPlannerVM: DayPlannerViewModel
     ) -> [EventStatistic] {
-        allEvents.map {
-            statistics(
-                for: $0,
-                completedEvents: completedEvents,
-                dayPlannerVM: dayPlannerVM
-            )
-        }
-        .sorted {
-            if $0.event.isFavourite != $1.event.isFavourite {
-                return $0.event.isFavourite
-            }
-            if $0.total == $1.total {
-                return $0.event.order < $1.event.order
-            }
+        let key = RankingKey(snapshotID: completions.identity, period: periodKey,
+                             events: allEvents.map { EventRankKey(id: $0.objectID, pinned: $0.isFavourite, order: $0.order) })
+        if let cached = rankingCache, cached.key == key { return cached.rows }
+        let columnDays = chartDateGroups(dayPlannerVM: dayPlannerVM).map { $0.map { $0.getYYMMDD() } }
+        let previousDays = previousDates(dayPlannerVM: dayPlannerVM).map { $0.getYYMMDD() }
+        let rows = allEvents.map { event in
+            let counts = columnDays.map { completions.count(eventID: event.objectID, days: $0) }
+            let total = counts.reduce(0, +)
+            let previous = completions.count(eventID: event.objectID, days: previousDays)
+            return EventStatistic(event: event, columnCounts: counts, total: total,
+                                  previousTotal: previous, delta: total - previous)
+        }.sorted {
+            if $0.event.isFavourite != $1.event.isFavourite { return $0.event.isFavourite }
+            if $0.total == $1.total { return $0.event.order < $1.event.order }
             return $0.total > $1.total
         }
+        rankingBuildCount += 1
+        rankingCache = (key, rows)
+        return rows
     }
 
     func statistics(
         for event: Event,
-        completedEvents: [Event_Cal],
+        completions: CompletionSnapshot,
         dayPlannerVM: DayPlannerViewModel
     ) -> EventStatistic {
         let counts = chartDateGroups(dayPlannerVM: dayPlannerVM).map {
-            completionCount(event: event, completedEvents: completedEvents, dates: $0)
+            completionCount(event: event, completions: completions, dates: $0)
         }
         let total = counts.reduce(0, +)
         let previous = completionCount(
             event: event,
-            completedEvents: completedEvents,
+            completions: completions,
             dates: previousDates(dayPlannerVM: dayPlannerVM)
         )
         return EventStatistic(
@@ -131,7 +174,7 @@ final class StatViewModel: ObservableObject {
 
     func eventColumns(
         for event: Event,
-        completedEvents: [Event_Cal],
+        completions: CompletionSnapshot,
         dayPlannerVM: DayPlannerViewModel
     ) -> [StatisticColumn] {
         chartDateGroups(dayPlannerVM: dayPlannerVM).enumerated().map { index, dates in
@@ -143,7 +186,7 @@ final class StatViewModel: ObservableObject {
                 shortLabel: "",
                 count: completionCount(
                     event: event,
-                    completedEvents: completedEvents,
+                    completions: completions,
                     dates: dates
                 )
             )
@@ -152,23 +195,14 @@ final class StatViewModel: ObservableObject {
 
     func completionCount(
         event: Event? = nil,
-        completedEvents: [Event_Cal],
+        completions: CompletionSnapshot,
         dates: [Date]
     ) -> Int {
-        let dateKeys = Set(dates.map { $0.getYYMMDD() })
-        return completedEvents.reduce(into: 0) { result, completion in
-            guard let key = completion.cal?.date,
-                  dateKeys.contains(key) else { return }
-            guard event == nil || completion.parent == event else { return }
-            result += 1
-        }
+        completions.count(eventID: event?.objectID, days: dates.map { $0.getYYMMDD() })
     }
 
-    func currentStreak(for event: Event, completedEvents: [Event_Cal]) -> Int {
-        let completedDateKeys = Set(completedEvents.compactMap { completion -> String? in
-            guard completion.parent == event else { return nil }
-            return completion.cal?.date
-        })
+    func currentStreak(for event: Event, completions: CompletionSnapshot) -> Int {
+        let completedDateKeys = Set(completions.countsByEvent[event.objectID]?.keys.map { $0 } ?? [])
         var cursor = MyCalendar.getToday()
         if !completedDateKeys.contains(cursor.getYYMMDD()) {
             cursor = calendar.date(byAdding: .day, value: -1, to: cursor) ?? cursor
@@ -186,13 +220,13 @@ final class StatViewModel: ObservableObject {
 
     func activeDayCount(
         for event: Event,
-        completedEvents: [Event_Cal],
+        completions: CompletionSnapshot,
         dayPlannerVM: DayPlannerViewModel
     ) -> Int {
         currentDates(dayPlannerVM: dayPlannerVM).filter {
             completionCount(
                 event: event,
-                completedEvents: completedEvents,
+                completions: completions,
                 dates: [$0]
             ) > 0
         }
@@ -201,7 +235,7 @@ final class StatViewModel: ObservableObject {
 
     func bestDay(
         for event: Event,
-        completedEvents: [Event_Cal],
+        completions: CompletionSnapshot,
         dayPlannerVM: DayPlannerViewModel
     ) -> String {
         let values = currentDates(dayPlannerVM: dayPlannerVM).map {
@@ -209,7 +243,7 @@ final class StatViewModel: ObservableObject {
                 $0,
                 completionCount(
                     event: event,
-                    completedEvents: completedEvents,
+                    completions: completions,
                     dates: [$0]
                 )
             )
@@ -224,15 +258,15 @@ final class StatViewModel: ObservableObject {
 
     func shareLabel(
         for event: Event,
-        completedEvents: [Event_Cal],
+        completions: CompletionSnapshot,
         dayPlannerVM: DayPlannerViewModel
     ) -> String {
         let dates = currentDates(dayPlannerVM: dayPlannerVM)
-        let total = completionCount(completedEvents: completedEvents, dates: dates)
+        let total = completionCount(completions: completions, dates: dates)
         guard total > 0 else { return "0%" }
         let eventTotal = completionCount(
             event: event,
-            completedEvents: completedEvents,
+            completions: completions,
             dates: dates
         )
         let share = Double(eventTotal) / Double(total) * 100
@@ -241,23 +275,11 @@ final class StatViewModel: ObservableObject {
 
     func usualTickTime(
         for event: Event,
-        completedEvents: [Event_Cal],
+        completions: CompletionSnapshot,
         dayPlannerVM: DayPlannerViewModel
     ) -> String {
-        let dateKeys = Set(currentDates(dayPlannerVM: dayPlannerVM).map { $0.getYYMMDD() })
-        let minutes = completedEvents.compactMap { completion -> Int? in
-            guard completion.parent == event,
-                  let key = completion.cal?.date,
-                  dateKeys.contains(key),
-                  let time = completion.aEndTime ?? completion.aStartTime else {
-                return nil
-            }
-            let parts = time.split(separator: ":").compactMap { Int($0) }
-            guard parts.count >= 2 else { return nil }
-            return parts[0] * 60 + parts[1]
-        }
-        guard !minutes.isEmpty else { return "—" }
-        let average = minutes.reduce(0, +) / minutes.count
+        let days = currentDates(dayPlannerVM: dayPlannerVM).map { $0.getYYMMDD() }
+        guard let average = completions.averageTickMinutes(eventID: event.objectID, days: days) else { return "—" }
         return String(format: "%02d:%02d", average / 60, average % 60)
     }
 
@@ -295,12 +317,12 @@ final class StatViewModel: ObservableObject {
 
     func eventHeadline(
         for event: Event,
-        completedEvents: [Event_Cal],
+        completions: CompletionSnapshot,
         dayPlannerVM: DayPlannerViewModel
     ) -> String {
         let delta = statistics(
             for: event,
-            completedEvents: completedEvents,
+            completions: completions,
             dayPlannerVM: dayPlannerVM
         ).delta
         if delta > 0 { return "Up \(delta) on last \(range.unit)!!" }
